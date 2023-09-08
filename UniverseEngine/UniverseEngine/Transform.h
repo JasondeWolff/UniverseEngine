@@ -2,7 +2,7 @@
 
 #include <glm/mat4x4.hpp>
 
-#include "Math.h"
+#include "MathUtil.h"
 
 namespace UniverseEngine {
 	class Transform {

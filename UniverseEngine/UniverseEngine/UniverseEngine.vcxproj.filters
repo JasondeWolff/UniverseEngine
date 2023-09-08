@@ -20,13 +20,66 @@
     <Filter Include="Src\Resources\Assets">
       <UniqueIdentifier>{d4beccec-75d9-4ae7-8c18-8482f83652c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Math">
+      <UniqueIdentifier>{e455f176-adc9-40ff-8601-1cbfc7810f28}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Math.h">
+    <ClInclude Include="Transform.h">
       <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="UniverseEngine.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="AtomicPool.h">
+      <Filter>Src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Logging.h">
+      <Filter>Src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Option.h">
+      <Filter>Src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Pool.h">
+      <Filter>Src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources.h">
+      <Filter>Src\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="MathUtil.h">
+      <Filter>Src\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Math.cpp" />
+    <ClCompile Include="Logging.cpp">
+      <Filter>Src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources.cpp">
+      <Filter>Src\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="MathUtil.cpp">
+      <Filter>Src\Math</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

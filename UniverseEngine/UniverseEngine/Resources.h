@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "AtomicPool.h"
 #include "Pool.h"
 
@@ -22,9 +24,9 @@ namespace UniverseEngine {
 		friend class Engine;
 		Resources();
 
-		Pool<Model> models;
-		Pool<Mesh> meshes;
-		Pool<Material> materials;
-		AtomicPool<Texture> textures;
+		std::unique_ptr<Pool<Model>> models;
+		std::unique_ptr<Pool<Mesh>> meshes;
+		std::unique_ptr<Pool<Material>> materials;
+		std::unique_ptr<AtomicPool<Texture>> textures;
 	};
 }
