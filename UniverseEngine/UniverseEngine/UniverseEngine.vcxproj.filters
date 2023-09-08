@@ -28,6 +28,15 @@
     <ClInclude Include="Logging.h">
       <Filter>Src\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Pool.h">
+      <Filter>Src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Option.h">
+      <Filter>Src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources.h">
+      <Filter>Src\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -35,6 +44,9 @@
     </ClCompile>
     <ClCompile Include="Logging.cpp">
       <Filter>Src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources.cpp">
+      <Filter>Src\Resources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
