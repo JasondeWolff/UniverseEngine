@@ -73,25 +73,25 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)UniverseEngine\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)UniverseEngine\;$(SolutionDir)Dependencies\glm\include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)bin\UniverseEngine\$(Configuration)\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)UniverseEngine\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)UniverseEngine\;$(SolutionDir)Dependencies\glm\include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)bin\UniverseEngine\$(Configuration)\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)UniverseEngine\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)UniverseEngine\;$(SolutionDir)Dependencies\glm\include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)bin\UniverseEngine\$(Configuration)\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)UniverseEngine\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)UniverseEngine\;$(SolutionDir)Dependencies\glm\include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)bin\UniverseEngine\$(Configuration)\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

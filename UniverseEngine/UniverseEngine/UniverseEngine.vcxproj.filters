@@ -17,6 +17,9 @@
     <Filter Include="Src\Resources">
       <UniqueIdentifier>{e5161b79-c6db-49fc-ac10-7eea07d93cb8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Resources\Assets">
+      <UniqueIdentifier>{d4beccec-75d9-4ae7-8c18-8482f83652c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UniverseEngine.h">
@@ -36,6 +39,21 @@
     </ClInclude>
     <ClInclude Include="Resources.h">
       <Filter>Src\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="AtomicPool.h">
+      <Filter>Src\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

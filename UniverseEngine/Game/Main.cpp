@@ -2,7 +2,7 @@
 using namespace UniverseEngine;
 
 int main() {
-	UE_INFO("Game Startup!");
+	Engine engine{};
 
 	return 0;
 }
