@@ -86,7 +86,7 @@ namespace UniverseEngine {
 		std::vector<T> data;
 		size_t capacity;
 
-		friend class AtomicHandle<T>;
+		friend struct AtomicHandle<T>;
 		void Free(AtomicHandle<T> handle);
 	};
 

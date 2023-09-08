@@ -3,13 +3,10 @@
 #include "AtomicPool.h"
 #include "Pool.h"
 
+#include "Model.h"
+
 namespace UniverseEngine {
 	class Engine;
-
-	class Material;
-	class Mesh;
-	class Model;
-	class Texture;
 
 	class Resources {
 	public:
