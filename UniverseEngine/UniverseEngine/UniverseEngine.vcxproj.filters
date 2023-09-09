@@ -23,6 +23,9 @@
     <Filter Include="Src\Math">
       <UniqueIdentifier>{e455f176-adc9-40ff-8601-1cbfc7810f28}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Resources\Loaders">
+      <UniqueIdentifier>{1d84470d-a6fe-4297-b2a3-70047aa28ad8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UniverseEngine.h">
@@ -80,6 +83,12 @@
     </ClCompile>
     <ClCompile Include="MathUtil.cpp">
       <Filter>Src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="USDLoader.cpp">
+      <Filter>Src\Resources\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="OBJLoader.cpp">
+      <Filter>Src\Resources\Loaders</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

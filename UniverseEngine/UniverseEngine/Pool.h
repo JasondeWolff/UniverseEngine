@@ -3,6 +3,7 @@
 #include <queue>
 
 #include "Option.h"
+#include "Logging.h"
 
 namespace UniverseEngine {
 	template<typename T>
@@ -10,6 +11,12 @@ namespace UniverseEngine {
 
 	template<typename T>
 	struct Handle {
+	public:
+		static Handle<T> Invalid() {
+			UE_ASSERT("Invalid handle reached.");
+			return Handle<T>(0, 0);
+		}
+
 	private:
 		friend class Pool<T>;
 		Handle(size_t index, size_t generation)

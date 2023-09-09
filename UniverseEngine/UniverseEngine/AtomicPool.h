@@ -50,6 +50,11 @@ namespace UniverseEngine {
 			this->Clean();
 		}
 
+		static AtomicHandle<T> Invalid() {
+			UE_ASSERT("Invalid handle reached.");
+			return AtomicHandle<T>(0, nullptr);
+		}
+
 	private:
 		friend class AtomicPool<T>;
 		AtomicHandle(size_t index, AtomicPool<T>* pool)

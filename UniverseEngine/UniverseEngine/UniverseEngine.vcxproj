@@ -37,8 +37,10 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="MathUtil.cpp" />
+    <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="USDLoader.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

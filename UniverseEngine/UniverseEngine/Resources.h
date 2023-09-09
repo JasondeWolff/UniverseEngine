@@ -28,5 +28,10 @@ namespace UniverseEngine {
 		std::unique_ptr<Pool<Mesh>> meshes;
 		std::unique_ptr<Pool<Material>> materials;
 		std::unique_ptr<AtomicPool<Texture>> textures;
+
+		static std::string FileExtension(const char* filePath);
+
+		static Handle<Model> LoadOBJ(const char* filePath);
+		static Handle<Model> LoadUSD(const char* filePath);
 	};
 }
