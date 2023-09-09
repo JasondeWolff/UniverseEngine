@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/vec4.hpp>
+#include <optional>
 
 #include "Pool.h"
 #include "Texture.h"
@@ -10,6 +11,6 @@ namespace UniverseEngine {
         std::string name;
 
         glm::vec4 baseColor;
-        Handle<Texture> baseColorMap;
+        std::optional<AtomicHandle<Texture>> baseColorMap;
     };
 }  // namespace UniverseEngine

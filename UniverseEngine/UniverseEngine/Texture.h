@@ -1,12 +1,36 @@
 #pragma once
 
-#include <cstdint>
-
 namespace UniverseEngine {
     struct Texture {
-        std::string name;
+        Texture() : name("default"), data(nullptr), width(0), height(0) {
+        }
+        Texture(const std::string& name, unsigned char* data, unsigned width, unsigned height)
+            : name(name), data(data), width(width), height(height) {
+        }
 
-        uint32_t width;
-        uint32_t height;
+        Texture(const Texture& other) = delete;
+        Texture& operator=(const Texture& other) = delete;
+        Texture(Texture&& other)
+            : name(other.name), data(other.data), width(other.width), height(other.height) {
+            other.data = nullptr;
+        }
+        Texture& operator=(Texture&& other) {
+            this->name = other.name;
+            this->data = other.data;
+            this->width = other.width;
+            this->height = other.height;
+
+            other.data = nullptr;
+            return *this;
+        }
+
+        ~Texture() {
+            delete this->data;
+        }
+
+        std::string name;
+        unsigned char* data;
+        unsigned width;
+        unsigned height;
     };
 }  // namespace UniverseEngine

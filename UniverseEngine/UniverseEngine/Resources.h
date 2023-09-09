@@ -13,23 +13,22 @@ namespace UniverseEngine {
     class Resources {
     public:
         Handle<Model> LoadModel(const std::filesystem::path& filePath);
+        AtomicHandle<Texture> LoadTexture(const std::filesystem::path& filePath);
         void FreeModel(Handle<Model> handle);
 
         OptionalPtr<Model> GetModel(Handle<Model> handle);
-        OptionalPtr<Mesh> GetMesh(Handle<Mesh> handle);
-        OptionalPtr<Material> GetMaterial(Handle<Material> handle);
         OptionalPtr<Texture> GetTexture(AtomicHandle<Texture> handle);
 
     private:
         friend class Engine;
         Resources();
 
+        // TODO: Atomic materials (will require hashable materials)
         std::unique_ptr<Pool<Model>> models;
-        std::unique_ptr<Pool<Mesh>> meshes;
-        std::unique_ptr<Pool<Material>> materials;
         std::unique_ptr<AtomicPool<Texture>> textures;
 
-        static Handle<Model> LoadOBJ(const std::filesystem::path& filePath);
-        static Handle<Model> LoadUSD(const std::filesystem::path& filePath);
+        Handle<Model> LoadOBJ(const std::filesystem::path& filePath);
+        Handle<Model> LoadUSD(const std::filesystem::path& filePath);
+        AtomicHandle<Texture> LoadIMG(const std::filesystem::path& filePath);
     };
 }  // namespace UniverseEngine

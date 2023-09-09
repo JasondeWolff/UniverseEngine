@@ -90,5 +90,11 @@
     <ClCompile Include="OBJLoader.cpp">
       <Filter>Src\Resources\Loaders</Filter>
     </ClCompile>
+    <ClCompile Include="IMGLoader.cpp">
+      <Filter>Src\Resources\Loaders</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".clang-format" />
   </ItemGroup>
 </Project>

@@ -28,6 +28,7 @@ namespace UniverseEngine {
 
             std::lock_guard<std::mutex> lock(*this->mutex);
             (*this->strongCount)++;
+            return *this;
         }
 
         AtomicHandle(AtomicHandle&& other)
@@ -47,6 +48,7 @@ namespace UniverseEngine {
             this->pool = other.pool;
 
             *other.strongCount = 0;
+            return *this;
         }
 
         ~AtomicHandle() {
