@@ -4,7 +4,7 @@
 #include "Mesh.h"
 
 namespace UniverseEngine {
-	struct Model {
-
-	};
-}
+    struct Model {
+        std::string name;
+    };
+}  // namespace UniverseEngine
