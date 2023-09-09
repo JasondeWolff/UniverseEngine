@@ -3,11 +3,8 @@
 namespace fs = std::filesystem;
 
 namespace UniverseEngine {
-<<<<<<< HEAD
 	Resources::Resources() {
 		this->models = std::make_unique<Pool<Model>>();
-		this->meshes = std::make_unique<Pool<Mesh>>();
-		this->materials = std::make_unique<Pool<Material>>();
 		this->textures = std::make_unique<AtomicPool<Texture>>();
 
 		loadUSDModel();
@@ -21,12 +18,6 @@ namespace UniverseEngine {
 
 		tinyusdz::LoadUSDFromFile("assets/cube.usd", &s, &warning, &error);*/
 	}
-}
-=======
-    Resources::Resources() {
-        this->models = std::make_unique<Pool<Model>>();
-        this->textures = std::make_unique<AtomicPool<Texture>>();
-    }
 
     Handle<Model> Resources::LoadModel(const fs::path& filePath) {
         std::string fileExtension = filePath.extension().string();
@@ -59,5 +50,4 @@ namespace UniverseEngine {
     OptionalPtr<Texture> Resources::GetTexture(AtomicHandle<Texture> handle) {
         return this->textures->Value(handle);
     }
-}  // namespace UniverseEngine
->>>>>>> 62e9eae5af26075071d4b555ac28f927aa2c57f3
+}

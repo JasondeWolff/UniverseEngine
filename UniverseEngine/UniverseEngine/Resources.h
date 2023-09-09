@@ -16,17 +16,12 @@ namespace UniverseEngine {
         AtomicHandle<Texture> LoadTexture(const std::filesystem::path& filePath);
         void FreeModel(Handle<Model> handle);
 
-<<<<<<< HEAD
 		void loadUSDModel();
 
 		OptionalPtr<Model> GetModel(Handle<Model> handle);
 		OptionalPtr<Mesh> GetMesh(Handle<Mesh> handle);
 		OptionalPtr<Material> GetMaterial(Handle<Material> handle);
 		OptionalPtr<Texture> GetTexture(AtomicHandle<Texture> handle);
-=======
-        OptionalPtr<Model> GetModel(Handle<Model> handle);
-        OptionalPtr<Texture> GetTexture(AtomicHandle<Texture> handle);
->>>>>>> 62e9eae5af26075071d4b555ac28f927aa2c57f3
 
     private:
         friend class Engine;

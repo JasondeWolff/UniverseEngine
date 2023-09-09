@@ -102,13 +102,8 @@
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
     <PublicIncludeDirectories>$(PublicIncludeDirectories)</PublicIncludeDirectories>
-<<<<<<< HEAD
-    <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\TinyUSD\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\TinyUSD\libs;$(LibraryPath)</LibraryPath>
-=======
     <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\TinyUSD\include\;$(SolutionDir)Dependencies\tree\include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Dependencies\TinyUSD\bin\;$(LibraryPath)</LibraryPath>
->>>>>>> 62e9eae5af26075071d4b555ac28f927aa2c57f3
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
