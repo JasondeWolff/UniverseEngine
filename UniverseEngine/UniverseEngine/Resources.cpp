@@ -1,5 +1,7 @@
 #include "Resources.h"
 
+#include <tinyusdz/tinyusdz.hh>
+
 namespace UniverseEngine {
 	Resources::Resources() {
 		this->models = std::make_unique<Pool<Model>>();
