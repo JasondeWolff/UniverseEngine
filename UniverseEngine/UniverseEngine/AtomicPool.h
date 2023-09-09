@@ -1,144 +1,158 @@
 #pragma once
 
-#include <queue>
 #include <mutex>
+#include <queue>
 
 #include "Option.h"
 
 namespace UniverseEngine {
-	template<typename T>
-	class AtomicPool;
+    template <typename T>
+    class AtomicPool;
 
-	template<typename T>
-	struct AtomicHandle {
-	public:
-		AtomicHandle(const AtomicHandle& other)
-			: index(other.index), mutex(other.mutex), pool(other.pool) {
-			std::lock_guard<std::mutex> lock(*this->mutex);
-			(*this->strongCount)++;
-		}
+    template <typename T>
+    struct AtomicHandle {
+    public:
+        AtomicHandle(const AtomicHandle& other)
+            : index(other.index), mutex(other.mutex), pool(other.pool) {
+            std::lock_guard<std::mutex> lock(*this->mutex);
+            (*this->strongCount)++;
+        }
 
-		AtomicHandle& operator=(const AtomicHandle& other) {
-			this->Clean();
+        AtomicHandle& operator=(const AtomicHandle& other) {
+            this->Clean();
 
-			this->index = other.index;
-			this->strongCount = other.strongCount;
-			this->mutex = other.mutex;
-			this->pool = other.pool;
+            this->index = other.index;
+            this->strongCount = other.strongCount;
+            this->mutex = other.mutex;
+            this->pool = other.pool;
 
-			std::lock_guard<std::mutex> lock(*this->mutex);
-			(*this->strongCount)++;
-		}
+            std::lock_guard<std::mutex> lock(*this->mutex);
+            (*this->strongCount)++;
+            return *this;
+        }
 
-		AtomicHandle(AtomicHandle&& other)
-			: index(other.index), strongCount(other.strongCount), mutex(other.mutex), pool(other.pool) {
-			*other.strongCount = 0;
-		}
+        AtomicHandle(AtomicHandle&& other)
+            : index(other.index),
+              strongCount(other.strongCount),
+              mutex(other.mutex),
+              pool(other.pool) {
+            *other.strongCount = 0;
+        }
 
-		AtomicHandle& operator=(AtomicHandle&& other) {
-			this->Clean();
+        AtomicHandle& operator=(AtomicHandle&& other) {
+            this->Clean();
 
-			this->index = other.index;
-			this->strongCount = other.strongCount;
-			this->mutex = other.mutex;
-			this->pool = other.pool;
+            this->index = other.index;
+            this->strongCount = other.strongCount;
+            this->mutex = other.mutex;
+            this->pool = other.pool;
 
-			*other.strongCount = 0;
-		}
+            *other.strongCount = 0;
+            return *this;
+        }
 
-		~AtomicHandle() {
-			this->Clean();
-		}
+        ~AtomicHandle() {
+            this->Clean();
+        }
 
-	private:
-		friend class AtomicPool<T>;
-		AtomicHandle(size_t index, AtomicPool<T>* pool)
-			: index(index), strongCount(new size_t(1)), mutex(new std::mutex()), pool(pool) {}
+        static AtomicHandle<T> Invalid() {
+            UE_FATAL("Invalid handle reached.");
+            return AtomicHandle<T>(0, nullptr);
+        }
 
-		size_t index;
-		size_t* strongCount;
-		std::mutex* mutex;
-		AtomicPool<T>* pool;
+    private:
+        friend class AtomicPool<T>;
+        AtomicHandle(size_t index, AtomicPool<T>* pool)
+            : index(index),
+              strongCount(new size_t(1)),
+              mutex(new std::mutex()),
+              pool(pool) {
+        }
 
-		void Clean() {
-			if (*this->strongCount == 0) return;
+        size_t index;
+        size_t* strongCount;
+        std::mutex* mutex;
+        AtomicPool<T>* pool;
 
-			{
-				std::lock_guard<std::mutex> lock(*this->mutex);
-				(*this->strongCount)--;
-			}
+        void Clean() {
+            if (*this->strongCount == 0)
+                return;
 
-			if (*this->strongCount == 0) {
-				this->strongCount = nullptr;
-				this->mutex = nullptr;
-				this->pool->Free(*this);
-			}
-		}
-	};
+            {
+                std::lock_guard<std::mutex> lock(*this->mutex);
+                (*this->strongCount)--;
+            }
 
-	template<typename T>
-	class AtomicPool {
-	public:
-		AtomicPool();
-		AtomicPool(const AtomicPool& other) = delete;
-		AtomicPool& operator=(const AtomicPool& other) = delete;
+            if (*this->strongCount == 0) {
+                this->strongCount = nullptr;
+                this->mutex = nullptr;
+                this->pool->Free(*this);
+            }
+        }
+    };
 
-		OptionalPtr<T> Value(AtomicHandle<T> handle);
-		AtomicHandle<T> Alloc();
+    template <typename T>
+    class AtomicPool {
+    public:
+        AtomicPool();
+        AtomicPool(const AtomicPool& other) = delete;
+        AtomicPool& operator=(const AtomicPool& other) = delete;
 
-	private:
-		std::queue<AtomicHandle<T>> freeHandles;
-		std::vector<T> data;
-		size_t capacity;
+        OptionalPtr<T> Value(AtomicHandle<T> handle);
+        AtomicHandle<T> Alloc();
 
-		friend struct AtomicHandle<T>;
-		void Free(AtomicHandle<T> handle);
-	};
+    private:
+        std::queue<AtomicHandle<T>> freeHandles;
+        std::vector<T> data;
+        size_t capacity;
 
-	template<typename T>
-	AtomicPool<T>::AtomicPool()
-		: freeHandles{}, data{}, capacity(32) {
-		this->data.reserve(this->capacity);
+        friend struct AtomicHandle<T>;
+        void Free(AtomicHandle<T> handle);
+    };
 
-		for (size_t i = 0; i < this->capacity; i++) {
-			this->freeHandles.emplace(AtomicHandle<T>(i, this));
-			this->data.emplace_back(T{});
-		}
-	}
+    template <typename T>
+    AtomicPool<T>::AtomicPool() : freeHandles{}, data{}, capacity(32) {
+        this->data.reserve(this->capacity);
 
-	template<typename T>
-	OptionalPtr<T> AtomicPool<T>::Value(AtomicHandle<T> handle) {
-		UE_ASSERT_MSG(handle.index < this->capacity, "Invalid handle.");
+        for (size_t i = 0; i < this->capacity; i++) {
+            this->freeHandles.emplace(AtomicHandle<T>(i, this));
+            this->data.emplace_back(T{});
+        }
+    }
 
-		T* value = &this->data[handle.index];
-		return OptionalPtr<T>::Some(value);
-	}
+    template <typename T>
+    OptionalPtr<T> AtomicPool<T>::Value(AtomicHandle<T> handle) {
+        UE_ASSERT_MSG(handle.index < this->capacity, "Invalid handle.");
 
-	template<typename T>
-	AtomicHandle<T> AtomicPool<T>::Alloc() {
-		if (this->freeHandles.empty()) {
-			size_t newCapacity = this->capacity * 2;
-			this->data.reserve(newCapacity);
+        T* value = &this->data[handle.index];
+        return OptionalPtr<T>::Some(value);
+    }
 
-			for (size_t i = this->capacity; i < newCapacity; i++) {
-				this->freeHandles.push(AtomicHandle<T>(i, this));
-				this->data.push_back(T{});
-			}
+    template <typename T>
+    AtomicHandle<T> AtomicPool<T>::Alloc() {
+        if (this->freeHandles.empty()) {
+            size_t newCapacity = this->capacity * 2;
+            this->data.reserve(newCapacity);
 
-			this->capacity = newCapacity;
-		}
+            for (size_t i = this->capacity; i < newCapacity; i++) {
+                this->freeHandles.push(AtomicHandle<T>(i, this));
+                this->data.push_back(T{});
+            }
 
-		AtomicHandle<T> handle = this->freeHandles.front();
-		this->freeHandles.pop();
-		*handle.strongCount = 1;
+            this->capacity = newCapacity;
+        }
 
-		return handle;
-	}
+        AtomicHandle<T> handle = this->freeHandles.front();
+        this->freeHandles.pop();
+        *handle.strongCount = 1;
 
-	template<typename T>
-	void AtomicPool<T>::Free(AtomicHandle<T> handle) {
-		UE_ASSERT_MSG(handle.index < this->capacity, "Invalid handle.");
+        return handle;
+    }
 
-		this->freeHandles.push(handle);
-	}
-}
+    template <typename T>
+    void AtomicPool<T>::Free(AtomicHandle<T> handle) {
+        UE_ASSERT_MSG(handle.index < this->capacity, "Invalid handle.");
+
+        this->freeHandles.push(handle);
+    }
+}  // namespace UniverseEngine

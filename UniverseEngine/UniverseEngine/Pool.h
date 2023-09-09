@@ -2,99 +2,106 @@
 
 #include <queue>
 
+#include "Logging.h"
 #include "Option.h"
 
 namespace UniverseEngine {
-	template<typename T>
-	class Pool;
+    template <typename T>
+    class Pool;
 
-	template<typename T>
-	struct Handle {
-	private:
-		friend class Pool<T>;
-		Handle(size_t index, size_t generation)
-			: index(index), generation(generation) {}
+    template <typename T>
+    struct Handle {
+    public:
+        static Handle<T> Invalid() {
+            UE_FATAL("Invalid handle reached.");
+            return Handle<T>(0, 0);
+        }
 
-		const size_t index;
-		size_t generation;
-	};
+    private:
+        friend class Pool<T>;
+        Handle(size_t index, size_t generation)
+            : index(index), generation(generation) {
+        }
 
-	template<typename T>
-	class Pool {
-	public:
-		Pool();
-		Pool(const Pool& other) = delete;
-		Pool& operator=(const Pool& other) = delete;
+        const size_t index;
+        size_t generation;
+    };
 
-		OptionalPtr<T> Value(Handle<T> handle);
+    template <typename T>
+    class Pool {
+    public:
+        Pool();
+        Pool(const Pool& other) = delete;
+        Pool& operator=(const Pool& other) = delete;
 
-		Handle<T> Alloc();
-		void Free(Handle<T> handle);
+        OptionalPtr<T> Value(Handle<T> handle);
 
-	private:
-		std::queue<Handle<T>> freeHandles;
+        Handle<T> Alloc();
+        void Free(Handle<T> handle);
 
-		std::vector<T> data;
-		std::vector<size_t> generations;
+    private:
+        std::queue<Handle<T>> freeHandles;
 
-		size_t capacity;
-	};
+        std::vector<T> data;
+        std::vector<size_t> generations;
 
-	template<typename T>
-	Pool<T>::Pool()
-		: freeHandles{}, data{}, generations{}, capacity(32) {
-		this->data.reserve(this->capacity);
-		this->generations.reserve(this->capacity);
+        size_t capacity;
+    };
 
-		for (size_t i = 0; i < this->capacity; i++) {
-			this->freeHandles.push(Handle<T>(i, 0));
-			this->data.push_back(T{});
-			this->generations.push_back(0);
-		}
-	}
+    template <typename T>
+    Pool<T>::Pool() : freeHandles{}, data{}, generations{}, capacity(32) {
+        this->data.reserve(this->capacity);
+        this->generations.reserve(this->capacity);
 
-	template<typename T>
-	OptionalPtr<T> Pool<T>::Value(Handle<T> handle) {
-		UE_ASSERT_MSG(handle.index < this->capacity, "Invalid handle.");
+        for (size_t i = 0; i < this->capacity; i++) {
+            this->freeHandles.push(Handle<T>(i, 0));
+            this->data.push_back(T{});
+            this->generations.push_back(0);
+        }
+    }
 
-		if (this->generations[handle.index] == handle.generation) {
-			T* value = &this->data[handle.index];
-			return OptionalPtr<T>::Some(value);
-		} else {
-			return OptionalPtr<T>::None();
-		}
-	}
+    template <typename T>
+    OptionalPtr<T> Pool<T>::Value(Handle<T> handle) {
+        UE_ASSERT_MSG(handle.index < this->capacity, "Invalid handle.");
 
-	template<typename T>
-	Handle<T> Pool<T>::Alloc() {
-		if (this->freeHandles.empty()) {
-			size_t newCapacity = this->capacity * 2;
-			this->data.reserve(newCapacity);
-			this->generations.reserve(newCapacity);
+        if (this->generations[handle.index] == handle.generation) {
+            T* value = &this->data[handle.index];
+            return OptionalPtr<T>::Some(value);
+        } else {
+            return OptionalPtr<T>::None();
+        }
+    }
 
-			for (size_t i = this->capacity; i < newCapacity; i++) {
-				this->freeHandles.push(Handle<T>(i, 0));
-				this->data.push_back(T{});
-				this->generations.push_back(0);
-			}
+    template <typename T>
+    Handle<T> Pool<T>::Alloc() {
+        if (this->freeHandles.empty()) {
+            size_t newCapacity = this->capacity * 2;
+            this->data.reserve(newCapacity);
+            this->generations.reserve(newCapacity);
 
-			this->capacity = newCapacity;
-		}
+            for (size_t i = this->capacity; i < newCapacity; i++) {
+                this->freeHandles.push(Handle<T>(i, 0));
+                this->data.push_back(T{});
+                this->generations.push_back(0);
+            }
 
-		Handle<T> handle = this->freeHandles.front();
-		this->freeHandles.pop();
-		handle.generation = this->generations[handle.index];
+            this->capacity = newCapacity;
+        }
 
-		return handle;
-	}
+        Handle<T> handle = this->freeHandles.front();
+        this->freeHandles.pop();
+        handle.generation = this->generations[handle.index];
 
-	template<typename T>
-	void Pool<T>::Free(Handle<T> handle) {
-		UE_ASSERT_MSG(handle.index < this->capacity, "Invalid handle.");
+        return handle;
+    }
 
-		if (this->generations[handle.index] == handle.generation) {
-			this->generations[handle.index]++;
-			this->freeHandles.push(handle);
-		}
-	}
-} 
+    template <typename T>
+    void Pool<T>::Free(Handle<T> handle) {
+        UE_ASSERT_MSG(handle.index < this->capacity, "Invalid handle.");
+
+        if (this->generations[handle.index] == handle.generation) {
+            this->generations[handle.index]++;
+            this->freeHandles.push(handle);
+        }
+    }
+}  // namespace UniverseEngine

@@ -430,3 +430,7 @@ FodyWeavers.xsd
 *.exe
 *.out
 *.app
+
+# Negate
+!UniverseEngine/Dependencies/*
+!UniverseEngine/Game/Assets/*
