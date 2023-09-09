@@ -431,5 +431,6 @@ FodyWeavers.xsd
 *.out
 *.app
 
-# Negate assets
+# Negate
+!UniverseEngine/Dependencies/*
 !UniverseEngine/Game/Assets/*
