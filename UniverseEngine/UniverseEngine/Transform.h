@@ -10,6 +10,10 @@ namespace UniverseEngine {
 		Transform(const glm::mat4& matrix);
 		Transform(const glm::vec3& translation = glm::zero<glm::vec3>(), const glm::quat& rotation = glm::identity<glm::quat>(), const glm::vec3& scale = glm::one<glm::vec3>());
 
+		glm::vec3 GetRight() const;
+		glm::vec3 GetUp() const;
+		glm::vec3 GetForward() const;
+
 		const glm::vec3& GetTranslation() const;
 		const glm::quat& GetRotation() const;
 		const glm::vec3& GetScale() const;

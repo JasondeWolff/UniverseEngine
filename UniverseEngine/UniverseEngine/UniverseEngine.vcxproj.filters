@@ -25,9 +25,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Transform.h">
-      <Filter>Src</Filter>
-    </ClInclude>
     <ClInclude Include="UniverseEngine.h">
       <Filter>Src</Filter>
     </ClInclude>
@@ -62,6 +59,9 @@
       <Filter>Src\Core</Filter>
     </ClInclude>
     <ClInclude Include="MathUtil.h">
+      <Filter>Src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
       <Filter>Src\Math</Filter>
     </ClInclude>
   </ItemGroup>

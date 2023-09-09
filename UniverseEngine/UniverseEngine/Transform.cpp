@@ -12,6 +12,18 @@ namespace UniverseEngine {
 	Transform::Transform(const glm::vec3& translation, const glm::quat& rotation, const glm::vec3& scale)
 		: translation(translation), rotation(rotation), scale(scale), matrix{}, matrixDirty(true) {}
 
+	glm::vec3 Transform::GetRight() const {
+		return this->rotation * Right();
+	}
+
+	glm::vec3 Transform::GetUp() const {
+		return this->rotation * Up();
+	}
+
+	glm::vec3 Transform::GetForward() const {
+		return this->rotation * Forward();
+	}
+
 	const glm::vec3& Transform::GetTranslation() const {
 		return this->translation;
 	}
