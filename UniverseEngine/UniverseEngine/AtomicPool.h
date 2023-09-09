@@ -30,16 +30,20 @@ namespace UniverseEngine {
 			(*this->strongCount)++;
 		}
 
-		AtomicHandle(const AtomicHandle&& other)
-			: index(other.index), strongCount(other.strongCount), mutex(other.mutex), pool(other.pool) {}
+		AtomicHandle(AtomicHandle&& other)
+			: index(other.index), strongCount(other.strongCount), mutex(other.mutex), pool(other.pool) {
+			*other.strongCount = 0;
+		}
 
-		AtomicHandle& operator=(const AtomicHandle&& other) {
+		AtomicHandle& operator=(AtomicHandle&& other) {
 			this->Clean();
 
 			this->index = other.index;
 			this->strongCount = other.strongCount;
 			this->mutex = other.mutex;
 			this->pool = other.pool;
+
+			*other.strongCount = 0;
 		}
 
 		~AtomicHandle() {
@@ -57,13 +61,14 @@ namespace UniverseEngine {
 		AtomicPool<T>* pool;
 
 		void Clean() {
-			std::lock_guard<std::mutex> lock(*this->mutex);
+			if (*this->strongCount == 0) return;
 
-			(*this->strongCount)--;
+			{
+				std::lock_guard<std::mutex> lock(*this->mutex);
+				(*this->strongCount)--;
+			}
+
 			if (*this->strongCount == 0) {
-				delete this->strongCount;
-				delete this->mutex;
-
 				this->strongCount = nullptr;
 				this->mutex = nullptr;
 				this->pool->Free(*this);
@@ -96,8 +101,8 @@ namespace UniverseEngine {
 		this->data.reserve(this->capacity);
 
 		for (size_t i = 0; i < this->capacity; i++) {
-			this->freeHandles.push(AtomicHandle<T>(i, this));
-			this->data.push_back(T{});
+			this->freeHandles.emplace(AtomicHandle<T>(i, this));
+			this->data.emplace_back(T{});
 		}
 	}
 
