@@ -5,6 +5,6 @@
 
 namespace UniverseEngine {
 	struct Model {
-
+		Model() {};
 	};
 }

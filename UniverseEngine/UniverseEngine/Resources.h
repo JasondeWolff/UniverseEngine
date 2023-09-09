@@ -15,6 +15,8 @@ namespace UniverseEngine {
 		Handle<Model> LoadModel(const char* filePath);
 		void FreeModel(Handle<Model> handle);
 
+		void loadUSDModel();
+
 		OptionalPtr<Model> GetModel(Handle<Model> handle);
 		OptionalPtr<Mesh> GetMesh(Handle<Mesh> handle);
 		OptionalPtr<Material> GetMaterial(Handle<Material> handle);
