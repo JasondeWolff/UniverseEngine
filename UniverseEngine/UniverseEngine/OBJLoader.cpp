@@ -49,7 +49,7 @@ namespace UniverseEngine {
 
             // TODO: Support mesh instancing
             Mesh parsedMesh{};
-            parsedMesh.materialIdx = mesh.material_ids[0];
+            parsedMesh.materialIdx = static_cast<size_t>(std::max(mesh.material_ids[0], 0));
 
             size_t index_offset = 0;
             for (size_t f = 0; f < mesh.num_face_vertices.size(); f++) {
@@ -89,6 +89,8 @@ namespace UniverseEngine {
                 }
                 index_offset += fv;
             }
+
+            parsedModel.meshes.emplace_back(parsedMesh);
         }
 
         Handle<Model> handle = this->models->Alloc();

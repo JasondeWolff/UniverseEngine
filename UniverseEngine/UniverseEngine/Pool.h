@@ -13,7 +13,7 @@ namespace UniverseEngine {
     struct Handle {
     public:
         static Handle<T> Invalid() {
-            UE_ASSERT("Invalid handle reached.");
+            UE_FATAL("Invalid handle reached.");
             return Handle<T>(0, 0);
         }
 

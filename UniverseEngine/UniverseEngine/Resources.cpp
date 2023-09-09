@@ -10,16 +10,16 @@ namespace UniverseEngine {
 
     Handle<Model> Resources::LoadModel(const fs::path& filePath) {
         std::string fileExtension = filePath.extension().string();
-        if (fileExtension == "usd")
+        if (fileExtension == ".usd")
             return LoadUSD(filePath);
-        if (fileExtension == "obj")
+        if (fileExtension == ".obj")
             return LoadOBJ(filePath);
         return Handle<Model>::Invalid();
     }
 
     AtomicHandle<Texture> Resources::LoadTexture(const fs::path& filePath) {
-        static const std::string supportedExtensions[8] = {"jpg", "png", "tga", "bmp",
-                                                           "psd", "gif", "hdr", "pic"};
+        static const std::string supportedExtensions[8] = {".jpg", ".png", ".tga", ".bmp",
+                                                           ".psd", ".gif", ".hdr", ".pic"};
 
         fs::path extension = filePath.extension();
         for (size_t i = 0; i < 8; i++) {

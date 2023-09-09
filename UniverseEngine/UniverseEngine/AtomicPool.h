@@ -56,7 +56,7 @@ namespace UniverseEngine {
         }
 
         static AtomicHandle<T> Invalid() {
-            UE_ASSERT("Invalid handle reached.");
+            UE_FATAL("Invalid handle reached.");
             return AtomicHandle<T>(0, nullptr);
         }
 
