@@ -13,6 +13,8 @@ namespace fs = std::filesystem;
 #include <tinyusdz/value-pprint.hh>
 #include <tinyusdz/path-util.hh>
 #include <tinyusdz/tydra/scene-access.hh>
+#include <tinyusdz/tydra/render-data.hh>
+#include <tinyusdz/io-util.hh>
 
 namespace UniverseEngine {
     Handle<Model> Resources::LoadUSD(const fs::path& filePath) {
@@ -25,13 +27,9 @@ namespace UniverseEngine {
 
         // Auto detect USDA/USDC/USDZ
         bool ret = tinyusdz::LoadUSDFromFile(filename, &stage, &warn, &err);
-
-
-
         if (warn.size()) {
             std::cout << "WARN : " << warn << "\n";
         }
-
         if (!ret) {
             if (!err.empty()) {
                 std::cerr << "ERR : " << warn << "\n";
@@ -40,45 +38,34 @@ namespace UniverseEngine {
         }
 
         // You can also use ExportToString() as done in pxrUSD
-        std::cout << stage.ExportToString() << "\n";
+        std::string s = stage.ExportToString();
+        std::cout << s << "\n";
+        std::cout << "--------------------------------------" << "\n";
 
-        // stage.metas() To get Scene metadatum,
-        for (const tinyusdz::Prim& root_prim : stage.root_prims()) {
+        // RenderScene: Scene graph object which is suited for GL/Vulkan renderer
+        tinyusdz::tydra::RenderScene render_scene;
+        tinyusdz::tydra::RenderSceneConverter converter;
 
-            //std::cout << root_prim.absolute_path() << "\n";
+         // Add base directory of .usd file to search path.
+        std::string usd_basedir = tinyusdz::io::GetBaseDir(filename);
+        std::cout << "Add seach path: " << usd_basedir << "\n";
 
-             if (root_prim.absolute_path().prim_part() == "/Materials") {
-                //Load all materials
-            }
+        converter.set_search_paths({usd_basedir});
+        // TODO: Set user-defined AssetResolutionResolver
+        // AssetResolutionResolver arr;
+        // converter.set_asset_resoluition_resolver(arr);
 
-            if (root_prim.absolute_path().prim_part() == "/root") {
-                for (auto prim : root_prim.children()) {
-                    //Show all primitives in the scene
-                    std::cout << 
-                        "\n PRIM: " << prim.element_name() << 
-                        " TYPE: " << prim.type_name() << 
-                        " DIR: " << prim.local_path() << "\n";
-
-                    if (prim.data().is_empty()) {
-                        // This should not be happen though.
-                        std::cerr << "Prim is null\n";
-                    }
-
-                    const tinyusdz::GeomMesh* mesh = prim.as<tinyusdz::GeomMesh>();
-                    if (!mesh) {
-                        std::cerr << "Expected GeomMesh.\n";
-                        continue;
-                    }
-
-                    //tinyusdz::GeomMesh mesh = tinyusdz::GeomMesh(); 
-
-                    int i = 02;
-                }
-            }
-
-            // You can traverse Prim(scene graph object) using Prim::children()
-            // See examples/api_tutorial and examples/tydra_api for details.
+        bool ret = converter.ConvertToRenderScene(stage, &render_scene);
+        if (!ret) {
+            std::cerr << "Failed to convert USD Stage to RenderScene: \n" << converter.GetError() << "\n";
         }
+
+        if (converter.GetWarning().size()) {
+            std::cout << "ConvertToRenderScene warn: " << converter.GetWarning() << "\n";
+        }
+
+        std::cout << DumpRenderScene(render_scene) << "\n";
+
 
         Handle<Model> handle = this->models->Alloc();
         // this->models->Value(handle).Value() = parsedModel;

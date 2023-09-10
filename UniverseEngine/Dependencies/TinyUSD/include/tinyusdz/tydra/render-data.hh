@@ -7,10 +7,10 @@
 #include <cmath>
 #include <unordered_map>
 
-#include "asset-resolution.hh"
-#include "nonstd/expected.hpp"
-#include "usdShade.hh"
-#include "value-types.hh"
+#include "../asset-resolution.hh"
+#include "../nonstd/expected.hpp"
+#include "../usdShade.hh"
+#include "../value-types.hh"
 
 namespace tinyusdz {
 
