@@ -44,11 +44,7 @@ namespace UniverseEngine {
 
         auto rootPrims = stage.root_prims();
         // stage.metas() To get Scene metadatum,
-<<<<<<< HEAD
         for (const tinyusdz::Prim& root_prim : rootPrims) {
-=======
-        for (const tinyusdz::Prim& root_prim : stage.root_prims()) {
->>>>>>> 8a7925f2814949cb53213d4459ace9db3ee00a25
             std::cout << root_prim.absolute_path() << "\n";
 
             /*if (root_prim.absolute_path().prim_part() == "/root") {
