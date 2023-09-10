@@ -5,7 +5,13 @@
 #include <glm/gtx/quaternion.hpp>
 
 namespace UniverseEngine {
-    Transform::Transform(const glm::mat4& matrix) {
+    Transform::Transform()
+        : matrixDirty(true) {
+        this->SetMatrix(glm::identity<glm::mat4>());
+    }
+
+    Transform::Transform(const glm::mat4& matrix)
+        : matrixDirty(true) {
         this->SetMatrix(matrix);
     }
 
@@ -69,6 +75,9 @@ namespace UniverseEngine {
         glm::vec4 perspective;
         glm::decompose(matrix, this->scale, this->rotation, this->translation,
                        skew, perspective);
+
+        this->matrix = matrix;
+        this->matrixDirty = false;
     }
 
     void Transform::Translate(const glm::vec3& translate) {

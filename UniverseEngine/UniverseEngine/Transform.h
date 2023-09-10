@@ -7,8 +7,9 @@
 namespace UniverseEngine {
     class Transform {
     public:
+        Transform();
         Transform(const glm::mat4& matrix);
-        Transform(const glm::vec3& translation = glm::zero<glm::vec3>(),
+        Transform(const glm::vec3& translation,
                   const glm::quat& rotation = glm::identity<glm::quat>(),
                   const glm::vec3& scale = glm::one<glm::vec3>());
 

@@ -4,6 +4,8 @@
 #include <glm/vec3.hpp>
 #include <vector>
 
+#include "Transform.h"
+
 namespace UniverseEngine {
     struct Vertex {
         glm::vec3 position;
@@ -12,7 +14,19 @@ namespace UniverseEngine {
         glm::vec3 color;
     };
 
+    struct MeshInstance {
+        MeshInstance() : transform{}, meshIdx(0) {
+        }
+        MeshInstance(int idx) : transform{}, meshIdx(idx) {
+        }
+
+        Transform transform;
+        size_t meshIdx;
+    };
+
     struct Mesh {
+        std::string name;
+
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
         size_t materialIdx;

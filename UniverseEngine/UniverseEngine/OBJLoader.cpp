@@ -33,6 +33,7 @@ namespace UniverseEngine {
         for (auto& material : materials) {
             Material parsedMaterial;
             parsedMaterial.name = material.name;
+
             parsedMaterial.baseColor =
                 glm::vec4(material.diffuse[0], material.diffuse[1], material.diffuse[2], 1.0);
             if (!material.diffuse_texname.empty()) {
@@ -41,14 +42,18 @@ namespace UniverseEngine {
             } else {
                 parsedMaterial.baseColorMap = std::nullopt;
             }
+
             parsedModel.materials.emplace_back(parsedMaterial);
         }
+
+        auto instanceRoot = parsedModel.instanceTree.begin();
+        instanceRoot = parsedModel.instanceTree.insert(instanceRoot, MeshInstance{});
 
         for (auto& shape : shapes) {
             auto& mesh = shape.mesh;
 
-            // TODO: Support mesh instancing
             Mesh parsedMesh{};
+            parsedMesh.name = shape.name;
             parsedMesh.materialIdx = static_cast<size_t>(std::max(mesh.material_ids[0], 0));
 
             size_t index_offset = 0;
@@ -91,6 +96,8 @@ namespace UniverseEngine {
             }
 
             parsedModel.meshes.emplace_back(parsedMesh);
+            parsedModel.instanceTree.append_child(instanceRoot,
+                                                  MeshInstance(parsedModel.meshes.size() - 1));
         }
 
         Handle<Model> handle = this->models->Alloc();
