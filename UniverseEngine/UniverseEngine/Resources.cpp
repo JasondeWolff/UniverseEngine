@@ -6,18 +6,7 @@ namespace UniverseEngine {
 	Resources::Resources() {
 		this->models = std::make_unique<Pool<Model>>();
 		this->textures = std::make_unique<AtomicPool<Texture>>();
-
-		loadUSDModel();
-	}
-
-	void Resources::loadUSDModel() 
-	{
-		/*tinyusdz::Stage s; 
-		std::string warning;
-		std::string error;
-
-		tinyusdz::LoadUSDFromFile("assets/cube.usd", &s, &warning, &error);*/
-	}
+    }
 
     Handle<Model> Resources::LoadModel(const fs::path& filePath) {
         std::string fileExtension = filePath.extension().string();

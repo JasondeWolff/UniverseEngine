@@ -1,23 +1,23 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
-#include "Resources.h"
-
 #include <tinyusdz/tinyusdz.hh>
 
+#include "Resources.h"
+
 // Include pprinter.hh and value-pprint.hh if you want to print TinyUSDZ classes/structs/enums.
-// `tinyusdz::to_string()` and `std::operator<<` for TinyUSDZ classes/enums are provided separately for faster compilation
+// `tinyusdz::to_string()` and `std::operator<<` for TinyUSDZ classes/enums are provided separately
+// for faster compilation
 #include <iostream>
 #include <tinyusdz/pprinter.hh>
 #include <tinyusdz/value-pprint.hh>
 
 namespace UniverseEngine {
     Handle<Model> Resources::LoadUSD(const fs::path& filePath) {
-
         std::string filename = filePath.u8string();
 
         tinyusdz::Stage stage;  // Stage in USD terminology is nearly meant for Scene in generic 3D
-                                            // graphics terminology.
+                                // graphics terminology.
         std::string warn;
         std::string err;
 
@@ -44,7 +44,11 @@ namespace UniverseEngine {
 
         auto rootPrims = stage.root_prims();
         // stage.metas() To get Scene metadatum,
+<<<<<<< HEAD
         for (const tinyusdz::Prim& root_prim : rootPrims) {
+=======
+        for (const tinyusdz::Prim& root_prim : stage.root_prims()) {
+>>>>>>> 8a7925f2814949cb53213d4459ace9db3ee00a25
             std::cout << root_prim.absolute_path() << "\n";
 
             /*if (root_prim.absolute_path().prim_part() == "/root") {
@@ -61,7 +65,7 @@ namespace UniverseEngine {
         }
 
         Handle<Model> handle = this->models->Alloc();
-        //this->models->Value(handle).Value() = parsedModel;
+        // this->models->Value(handle).Value() = parsedModel;
         return handle;
     }
 }  // namespace UniverseEngine

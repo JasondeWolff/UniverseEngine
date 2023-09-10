@@ -4,6 +4,9 @@
     <Filter Include="Src">
       <UniqueIdentifier>{aa9b89f5-fa92-456f-86a2-c5ef9fe70cbf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{5df777ee-f829-474b-a28f-7249e98348b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -12,5 +15,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\UniverseEngine\.clang-format" />
+    <None Include="Assets\cube.usd">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\susan.mtl">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\susan.obj">
+      <Filter>Assets</Filter>
+    </None>
   </ItemGroup>
 </Project>
