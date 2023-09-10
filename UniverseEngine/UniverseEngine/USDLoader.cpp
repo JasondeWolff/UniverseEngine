@@ -11,23 +11,25 @@ namespace fs = std::filesystem;
 #include <iostream>
 #include <tinyusdz/pprinter.hh>
 #include <tinyusdz/value-pprint.hh>
+#include <tinyusdz/path-util.hh>
+#include <tinyusdz/tydra/scene-access.hh>
+#include <tinyusdz/tydra/render-data.hh>
+#include <tinyusdz/io-util.hh>
 
 namespace UniverseEngine {
     Handle<Model> Resources::LoadUSD(const fs::path& filePath) {
         std::string filename = filePath.u8string();
 
         tinyusdz::Stage stage;  // Stage in USD terminology is nearly meant for Scene in generic 3D
-                                // graphics terminology.
+                                            // graphics terminology.
         std::string warn;
         std::string err;
 
         // Auto detect USDA/USDC/USDZ
         bool ret = tinyusdz::LoadUSDFromFile(filename, &stage, &warn, &err);
-
         if (warn.size()) {
             std::cout << "WARN : " << warn << "\n";
         }
-
         if (!ret) {
             if (!err.empty()) {
                 std::cerr << "ERR : " << warn << "\n";
@@ -35,18 +37,35 @@ namespace UniverseEngine {
             return Handle<Model>::Invalid();
         }
 
-        // Print Stage(Scene graph)
-        std::cout << tinyusdz::to_string(stage) << "\n";
-
         // You can also use ExportToString() as done in pxrUSD
-        // std::cout << stage.ExportToString() << "\n";
+       /* std::string s = stage.ExportToString();
+        std::cout << s << "\n";
+        std::cout << "--------------------------------------" << "\n";*/
 
-        // stage.metas() To get Scene metadatum,
-        for (const tinyusdz::Prim& root_prim : stage.root_prims()) {
-            std::cout << root_prim.absolute_path() << "\n";
-            // You can traverse Prim(scene graph object) using Prim::children()
-            // See examples/api_tutorial and examples/tydra_api for details.
+        // RenderScene: Scene graph object which is suited for GL/Vulkan renderer
+        tinyusdz::tydra::RenderScene render_scene;
+        tinyusdz::tydra::RenderSceneConverter converter;
+
+         // Add base directory of .usd file to search path.
+        //  this is the folder where tinyusdz will look for assets
+        std::string usd_basedir = tinyusdz::io::GetBaseDir(filename);
+        std::cout << "Add seach path: " << usd_basedir << "\n";
+
+        converter.set_search_paths({usd_basedir});
+        // TODO: Set user-defined AssetResolutionResolver
+        // AssetResolutionResolver arr;
+        // converter.set_asset_resoluition_resolver(arr);
+        ret = converter.ConvertToRenderScene(stage, &render_scene);
+        if (!ret) {
+            std::cerr << "Failed to convert USD Stage to RenderScene: \n" << converter.GetError() << "\n";
         }
+
+        if (converter.GetWarning().size()) {
+            std::cout << "ConvertToRenderScene warn: " << converter.GetWarning() << "\n";
+        }
+
+        //At this point render_scene hold all the information loaded from the USD
+        //std::cout << DumpRenderScene(render_scene) << "\n";
 
         Handle<Model> handle = this->models->Alloc();
         // this->models->Value(handle).Value() = parsedModel;
