@@ -10,12 +10,12 @@
 
 #include <map>
 
-#include "prim-types.hh"
-#include "stage.hh"
-#include "usdGeom.hh"
-#include "usdShade.hh"
-#include "usdSkel.hh"
-#include "value-types.hh"
+#include "../prim-types.hh"
+#include "../stage.hh"
+#include "../usdGeom.hh"
+#include "../usdShade.hh"
+#include "../usdSkel.hh"
+#include "../value-types.hh"
 
 namespace tinyusdz {
 namespace tydra {
