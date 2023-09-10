@@ -39,11 +39,23 @@ namespace UniverseEngine {
         std::cout << tinyusdz::to_string(stage) << "\n";
 
         // You can also use ExportToString() as done in pxrUSD
-        // std::cout << stage.ExportToString() << "\n";
+        std::cout << stage.ExportToString() << "\n";
 
+
+        auto rootPrims = stage.root_prims();
         // stage.metas() To get Scene metadatum,
-         for (const tinyusdz::Prim& root_prim : stage.root_prims()) {
+        for (const tinyusdz::Prim& root_prim : rootPrims) {
             std::cout << root_prim.absolute_path() << "\n";
+
+            /*if (root_prim.absolute_path().prim_part() == "/root") {
+                for (auto objects : root_prim.children()) {
+                    std::cout << "\n OBJECT:" << objects.element_name() << "\n";
+                    auto data = objects.get_data();
+
+                    int i = 02;
+                }
+            }*/
+
             // You can traverse Prim(scene graph object) using Prim::children()
             // See examples/api_tutorial and examples/tydra_api for details.
         }
