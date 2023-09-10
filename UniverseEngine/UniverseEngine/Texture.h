@@ -10,11 +10,11 @@ namespace UniverseEngine {
 
         Texture(const Texture& other) = delete;
         Texture& operator=(const Texture& other) = delete;
-        Texture(Texture&& other)
+        Texture(Texture&& other) noexcept
             : name(other.name), data(other.data), width(other.width), height(other.height) {
             other.data = nullptr;
         }
-        Texture& operator=(Texture&& other) {
+        Texture& operator=(Texture&& other) noexcept {
             this->name = other.name;
             this->data = other.data;
             this->width = other.width;

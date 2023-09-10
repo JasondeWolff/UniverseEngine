@@ -163,6 +163,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\UniverseEngine\.clang-format" />
+    <Resource Include="Assets\cube.usd">
+      <FileType>Document</FileType>
+    </Resource>
+    <Resource Include="Assets\susan.mtl">
+      <FileType>Document</FileType>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\susan.obj">
+      <FileType>Document</FileType>
+    </Resource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
