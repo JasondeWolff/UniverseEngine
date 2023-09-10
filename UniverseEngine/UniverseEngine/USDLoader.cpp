@@ -38,15 +38,16 @@ namespace UniverseEngine {
         }
 
         // You can also use ExportToString() as done in pxrUSD
-        std::string s = stage.ExportToString();
+       /* std::string s = stage.ExportToString();
         std::cout << s << "\n";
-        std::cout << "--------------------------------------" << "\n";
+        std::cout << "--------------------------------------" << "\n";*/
 
         // RenderScene: Scene graph object which is suited for GL/Vulkan renderer
         tinyusdz::tydra::RenderScene render_scene;
         tinyusdz::tydra::RenderSceneConverter converter;
 
          // Add base directory of .usd file to search path.
+        //  this is the folder where tinyusdz will look for assets
         std::string usd_basedir = tinyusdz::io::GetBaseDir(filename);
         std::cout << "Add seach path: " << usd_basedir << "\n";
 
@@ -54,8 +55,7 @@ namespace UniverseEngine {
         // TODO: Set user-defined AssetResolutionResolver
         // AssetResolutionResolver arr;
         // converter.set_asset_resoluition_resolver(arr);
-
-        bool ret = converter.ConvertToRenderScene(stage, &render_scene);
+        ret = converter.ConvertToRenderScene(stage, &render_scene);
         if (!ret) {
             std::cerr << "Failed to convert USD Stage to RenderScene: \n" << converter.GetError() << "\n";
         }
@@ -64,8 +64,8 @@ namespace UniverseEngine {
             std::cout << "ConvertToRenderScene warn: " << converter.GetWarning() << "\n";
         }
 
-        std::cout << DumpRenderScene(render_scene) << "\n";
-
+        //At this point render_scene hold all the information loaded from the USD
+        //std::cout << DumpRenderScene(render_scene) << "\n";
 
         Handle<Model> handle = this->models->Alloc();
         // this->models->Value(handle).Value() = parsedModel;
