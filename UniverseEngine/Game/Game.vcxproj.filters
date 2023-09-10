@@ -15,16 +15,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\UniverseEngine\.clang-format" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Assets\susan.obj">
+    <None Include="Assets\cube.usd">
       <Filter>Assets</Filter>
-    </Resource>
-    <Resource Include="Assets\cube.usd">
+    </None>
+    <None Include="Assets\susan.mtl">
       <Filter>Assets</Filter>
-    </Resource>
-    <Resource Include="Assets\susan.mtl">
+    </None>
+    <None Include="Assets\susan.obj">
       <Filter>Assets</Filter>
-    </Resource>
+    </None>
   </ItemGroup>
 </Project>
