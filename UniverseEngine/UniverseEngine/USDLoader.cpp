@@ -3,25 +3,26 @@ namespace fs = std::filesystem;
 
 #include <tinyusdz/tinyusdz.hh>
 
+#include "MathUtil.h"
 #include "Resources.h"
 
 // Include pprinter.hh and value-pprint.hh if you want to print TinyUSDZ classes/structs/enums.
 // `tinyusdz::to_string()` and `std::operator<<` for TinyUSDZ classes/enums are provided separately
 // for faster compilation
 #include <iostream>
-#include <tinyusdz/pprinter.hh>
-#include <tinyusdz/value-pprint.hh>
-#include <tinyusdz/path-util.hh>
-#include <tinyusdz/tydra/scene-access.hh>
-#include <tinyusdz/tydra/render-data.hh>
 #include <tinyusdz/io-util.hh>
+#include <tinyusdz/path-util.hh>
+#include <tinyusdz/pprinter.hh>
+#include <tinyusdz/tydra/render-data.hh>
+#include <tinyusdz/tydra/scene-access.hh>
+#include <tinyusdz/value-pprint.hh>
 
 namespace UniverseEngine {
-    Handle<Model> Resources::LoadUSD(const fs::path& filePath) {
+    Handle<Scene> Resources::LoadUSD(const fs::path& filePath) {
         std::string filename = filePath.u8string();
 
         tinyusdz::Stage stage;  // Stage in USD terminology is nearly meant for Scene in generic 3D
-                                            // graphics terminology.
+                                // graphics terminology.
         std::string warn;
         std::string err;
 
@@ -34,41 +35,94 @@ namespace UniverseEngine {
             if (!err.empty()) {
                 std::cerr << "ERR : " << warn << "\n";
             }
-            return Handle<Model>::Invalid();
+            return Handle<Scene>::Invalid();
         }
 
         // You can also use ExportToString() as done in pxrUSD
-       /* std::string s = stage.ExportToString();
-        std::cout << s << "\n";
-        std::cout << "--------------------------------------" << "\n";*/
+        /* std::string s = stage.ExportToString();
+         std::cout << s << "\n";
+         std::cout << "--------------------------------------" << "\n";*/
 
         // RenderScene: Scene graph object which is suited for GL/Vulkan renderer
         tinyusdz::tydra::RenderScene render_scene;
         tinyusdz::tydra::RenderSceneConverter converter;
 
-         // Add base directory of .usd file to search path.
+        // Add base directory of .usd file to search path.
         //  this is the folder where tinyusdz will look for assets
         std::string usd_basedir = tinyusdz::io::GetBaseDir(filename);
         std::cout << "Add seach path: " << usd_basedir << "\n";
 
         converter.set_search_paths({usd_basedir});
         // TODO: Set user-defined AssetResolutionResolver
-        // AssetResolutionResolver arr;
+        // tinyusdz::AssetResolutionResolver arr;
         // converter.set_asset_resoluition_resolver(arr);
+
         ret = converter.ConvertToRenderScene(stage, &render_scene);
         if (!ret) {
-            std::cerr << "Failed to convert USD Stage to RenderScene: \n" << converter.GetError() << "\n";
+            std::cerr << "Failed to convert USD Stage to RenderScene: \n"
+                      << converter.GetError() << "\n";
         }
 
         if (converter.GetWarning().size()) {
             std::cout << "ConvertToRenderScene warn: " << converter.GetWarning() << "\n";
         }
 
-        //At this point render_scene hold all the information loaded from the USD
-        //std::cout << DumpRenderScene(render_scene) << "\n";
+        Scene USDscene;
+        USDscene.sceneName = "aa";
 
-        Handle<Model> handle = this->models->Alloc();
-        // this->models->Value(handle).Value() = parsedModel;
+        std::vector<Material> materials;
+        auto materialCount = render_scene.materials.size();
+        for (auto material : render_scene.materials) {
+            // Load materials
+            Material custommaterial;
+            custommaterial.name = material.name;
+            custommaterial.baseColor = glm::vec4(material.surfaceShader.diffuseColor.value[0],
+                                                 material.surfaceShader.diffuseColor.value[1],
+                                                 material.surfaceShader.diffuseColor.value[2],
+                                                 material.surfaceShader.opacity.value);
+
+            //  NO TEXTURE SUPPORT YET
+            // custommaterial.baseColorMap = AtomicHandle<Texture>::Invalid();
+
+            materials.push_back(custommaterial);
+        }
+
+        /*At this point render_scene hold all the information loaded from the USD
+        std::cout << DumpRenderScene(render_scene) << "\n";*/
+        std::vector<Handle<Model>> modelHandles;
+
+        auto meshCount = render_scene.meshes.size();
+        for (auto model : render_scene.meshes) {
+            Model parsedModel{};
+            // Load model name
+            if (model.abs_name == "")
+                parsedModel.name = "usdModel";
+
+            Mesh m;
+            m.indices = model.faceVertexIndices;
+
+            std::vector<Vertex> vertices;
+            for (int i = 0; i < model.points.size(); i++) {
+                // glm::vec3 pos = model.points[i];
+
+                // glm::vec2 texCoord = glm::vec2(0, 0); //model.facevaryingTexcoords;  //
+                // glm::vec3 normal =
+                //     glm::vec3(model.facevaryingNormals[i * 8], model.facevaryingNormals[i * 8 +
+                //     1],
+                //               model.facevaryingNormals[i * 8 + 2]);
+
+                // Vertex v = { pos, texCoord, normal, }
+            }
+
+            Handle<Model> handle = this->models->Alloc();
+            this->models->Value(handle).Value() = parsedModel;
+            modelHandles.push_back(handle);
+        }
+
+        USDscene.hModels = modelHandles;
+
+        Handle<Scene> handle = this->scenes->Alloc();
+        this->scenes->Value(handle).Value() = USDscene;
         return handle;
     }
 }  // namespace UniverseEngine

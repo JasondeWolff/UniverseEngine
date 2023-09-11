@@ -23,7 +23,7 @@ namespace UniverseEngine {
             : index(index), generation(generation) {
         }
 
-        const size_t index;
+        size_t index;
         size_t generation;
     };
 

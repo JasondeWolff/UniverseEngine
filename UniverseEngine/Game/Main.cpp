@@ -7,7 +7,7 @@ int main() {
 	Handle<Model> hSusanModel = engine.GetResources().LoadModel("Assets/susanMultiple.obj");
 	Model& susanModel = engine.GetResources().GetModel(hSusanModel).Value();
 
-	Handle<Model> hCubeModel = engine.GetResources().LoadModel("Assets/cube.usd");
+	Handle<Scene> hCubeModel = engine.GetResources().LoadScene("Assets/cube.usd");
 
 	engine.Run();
 
