@@ -5,7 +5,8 @@ namespace fs = std::filesystem;
 namespace UniverseEngine {
 	Resources::Resources() {
 		this->models = std::make_unique<Pool<Model>>();
-		this->textures = std::make_unique<AtomicPool<Texture>>();
+            this->textures = std::make_unique<AtomicPool<Texture>>();
+            this->scenes = std::make_unique<Pool<Scene>>();
     }
 
     Handle<Model> Resources::LoadModel(const fs::path& filePath) {
