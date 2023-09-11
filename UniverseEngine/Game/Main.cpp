@@ -4,10 +4,10 @@ using namespace UniverseEngine;
 int main() {
 	Engine engine{};
 
-	Handle<Scene> hSusanModel = engine.GetResources().LoadScene("Assets/susanMultiple.obj");
-	Scene& susanModel = engine.GetResources().GetScene(hSusanModel).Value();
-
+	Handle<Scene> hSusan = engine.GetResources().LoadScene("Assets/susanMultiple.obj");
 	Handle<Scene> hCubeModel = engine.GetResources().LoadScene("Assets/cube.usd");
+
+	Handle<SceneInstance> hSusanInstance = engine.GetWorld().AddSceneInstance(hSusan);
 
 	engine.Run();
 

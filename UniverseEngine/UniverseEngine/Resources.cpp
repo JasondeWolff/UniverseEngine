@@ -32,11 +32,15 @@ namespace UniverseEngine {
         return AtomicHandle<Texture>::Invalid();
     }
 
-    OptionalPtr<Scene> Resources::GetScene(Handle<Scene> handle) {
-        return this->scenes->Value(handle);
+    void Resources::DeleteScene(Handle<Scene> hScene) {
+        this->scenes->Free(hScene);
     }
 
-    OptionalPtr<Texture> Resources::GetTexture(AtomicHandle<Texture> handle) {
-        return this->textures->Value(handle);
+    OptionalPtr<Scene> Resources::GetScene(Handle<Scene> hScene) {
+        return this->scenes->Value(hScene);
+    }
+
+    OptionalPtr<Texture> Resources::GetTexture(AtomicHandle<Texture> hTexture) {
+        return this->textures->Value(hTexture);
     }
 }

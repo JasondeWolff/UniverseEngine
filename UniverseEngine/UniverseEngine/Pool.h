@@ -12,15 +12,30 @@ namespace UniverseEngine {
     template <typename T>
     struct Handle {
     public:
+        Handle() = default;
+
+        static Handle<T> Null() {
+            return Handle<T>(0, 0);
+        }
+
         static Handle<T> Invalid() {
             UE_FATAL("Invalid handle reached.");
             return Handle<T>(0, 0);
+        }
+
+        void IsNull() const {
+            return this->index == 0;
         }
 
     private:
         friend class Pool<T>;
         Handle(size_t index, size_t generation)
             : index(index), generation(generation) {
+        }
+
+        size_t Index() const {
+            UE_ASSERT_MSG(this->index > 0, "Tried to get index of null handle.");
+            return index - 1;
         }
 
         size_t index;
@@ -54,7 +69,7 @@ namespace UniverseEngine {
         this->generations.reserve(this->capacity);
 
         for (size_t i = 0; i < this->capacity; i++) {
-            this->freeHandles.push(Handle<T>(i, 0));
+            this->freeHandles.push(Handle<T>(i + 1, 0));
             this->data.push_back(T{});
             this->generations.push_back(0);
         }
@@ -62,10 +77,10 @@ namespace UniverseEngine {
 
     template <typename T>
     OptionalPtr<T> Pool<T>::Value(Handle<T> handle) {
-        UE_ASSERT_MSG(handle.index < this->capacity, "Invalid handle.");
+        UE_ASSERT_MSG(handle.Index() < this->capacity, "Invalid handle.");
 
-        if (this->generations[handle.index] == handle.generation) {
-            T* value = &this->data[handle.index];
+        if (this->generations[handle.Index()] == handle.generation) {
+            T* value = &this->data[handle.Index()];
             return OptionalPtr<T>::Some(value);
         } else {
             return OptionalPtr<T>::None();
@@ -80,7 +95,7 @@ namespace UniverseEngine {
             this->generations.reserve(newCapacity);
 
             for (size_t i = this->capacity; i < newCapacity; i++) {
-                this->freeHandles.push(Handle<T>(i, 0));
+                this->freeHandles.push(Handle<T>(i + 1, 0));
                 this->data.push_back(T{});
                 this->generations.push_back(0);
             }
@@ -90,17 +105,17 @@ namespace UniverseEngine {
 
         Handle<T> handle = this->freeHandles.front();
         this->freeHandles.pop();
-        handle.generation = this->generations[handle.index];
+        handle.generation = this->generations[handle.Index()];
 
         return handle;
     }
 
     template <typename T>
     void Pool<T>::Free(Handle<T> handle) {
-        UE_ASSERT_MSG(handle.index < this->capacity, "Invalid handle.");
+        UE_ASSERT_MSG(handle.Index() < this->capacity, "Invalid handle.");
 
-        if (this->generations[handle.index] == handle.generation) {
-            this->generations[handle.index]++;
+        if (this->generations[handle.Index()] == handle.generation) {
+            this->generations[handle.Index()]++;
             this->freeHandles.push(handle);
         }
     }

@@ -10,6 +10,7 @@ namespace UniverseEngine {
         Engine::gInstance = this;
 
         this->resources = std::move(std::unique_ptr<Resources>(new Resources{}));
+        this->world = std::move(std::unique_ptr<World>(new World{}));
         this->graphics = std::move(std::unique_ptr<Graphics>(new Graphics{}));
         this->input = std::move(std::unique_ptr<Input>(new Input{}));
     }
@@ -22,6 +23,12 @@ namespace UniverseEngine {
         UE_ASSERT_MSG(Engine::gInstance && Engine::gInstance->resources.get(),
                       "Resources hasn't been initialized.");
         return *Engine::gInstance->resources.get();
+    }
+
+    World& Engine::GetWorld() {
+        UE_ASSERT_MSG(Engine::gInstance && Engine::gInstance->world.get(),
+                      "World hasn't been initialized.");
+        return *Engine::gInstance->world.get();
     }
 
     Graphics& Engine::GetGraphics() {

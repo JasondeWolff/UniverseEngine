@@ -15,14 +15,15 @@ namespace UniverseEngine {
         Handle<Scene> LoadScene(const std::filesystem::path& filePath);
         AtomicHandle<Texture> LoadTexture(const std::filesystem::path& filePath);
 
-		OptionalPtr<Scene> GetScene(Handle<Scene> handle);
-		OptionalPtr<Texture> GetTexture(AtomicHandle<Texture> handle);
+        void DeleteScene(Handle<Scene> hScene);
+
+		OptionalPtr<Scene> GetScene(Handle<Scene> hScene);
+		OptionalPtr<Texture> GetTexture(AtomicHandle<Texture> hTexture);
 
     private:
         friend class Engine;
         Resources();
 
-        // TODO: Atomic materials (will require hashable materials)
         std::unique_ptr<Pool<Scene>> scenes;
         std::unique_ptr<AtomicPool<Texture>> textures;
 
