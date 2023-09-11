@@ -9,6 +9,6 @@ namespace UniverseEngine
     struct Scene 
     {
         std::string sceneName;
-        std::vector<Handle<Model>> model_refs;
+        std::vector<Handle<Model>> hModels;
     };
 }  // namespace UniverseEngine

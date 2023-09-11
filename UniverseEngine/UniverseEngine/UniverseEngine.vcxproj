@@ -31,6 +31,7 @@
     <ClInclude Include="Option.h" />
     <ClInclude Include="Pool.h" />
     <ClInclude Include="Resources.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UniverseEngine.h" />

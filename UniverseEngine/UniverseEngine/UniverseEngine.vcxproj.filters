@@ -79,6 +79,9 @@
     <ClInclude Include="Input.h">
       <Filter>Src\Input</Filter>
     </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
