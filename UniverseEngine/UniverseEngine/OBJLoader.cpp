@@ -10,7 +10,7 @@ namespace fs = std::filesystem;
 #include <tiny_obj_loader.h>
 
 namespace UniverseEngine {
-    Handle<Model> Resources::LoadOBJ(const fs::path& filePath) {
+    Handle<Scene> Resources::LoadOBJ(const fs::path& filePath) {
         tinyobj::ObjReaderConfig reader_config;
         reader_config.mtl_search_path = (fs::path(".") / filePath.parent_path()).string();
         reader_config.triangulate = true;
@@ -27,8 +27,8 @@ namespace UniverseEngine {
         auto& shapes = reader.GetShapes();
         auto& materials = reader.GetMaterials();
 
-        Model parsedModel{};
-        parsedModel.name = filePath.filename().string();
+        Scene parsedScene{};
+        parsedScene.name = filePath.filename().string();
 
         for (auto& material : materials) {
             Material parsedMaterial;
@@ -43,11 +43,11 @@ namespace UniverseEngine {
                 parsedMaterial.baseColorMap = std::nullopt;
             }
 
-            parsedModel.materials.emplace_back(parsedMaterial);
+            parsedScene.materials.emplace_back(parsedMaterial);
         }
 
-        auto instanceRoot = parsedModel.instanceTree.begin();
-        instanceRoot = parsedModel.instanceTree.insert(instanceRoot, MeshInstance{});
+        auto instanceRoot = parsedScene.instanceTree.begin();
+        instanceRoot = parsedScene.instanceTree.insert(instanceRoot, MeshInstance{});
 
         for (auto& shape : shapes) {
             auto& mesh = shape.mesh;
@@ -95,13 +95,13 @@ namespace UniverseEngine {
                 index_offset += fv;
             }
 
-            parsedModel.meshes.emplace_back(parsedMesh);
-            parsedModel.instanceTree.append_child(instanceRoot,
-                                                  MeshInstance(parsedModel.meshes.size() - 1));
+            parsedScene.meshes.emplace_back(parsedMesh);
+            parsedScene.instanceTree.append_child(instanceRoot,
+                                                  MeshInstance(parsedScene.meshes.size() - 1));
         }
 
-        Handle<Model> handle = this->models->Alloc();
-        this->models->Value(handle).Value() = parsedModel;
+        Handle<Scene> handle = this->scenes->Alloc();
+        this->scenes->Value(handle).Value() = parsedScene;
         return handle;
     }
 }  // namespace UniverseEngine

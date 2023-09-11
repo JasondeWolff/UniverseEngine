@@ -3,7 +3,7 @@
 #include <glm/vec4.hpp>
 #include <optional>
 
-#include "Pool.h"
+#include "AtomicPool.h"
 #include "Texture.h"
 
 namespace UniverseEngine {

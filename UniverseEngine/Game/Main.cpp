@@ -4,8 +4,8 @@ using namespace UniverseEngine;
 int main() {
 	Engine engine{};
 
-	Handle<Model> hSusanModel = engine.GetResources().LoadModel("Assets/susanMultiple.obj");
-	Model& susanModel = engine.GetResources().GetModel(hSusanModel).Value();
+	Handle<Scene> hSusanModel = engine.GetResources().LoadScene("Assets/susanMultiple.obj");
+	Scene& susanModel = engine.GetResources().GetScene(hSusanModel).Value();
 
 	Handle<Scene> hCubeModel = engine.GetResources().LoadScene("Assets/cube.usd");
 

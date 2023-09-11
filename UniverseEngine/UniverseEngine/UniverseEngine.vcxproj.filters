@@ -52,9 +52,6 @@
     <ClInclude Include="Mesh.h">
       <Filter>Src\Resources\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Src\Resources\Assets</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Src\Resources\Assets</Filter>
     </ClInclude>
@@ -81,6 +78,9 @@
     </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Src\Resources\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Src\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -116,6 +116,9 @@
     </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Src\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Src\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

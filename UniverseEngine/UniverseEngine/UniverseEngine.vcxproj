@@ -27,7 +27,6 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="MathUtil.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Model.h" />
     <ClInclude Include="Option.h" />
     <ClInclude Include="Pool.h" />
     <ClInclude Include="Resources.h" />
@@ -36,6 +35,7 @@
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UniverseEngine.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp" />
@@ -49,6 +49,7 @@
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="USDLoader.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />

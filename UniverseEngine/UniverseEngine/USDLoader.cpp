@@ -68,7 +68,7 @@ namespace UniverseEngine {
         }
 
         Scene USDscene;
-        USDscene.sceneName = "aa";
+        USDscene.name = "aa";
 
         std::vector<Material> materials;
         auto materialCount = render_scene.materials.size();
@@ -89,14 +89,14 @@ namespace UniverseEngine {
 
         /*At this point render_scene hold all the information loaded from the USD
         std::cout << DumpRenderScene(render_scene) << "\n";*/
-        std::vector<Handle<Model>> modelHandles;
+        std::vector<Mesh> meshes;
 
         auto meshCount = render_scene.meshes.size();
         for (auto model : render_scene.meshes) {
-            Model parsedModel{};
+            Mesh parsedMesh{};
             // Load model name
             if (model.abs_name == "")
-                parsedModel.name = "usdModel";
+                parsedMesh.name = "usdModel";
 
             Mesh m;
             m.indices = model.faceVertexIndices;
@@ -113,13 +113,8 @@ namespace UniverseEngine {
 
                 // Vertex v = { pos, texCoord, normal, }
             }
-
-            Handle<Model> handle = this->models->Alloc();
-            this->models->Value(handle).Value() = parsedModel;
-            modelHandles.push_back(handle);
+            USDscene.meshes.push_back(parsedMesh);
         }
-
-        USDscene.hModels = modelHandles;
 
         Handle<Scene> handle = this->scenes->Alloc();
         this->scenes->Value(handle).Value() = USDscene;

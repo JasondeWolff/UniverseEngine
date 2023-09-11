@@ -4,23 +4,16 @@ namespace fs = std::filesystem;
 
 namespace UniverseEngine {
 	Resources::Resources() {
-		this->models = std::make_unique<Pool<Model>>();
+        this->scenes = std::make_unique<Pool<Scene>>();
 		this->textures = std::make_unique<AtomicPool<Texture>>();
-    }
-
-    Handle<Model> Resources::LoadModel(const fs::path& filePath) {
-        std::string fileExtension = filePath.extension().string();
-        if (fileExtension == ".usd")
-            return Handle<Model>::Invalid();
-        if (fileExtension == ".obj")
-            return LoadOBJ(filePath);
-        return Handle<Model>::Invalid();
     }
 
     Handle<Scene> Resources::LoadScene(const std::filesystem::path& filePath) {
         std::string fileExtension = filePath.extension().string();
         if (fileExtension == ".usd")
             return LoadUSD(filePath);
+        if (fileExtension == ".obj")
+            return LoadOBJ(filePath);
         return Handle<Scene>::Invalid();
     }
 
@@ -39,8 +32,8 @@ namespace UniverseEngine {
         return AtomicHandle<Texture>::Invalid();
     }
 
-    OptionalPtr<Model> Resources::GetModel(Handle<Model> handle) {
-        return this->models->Value(handle);
+    OptionalPtr<Scene> Resources::GetScene(Handle<Scene> handle) {
+        return this->scenes->Value(handle);
     }
 
     OptionalPtr<Texture> Resources::GetTexture(AtomicHandle<Texture> handle) {
