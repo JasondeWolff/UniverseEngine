@@ -13,7 +13,7 @@ namespace UniverseEngine {
     struct AtomicHandle {
     public:
         AtomicHandle(const AtomicHandle& other)
-            : index(other.index), mutex(other.mutex), pool(other.pool) {
+            : index(other.index), strongCount(other.strongCount), mutex(other.mutex), pool(other.pool) {
             std::lock_guard<std::mutex> lock(*this->mutex);
             (*this->strongCount)++;
         }
