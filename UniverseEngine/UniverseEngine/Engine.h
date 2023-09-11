@@ -17,10 +17,10 @@ namespace UniverseEngine {
         static Graphics& GetGraphics();
         static Input& GetInput();
 
+        void Run();
+
     private:
         static Engine* gInstance;
-
-        void Run();
 
         std::unique_ptr<Resources> resources;
         std::unique_ptr<Graphics> graphics;

@@ -9,5 +9,7 @@ int main() {
 
 	Handle<Model> hCubeModel = engine.GetResources().LoadModel("Assets/cube.usd");
 
+	engine.Run();
+
 	return 0;
 }

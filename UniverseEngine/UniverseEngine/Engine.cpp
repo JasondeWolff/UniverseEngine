@@ -12,8 +12,6 @@ namespace UniverseEngine {
         this->resources = std::move(std::unique_ptr<Resources>(new Resources{}));
         this->graphics = std::move(std::unique_ptr<Graphics>(new Graphics{}));
         this->input = std::move(std::unique_ptr<Input>(new Input{}));
-
-        Run();
     }
 
     void Engine::Quit() {
