@@ -29,17 +29,16 @@ namespace UniverseEngine {
 
     private:
         friend class Pool<T>;
-        Handle(size_t index, size_t generation)
-            : index(index), generation(generation) {
+        Handle(size_t index, size_t generation) : index(index), generation(generation) {
         }
+
+        size_t index;
+        size_t generation;
 
         size_t Index() const {
             UE_ASSERT_MSG(this->index > 0, "Tried to get index of null handle.");
             return index - 1;
         }
-
-        size_t index;
-        size_t generation;
     };
 
     template <typename T>
