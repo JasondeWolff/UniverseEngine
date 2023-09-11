@@ -26,6 +26,9 @@
     <Filter Include="Src\Resources\Loaders">
       <UniqueIdentifier>{1d84470d-a6fe-4297-b2a3-70047aa28ad8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Input">
+      <UniqueIdentifier>{1a6bfce2-cce5-46e1-b82a-15130e58fb27}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UniverseEngine.h">
@@ -67,6 +70,15 @@
     <ClInclude Include="Transform.h">
       <Filter>Src\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>Src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Src\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -92,6 +104,15 @@
     </ClCompile>
     <ClCompile Include="IMGLoader.cpp">
       <Filter>Src\Resources\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Src\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
