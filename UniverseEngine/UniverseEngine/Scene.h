@@ -8,6 +8,18 @@
 #include "Pool.h"
 
 namespace UniverseEngine {
+    struct Scene;
+
+    struct SceneInstance {
+        SceneInstance() : transform{}, hScene{} {
+        }
+        SceneInstance(Handle<Scene> hScene) : transform{}, hScene(hScene) {
+        }
+
+        Transform transform;
+        Handle<Scene> hScene;
+    };
+
     struct Scene {
         std::string name;
 
