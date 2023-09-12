@@ -98,20 +98,19 @@ namespace UniverseEngine {
             if (model.abs_name == "")
                 parsedMesh.name = "usdModel";
 
-            Mesh m;
-            m.indices = model.faceVertexIndices;
+            parsedMesh.indices = model.faceVertexIndices;
 
             std::vector<Vertex> vertices;
             for (int i = 0; i < model.points.size(); i++) {
-                // glm::vec3 pos = model.points[i];
 
-                // glm::vec2 texCoord = glm::vec2(0, 0); //model.facevaryingTexcoords;  //
-                // glm::vec3 normal =
-                //     glm::vec3(model.facevaryingNormals[i * 8], model.facevaryingNormals[i * 8 +
-                //     1],
-                //               model.facevaryingNormals[i * 8 + 2]);
+                glm::vec3 pos = ToGlm(model.points[i]);
 
-                // Vertex v = { pos, texCoord, normal, }
+                glm::vec2 texCoord = glm::vec2(0, 0); //model.facevaryingTexcoords;
+
+                glm::vec3 normal = ToGlm(model.facevaryingNormals[i*3]);
+
+                Vertex v = {pos, texCoord, normal, materials[model.materialIds[i]].baseColor};
+                parsedMesh.vertices.push_back(v);
             }
             USDscene.meshes.push_back(parsedMesh);
         }
