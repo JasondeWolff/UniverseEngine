@@ -46,8 +46,8 @@ namespace UniverseEngine {
             parsedScene.materials.emplace_back(parsedMaterial);
         }
 
-        auto instanceRoot = parsedScene.instanceTree.begin();
-        instanceRoot = parsedScene.instanceTree.insert(instanceRoot, MeshInstance{});
+        auto instanceRoot = parsedScene.meshHierarchy.begin();
+        instanceRoot = parsedScene.meshHierarchy.insert(instanceRoot, MeshInstance{});
 
         for (auto& shape : shapes) {
             auto& mesh = shape.mesh;
@@ -96,7 +96,7 @@ namespace UniverseEngine {
             }
 
             parsedScene.meshes.emplace_back(parsedMesh);
-            parsedScene.instanceTree.append_child(instanceRoot,
+            parsedScene.meshHierarchy.append_child(instanceRoot,
                                                   MeshInstance(parsedScene.meshes.size() - 1));
         }
 

@@ -23,8 +23,10 @@ namespace UniverseEngine {
     struct Scene {
         std::string name;
 
-        tree<MeshInstance> instanceTree;
+        tree<MeshInstance> meshHierarchy;
         std::vector<Mesh> meshes;
         std::vector<Material> materials;
+
+        tree<MeshInstance> TransformedMeshHierarchy(const Transform& root) const;
     };
 }  // namespace UniverseEngine
