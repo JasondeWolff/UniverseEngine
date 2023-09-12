@@ -8,11 +8,9 @@ namespace UniverseEngine {
     inline constexpr glm::vec3 Right() {
         return glm::vec3(1.0, 0.0, 0.0);
     }
-
     inline constexpr glm::vec3 Up() {
         return glm::vec3(0.0, 1.0, 0.0);
     }
-
     inline constexpr glm::vec3 Forward() {
         return glm::vec3(0.0, 0.0, 1.0);
     }
@@ -20,14 +18,6 @@ namespace UniverseEngine {
     glm::quat EulerToQuat(const glm::vec3& euler);
     glm::vec3 QuatToEuler(const glm::quat& rotation);
 
-    inline glm::vec3 ToGlm(const tinyusdz::value::float3 f3) 
-    {
-        const float* data = f3.data();
-        return glm::vec3(*data, *(data+1), *(data+2));
-    }
-
-    inline glm::vec2 ToGlm(const tinyusdz::value::float2 f2) {
-        const float* data = f2.data();
-        return glm::vec2(*data, *(data + 1));
-    }
+    glm::vec3 ToGlm(const tinyusdz::value::float3 f3);
+    glm::vec2 ToGlm(const tinyusdz::value::float2 f2);
 }  // namespace UniverseEngine
