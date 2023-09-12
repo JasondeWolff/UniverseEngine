@@ -5,16 +5,6 @@
 namespace UniverseEngine {
     class Engine;
 
-    struct SceneInstance {
-        SceneInstance() : transform{}, hScene{} {
-        }
-        SceneInstance(Handle<Scene> hScene) : transform{}, hScene(hScene) {
-        }
-
-        Transform transform;
-        Handle<Scene> hScene;
-    };
-
     class World {
     public:
         Handle<SceneInstance> AddSceneInstance(Handle<Scene> hScene);
