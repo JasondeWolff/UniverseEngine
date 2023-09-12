@@ -1,0 +1,11 @@
+Add seach path: Assets
+Failed to convert USD Stage to RenderScene:
+[error]
+	C:\Users\jason\Downloads\tinyusdz-dev\src\tydra\render-data.cc:ConvertPreviewSurfaceShaderParam():1337 
+		connection Path's property part must be `outputs:rgb` at the moment for UsdUVTexture, but got outputs:r
+
+[error]
+	C:\Users\jason\Downloads\tinyusdz-dev\src\tydra\render-data.cc:ConvertMaterial():1554 
+		Failed to convert UsdPreviewSurface : /scene/Materials/ToriiGate/pbr_shader
+		Visit function returned an error for Prim 
+			/scene/Meshes/Sketchfab_model/ToriiGate_01_fbx/RootNode/ToriiGate_001_Low/ToriiGate_001_Low_ToriiGate_0/ToriiGate_001_Low_ToriiGate_0 (id 16)

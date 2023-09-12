@@ -10,7 +10,7 @@ namespace UniverseEngine {
 
     Handle<Scene> Resources::LoadScene(const std::filesystem::path& filePath) {
         std::string fileExtension = filePath.extension().string();
-        if (fileExtension == ".usd")
+        if (fileExtension == ".usd") //fileExtension == ".usdz" (Need to look into)
             return LoadUSD(filePath);
         if (fileExtension == ".obj")
             return LoadOBJ(filePath);

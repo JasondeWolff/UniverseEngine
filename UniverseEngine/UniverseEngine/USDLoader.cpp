@@ -23,6 +23,7 @@ namespace UniverseEngine {
 
         tinyusdz::Stage stage;  // Stage in USD terminology is nearly meant for Scene in generic 3D
                                 // graphics terminology.
+
         std::string warn;
         std::string err;
 
@@ -33,15 +34,17 @@ namespace UniverseEngine {
         }
         if (!ret) {
             if (!err.empty()) {
-                std::cerr << "ERR : " << warn << "\n";
+                std::cerr << "ERR : " << err << "\n";
             }
             return Handle<Scene>::Invalid();
         }
 
         // You can also use ExportToString() as done in pxrUSD
-        /* std::string s = stage.ExportToString();
+        std::string s = stage.ExportToString();
          std::cout << s << "\n";
-         std::cout << "--------------------------------------" << "\n";*/
+         std::cout << "--------------------------------------" << "\n";
+
+
 
         // RenderScene: Scene graph object which is suited for GL/Vulkan renderer
         tinyusdz::tydra::RenderScene render_scene;
@@ -50,12 +53,16 @@ namespace UniverseEngine {
         // Add base directory of .usd file to search path.
         //  this is the folder where tinyusdz will look for assets
         std::string usd_basedir = tinyusdz::io::GetBaseDir(filename);
-        std::cout << "Add seach path: " << usd_basedir << "\n";
+        
+        //std::cout << "Add seach path: " << usd_basedir << "\n";
 
         converter.set_search_paths({usd_basedir});
         // TODO: Set user-defined AssetResolutionResolver
-        // tinyusdz::AssetResolutionResolver arr;
-        // converter.set_asset_resoluition_resolver(arr);
+        /*tinyusdz::AssetResolutionResolver arr = {
+            
+        };
+        converter.set_asset_resoluition_resolver(arr);*/
+
 
         ret = converter.ConvertToRenderScene(stage, &render_scene);
         if (!ret) {
