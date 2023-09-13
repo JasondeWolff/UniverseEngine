@@ -16,7 +16,7 @@ namespace UniverseEngine {
         Handle<Scene> hScene;
 
         std::string extension = filePath.extension().string();
-        if (extension == ".usd")
+        if (extension == ".usd") // TODO: Look into usdz
             hScene = LoadUSD(filePath);
         else if (extension == ".obj")
             hScene = LoadOBJ(filePath);
