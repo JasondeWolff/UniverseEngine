@@ -28,6 +28,7 @@ namespace UniverseEngine {
             for (Mesh& mesh : scene.meshes) {
                 if (!mesh.renderable.has_value()) {
                     mesh.renderable = MeshRenderable(mesh);
+                    mesh.ClearCPUData();
                 }
             }
         }

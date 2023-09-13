@@ -35,6 +35,12 @@
     <Filter Include="Src\Graphics\GL">
       <UniqueIdentifier>{afc53881-e2c3-45a4-a6b5-6d2cbe5dc92b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Graphics\Common\Assets">
+      <UniqueIdentifier>{ef60d133-6efd-42f2-873e-1d907335456f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Graphics\GL\Assets">
+      <UniqueIdentifier>{fa285c54-669d-4b7d-91ba-413b509ef73b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UniverseEngine.h">
@@ -89,6 +95,9 @@
       <Filter>Src\Core</Filter>
     </ClInclude>
     <ClInclude Include="MeshRenderable.h">
+      <Filter>Src\Graphics\Common\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI.h">
       <Filter>Src\Graphics\Common</Filter>
     </ClInclude>
   </ItemGroup>
@@ -133,6 +142,12 @@
       <Filter>Src\Resources\Assets</Filter>
     </ClCompile>
     <ClCompile Include="MeshRenderable.cpp">
+      <Filter>Src\Graphics\GL\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI.cpp">
       <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
   </ItemGroup>

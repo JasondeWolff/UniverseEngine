@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Logging.h"
+#include "GraphicsAPI.h"
 
 namespace UniverseEngine {
     void GlfwErrorCallback(int error, const char* description) {
@@ -22,7 +23,7 @@ namespace UniverseEngine {
         UE_ASSERT_MSG(this->glfwWindow, "Failed to create window.");
 
         glfwMakeContextCurrent(this->glfwWindow);
-        glewInit();
+        GraphicsAPI::Init();
     }
 
     GLFWwindow* Window::GlfwWindow() const {

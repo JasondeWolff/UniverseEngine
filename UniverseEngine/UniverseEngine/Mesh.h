@@ -38,5 +38,7 @@ namespace UniverseEngine {
     private:
         friend class Graphics;
         std::optional<MeshRenderable> renderable;
+
+        void ClearCPUData();
     };
 }  // namespace UniverseEngine
