@@ -25,6 +25,8 @@
     <ClInclude Include="Pool.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderRenderable.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UniverseEngine.h" />
@@ -44,6 +46,9 @@
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderLoader.cpp" />
+    <ClCompile Include="ShaderRenderable.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="USDLoader.cpp" />
     <ClCompile Include="Window.cpp" />

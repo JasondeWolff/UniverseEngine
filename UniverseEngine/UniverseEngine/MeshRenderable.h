@@ -13,6 +13,8 @@ namespace UniverseEngine {
 
         void Draw();
 
+        size_t indexCount;
+
 #ifdef GRAPHICS_API_GL
         unsigned vao;
         unsigned vbo;

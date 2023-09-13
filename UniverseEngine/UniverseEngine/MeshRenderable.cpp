@@ -6,9 +6,10 @@
 #include "Logging.h"
 
 namespace UniverseEngine {
-    MeshRenderable::MeshRenderable(const Mesh& mesh) {
+    MeshRenderable::MeshRenderable(const Mesh& mesh) : indexCount(mesh.indices.size()) {
         UE_ASSERT(mesh.vertices.size() > 0);
         UE_ASSERT(mesh.indices.size() > 0);
+        UE_INFO("YAY");
 
         glGenVertexArrays(1, &this->vao);
         glGenBuffers(1, &this->vbo);
@@ -37,6 +38,12 @@ namespace UniverseEngine {
     }
 
     void MeshRenderable::Draw() {
+        glBindVertexArray(this->vao);
+        {
+            glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(this->indexCount), GL_UNSIGNED_INT,
+                           0);
+        }
+        glBindVertexArray(0);
     }
 }  // namespace UniverseEngine
 

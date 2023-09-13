@@ -1,9 +1,12 @@
 #pragma once
 
+#include <set>
+
 #include "Resources.h"
 
 namespace UniverseEngine {
     class Engine;
+    class Graphics;
 
     class World {
     public:
@@ -11,14 +14,15 @@ namespace UniverseEngine {
         void RemoveSceneInstance(Handle<SceneInstance> hSceneInstance);
 
         OptionalPtr<SceneInstance> GetSceneInstance(Handle<SceneInstance> hSceneInstance);
-        std::vector<std::reference_wrapper<SceneInstance>> AllSceneInstances();
 
     private:
         friend class Engine;
+        friend class Graphics;
         World();
 
         void Update();
 
         std::unique_ptr<Pool<SceneInstance>> sceneInstances;
+        std::set<Handle<SceneInstance>> newInstances;
     };
 }  // namespace UniverseEngine

@@ -16,7 +16,7 @@ namespace UniverseEngine {
         Handle<Scene> hScene;
 
         std::string extension = filePath.extension().string();
-        if (extension == ".usd") // TODO: Look into usdz
+        if (extension == ".usd")  // TODO: Look into usdz
             hScene = LoadUSD(filePath);
         else if (extension == ".obj")
             hScene = LoadOBJ(filePath);
@@ -44,7 +44,9 @@ namespace UniverseEngine {
         fs::path extension = filePath.extension();
         for (size_t i = 0; i < 8; i++) {
             if (supportedExtensions[i] == extension) {
-                return LoadIMG(filePath);
+                AtomicHandle<Texture> hTexture = LoadIMG(filePath);
+                texturePaths.insert(std::make_pair(filePath, hTexture.Weak()));
+                return hTexture;
             }
         }
 
@@ -52,8 +54,33 @@ namespace UniverseEngine {
         return AtomicHandle<Texture>::Invalid();
     }
 
+    Handle<Shader> Resources::LoadShader(const std::filesystem::path& filePath) {
+        auto shader = this->shaderPaths.find(filePath);
+        if (shader != this->shaderPaths.end())
+            return shader->second;
+
+        static const std::string supportedExtensions[2] = {".vs", ".fs"};
+
+        fs::path extension = filePath.extension();
+        for (size_t i = 0; i < 2; i++) {
+            if (supportedExtensions[i] == extension) {
+                Handle<Shader> hShader = LoadShaderSource(filePath);
+                this->shaderPaths.insert(std::make_pair(filePath, hShader));
+                this->newShaders.push_back(hShader);
+                return hShader;
+            }
+        }
+
+        UE_FATAL("Cannot load unsupported shader type '%s'.", extension);
+        return Handle<Shader>::Invalid();
+    }
+
     void Resources::DeleteScene(Handle<Scene> hScene) {
         this->scenes->Free(hScene);
+    }
+
+    void Resources::DeleteShader(Handle<Shader> hShader) {
+        this->shaders->Free(hShader);
     }
 
     OptionalPtr<Scene> Resources::GetScene(Handle<Scene> hScene) {
@@ -62,5 +89,17 @@ namespace UniverseEngine {
 
     OptionalPtr<Texture> Resources::GetTexture(AtomicHandle<Texture> hTexture) {
         return this->textures->Value(hTexture);
+    }
+
+    OptionalPtr<Shader> Resources::GetShader(Handle<Shader> hShader) {
+        return this->shaders->Value(hShader);
+    }
+
+    const std::vector<Handle<Shader>>& Resources::GetNewShaders() {
+        return this->newShaders;
+    }
+
+    void Resources::Update() {
+        this->newShaders.clear();
     }
 }  // namespace UniverseEngine

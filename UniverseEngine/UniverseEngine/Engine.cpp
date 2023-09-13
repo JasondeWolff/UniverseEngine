@@ -47,6 +47,7 @@ namespace UniverseEngine {
         while (!GetGraphics().GetWindow().ShouldClose()) {
             GetWorld().Update();
             GetGraphics().Update();
+            GetResources().Update();
         }
     }
 }  // namespace UniverseEngine

@@ -19,5 +19,9 @@ namespace UniverseEngine {
         glDebugMessageCallback(GlDebugCallback, nullptr);
 #endif
     }
+
+    const char* GraphicsAPI::ShaderDir() {
+        return "GL/";
+    }
 }  // namespace UniverseEngine
 #endif

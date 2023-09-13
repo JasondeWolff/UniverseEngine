@@ -28,6 +28,14 @@ namespace UniverseEngine {
             return this->index == 0;
         }
 
+        operator bool() {
+            return !IsNull();
+        }
+
+        bool operator<(const Handle<T>& other) const {
+            return this->index < other.index;
+        }
+
     private:
         friend class Pool<T>;
         Handle(size_t index, size_t generation) : index(index), generation(generation) {

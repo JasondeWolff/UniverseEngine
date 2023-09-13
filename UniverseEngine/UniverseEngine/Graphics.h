@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "Window.h"
+#include "Resources.h"
 
 namespace UniverseEngine {
     class Engine;
@@ -20,5 +21,6 @@ namespace UniverseEngine {
         void BuildRenderables();
 
         std::unique_ptr<Window> window;
+        Handle<Shader> hShaderUnlit;
     };
 }  // namespace UniverseEngine

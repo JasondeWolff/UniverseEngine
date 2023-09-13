@@ -77,7 +77,7 @@ namespace UniverseEngine {
         }
 
         WeakAtomicHandle<T> Weak() const {
-            return WeakAtomicHandle<T>(this->index, this->strongCount);
+            return WeakAtomicHandle<T>(this->index, this->strongCount, this->mutex, this->pool);
         }
 
     private:

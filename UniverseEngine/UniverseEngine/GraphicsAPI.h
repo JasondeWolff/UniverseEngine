@@ -6,5 +6,6 @@ namespace UniverseEngine {
     class GraphicsAPI {
     public:
         static void Init();
+        static const char* ShaderDir();
     };
 }  // namespace UniverseEngine
