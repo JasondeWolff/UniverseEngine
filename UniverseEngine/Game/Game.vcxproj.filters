@@ -21,7 +21,25 @@
     <None Include="Assets\susan.mtl">
       <Filter>Assets</Filter>
     </None>
-    <None Include="Assets\susan.obj">
+    <None Include="Assets\Torii_Gate.usdz">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\home_flower.usd">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\susanMultiple.mtl">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\templates\ad_3dsmax_maps.mdl">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\templates\ad_3dsmax_materials.mdl">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\templates\vray_maps.mdl">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\templates\vray_materials.mdl">
       <Filter>Assets</Filter>
     </None>
   </ItemGroup>
