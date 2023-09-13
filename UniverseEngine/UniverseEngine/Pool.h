@@ -23,7 +23,7 @@ namespace UniverseEngine {
             return Handle<T>(0, 0);
         }
 
-        void IsNull() const {
+        bool IsNull() const {
             return this->index == 0;
         }
 

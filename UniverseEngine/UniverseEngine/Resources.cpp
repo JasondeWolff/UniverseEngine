@@ -3,21 +3,41 @@
 namespace fs = std::filesystem;
 
 namespace UniverseEngine {
-	Resources::Resources() {
+    Resources::Resources() : scenePaths{}, texturePaths{} {
         this->scenes = std::make_unique<Pool<Scene>>();
-		this->textures = std::make_unique<AtomicPool<Texture>>();
+        this->textures = std::make_unique<AtomicPool<Texture>>();
     }
 
     Handle<Scene> Resources::LoadScene(const std::filesystem::path& filePath) {
-        std::string fileExtension = filePath.extension().string();
-        if (fileExtension == ".usd")
-            return LoadUSD(filePath);
-        if (fileExtension == ".obj")
-            return LoadOBJ(filePath);
-        return Handle<Scene>::Invalid();
+        auto scene = scenePaths.find(filePath);
+        if (scene != scenePaths.end())
+            return scene->second;
+
+        Handle<Scene> hScene;
+
+        std::string extension = filePath.extension().string();
+        if (extension == ".usd")
+            hScene = LoadUSD(filePath);
+        else if (extension == ".obj")
+            hScene = LoadOBJ(filePath);
+        else
+            UE_FATAL("Cannot load unsupported scene type '%s'.", extension);
+
+        scenePaths.insert(std::make_pair(filePath, hScene));
+        return hScene;
     }
 
     AtomicHandle<Texture> Resources::LoadTexture(const fs::path& filePath) {
+        auto texture = texturePaths.find(filePath);
+        if (texture != texturePaths.end()) {
+            auto& weak = texture->second;
+            if (weak.IsAlive()) {
+                return weak.Strong();
+            } else {
+                texturePaths.erase(texture);
+            }
+        }
+
         static const std::string supportedExtensions[8] = {".jpg", ".png", ".tga", ".bmp",
                                                            ".psd", ".gif", ".hdr", ".pic"};
 
@@ -43,4 +63,4 @@ namespace UniverseEngine {
     OptionalPtr<Texture> Resources::GetTexture(AtomicHandle<Texture> hTexture) {
         return this->textures->Value(hTexture);
     }
-}
+}  // namespace UniverseEngine

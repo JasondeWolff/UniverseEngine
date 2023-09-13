@@ -46,6 +46,7 @@
     <ClCompile Include="MathUtil.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="Resources.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="USDLoader.cpp" />
     <ClCompile Include="Window.cpp" />

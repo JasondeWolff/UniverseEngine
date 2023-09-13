@@ -120,6 +120,9 @@
     <ClCompile Include="World.cpp">
       <Filter>Src\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />

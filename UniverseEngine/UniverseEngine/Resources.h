@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <memory>
+#include <unordered_map>
 
 #include "AtomicPool.h"
 #include "Pool.h"
@@ -26,6 +27,9 @@ namespace UniverseEngine {
 
         std::unique_ptr<Pool<Scene>> scenes;
         std::unique_ptr<AtomicPool<Texture>> textures;
+
+        std::unordered_map<std::filesystem::path, Handle<Scene>> scenePaths;
+        std::unordered_map<std::filesystem::path, WeakAtomicHandle<Texture>> texturePaths;
 
         Handle<Scene> LoadOBJ(const std::filesystem::path& filePath);
         Handle<Scene> LoadUSD(const std::filesystem::path& filePath);
