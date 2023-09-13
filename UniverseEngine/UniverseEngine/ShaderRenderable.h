@@ -10,5 +10,8 @@ namespace UniverseEngine {
     private:
         friend class Graphics;
         ShaderRenderable(const Shader& shader);
+
+#ifdef GRAPHICS_API_GL
+#endif
     };
 }  // namespace UniverseEngine

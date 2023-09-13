@@ -3,17 +3,22 @@
 #ifdef GRAPHICS_API_GL
 #include <GL/glew.h>
 
+#include "DebugNames.h"
+#include "Format.h"
 #include "Logging.h"
 
 namespace UniverseEngine {
     MeshRenderable::MeshRenderable(const Mesh& mesh) : indexCount(mesh.indices.size()) {
         UE_ASSERT(mesh.vertices.size() > 0);
         UE_ASSERT(mesh.indices.size() > 0);
-        UE_INFO("YAY");
 
         glGenVertexArrays(1, &this->vao);
         glGenBuffers(1, &this->vbo);
         glGenBuffers(1, &this->ebo);
+
+        DebugNames::Set(GL_VERTEX_ARRAY, this->vao, Format("%s_VAO", mesh.name.c_str()));
+        DebugNames::Set(GL_BUFFER, this->vbo, Format("%s_VBO", mesh.name.c_str()));
+        DebugNames::Set(GL_BUFFER, this->ebo, Format("%s_EBO", mesh.name.c_str()));
 
         glBindVertexArray(this->vao);
         {

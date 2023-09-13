@@ -15,6 +15,7 @@ namespace UniverseEngine {
         glewInit();
 
 #ifndef NDEBUG
+        glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
         glDebugMessageCallback(GlDebugCallback, nullptr);
 #endif
