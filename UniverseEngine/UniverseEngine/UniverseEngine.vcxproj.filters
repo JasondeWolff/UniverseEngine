@@ -29,6 +29,12 @@
     <Filter Include="Src\Input">
       <UniqueIdentifier>{1a6bfce2-cce5-46e1-b82a-15130e58fb27}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Graphics\Common">
+      <UniqueIdentifier>{21b00391-0cef-49ea-8ebf-5bc5ff4cafcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Graphics\GL">
+      <UniqueIdentifier>{afc53881-e2c3-45a4-a6b5-6d2cbe5dc92b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UniverseEngine.h">
@@ -82,6 +88,9 @@
     <ClInclude Include="World.h">
       <Filter>Src\Core</Filter>
     </ClInclude>
+    <ClInclude Include="MeshRenderable.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -122,6 +131,9 @@
     </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>Src\Resources\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRenderable.cpp">
+      <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

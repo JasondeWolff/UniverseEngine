@@ -3,10 +3,14 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <vector>
+#include <optional>
 
 #include "Transform.h"
+#include "MeshRenderable.h"
 
 namespace UniverseEngine {
+    class Graphics;
+
     struct Vertex {
         glm::vec3 position;
         glm::vec2 texCoord;
@@ -30,5 +34,9 @@ namespace UniverseEngine {
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
         size_t materialIdx;
+
+    private:
+        friend class Graphics;
+        std::optional<MeshRenderable> renderable;
     };
 }  // namespace UniverseEngine

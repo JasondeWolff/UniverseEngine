@@ -1,6 +1,7 @@
 #pragma once
 
 #include <queue>
+#include <functional>
 
 #include "Logging.h"
 #include "Option.h"
@@ -49,6 +50,7 @@ namespace UniverseEngine {
         Pool& operator=(const Pool& other) = delete;
 
         OptionalPtr<T> Value(Handle<T> handle);
+        const std::vector<std::reference_wrapper<T>> AllValues();
 
         Handle<T> Alloc();
         void Free(Handle<T> handle);
@@ -58,6 +60,7 @@ namespace UniverseEngine {
 
         std::vector<T> data;
         std::vector<size_t> generations;
+        std::vector<bool> alive;
 
         size_t capacity;
     };
@@ -66,11 +69,13 @@ namespace UniverseEngine {
     Pool<T>::Pool() : freeHandles{}, data{}, generations{}, capacity(32) {
         this->data.reserve(this->capacity);
         this->generations.reserve(this->capacity);
+        this->alive.reserve(this->capacity);
 
         for (size_t i = 0; i < this->capacity; i++) {
             this->freeHandles.push(Handle<T>(i + 1, 0));
             this->data.push_back(T{});
             this->generations.push_back(0);
+            this->alive.push_back(false);
         }
     }
 
@@ -87,16 +92,32 @@ namespace UniverseEngine {
     }
 
     template <typename T>
+    const std::vector<std::reference_wrapper<T>> Pool<T>::AllValues() {
+        std::vector<std::reference_wrapper<T>> values;
+        values.reserve(this->capacity - this->freeHandles.size());
+
+        for (size_t i = 0; i < capacity; i++) {
+            if (alive[i]) {
+                values.push_back(std::ref(data[i]));
+            }
+        }
+
+        return values;
+    }
+
+    template <typename T>
     Handle<T> Pool<T>::Alloc() {
         if (this->freeHandles.empty()) {
             size_t newCapacity = this->capacity * 2;
             this->data.reserve(newCapacity);
             this->generations.reserve(newCapacity);
+            this->alive.reserve(newCapacity);
 
             for (size_t i = this->capacity; i < newCapacity; i++) {
                 this->freeHandles.push(Handle<T>(i + 1, 0));
                 this->data.push_back(T{});
                 this->generations.push_back(0);
+                this->alive.push_back(false);
             }
 
             this->capacity = newCapacity;
@@ -105,6 +126,7 @@ namespace UniverseEngine {
         Handle<T> handle = this->freeHandles.front();
         this->freeHandles.pop();
         handle.generation = this->generations[handle.Index()];
+        this->alive[handle.Index()] = true;
 
         return handle;
     }
@@ -115,6 +137,7 @@ namespace UniverseEngine {
 
         if (this->generations[handle.Index()] == handle.generation) {
             this->generations[handle.Index()]++;
+            this->alive[handle.Index()] = false;
             this->freeHandles.push(handle);
         }
     }

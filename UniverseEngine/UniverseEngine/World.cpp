@@ -10,12 +10,19 @@ namespace UniverseEngine {
         this->sceneInstances->Value(hSceneInstance).Value() = SceneInstance(hScene);
         return hSceneInstance;
     }
-    
+
     void World::RemoveSceneInstance(Handle<SceneInstance> hSceneInstance) {
         this->sceneInstances->Free(hSceneInstance);
     }
 
     OptionalPtr<SceneInstance> World::GetSceneInstance(Handle<SceneInstance> hSceneInstance) {
         return this->sceneInstances->Value(hSceneInstance);
+    }
+
+    std::vector<std::reference_wrapper<SceneInstance>> World::AllSceneInstances() {
+        return this->sceneInstances->AllValues();
+    }
+
+    void World::Update() {
     }
 }  // namespace UniverseEngine

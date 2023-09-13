@@ -17,6 +17,8 @@ namespace UniverseEngine {
 
         void Update();
 
+        void BuildRenderables();
+
         std::unique_ptr<Window> window;
     };
 }  // namespace UniverseEngine
