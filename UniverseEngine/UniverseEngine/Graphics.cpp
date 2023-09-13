@@ -7,7 +7,17 @@ namespace UniverseEngine {
         this->window = std::move(std::unique_ptr<Window>(new Window("Universe Engine")));
 
         auto& resources = Engine::GetResources();
-        this->hShaderUnlit = resources.LoadShader("Assets/Shaders/unlit.vs");
+
+        Handle<Shader> hShaderUnlitVS = resources.LoadShader("Assets/Shaders/unlit.vs");
+        Handle<Shader> hShaderUnlitFS = resources.LoadShader("Assets/Shaders/unlit.fs");
+        this->BuildRenderables();
+
+        std::vector<ShaderRenderable*> unlitShaders = {
+            resources.GetShader(hShaderUnlitVS).Value().renderable.get(),
+            resources.GetShader(hShaderUnlitFS).Value().renderable.get()};
+        this->unlitPipeline = std::make_unique<GraphicsPipeline>(unlitShaders);
+        resources.DeleteShader(hShaderUnlitVS);
+        resources.DeleteShader(hShaderUnlitFS);
     }
 
     const Window& Graphics::GetWindow() const {
@@ -32,8 +42,9 @@ namespace UniverseEngine {
 
             Shader& shader = optionalShader.Value();
 
-            if (shader.renderable.has_value()) {
-                shader.renderable = ShaderRenderable(shader);
+            if (!shader.renderable) {
+                shader.renderable =
+                    std::move(std::unique_ptr<ShaderRenderable>(new ShaderRenderable(shader)));
                 shader.ClearCPUData();
             }
         }
@@ -48,8 +59,9 @@ namespace UniverseEngine {
             Scene& scene = resources.GetScene(sceneInstance.hScene).Value();
 
             for (Mesh& mesh : scene.meshes) {
-                if (!mesh.renderable.has_value()) {
-                    mesh.renderable = MeshRenderable(mesh);
+                if (!mesh.renderable) {
+                    mesh.renderable =
+                        std::move(std::unique_ptr<MeshRenderable>(new MeshRenderable(mesh)));
                     mesh.ClearCPUData();
                 }
             }

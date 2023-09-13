@@ -119,11 +119,11 @@ namespace UniverseEngine {
                 Vertex v = {pos, normal, texCoord, materials[model.materialIds[i]].baseColor};
                 parsedMesh.vertices.push_back(v);
             }
-            USDscene.meshes.push_back(parsedMesh);
+            USDscene.meshes.emplace_back(std::move(parsedMesh));
         }
 
         Handle<Scene> handle = this->scenes->Alloc();
-        this->scenes->Value(handle).Value() = USDscene;
+        this->scenes->Value(handle).Value() = std::move(USDscene);
         return handle;
     }
 }  // namespace UniverseEngine

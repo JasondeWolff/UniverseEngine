@@ -1,6 +1,5 @@
 #include "Mesh.h"
 
-#ifdef GRAPHICS_API_GL
 #include <GL/glew.h>
 
 #include "DebugNames.h"
@@ -16,17 +15,16 @@ namespace UniverseEngine {
         glGenBuffers(1, &this->vbo);
         glGenBuffers(1, &this->ebo);
 
-        DebugNames::Set(GL_VERTEX_ARRAY, this->vao, Format("%s_VAO", mesh.name.c_str()));
-        DebugNames::Set(GL_BUFFER, this->vbo, Format("%s_VBO", mesh.name.c_str()));
-        DebugNames::Set(GL_BUFFER, this->ebo, Format("%s_EBO", mesh.name.c_str()));
-
         glBindVertexArray(this->vao);
+        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
         {
-            glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+            DebugNames::Set(GL_VERTEX_ARRAY, this->vao, Format("%s_VAO", mesh.name.c_str()));
+            DebugNames::Set(GL_BUFFER, this->vbo, Format("%s_VBO", mesh.name.c_str()));
+            DebugNames::Set(GL_BUFFER, this->ebo, Format("%s_EBO", mesh.name.c_str()));
+
             glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(Vertex), &mesh.vertices,
                          GL_STATIC_DRAW);
-
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indices.size() * sizeof(uint32_t),
                          &mesh.indices, GL_STATIC_DRAW);
 
@@ -42,6 +40,12 @@ namespace UniverseEngine {
         glBindVertexArray(0);
     }
 
+    MeshRenderable::~MeshRenderable() {
+        glDeleteBuffers(1, &this->vbo);
+        glDeleteBuffers(1, &this->ebo);
+        glDeleteVertexArrays(1, &this->vao);
+    }
+
     void MeshRenderable::Draw() {
         glBindVertexArray(this->vao);
         {
@@ -51,5 +55,3 @@ namespace UniverseEngine {
         glBindVertexArray(0);
     }
 }  // namespace UniverseEngine
-
-#endif

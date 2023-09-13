@@ -2,8 +2,9 @@
 
 #include <memory>
 
-#include "Window.h"
+#include "GraphicsPipeline.h"
 #include "Resources.h"
+#include "Window.h"
 
 namespace UniverseEngine {
     class Engine;
@@ -21,6 +22,6 @@ namespace UniverseEngine {
         void BuildRenderables();
 
         std::unique_ptr<Window> window;
-        Handle<Shader> hShaderUnlit;
+        std::unique_ptr<GraphicsPipeline> unlitPipeline;
     };
 }  // namespace UniverseEngine

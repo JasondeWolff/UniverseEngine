@@ -6,6 +6,7 @@ namespace UniverseEngine {
     Resources::Resources() : scenePaths{}, texturePaths{} {
         this->scenes = std::make_unique<Pool<Scene>>();
         this->textures = std::make_unique<AtomicPool<Texture>>();
+        this->shaders = std::make_unique<Pool<Shader>>();
     }
 
     Handle<Scene> Resources::LoadScene(const std::filesystem::path& filePath) {

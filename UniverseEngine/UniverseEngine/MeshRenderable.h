@@ -7,6 +7,9 @@ namespace UniverseEngine {
     struct Mesh;
 
     class MeshRenderable {
+    public:
+        ~MeshRenderable();
+
     private:
         friend class Graphics;
         MeshRenderable(const Mesh& mesh);

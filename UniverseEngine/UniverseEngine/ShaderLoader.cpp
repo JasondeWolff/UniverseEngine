@@ -17,6 +17,12 @@ namespace UniverseEngine {
         parsedShader.name = shaderFile.filename().string();
         parsedShader.sourceCode = buffer.str();
 
+        std::string extension = filePath.extension().string();
+        if (extension == ".vs")
+            parsedShader.type = ShaderType::VERTEX;
+        if (extension == ".fs")
+            parsedShader.type = ShaderType::FRAGMENT;
+
         Handle<Shader> handle = this->shaders->Alloc();
         this->shaders->Value(handle).Value() = std::move(parsedShader);
         return handle;

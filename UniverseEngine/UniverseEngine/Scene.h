@@ -21,6 +21,12 @@ namespace UniverseEngine {
     };
 
     struct Scene {
+        Scene() = default;
+        explicit Scene(const Scene& other) = delete;
+        Scene& operator=(const Scene& other) = delete;
+        explicit Scene(Scene&& other) noexcept = default;
+        Scene& operator=(Scene&& other) noexcept = default;
+
         std::string name;
 
         tree<MeshInstance> meshHierarchy;

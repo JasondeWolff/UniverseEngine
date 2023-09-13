@@ -1,6 +1,5 @@
 #include "GraphicsAPI.h"
 
-#ifdef GRAPHICS_API_GL
 #include <GL/glew.h>
 
 #include "Logging.h"
@@ -8,7 +7,7 @@
 namespace UniverseEngine {
     void GlDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
                          const GLchar* message, const void* userParam) {
-        UE_FATAL("GL: %s", message);
+        UE_ASSERT_MSG(severity != GL_DEBUG_SEVERITY_HIGH, "GL: %s", message);
     }
 
     void GraphicsAPI::Init() {
@@ -25,4 +24,3 @@ namespace UniverseEngine {
         return "GL/";
     }
 }  // namespace UniverseEngine
-#endif

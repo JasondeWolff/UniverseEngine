@@ -3,7 +3,7 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <vector>
-#include <optional>
+#include <memory>
 
 #include "Transform.h"
 #include "MeshRenderable.h"
@@ -29,6 +29,12 @@ namespace UniverseEngine {
     };
 
     struct Mesh {
+        Mesh() = default;
+        explicit Mesh(const Mesh& other) = delete;
+        Mesh& operator=(const Mesh& other) = delete;
+        explicit Mesh(Mesh&& other) noexcept = default;
+        Mesh& operator=(Mesh&& other) noexcept = default;
+
         std::string name;
 
         std::vector<Vertex> vertices;
@@ -37,7 +43,7 @@ namespace UniverseEngine {
 
     private:
         friend class Graphics;
-        std::optional<MeshRenderable> renderable;
+        std::unique_ptr<MeshRenderable> renderable;
 
         void ClearCPUData();
     };

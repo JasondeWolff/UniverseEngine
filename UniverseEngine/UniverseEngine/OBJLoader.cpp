@@ -95,13 +95,13 @@ namespace UniverseEngine {
                 index_offset += fv;
             }
 
-            parsedScene.meshes.emplace_back(parsedMesh);
+            parsedScene.meshes.emplace_back(std::move(parsedMesh));
             parsedScene.meshHierarchy.append_child(instanceRoot,
                                                   MeshInstance(parsedScene.meshes.size() - 1));
         }
 
         Handle<Scene> handle = this->scenes->Alloc();
-        this->scenes->Value(handle).Value() = parsedScene;
+        this->scenes->Value(handle).Value() = std::move(parsedScene);
         return handle;
     }
 }  // namespace UniverseEngine

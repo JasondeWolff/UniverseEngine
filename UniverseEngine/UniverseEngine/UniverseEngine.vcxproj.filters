@@ -106,6 +106,18 @@
     <ClInclude Include="ShaderRenderable.h">
       <Filter>Src\Graphics\Common\Assets</Filter>
     </ClInclude>
+    <ClInclude Include="DebugNames.h">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="Format.h">
+      <Filter>Src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsPipeline.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderType.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -164,6 +176,12 @@
     </ClCompile>
     <ClCompile Include="ShaderLoader.cpp">
       <Filter>Src\Resources\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugNames.cpp">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsPipeline.cpp">
+      <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

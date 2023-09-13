@@ -54,8 +54,10 @@ namespace UniverseEngine {
     class Pool {
     public:
         Pool();
-        Pool(const Pool& other) = delete;
+        explicit Pool(const Pool& other) = delete;
         Pool& operator=(const Pool& other) = delete;
+        explicit Pool(Pool&& other) noexcept = default;
+        Pool& operator=(Pool&& other) noexcept = default;
 
         OptionalPtr<T> Value(Handle<T> handle);
         const std::vector<std::reference_wrapper<T>> AllValues();
@@ -81,7 +83,7 @@ namespace UniverseEngine {
 
         for (size_t i = 0; i < this->capacity; i++) {
             this->freeHandles.push(Handle<T>(i + 1, 0));
-            this->data.push_back(T{});
+            this->data.emplace_back(T{});
             this->generations.push_back(0);
             this->alive.push_back(false);
         }
@@ -123,7 +125,7 @@ namespace UniverseEngine {
 
             for (size_t i = this->capacity; i < newCapacity; i++) {
                 this->freeHandles.push(Handle<T>(i + 1, 0));
-                this->data.push_back(T{});
+                this->data.emplace_back(T{});
                 this->generations.push_back(0);
                 this->alive.push_back(false);
             }
