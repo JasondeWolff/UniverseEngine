@@ -116,7 +116,7 @@ namespace UniverseEngine {
 
                 glm::vec3 normal = ToGlm(model.facevaryingNormals[i*3]);
 
-                Vertex v = {pos, texCoord, normal, materials[model.materialIds[i]].baseColor};
+                Vertex v = {pos, normal, texCoord, materials[model.materialIds[i]].baseColor};
                 parsedMesh.vertices.push_back(v);
             }
             USDscene.meshes.push_back(parsedMesh);

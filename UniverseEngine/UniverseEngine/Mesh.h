@@ -13,15 +13,15 @@ namespace UniverseEngine {
 
     struct Vertex {
         glm::vec3 position;
-        glm::vec2 texCoord;
         glm::vec3 normal;
+        glm::vec2 texCoord;
         glm::vec3 color;
     };
 
     struct MeshInstance {
         MeshInstance() : transform{}, meshIdx(0) {
         }
-        MeshInstance(int idx) : transform{}, meshIdx(idx) {
+        MeshInstance(size_t idx) : transform{}, meshIdx(idx) {
         }
 
         Transform transform;

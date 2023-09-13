@@ -24,9 +24,16 @@ namespace UniverseEngine {
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indices.size() * sizeof(uint32_t),
                          &mesh.indices, GL_STATIC_DRAW);
 
-            //glEnableVertexAttribArray(0);
-
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                                  (void*)offsetof(Vertex, normal));
+            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                                  (void*)offsetof(Vertex, texCoord));
+            glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                                  (void*)offsetof(Vertex, color));
         }
+        glBindVertexArray(0);
     }
 
     void MeshRenderable::Draw() {

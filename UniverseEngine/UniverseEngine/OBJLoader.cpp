@@ -90,7 +90,7 @@ namespace UniverseEngine {
 
                     // TODO: Use proper indices
                     parsedMesh.vertices.emplace_back(parsedVertex);
-                    parsedMesh.indices.emplace_back(parsedMesh.vertices.size() - 1);
+                    parsedMesh.indices.emplace_back(static_cast<uint32_t>(parsedMesh.vertices.size() - 1));
                 }
                 index_offset += fv;
             }
