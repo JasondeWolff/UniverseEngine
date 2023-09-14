@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "CmdList.h"
 #include "GraphicsPipeline.h"
 #include "Resources.h"
 #include "Window.h"

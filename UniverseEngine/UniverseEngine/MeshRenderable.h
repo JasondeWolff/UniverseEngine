@@ -5,6 +5,7 @@
 namespace UniverseEngine {
     class Graphics;
     struct Mesh;
+    class CmdList;
 
     class MeshRenderable {
     public:
@@ -14,9 +15,9 @@ namespace UniverseEngine {
         friend class Graphics;
         MeshRenderable(const Mesh& mesh);
 
-        void Draw();
+        void Draw(CmdList& cmdList);
 
-        size_t indexCount;
+        uint32_t indexCount;
 
 #ifdef GRAPHICS_API_GL
         unsigned vao;

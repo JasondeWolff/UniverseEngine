@@ -118,6 +118,15 @@
     <ClInclude Include="ShaderType.h">
       <Filter>Src\Graphics\Common</Filter>
     </ClInclude>
+    <ClInclude Include="CmdList.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Rect2D.h">
+      <Filter>Src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdQueue.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -181,6 +190,12 @@
       <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsPipeline.cpp">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdList.cpp">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdQueue.cpp">
       <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
   </ItemGroup>

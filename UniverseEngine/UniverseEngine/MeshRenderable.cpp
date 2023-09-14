@@ -1,13 +1,14 @@
-#include "Mesh.h"
-
 #include <GL/glew.h>
 
+#include "CmdList.h"
 #include "DebugNames.h"
 #include "Format.h"
 #include "Logging.h"
+#include "Mesh.h"
 
 namespace UniverseEngine {
-    MeshRenderable::MeshRenderable(const Mesh& mesh) : indexCount(mesh.indices.size()) {
+    MeshRenderable::MeshRenderable(const Mesh& mesh)
+        : indexCount(static_cast<uint32_t>(mesh.indices.size())) {
         UE_ASSERT(mesh.vertices.size() > 0);
         UE_ASSERT(mesh.indices.size() > 0);
 
@@ -46,12 +47,9 @@ namespace UniverseEngine {
         glDeleteVertexArrays(1, &this->vao);
     }
 
-    void MeshRenderable::Draw() {
+    void MeshRenderable::Draw(CmdList& cmdList) {
         glBindVertexArray(this->vao);
-        {
-            glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(this->indexCount), GL_UNSIGNED_INT,
-                           0);
-        }
+        cmdList.DrawElements(this->indexCount);
         glBindVertexArray(0);
     }
 }  // namespace UniverseEngine

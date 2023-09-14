@@ -27,6 +27,33 @@ namespace UniverseEngine {
     void Graphics::Update() {
         this->BuildRenderables();
 
+        World& world = Engine::GetWorld();
+        Resources& resources = Engine::GetResources();
+
+        uint32_t width = GetWindow().Width();
+        uint32_t height = GetWindow().Height();
+
+        CmdList cmdList{};
+
+        cmdList.SetScissor(Rect2D(width, height));
+        cmdList.SetViewport(Rect2D(width, height));
+
+        cmdList.Clear(glm::vec4(1.0, 0.0, 1.0, 1.0));
+
+        auto& hSceneInstances = world.newInstances;
+        for (auto hSceneInstance : hSceneInstances) {
+            auto optiontalSceneInstance = world.GetSceneInstance(hSceneInstance);
+            if (!optiontalSceneInstance)
+                continue;
+
+            SceneInstance& sceneInstance = optiontalSceneInstance.Value();
+            Scene& scene = resources.GetScene(sceneInstance.hScene).Value();
+
+            for (Mesh& mesh : scene.meshes) {
+                mesh.renderable->Draw(cmdList);
+            }
+        }
+
         this->window->Update();
     }
 
