@@ -27,5 +27,8 @@ namespace UniverseEngine {
         unsigned height;
 
         static void GlfwWindowSizeCallback(GLFWwindow* glfwWindow, int width, int height);
+        static void GlfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+        static void GlfwCursorPositionCallback(GLFWwindow* window, double xpos, double ypos);
+        static void GlfwMouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
     };
 }

@@ -2,6 +2,8 @@
 
 #include <UniverseEngine.h>
 
+#include "FreeFormCamera.h"
+
 class MyGame : public UniverseEngine::Game {
 public:
 	void OnStart() override;
@@ -9,6 +11,8 @@ public:
 	void OnClose() override;
 
 private:
+	FreeFormCamera camera;
+
 	UniverseEngine::Handle<UniverseEngine::Scene> hSusan;
 	UniverseEngine::Handle<UniverseEngine::Scene> hCube;
 

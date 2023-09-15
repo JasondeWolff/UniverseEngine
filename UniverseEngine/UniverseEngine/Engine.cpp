@@ -51,6 +51,7 @@ namespace UniverseEngine {
             this->game->Update(deltaTime);
             GetWorld().Update();
             GetGraphics().Update();
+            GetInput().Update();
             GetResources().Update();
         }
 

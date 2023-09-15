@@ -6,15 +6,41 @@
 #include "Engine.h"
 
 namespace UniverseEngine {
-    static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
+    Input::Input()
+        : keys{}, oldKeys{}, mouseButtons{}, oldMouseButtons{}, mousePosition{}, mouseDelta{} {
     }
 
-    Input::Input() {
-        const Window& window = Engine::GetGraphics().GetWindow();
-        GLFWwindow* glfwWindow = window.GlfwWindow();
-
-        glfwSetKeyCallback(glfwWindow, KeyCallback);
+    bool Input::GetKey(KeyCode keyCode) const {
+        return this->keys[static_cast<size_t>(keyCode)];
     }
-}
+
+    bool Input::GetKeyDown(KeyCode keyCode) const {
+        return this->keys[static_cast<size_t>(keyCode)] &&
+               !this->oldKeys[static_cast<size_t>(keyCode)];
+    }
+
+    bool Input::GetMouseButton(MouseButton mouseButton) const {
+        return this->mouseButtons[static_cast<size_t>(mouseButton)];
+    }
+
+    bool Input::GetMouseButtonDown(MouseButton mouseButton) const {
+        return this->mouseButtons[static_cast<size_t>(mouseButton)] &&
+               !this->oldMouseButtons[static_cast<size_t>(mouseButton)];
+    }
+
+    const glm::vec2& Input::GetMousePosition() const {
+        return this->mousePosition;
+    }
+
+    const glm::vec2& Input::GetMouseDelta() const {
+        return this->mouseDelta;
+    }
+
+    void Input::Update() {
+        memcpy(this->oldKeys, this->keys, sizeof(bool) * MAX_KEYS);
+        memcpy(this->oldMouseButtons, this->mouseButtons, sizeof(bool) * MAX_MOUSE_BUTTONS);
+
+        memset(this->keys, 0, sizeof(bool) * MAX_KEYS);
+        memset(this->mouseButtons, 0, sizeof(bool) * MAX_MOUSE_BUTTONS);
+    }
+}  // namespace UniverseEngine

@@ -24,6 +24,9 @@
     <ClCompile Include="MyGame.cpp">
       <Filter>Src</Filter>
     </ClCompile>
+    <ClCompile Include="FreeFormCamera.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\UniverseEngine\.clang-format" />
@@ -63,6 +66,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyGame.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeFormCamera.h">
       <Filter>Src</Filter>
     </ClInclude>
   </ItemGroup>

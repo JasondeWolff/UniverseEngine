@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "Engine.h"
 #include "GraphicsAPI.h"
 #include "Logging.h"
 
@@ -15,6 +16,21 @@ namespace UniverseEngine {
         Window* window = static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
         window->width = static_cast<unsigned>(width);
         window->height = static_cast<unsigned>(height);
+    }
+
+    void Window::GlfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+        if (key != GLFW_KEY_UNKNOWN) {
+            Engine::GetInput().keys[static_cast<size_t>(key)] = (action != GLFW_RELEASE);
+        }
+    }
+
+    void Window::GlfwCursorPositionCallback(GLFWwindow* window, double xpos, double ypos) {
+        Engine::GetInput().mousePosition =
+            glm::vec2(static_cast<float>(xpos), static_cast<float>(ypos));
+    }
+
+    void Window::GlfwMouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+        Engine::GetInput().mouseButtons[static_cast<size_t>(button)] = (action != GLFW_RELEASE);
     }
 
     Window::Window(const char* title) : width(640), height(480) {
@@ -32,6 +48,8 @@ namespace UniverseEngine {
 
         glfwSetWindowUserPointer(this->glfwWindow, static_cast<void*>(this));
         glfwSetWindowSizeCallback(this->glfwWindow, Window::GlfwWindowSizeCallback);
+        glfwSetKeyCallback(this->glfwWindow, Window::GlfwKeyCallback);
+        glfwSetCursorPosCallback(this->glfwWindow, Window::GlfwCursorPositionCallback);
     }
 
     GLFWwindow* Window::GlfwWindow() const {

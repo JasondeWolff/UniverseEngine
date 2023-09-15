@@ -90,6 +90,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FreeFormCamera.cpp" />
     <ClCompile Include="MyGame.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
@@ -122,6 +123,7 @@
     <None Include="Assets\Torii_Gate.usdz" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FreeFormCamera.h" />
     <ClInclude Include="MyGame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

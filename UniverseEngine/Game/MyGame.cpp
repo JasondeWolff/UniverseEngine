@@ -11,7 +11,7 @@ void MyGame::OnStart() {
 }
 
 void MyGame::Update(float deltaTime) {
-
+	this->camera.Update(deltaTime);
 }
 
 void MyGame::OnClose() {
