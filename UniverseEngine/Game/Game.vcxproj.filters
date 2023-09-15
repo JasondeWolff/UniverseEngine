@@ -13,6 +13,9 @@
     <Filter Include="Assets\Shaders\GL">
       <UniqueIdentifier>{db98b50d-ddea-4a8c-af93-0fadcc2eea45}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets\Models">
+      <UniqueIdentifier>{004a1f60-8978-4974-98a5-f119bb2ef635}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -21,38 +24,38 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\UniverseEngine\.clang-format" />
-    <None Include="Assets\cube.usd">
-      <Filter>Assets</Filter>
-    </None>
-    <None Include="Assets\susan.mtl">
-      <Filter>Assets</Filter>
-    </None>
-    <None Include="Assets\Torii_Gate.usdz">
-      <Filter>Assets</Filter>
-    </None>
-    <None Include="Assets\home_flower.usd">
-      <Filter>Assets</Filter>
-    </None>
-    <None Include="Assets\susanMultiple.mtl">
-      <Filter>Assets</Filter>
-    </None>
-    <None Include="Assets\templates\ad_3dsmax_maps.mdl">
-      <Filter>Assets</Filter>
-    </None>
-    <None Include="Assets\templates\ad_3dsmax_materials.mdl">
-      <Filter>Assets</Filter>
-    </None>
-    <None Include="Assets\templates\vray_maps.mdl">
-      <Filter>Assets</Filter>
-    </None>
-    <None Include="Assets\templates\vray_materials.mdl">
-      <Filter>Assets</Filter>
-    </None>
     <None Include="Assets\Shaders\GL\unlit.fs">
       <Filter>Assets\Shaders\GL</Filter>
     </None>
     <None Include="Assets\Shaders\GL\unlit.vs">
       <Filter>Assets\Shaders\GL</Filter>
+    </None>
+    <None Include="Assets\templates\ad_3dsmax_maps.mdl">
+      <Filter>Assets\Models</Filter>
+    </None>
+    <None Include="Assets\templates\ad_3dsmax_materials.mdl">
+      <Filter>Assets\Models</Filter>
+    </None>
+    <None Include="Assets\cube.usd">
+      <Filter>Assets\Models</Filter>
+    </None>
+    <None Include="Assets\home_flower.usd">
+      <Filter>Assets\Models</Filter>
+    </None>
+    <None Include="Assets\susan.mtl">
+      <Filter>Assets\Models</Filter>
+    </None>
+    <None Include="Assets\susanMultiple.mtl">
+      <Filter>Assets\Models</Filter>
+    </None>
+    <None Include="Assets\Torii_Gate.usdz">
+      <Filter>Assets\Models</Filter>
+    </None>
+    <None Include="Assets\templates\vray_maps.mdl">
+      <Filter>Assets\Models</Filter>
+    </None>
+    <None Include="Assets\templates\vray_materials.mdl">
+      <Filter>Assets\Models</Filter>
     </None>
   </ItemGroup>
 </Project>

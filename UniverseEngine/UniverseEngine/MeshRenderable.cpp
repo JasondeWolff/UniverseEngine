@@ -13,7 +13,7 @@ namespace UniverseEngine {
         UE_ASSERT(mesh.indices.size() > 0);
 
         glGenVertexArrays(1, &this->vao);
-        glGenBuffers(1, &this->vbo);
+        glGenBuffers(1, &this->vbo);  
         glGenBuffers(1, &this->ebo);
 
         glBindVertexArray(this->vao);
