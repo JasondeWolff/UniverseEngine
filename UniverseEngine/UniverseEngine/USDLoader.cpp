@@ -1,8 +1,6 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
-#include <tinyusdz/tinyusdz.hh>
-
 #include "MathUtil.h"
 #include "Resources.h"
 
@@ -10,6 +8,7 @@ namespace fs = std::filesystem;
 // `tinyusdz::to_string()` and `std::operator<<` for TinyUSDZ classes/enums are provided separately
 // for faster compilation
 #include <iostream>
+#include <tinyusdz/tinyusdz.hh>
 #include <tinyusdz/io-util.hh>
 #include <tinyusdz/path-util.hh>
 #include <tinyusdz/pprinter.hh>
@@ -19,48 +18,6 @@ namespace fs = std::filesystem;
 
 namespace UniverseEngine {
     Handle<Scene> Resources::LoadUSD(const fs::path& filePath) {
-        //
-        // Create simple material with UsdPrevieSurface.
-        //
-        tinyusdz::Material mat;
-        mat.name = "mat";
-
-        tinyusdz::Shader shader;  // Shader container
-        shader.name = "defaultPBR";
-        {
-            tinyusdz::UsdPreviewSurface surfaceShader;  // Concrete Shader node object
-
-            //
-            // Asssign actual shader object to Shader::value.
-            // Also do not forget set its shader node type name through Shader::info_id
-            //
-            shader.info_id = tinyusdz::kUsdPreviewSurface;  // "UsdPreviewSurface" token
-
-            //
-            // Currently no shader network/connection API.
-            // Manually construct it.
-            //
-            surfaceShader.outputsSurface.set_authored(true);  // Author `token outputs:surface`
-
-            surfaceShader.metallic = 0.3f;
-            // TODO: UsdUVTexture, UsdPrimvarReader***, UsdTransform2d
-
-            // Connect to UsdPreviewSurface's outputs:surface by setting targetPath.
-            //
-            // token outputs:surface = </mat/defaultPBR.outputs:surface>
-            mat.surface.set(tinyusdz::Path(/* prim path */ "/mat/defaultPBR",
-                                           /* prop path */ "outputs:surface"));
-
-            //
-            // Shaer::value is `value::Value` type, so can use '=' to assign Shader object.
-            //
-            shader.value = std::move(surfaceShader);
-        }
-
-        tinyusdz::Prim shaderPrim(shader);
-        tinyusdz::Prim matPrim(mat);
-        //------------------------------------------------------------------------------------------
-
         std::string filename = filePath.string();
 
         std::string err;
@@ -69,7 +26,6 @@ namespace UniverseEngine {
         std::string ext = filename.substr(filename.find_last_of(".") + 1);
 
         tinyusdz::Stage stage;
-        stage.add_root_prim(&matPrim);
 
 
         // Auto detect USDA/USDC/USDZ
@@ -85,10 +41,10 @@ namespace UniverseEngine {
             }
         }
 
-        std::string s = stage.ExportToString();
-        std::cout << s << "\n";
-        std::cout << "--------------------------------------"
-                  << "\n";
+        //std::string s = stage.ExportToString();
+        //std::cout << s << "\n";
+        //std::cout << "--------------------------------------"
+        //          << "\n";
 
         // RenderScene: Scene graph object which is suited for GL/Vulkan renderer
         tinyusdz::tydra::RenderScene render_scene;
@@ -114,7 +70,7 @@ namespace UniverseEngine {
             std::cout << "ConvertToRenderScene warn: " << converter.GetWarning() << "\n";
         }
 
-        std::cout << DumpRenderScene(render_scene) << "\n";
+        //std::cout << DumpRenderScene(render_scene) << "\n";
 
         Scene USDscene;
         USDscene.name = "aa";
@@ -165,7 +121,7 @@ namespace UniverseEngine {
         }
 
         Handle<Scene> handle = this->scenes->Alloc();
-        this->scenes->Value(handle).Value() = std::move(USDscene);
+        //this->scenes->Value(handle).Value() = std::move(USDscene);
         return handle;
     }
 }  // namespace UniverseEngine

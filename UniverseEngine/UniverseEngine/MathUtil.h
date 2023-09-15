@@ -2,6 +2,7 @@
 
 #include <glm/gtc/quaternion.hpp>
 #include <glm/vec3.hpp>
+
 #include <tinyusdz/value-types.hh>
 
 namespace UniverseEngine {
