@@ -13,7 +13,7 @@ namespace UniverseEngine {
         return glm::vec3(0.0, 1.0, 0.0);
     }
     inline constexpr glm::vec3 Forward() {
-        return glm::vec3(0.0, 0.0, 1.0);
+        return glm::vec3(0.0, 0.0, -1.0);
     }
 
     glm::quat EulerToQuat(const glm::vec3& euler);

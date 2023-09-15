@@ -18,7 +18,7 @@ namespace UniverseEngine {
         bool GetMouseButtonDown(MouseButton mouseButton) const;
 
         const glm::vec2& GetMousePosition() const;
-        const glm::vec2& GetMouseDelta() const;
+        glm::vec2 GetMouseDelta() const;
 
         CursorMode GetCursorMode() const;
         void SetCursorMode(CursorMode cursorMode);

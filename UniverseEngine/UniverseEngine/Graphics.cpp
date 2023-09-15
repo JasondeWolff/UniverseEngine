@@ -42,7 +42,7 @@ namespace UniverseEngine {
 
         const glm::mat4& viewMatrix = camera.transform.GetMatrix();
         const glm::mat4& projectionMatrix = camera.GetMatrix();
-        const glm::mat4 vpMatrix = projectionMatrix * viewMatrix;
+        const glm::mat4 vpMatrix = projectionMatrix * glm::inverse(viewMatrix);
 
         CmdList cmdList{};
 

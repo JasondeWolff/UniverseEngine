@@ -136,7 +136,7 @@
     <ClInclude Include="Timer.h">
       <Filter>Src\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="KeyCode.h">
+    <ClInclude Include="InputCode.h">
       <Filter>Src\Input</Filter>
     </ClInclude>
   </ItemGroup>

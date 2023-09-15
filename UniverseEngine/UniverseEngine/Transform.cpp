@@ -96,6 +96,7 @@ namespace UniverseEngine {
     }
 
     void Transform::UpdateMatrix() const {
+        this->matrix = glm::identity<glm::mat4>();
         this->matrix = glm::scale(this->matrix, this->scale);
         this->matrix *= glm::toMat4(this->rotation);
         this->matrix = glm::translate(this->matrix, this->translation);

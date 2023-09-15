@@ -7,7 +7,7 @@
 
 namespace UniverseEngine {
     Input::Input()
-        : keys{}, oldKeys{}, mouseButtons{}, oldMouseButtons{}, mousePosition{}, mouseDelta{}, cursorMode(CursorMode::ENABLED) {
+        : keys{}, oldKeys{}, mouseButtons{}, oldMouseButtons{}, mousePosition{}, oldMousePosition{}, cursorMode(CursorMode::ENABLED) {
     }
 
     bool Input::GetKey(KeyCode keyCode) const {
@@ -32,7 +32,7 @@ namespace UniverseEngine {
         return this->mousePosition;
     }
 
-    const glm::vec2& Input::GetMouseDelta() const {
+    glm::vec2 Input::GetMouseDelta() const {
         return this->mousePosition - this->oldMousePosition;
     }
 
@@ -56,9 +56,6 @@ namespace UniverseEngine {
     void Input::Update() {
         memcpy(this->oldKeys, this->keys, sizeof(bool) * MAX_KEYS);
         memcpy(this->oldMouseButtons, this->mouseButtons, sizeof(bool) * MAX_MOUSE_BUTTONS);
-
-        memset(this->keys, 0, sizeof(bool) * MAX_KEYS);
-        memset(this->mouseButtons, 0, sizeof(bool) * MAX_MOUSE_BUTTONS);
 
         this->oldMousePosition = this->mousePosition;
     }

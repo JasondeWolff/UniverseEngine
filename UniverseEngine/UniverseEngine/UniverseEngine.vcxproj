@@ -21,7 +21,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GraphicsAPI.h" />
     <ClInclude Include="GraphicsPipeline.h" />
-    <ClInclude Include="KeyCode.h" />
+    <ClInclude Include="InputCode.h" />
     <ClInclude Include="MeshRenderable.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Input.h" />

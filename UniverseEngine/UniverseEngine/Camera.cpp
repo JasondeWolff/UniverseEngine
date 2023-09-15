@@ -3,7 +3,7 @@
 namespace UniverseEngine {
     Camera::Camera(float fov, float aspect, float near, float far)
         : transform{}, fov(fov), aspect(aspect), near(near), far(far), matrix{}, dirty(true) {
-        transform.SetTranslation(glm::vec3(0.0, 0.0, -10.0));
+        transform.SetTranslation(glm::vec3(0.0, 0.0, 10.0));
     }
 
     float Camera::GetFov() const {
