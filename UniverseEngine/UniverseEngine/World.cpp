@@ -1,7 +1,7 @@
 #include "World.h"
 
 namespace UniverseEngine {
-    World::World() : newInstances{} {
+    World::World() : camera{}, newInstances{} {
         this->sceneInstances = std::make_unique<Pool<SceneInstance>>();
     }
 

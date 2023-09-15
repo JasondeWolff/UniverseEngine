@@ -35,7 +35,7 @@ namespace UniverseEngine {
         glGetShaderiv(this->shader, GL_COMPILE_STATUS, &success);
         if (!success) {
             glGetShaderInfoLog(this->shader, sizeof(log), NULL, log);
-            UE_FATAL("Failed to compile shader '%s'.\n---------------------------------\n%s", log);
+            UE_FATAL("Failed to compile shader '%s'.\n---------------------------------\n%s", shader.name.c_str(), log);
         }
     }
 

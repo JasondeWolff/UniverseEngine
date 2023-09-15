@@ -3,6 +3,7 @@
 #include <set>
 
 #include "Resources.h"
+#include "Camera.h"
 
 namespace UniverseEngine {
     class Engine;
@@ -10,9 +11,10 @@ namespace UniverseEngine {
 
     class World {
     public:
+        Camera camera;
+
         Handle<SceneInstance> AddSceneInstance(Handle<Scene> hScene);
         void RemoveSceneInstance(Handle<SceneInstance> hSceneInstance);
-
         OptionalPtr<SceneInstance> GetSceneInstance(Handle<SceneInstance> hSceneInstance);
 
     private:

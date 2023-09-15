@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AtomicPool.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="CmdList.h" />
     <ClInclude Include="CmdQueue.h" />
     <ClInclude Include="DebugNames.h" />
@@ -41,6 +42,7 @@
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CmdList.cpp" />
     <ClCompile Include="CmdQueue.cpp" />
     <ClCompile Include="DebugNames.cpp" />

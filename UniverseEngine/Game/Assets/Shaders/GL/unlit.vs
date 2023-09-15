@@ -7,13 +7,13 @@ layout (location = 3) in vec3 aColor;
 out vec2 TexCoords;
 out vec3 Color;
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+layout(push_constant) uniform PushConstants {
+    mat4 mvp;
+} pc;
 
 void main()
 {
     TexCoords = aTexCoords;
     Color = aColor;
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
+    gl_Position = pc.mvp * vec4(aPos, 1.0);
 }

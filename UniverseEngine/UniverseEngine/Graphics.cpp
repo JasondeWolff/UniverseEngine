@@ -2,6 +2,10 @@
 
 #include "Engine.h"
 
+struct MVPPushConstant {
+    glm::mat4 mvp;
+};
+
 namespace UniverseEngine {
     Graphics::Graphics() {
         this->window = std::move(std::unique_ptr<Window>(new Window("Universe Engine")));
@@ -15,7 +19,8 @@ namespace UniverseEngine {
         std::vector<ShaderRenderable*> unlitShaders = {
             resources.GetShader(hShaderUnlitVS).Value().renderable.get(),
             resources.GetShader(hShaderUnlitFS).Value().renderable.get()};
-        this->unlitPipeline = std::make_unique<GraphicsPipeline>(unlitShaders);
+        this->unlitPipeline = std::make_shared<GraphicsPipeline>(unlitShaders);
+
         resources.DeleteShader(hShaderUnlitVS);
         resources.DeleteShader(hShaderUnlitFS);
     }
@@ -28,17 +33,25 @@ namespace UniverseEngine {
         this->BuildRenderables();
 
         World& world = Engine::GetWorld();
+        Camera& camera = world.camera;
         Resources& resources = Engine::GetResources();
 
         uint32_t width = GetWindow().Width();
         uint32_t height = GetWindow().Height();
+        camera.SetAspect(static_cast<float>(width) / static_cast<float>(height));
+
+        const glm::mat4& viewMatrix = camera.transform.GetMatrix();
+        const glm::mat4& projectionMatrix = camera.GetMatrix();
+        const glm::mat4 vpMatrix = projectionMatrix * viewMatrix;
 
         CmdList cmdList{};
 
         cmdList.SetScissor(Rect2D(width, height));
         cmdList.SetViewport(Rect2D(width, height));
 
-        cmdList.Clear(glm::vec4(1.0, 0.0, 1.0, 1.0));
+        cmdList.Clear(glm::vec4(0.0, 0.05, 0.07, 1.0));
+
+        cmdList.BindGraphicsPipeline(this->unlitPipeline);
 
         auto& hSceneInstances = world.newInstances;
         for (auto hSceneInstance : hSceneInstances) {
@@ -50,6 +63,9 @@ namespace UniverseEngine {
             Scene& scene = resources.GetScene(sceneInstance.hScene).Value();
 
             for (Mesh& mesh : scene.meshes) {
+                MVPPushConstant pushConstant{vpMatrix};
+
+                cmdList.PushConstant("pc", pushConstant);
                 mesh.renderable->Draw(cmdList);
             }
         }

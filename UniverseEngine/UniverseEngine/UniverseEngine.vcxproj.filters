@@ -127,6 +127,9 @@
     <ClInclude Include="CmdQueue.h">
       <Filter>Src\Graphics\Common</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Src\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -197,6 +200,9 @@
     </ClCompile>
     <ClCompile Include="CmdQueue.cpp">
       <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Src\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

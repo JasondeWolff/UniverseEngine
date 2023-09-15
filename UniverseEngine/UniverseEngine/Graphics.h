@@ -23,6 +23,6 @@ namespace UniverseEngine {
         void BuildRenderables();
 
         std::unique_ptr<Window> window;
-        std::unique_ptr<GraphicsPipeline> unlitPipeline;
+        std::shared_ptr<GraphicsPipeline> unlitPipeline;
     };
 }  // namespace UniverseEngine
