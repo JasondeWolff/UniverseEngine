@@ -19,60 +19,102 @@ namespace fs = std::filesystem;
 
 namespace UniverseEngine {
     Handle<Scene> Resources::LoadUSD(const fs::path& filePath) {
-        std::string filename = filePath.u8string();
+        //
+        // Create simple material with UsdPrevieSurface.
+        //
+        tinyusdz::Material mat;
+        mat.name = "mat";
 
-        tinyusdz::Stage stage;  // Stage in USD terminology is nearly meant for Scene in generic 3D
-                                // graphics terminology.
+        tinyusdz::Shader shader;  // Shader container
+        shader.name = "defaultPBR";
+        {
+            tinyusdz::UsdPreviewSurface surfaceShader;  // Concrete Shader node object
 
-        std::string warn;
+            //
+            // Asssign actual shader object to Shader::value.
+            // Also do not forget set its shader node type name through Shader::info_id
+            //
+            shader.info_id = tinyusdz::kUsdPreviewSurface;  // "UsdPreviewSurface" token
+
+            //
+            // Currently no shader network/connection API.
+            // Manually construct it.
+            //
+            surfaceShader.outputsSurface.set_authored(true);  // Author `token outputs:surface`
+
+            surfaceShader.metallic = 0.3f;
+            // TODO: UsdUVTexture, UsdPrimvarReader***, UsdTransform2d
+
+            // Connect to UsdPreviewSurface's outputs:surface by setting targetPath.
+            //
+            // token outputs:surface = </mat/defaultPBR.outputs:surface>
+            mat.surface.set(tinyusdz::Path(/* prim path */ "/mat/defaultPBR",
+                                           /* prop path */ "outputs:surface"));
+
+            //
+            // Shaer::value is `value::Value` type, so can use '=' to assign Shader object.
+            //
+            shader.value = std::move(surfaceShader);
+        }
+
+        tinyusdz::Prim shaderPrim(shader);
+        tinyusdz::Prim matPrim(mat);
+        //------------------------------------------------------------------------------------------
+
+        std::string filename = filePath.string();
+
         std::string err;
+        std::string warn;
+
+        std::string ext = filename.substr(filename.find_last_of(".") + 1);
+
+        tinyusdz::Stage stage;
+        stage.add_root_prim(&matPrim);
+
 
         // Auto detect USDA/USDC/USDZ
-        bool ret = tinyusdz::LoadUSDFromFile(filename, &stage, &warn, &err);
-        if (warn.size()) {
-            std::cout << "WARN : " << warn << "\n";
-        }
-        if (!ret) {
-            if (!err.empty()) {
-                std::cerr << "ERR : " << err << "\n";
+        if (ext.compare("usd") == 0) {
+            bool ret = tinyusdz::LoadUSDFromFile(filename, &stage, &warn, &err);
+            if (!warn.empty()) {
+                std::cerr << "WARN : " << warn << "\n";
             }
-            return Handle<Scene>::Invalid();
+            if (!err.empty()) {
+                std::cerr << "Failed to load USD file: " << filename << "\n";
+                std::cerr << "ERR : " << err << "\n";
+                return Handle<Scene>::Invalid();
+            }
         }
 
-        // You can also use ExportToString() as done in pxrUSD
         std::string s = stage.ExportToString();
-         std::cout << s << "\n";
-         std::cout << "--------------------------------------" << "\n";
-
-
+        std::cout << s << "\n";
+        std::cout << "--------------------------------------"
+                  << "\n";
 
         // RenderScene: Scene graph object which is suited for GL/Vulkan renderer
         tinyusdz::tydra::RenderScene render_scene;
         tinyusdz::tydra::RenderSceneConverter converter;
 
         // Add base directory of .usd file to search path.
-        //  this is the folder where tinyusdz will look for assets
         std::string usd_basedir = tinyusdz::io::GetBaseDir(filename);
-        
-        //std::cout << "Add seach path: " << usd_basedir << "\n";
+        std::cout << "Add seach path: " << usd_basedir << "\n";
 
         converter.set_search_paths({usd_basedir});
         // TODO: Set user-defined AssetResolutionResolver
-        /*tinyusdz::AssetResolutionResolver arr = {
-            
-        };
-        converter.set_asset_resoluition_resolver(arr);*/
+        // AssetResolutionResolver arr;
+        // converter.set_asset_resoluition_resolver(arr);
 
-
-        ret = converter.ConvertToRenderScene(stage, &render_scene);
+        bool ret = converter.ConvertToRenderScene(stage, &render_scene);
         if (!ret) {
             std::cerr << "Failed to convert USD Stage to RenderScene: \n"
                       << converter.GetError() << "\n";
+            return Handle<Scene>::Invalid();
         }
 
         if (converter.GetWarning().size()) {
             std::cout << "ConvertToRenderScene warn: " << converter.GetWarning() << "\n";
         }
+
+        std::cout << DumpRenderScene(render_scene) << "\n";
 
         Scene USDscene;
         USDscene.name = "aa";
