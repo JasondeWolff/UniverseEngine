@@ -5,6 +5,11 @@
 #include "InputCode.h"
 
 namespace UniverseEngine {
+    enum class CursorMode {
+        ENABLED,
+        DISABLED
+    };
+
     class Input {
     public:
         bool GetKey(KeyCode keyCode) const;
@@ -14,6 +19,9 @@ namespace UniverseEngine {
 
         const glm::vec2& GetMousePosition() const;
         const glm::vec2& GetMouseDelta() const;
+
+        CursorMode GetCursorMode() const;
+        void SetCursorMode(CursorMode cursorMode);
 
     private:
         friend class Engine;
@@ -30,6 +38,7 @@ namespace UniverseEngine {
         bool oldMouseButtons[MAX_MOUSE_BUTTONS];
 
         glm::vec2 mousePosition;
-        glm::vec2 mouseDelta;
+        glm::vec2 oldMousePosition;
+        CursorMode cursorMode;
     };
 }

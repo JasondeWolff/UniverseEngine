@@ -7,7 +7,7 @@
 
 namespace UniverseEngine {
     Input::Input()
-        : keys{}, oldKeys{}, mouseButtons{}, oldMouseButtons{}, mousePosition{}, mouseDelta{} {
+        : keys{}, oldKeys{}, mouseButtons{}, oldMouseButtons{}, mousePosition{}, mouseDelta{}, cursorMode(CursorMode::ENABLED) {
     }
 
     bool Input::GetKey(KeyCode keyCode) const {
@@ -33,7 +33,24 @@ namespace UniverseEngine {
     }
 
     const glm::vec2& Input::GetMouseDelta() const {
-        return this->mouseDelta;
+        return this->mousePosition - this->oldMousePosition;
+    }
+
+    CursorMode Input::GetCursorMode() const {
+        return this->cursorMode;
+    }
+
+    void Input::SetCursorMode(CursorMode cursorMode) {
+        this->cursorMode = cursorMode;
+
+        GLFWwindow* glfwWindow = Engine::GetGraphics().GetWindow().GlfwWindow();
+        if (cursorMode == CursorMode::ENABLED) {
+            glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            glfwSetInputMode(glfwWindow, GLFW_RAW_MOUSE_MOTION, GLFW_FALSE);
+        } else {
+            glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            glfwSetInputMode(glfwWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+        }
     }
 
     void Input::Update() {
@@ -42,5 +59,7 @@ namespace UniverseEngine {
 
         memset(this->keys, 0, sizeof(bool) * MAX_KEYS);
         memset(this->mouseButtons, 0, sizeof(bool) * MAX_MOUSE_BUTTONS);
+
+        this->oldMousePosition = this->mousePosition;
     }
 }  // namespace UniverseEngine
