@@ -130,6 +130,12 @@
     <ClInclude Include="Camera.h">
       <Filter>Src\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Src\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -203,6 +209,9 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Src\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

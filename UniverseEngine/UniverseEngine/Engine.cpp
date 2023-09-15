@@ -5,7 +5,7 @@
 namespace UniverseEngine {
     Engine* Engine::gInstance = nullptr;
 
-    Engine::Engine() {
+    Engine::Engine() : timer{} {
         UE_ASSERT_MSG(Engine::gInstance == nullptr, "Already an engine instance alive.");
         Engine::gInstance = this;
 
@@ -45,9 +45,15 @@ namespace UniverseEngine {
 
     void Engine::Run() {
         while (!GetGraphics().GetWindow().ShouldClose()) {
+            float deltaTime = this->timer.Elapsed();
+            this->timer.Reset();
+
+            this->game->Update(deltaTime);
             GetWorld().Update();
             GetGraphics().Update();
             GetResources().Update();
         }
+
+        this->game->OnClose();
     }
 }  // namespace UniverseEngine

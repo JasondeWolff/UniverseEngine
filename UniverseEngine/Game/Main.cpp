@@ -1,16 +1,10 @@
 #include <UniverseEngine.h>
-using namespace UniverseEngine;
+
+#include "MyGame.h"
 
 int main() {
-	Engine engine{};
-
-	Handle<Scene> hSusan = engine.GetResources().LoadScene("Assets/susanMultiple.obj");
-	Handle<Scene> hCubeModel = engine.GetResources().LoadScene("Assets/cube.usd");
-
-	Handle<SceneInstance> hSusanInstance = engine.GetWorld().AddSceneInstance(hSusan);
-	Handle<SceneInstance> hCubeInstance = engine.GetWorld().AddSceneInstance(hCubeModel);
-	
-	engine.Run();
+	UniverseEngine::Engine engine{};
+	engine.Start<MyGame>();
 
 	return 0;
 }

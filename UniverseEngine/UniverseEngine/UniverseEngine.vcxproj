@@ -18,6 +18,7 @@
     <ClInclude Include="DebugNames.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Format.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="GraphicsAPI.h" />
     <ClInclude Include="GraphicsPipeline.h" />
     <ClInclude Include="MeshRenderable.h" />
@@ -36,6 +37,7 @@
     <ClInclude Include="ShaderRenderable.h" />
     <ClInclude Include="ShaderType.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UniverseEngine.h" />
     <ClInclude Include="Window.h" />
@@ -62,6 +64,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="ShaderRenderable.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="USDLoader.cpp" />
     <ClCompile Include="Window.cpp" />

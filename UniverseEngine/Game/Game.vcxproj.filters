@@ -21,6 +21,9 @@
     <ClCompile Include="Main.cpp">
       <Filter>Src</Filter>
     </ClCompile>
+    <ClCompile Include="MyGame.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\UniverseEngine\.clang-format" />
@@ -57,5 +60,10 @@
     <None Include="Assets\templates\vray_materials.mdl">
       <Filter>Assets\Models</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MyGame.h">
+      <Filter>Src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

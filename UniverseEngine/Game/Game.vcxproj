@@ -90,6 +90,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="MyGame.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -119,6 +120,9 @@
     <None Include="Assets\templates\vray_maps.mdl" />
     <None Include="Assets\templates\vray_materials.mdl" />
     <None Include="Assets\Torii_Gate.usdz" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MyGame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
