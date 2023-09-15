@@ -24,10 +24,13 @@ namespace UniverseEngine {
         static Graphics& GetGraphics();
         static Input& GetInput();
 
+        static uint64_t FrameCount();
+
     private:
         static Engine* gInstance;
 
         Timer timer;
+        uint64_t frameCount;
         std::unique_ptr<Game> game;
 
         std::unique_ptr<Resources> resources;

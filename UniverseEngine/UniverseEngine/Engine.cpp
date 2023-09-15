@@ -5,7 +5,7 @@
 namespace UniverseEngine {
     Engine* Engine::gInstance = nullptr;
 
-    Engine::Engine() : timer{} {
+    Engine::Engine() : timer{}, frameCount(0) {
         UE_ASSERT_MSG(Engine::gInstance == nullptr, "Already an engine instance alive.");
         Engine::gInstance = this;
 
@@ -43,6 +43,12 @@ namespace UniverseEngine {
         return *Engine::gInstance->input.get();
     }
 
+    uint64_t Engine::FrameCount() {
+        UE_ASSERT_MSG(Engine::gInstance,
+                      "Engine hasn't been initialized.");
+        return Engine::gInstance->frameCount;
+    }
+
     void Engine::Run() {
         while (!GetGraphics().GetWindow().ShouldClose()) {
             float deltaTime = this->timer.Elapsed();
@@ -53,6 +59,8 @@ namespace UniverseEngine {
             GetInput().Update();
             GetGraphics().Update();
             GetResources().Update();
+            
+            frameCount++;
         }
 
         this->game->OnClose();

@@ -8,9 +8,15 @@ void MyGame::OnStart() {
 
 	this->hSusanInstance = Engine::GetWorld().AddSceneInstance(this->hSusan);
 	this->hCubeInstance = Engine::GetWorld().AddSceneInstance(this->hCube);
+
+	this->camera.Start();
 }
 
 void MyGame::Update(float deltaTime) {
+	if (Engine::GetInput().GetKey(KeyCode::ESCAPE)) {
+		Engine::Quit();
+	}
+
 	this->camera.Update(deltaTime);
 }
 

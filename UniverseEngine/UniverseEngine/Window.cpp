@@ -25,8 +25,13 @@ namespace UniverseEngine {
     }
 
     void Window::GlfwCursorPositionCallback(GLFWwindow* window, double xpos, double ypos) {
+        static bool firstCall = true;
         Engine::GetInput().mousePosition =
             glm::vec2(static_cast<float>(xpos), static_cast<float>(ypos));
+        if (firstCall) {
+            firstCall = false;
+            Engine::GetInput().oldMousePosition = Engine::GetInput().mousePosition;
+        }
     }
 
     void Window::GlfwMouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
