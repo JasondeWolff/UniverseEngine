@@ -16,6 +16,7 @@ namespace UniverseEngine {
         Handle<SceneInstance> AddSceneInstance(Handle<Scene> hScene);
         void RemoveSceneInstance(Handle<SceneInstance> hSceneInstance);
         OptionalPtr<SceneInstance> GetSceneInstance(Handle<SceneInstance> hSceneInstance);
+        std::vector<std::reference_wrapper<SceneInstance>> GetAllSceneInstances();
 
     private:
         friend class Engine;

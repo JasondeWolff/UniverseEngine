@@ -20,6 +20,10 @@ namespace UniverseEngine {
         return this->sceneInstances->Value(hSceneInstance);
     }
 
+    std::vector<std::reference_wrapper<SceneInstance>> World::GetAllSceneInstances() {
+        return this->sceneInstances->AllValues();
+    }
+
     void World::Update() {
     }
 }  // namespace UniverseEngine

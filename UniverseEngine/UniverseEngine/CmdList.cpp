@@ -59,6 +59,8 @@ namespace UniverseEngine {
 
         unsigned shaderProgram = this->graphicsPipeline->ShaderProgram();
         unsigned blockIndex = glGetUniformBlockIndex(shaderProgram, name.c_str());
+        UE_ASSERT_MSG(blockIndex != GL_INVALID_INDEX, "Cannot find push constant '%s'.",
+                      name.c_str());
         glUniformBlockBinding(shaderProgram, blockIndex, 0);
 
         unsigned ubo;

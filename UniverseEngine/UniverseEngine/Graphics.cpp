@@ -53,19 +53,14 @@ namespace UniverseEngine {
 
         cmdList.BindGraphicsPipeline(this->unlitPipeline);
 
-        auto& hSceneInstances = world.newInstances;
-        for (auto hSceneInstance : hSceneInstances) {
-            auto optiontalSceneInstance = world.GetSceneInstance(hSceneInstance);
-            if (!optiontalSceneInstance)
-                continue;
-
-            SceneInstance& sceneInstance = optiontalSceneInstance.Value();
-            Scene& scene = resources.GetScene(sceneInstance.hScene).Value();
+        auto sceneInstances = world.GetAllSceneInstances();
+        for (auto sceneInstance : sceneInstances) {
+            Scene& scene = resources.GetScene(sceneInstance.get().hScene).Value();
 
             for (Mesh& mesh : scene.meshes) {
                 MVPPushConstant pushConstant{vpMatrix};
 
-                cmdList.PushConstant("pc", pushConstant);
+                cmdList.PushConstant("PushConstants", pushConstant);
                 mesh.renderable->Draw(cmdList);
             }
         }

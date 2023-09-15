@@ -9,11 +9,11 @@ out vec3 Color;
 
 layout(push_constant) uniform PushConstants {
     mat4 mvp;
-} pc;
+};
 
 void main()
 {
     TexCoords = aTexCoords;
     Color = aColor;
-    gl_Position = pc.mvp * vec4(aPos, 1.0);
+    gl_Position = mvp * vec4(aPos, 1.0);
 }
