@@ -7,11 +7,9 @@ layout (location = 3) in vec3 aColor;
 out vec2 TexCoords;
 out vec3 Color;
 
-uniform mat4 mvp;
-
-// layout(push_constant) uniform PushConstants {
-//     mat4 mvp;
-// };
+layout(push_constant) uniform PushConstants {
+    mat4 mvp;
+};
 
 void main()
 {

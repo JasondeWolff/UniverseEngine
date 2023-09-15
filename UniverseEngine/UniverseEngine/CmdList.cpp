@@ -58,7 +58,7 @@ namespace UniverseEngine {
         UE_ASSERT_MSG(this->graphicsPipeline, "No graphics pipeline bound.");
 
         unsigned shaderProgram = this->graphicsPipeline->ShaderProgram();
-        /*unsigned blockIndex = glGetUniformBlockIndex(shaderProgram, name.c_str());
+        unsigned blockIndex = glGetUniformBlockIndex(shaderProgram, name.c_str());
         UE_ASSERT_MSG(blockIndex != GL_INVALID_INDEX, "Cannot find push constant '%s'.",
                       name.c_str());
         glUniformBlockBinding(shaderProgram, blockIndex, 0);
@@ -68,9 +68,8 @@ namespace UniverseEngine {
 
         glBindBuffer(GL_UNIFORM_BUFFER, ubo);
         glBufferData(GL_UNIFORM_BUFFER, size, constant, GL_DYNAMIC_DRAW);
-        glBindBuffer(GL_UNIFORM_BUFFER, 0);*/
+        glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "mvp"), 1, GL_FALSE,
-                           static_cast<const GLfloat*>(constant));
+        glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, size);
     }
 }  // namespace UniverseEngine
