@@ -8,7 +8,8 @@ int main() {
 	Handle<Scene> hCubeModel = engine.GetResources().LoadScene("Assets/cube.usd");
 
 	Handle<SceneInstance> hSusanInstance = engine.GetWorld().AddSceneInstance(hSusan);
-
+	Handle<SceneInstance> hCubeInstance = engine.GetWorld().AddSceneInstance(hCubeModel);
+	
 	engine.Run();
 
 	return 0;

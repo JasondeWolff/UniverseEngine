@@ -121,7 +121,7 @@ namespace UniverseEngine {
         }
 
         Handle<Scene> handle = this->scenes->Alloc();
-        //this->scenes->Value(handle).Value() = std::move(USDscene);
+        this->scenes->Value(handle).Value() = std::move(USDscene);
         return handle;
     }
 }  // namespace UniverseEngine
