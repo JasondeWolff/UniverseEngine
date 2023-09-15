@@ -10,6 +10,9 @@ namespace UniverseEngine {
     class AtomicPool;
 
     template <typename T>
+    struct WeakAtomicHandle;
+
+    template <typename T>
     struct AtomicHandle {
     public:
         AtomicHandle() = default;
@@ -69,14 +72,23 @@ namespace UniverseEngine {
             return AtomicHandle<T>(0, nullptr);
         }
 
-        void IsNull() const {
+        bool IsNull() const {
             return this->index == 0;
+        }
+
+        WeakAtomicHandle<T> Weak() const {
+            return WeakAtomicHandle<T>(this->index, this->strongCount, this->mutex, this->pool);
         }
 
     private:
         friend class AtomicPool<T>;
+        friend struct WeakAtomicHandle<T>;
         AtomicHandle(size_t index, AtomicPool<T>* pool)
             : index(index), strongCount(new size_t(1)), mutex(new std::mutex()), pool(pool) {
+        }
+
+        AtomicHandle(size_t index, size_t* strongCount, std::mutex* mutex, AtomicPool<T>* pool)
+            : index(index), strongCount(strongCount), mutex(mutex), pool(pool) {
         }
 
         size_t index;
@@ -107,6 +119,42 @@ namespace UniverseEngine {
     };
 
     template <typename T>
+    struct WeakAtomicHandle {
+    public:
+        WeakAtomicHandle() = default;
+
+        static WeakAtomicHandle<T> Invalid() {
+            UE_FATAL("Invalid handle reached.");
+            return WeakAtomicHandle<T>(0, nullptr);
+        }
+
+        bool IsNull() const {
+            return this->index == 0;
+        }
+
+        bool IsAlive() const {
+            return this->strongCount != nullptr;
+        }
+
+        AtomicHandle<T> Strong() const {
+            UE_ASSERT_MSG(this->strongCount, "Failed to get strong from dropped weak handle.");
+            return AtomicHandle<T>(this->index, this->strongCount, this->mutex, this->pool);
+        }
+
+    private:
+        friend class AtomicPool<T>;
+        friend struct AtomicHandle<T>;
+        WeakAtomicHandle(size_t index, size_t* strongCount, std::mutex* mutex, AtomicPool<T>* pool)
+            : index(index), strongCount(strongCount), mutex(mutex), pool(pool) {
+        }
+
+        size_t index;
+        size_t* strongCount;
+        std::mutex* mutex;
+        AtomicPool<T>* pool;
+    };
+
+    template <typename T>
     class AtomicPool {
     public:
         AtomicPool();
@@ -114,6 +162,7 @@ namespace UniverseEngine {
         AtomicPool& operator=(const AtomicPool& other) = delete;
 
         OptionalPtr<T> Value(AtomicHandle<T> handle);
+        OptionalPtr<T> Value(WeakAtomicHandle<T> handle);
         AtomicHandle<T> Alloc();
 
     private:
@@ -144,6 +193,18 @@ namespace UniverseEngine {
     }
 
     template <typename T>
+    OptionalPtr<T> AtomicPool<T>::Value(WeakAtomicHandle<T> handle) {
+        UE_ASSERT_MSG(handle.Index() < this->capacity, "Invalid handle.");
+
+        if (handle.IsAlive()) {
+            T* value = &this->data[handle.Index()];
+            return OptionalPtr<T>::Some(value);
+        } else {
+            return OptionalPtr<T>::None();
+        }
+    }
+
+    template <typename T>
     AtomicHandle<T> AtomicPool<T>::Alloc() {
         if (this->freeHandles.empty()) {
             size_t newCapacity = this->capacity * 2;
@@ -159,7 +220,8 @@ namespace UniverseEngine {
 
         AtomicHandle<T> handle = this->freeHandles.front();
         this->freeHandles.pop();
-        *handle.strongCount = 1;
+        handle.strongCount = new size_t(1);
+        handle.mutex = new std::mutex{};
 
         return handle;
     }

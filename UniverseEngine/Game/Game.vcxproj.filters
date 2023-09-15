@@ -7,6 +7,12 @@
     <Filter Include="Assets">
       <UniqueIdentifier>{5df777ee-f829-474b-a28f-7249e98348b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets\Shaders">
+      <UniqueIdentifier>{c84ce787-a069-441c-8675-9d80b9e6a763}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Shaders\GL">
+      <UniqueIdentifier>{db98b50d-ddea-4a8c-af93-0fadcc2eea45}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -41,6 +47,12 @@
     </None>
     <None Include="Assets\templates\vray_materials.mdl">
       <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Shaders\GL\unlit.fs">
+      <Filter>Assets\Shaders\GL</Filter>
+    </None>
+    <None Include="Assets\Shaders\GL\unlit.vs">
+      <Filter>Assets\Shaders\GL</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -45,7 +45,9 @@ namespace UniverseEngine {
 
     void Engine::Run() {
         while (!GetGraphics().GetWindow().ShouldClose()) {
+            GetWorld().Update();
             GetGraphics().Update();
+            GetResources().Update();
         }
     }
 }  // namespace UniverseEngine

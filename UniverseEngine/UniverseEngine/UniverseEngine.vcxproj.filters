@@ -29,6 +29,18 @@
     <Filter Include="Src\Input">
       <UniqueIdentifier>{1a6bfce2-cce5-46e1-b82a-15130e58fb27}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Graphics\Common">
+      <UniqueIdentifier>{21b00391-0cef-49ea-8ebf-5bc5ff4cafcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Graphics\GL">
+      <UniqueIdentifier>{afc53881-e2c3-45a4-a6b5-6d2cbe5dc92b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Graphics\Common\Assets">
+      <UniqueIdentifier>{ef60d133-6efd-42f2-873e-1d907335456f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Graphics\GL\Assets">
+      <UniqueIdentifier>{fa285c54-669d-4b7d-91ba-413b509ef73b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UniverseEngine.h">
@@ -82,6 +94,42 @@
     <ClInclude Include="World.h">
       <Filter>Src\Core</Filter>
     </ClInclude>
+    <ClInclude Include="MeshRenderable.h">
+      <Filter>Src\Graphics\Common\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsAPI.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderRenderable.h">
+      <Filter>Src\Graphics\Common\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugNames.h">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="Format.h">
+      <Filter>Src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsPipeline.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderType.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdList.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Rect2D.h">
+      <Filter>Src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdQueue.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Src\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -119,6 +167,42 @@
     </ClCompile>
     <ClCompile Include="World.cpp">
       <Filter>Src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRenderable.cpp">
+      <Filter>Src\Graphics\GL\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsAPI.cpp">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderRenderable.cpp">
+      <Filter>Src\Graphics\GL\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderLoader.cpp">
+      <Filter>Src\Resources\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugNames.cpp">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsPipeline.cpp">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdList.cpp">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdQueue.cpp">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Src\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

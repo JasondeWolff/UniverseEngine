@@ -2,6 +2,9 @@
 
 #include <memory>
 
+#include "CmdList.h"
+#include "GraphicsPipeline.h"
+#include "Resources.h"
 #include "Window.h"
 
 namespace UniverseEngine {
@@ -17,6 +20,9 @@ namespace UniverseEngine {
 
         void Update();
 
+        void BuildRenderables();
+
         std::unique_ptr<Window> window;
+        std::shared_ptr<GraphicsPipeline> unlitPipeline;
     };
 }  // namespace UniverseEngine

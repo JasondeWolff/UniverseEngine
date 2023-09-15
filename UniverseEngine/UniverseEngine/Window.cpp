@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "GraphicsAPI.h"
 #include "Logging.h"
 
 namespace UniverseEngine {
@@ -10,19 +11,18 @@ namespace UniverseEngine {
         UE_FATAL(description);
     }
 
-    Window::Window(const char* title)
-        : width(640), height(480) {
+    Window::Window(const char* title) : width(640), height(480) {
         UE_ASSERT_MSG(glfwInit(), "Failed to init glfw.");
         glfwSetErrorCallback(GlfwErrorCallback);
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-        this->glfwWindow =
-            glfwCreateWindow(static_cast<int>(this->width), static_cast<int>(this->height), title, NULL, NULL);
+        this->glfwWindow = glfwCreateWindow(static_cast<int>(this->width),
+                                            static_cast<int>(this->height), title, NULL, NULL);
         UE_ASSERT_MSG(this->glfwWindow, "Failed to create window.");
 
         glfwMakeContextCurrent(this->glfwWindow);
-        glewInit();
+        GraphicsAPI::Init();
     }
 
     GLFWwindow* Window::GlfwWindow() const {
@@ -35,6 +35,14 @@ namespace UniverseEngine {
 
     void Window::Close() const {
         glfwSetWindowShouldClose(this->glfwWindow, GLFW_TRUE);
+    }
+
+    uint32_t Window::Width() const {
+        return this->width;
+    }
+
+    uint32_t Window::Height() const {
+        return this->height;
     }
 
     void Window::Update() {
