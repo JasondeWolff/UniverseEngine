@@ -11,6 +11,12 @@ namespace UniverseEngine {
         UE_FATAL(description);
     }
 
+    void Window::GlfwWindowSizeCallback(GLFWwindow* glfwWindow, int width, int height) {
+        Window* window = static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+        window->width = static_cast<unsigned>(width);
+        window->height = static_cast<unsigned>(height);
+    }
+
     Window::Window(const char* title) : width(640), height(480) {
         UE_ASSERT_MSG(glfwInit(), "Failed to init glfw.");
         glfwSetErrorCallback(GlfwErrorCallback);
@@ -23,6 +29,9 @@ namespace UniverseEngine {
 
         glfwMakeContextCurrent(this->glfwWindow);
         GraphicsAPI::Init();
+
+        glfwSetWindowUserPointer(this->glfwWindow, static_cast<void*>(this));
+        glfwSetWindowSizeCallback(this->glfwWindow, Window::GlfwWindowSizeCallback);
     }
 
     GLFWwindow* Window::GlfwWindow() const {

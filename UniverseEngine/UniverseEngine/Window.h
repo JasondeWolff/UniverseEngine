@@ -25,5 +25,7 @@ namespace UniverseEngine {
         GLFWwindow* glfwWindow;
         unsigned width;
         unsigned height;
+
+        static void GlfwWindowSizeCallback(GLFWwindow* glfwWindow, int width, int height);
     };
 }
