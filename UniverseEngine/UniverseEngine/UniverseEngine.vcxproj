@@ -15,6 +15,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CmdList.h" />
     <ClInclude Include="CmdQueue.h" />
+    <ClInclude Include="Gamepad.h" />
     <ClInclude Include="DebugNames.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Format.h" />
@@ -48,6 +49,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CmdList.cpp" />
     <ClCompile Include="CmdQueue.cpp" />
+    <ClCompile Include="Gamepad.cpp" />
     <ClCompile Include="DebugNames.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GraphicsAPI.cpp" />

@@ -139,6 +139,9 @@
     <ClInclude Include="InputCode.h">
       <Filter>Src\Input</Filter>
     </ClInclude>
+    <ClInclude Include="Gamepad.h">
+      <Filter>Src\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -215,6 +218,9 @@
     </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Gamepad.cpp">
+      <Filter>Src\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

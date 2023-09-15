@@ -32,7 +32,10 @@ void FreeFormCamera::Update(float deltaTime) {
 	if (input.GetKey(KeyCode::Q)) {
 		translation -= camera.transform.GetUp();
 	}
-	translation *= deltaTime * this->movementSpeed;
+
+	if (glm::dot(translation, translation) > 0.0) {
+		translation = glm::normalize(translation) * deltaTime * this->movementSpeed;
+	}
 
 	this->rotationEuler.x -= input.GetMouseDelta().y * this->lookSensitivity;
 	this->rotationEuler.z -= input.GetMouseDelta().x * this->lookSensitivity;

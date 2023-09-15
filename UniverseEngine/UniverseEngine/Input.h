@@ -3,6 +3,7 @@
 #include <glm/vec2.hpp>
 
 #include "InputCode.h"
+#include "Gamepad.h"
 
 namespace UniverseEngine {
     enum class CursorMode {
@@ -23,6 +24,8 @@ namespace UniverseEngine {
         CursorMode GetCursorMode() const;
         void SetCursorMode(CursorMode cursorMode);
 
+        const Gamepad& GetGamepad(GamepadIndex index = GamepadIndex::GAMEPAD_1) const;
+
     private:
         friend class Engine;
         friend class Window;
@@ -40,5 +43,7 @@ namespace UniverseEngine {
         glm::vec2 mousePosition;
         glm::vec2 oldMousePosition;
         CursorMode cursorMode;
+
+        Gamepad gamepads[MAX_GAMEPADS];
     };
 }

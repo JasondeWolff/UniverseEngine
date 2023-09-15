@@ -7,7 +7,15 @@
 
 namespace UniverseEngine {
     Input::Input()
-        : keys{}, oldKeys{}, mouseButtons{}, oldMouseButtons{}, mousePosition{}, oldMousePosition{}, cursorMode(CursorMode::ENABLED) {
+        : keys{},
+          oldKeys{},
+          mouseButtons{},
+          oldMouseButtons{},
+          mousePosition{},
+          oldMousePosition{},
+          cursorMode(CursorMode::ENABLED),
+          gamepads{Gamepad(GamepadIndex::GAMEPAD_1), Gamepad(GamepadIndex::GAMEPAD_2),
+                   Gamepad(GamepadIndex::GAMEPAD_3), Gamepad(GamepadIndex::GAMEPAD_4)} {
     }
 
     bool Input::GetKey(KeyCode keyCode) const {
@@ -53,10 +61,18 @@ namespace UniverseEngine {
         }
     }
 
+    const Gamepad& Input::GetGamepad(GamepadIndex index) const {
+        return this->gamepads[static_cast<size_t>(index)];
+    }
+
     void Input::Update() {
         memcpy(this->oldKeys, this->keys, sizeof(bool) * MAX_KEYS);
         memcpy(this->oldMouseButtons, this->mouseButtons, sizeof(bool) * MAX_MOUSE_BUTTONS);
 
         this->oldMousePosition = this->mousePosition;
+
+        for (size_t i = 0; i < MAX_GAMEPADS; i++) {
+            this->gamepads[i].Update();
+        }
     }
 }  // namespace UniverseEngine
