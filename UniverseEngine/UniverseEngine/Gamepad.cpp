@@ -2,6 +2,8 @@
 
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+
 #include "Logging.h"
 
 namespace UniverseEngine {
@@ -49,10 +51,14 @@ namespace UniverseEngine {
         this->connected = (glfwJoystickPresent(jid) == GLFW_TRUE);
 
         int count;
-        const float* axes = glfwGetJoystickAxes(jid, &count);
+        const float* axis = glfwGetJoystickAxes(jid, &count);
         UE_ASSERT_MSG(count <= NUM_AXIS, "Gamepad exceeds max axis.");
         for (size_t i = 0; i < count; i++) {
-            this->axis[i] = axis[i];
+            if (abs(axis[i]) < 0.05) {
+                this->axis[i] = 0.0;
+            } else {
+                this->axis[i] = axis[i];
+            }
         }
 
         memcpy(this->oldButtons, this->buttons, sizeof(bool) * NUM_BUTTONS);
