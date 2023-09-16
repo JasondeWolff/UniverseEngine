@@ -43,6 +43,7 @@
     <ClInclude Include="MathUtil.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Option.h" />
+    <ClInclude Include="Plane.h" />
     <ClInclude Include="Pool.h" />
     <ClInclude Include="Rect2D.h" />
     <ClInclude Include="Resources.h" />
@@ -100,6 +101,7 @@
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="MathUtil.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
+    <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />

@@ -148,6 +148,9 @@
     <ClInclude Include="GraphicsInstance.h">
       <Filter>Src\Graphics\Common</Filter>
     </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -233,6 +236,9 @@
     </ClCompile>
     <ClCompile Include="gl\GraphicsInstance.cpp">
       <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
+      <Filter>Src\Resources\Assets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
