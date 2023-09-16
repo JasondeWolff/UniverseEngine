@@ -1,9 +1,9 @@
-#include "CmdList.h"
+#include "../CmdList.h"
 
 #include <GL/glew.h>
 
-#include "Logging.h"
-#include "GraphicsPipeline.h"
+#include "../Logging.h"
+#include "../GraphicsPipeline.h"
 
 namespace UniverseEngine {
     CmdList::CmdList() {

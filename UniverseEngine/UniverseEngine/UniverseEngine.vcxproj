@@ -24,7 +24,7 @@
     <ClInclude Include="CmdList.h" />
     <ClInclude Include="CmdQueue.h" />
     <ClInclude Include="Gamepad.h" />
-    <ClInclude Include="GlDebugNames.h">
+    <ClInclude Include="gl\GlDebugNames.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugVulkan|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseVulkan|x64'">true</ExcludedFromBuild>
     </ClInclude>
@@ -59,38 +59,38 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="CmdList.cpp">
+    <ClCompile Include="gl\CmdList.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugVulkan|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseVulkan|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="CmdQueue.cpp">
+    <ClCompile Include="gl\CmdQueue.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugVulkan|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseVulkan|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Gamepad.cpp" />
-    <ClCompile Include="GlDebugNames.cpp">
+    <ClCompile Include="gl\GlDebugNames.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugVulkan|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseVulkan|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="GraphicsAPI.cpp">
+    <ClCompile Include="gl\GraphicsAPI.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugVulkan|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseVulkan|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="GraphicsInstance.cpp">
+    <ClCompile Include="gl\GraphicsInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugVulkan|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseVulkan|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="GraphicsInstances.cpp">
+    <ClCompile Include="vulkan\GraphicsInstance.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="GraphicsPipeline.cpp">
+    <ClCompile Include="gl\GraphicsPipeline.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugVulkan|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseVulkan|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="MeshRenderable.cpp">
+    <ClCompile Include="gl\MeshRenderable.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugVulkan|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseVulkan|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -104,7 +104,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderLoader.cpp" />
-    <ClCompile Include="ShaderRenderable.cpp">
+    <ClCompile Include="gl\ShaderRenderable.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugVulkan|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseVulkan|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -174,13 +174,13 @@
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
     <PublicIncludeDirectories>$(PublicIncludeDirectories)</PublicIncludeDirectories>
     <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\TinyUSD\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\tree\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\TinyUSD\bin\;$(SolutionDir)Dependencies\GLFW\bin\;$(SolutionDir)Dependencies\glew\bin\;C:\VulkanSDK\1.3.261.1\Lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Dependencies\TinyUSD\bin\;$(SolutionDir)Dependencies\GLFW\bin\;$(SolutionDir)Dependencies\glew\bin\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugVulkan|x64'">
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
     <PublicIncludeDirectories>$(PublicIncludeDirectories)</PublicIncludeDirectories>
-    <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\TinyUSD\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\tree\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\TinyUSD\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\tree\include\;C:\VulkanSDK\1.3.261.1\Include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Dependencies\TinyUSD\bin\;$(SolutionDir)Dependencies\GLFW\bin\;$(SolutionDir)Dependencies\glew\bin\;C:\VulkanSDK\1.3.261.1\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -188,20 +188,20 @@
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
     <PublicIncludeDirectories>$(PublicIncludeDirectories)</PublicIncludeDirectories>
     <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\TinyUSD\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\tree\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\TinyUSD\bin\;$(SolutionDir)Dependencies\GLFW\bin\;$(SolutionDir)Dependencies\glew\bin\;C:\VulkanSDK\1.3.261.1\Lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Dependencies\TinyUSD\bin\;$(SolutionDir)Dependencies\GLFW\bin\;$(SolutionDir)Dependencies\glew\bin\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseVulkan|x64'">
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
     <PublicIncludeDirectories>$(PublicIncludeDirectories)</PublicIncludeDirectories>
-    <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\TinyUSD\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\tree\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\TinyUSD\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\tree\include\;C:\VulkanSDK\1.3.261.1\Include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Dependencies\TinyUSD\bin\;$(SolutionDir)Dependencies\GLFW\bin\;$(SolutionDir)Dependencies\glew\bin\;C:\VulkanSDK\1.3.261.1\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NOMINMAX;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GRAPHICS_API_GL;NOMINMAX;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -212,14 +212,14 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>dtinyusdz_static.lib;glfw3.lib;glew32.lib;opengl32.lib;vulkan-1.lib</AdditionalDependencies>
+      <AdditionalDependencies>dtinyusdz_static.lib;glfw3.lib;glew32.lib;opengl32.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugVulkan|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NOMINMAX;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GRAPHICS_API_VULKAN;NOMINMAX;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -239,7 +239,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NOMINMAX;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GRAPHICS_API_GL;NOMINMAX;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -252,7 +252,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>tinyusdz_static.lib;glfw3.lib;glew32.lib;opengl32.lib;vulkan-1.lib</AdditionalDependencies>
+      <AdditionalDependencies>tinyusdz_static.lib;glfw3.lib;glew32.lib;opengl32.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseVulkan|x64'">
@@ -261,7 +261,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NOMINMAX;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GRAPHICS_API_VULKAN;NOMINMAX;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>

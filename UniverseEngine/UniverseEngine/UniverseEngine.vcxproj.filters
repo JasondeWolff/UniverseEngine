@@ -109,7 +109,7 @@
     <ClInclude Include="ShaderRenderable.h">
       <Filter>Src\Graphics\Common\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="GlDebugNames.h">
+    <ClInclude Include="gl\GlDebugNames.h">
       <Filter>Src\Graphics\GL</Filter>
     </ClInclude>
     <ClInclude Include="Format.h">
@@ -189,16 +189,16 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Src\Resources\Assets</Filter>
     </ClCompile>
-    <ClCompile Include="MeshRenderable.cpp">
+    <ClCompile Include="gl\MeshRenderable.cpp">
       <Filter>Src\Graphics\GL\Assets</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Src\Resources\Assets</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsAPI.cpp">
+    <ClCompile Include="gl\GraphicsAPI.cpp">
       <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderRenderable.cpp">
+    <ClCompile Include="gl\ShaderRenderable.cpp">
       <Filter>Src\Graphics\GL\Assets</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
@@ -207,16 +207,16 @@
     <ClCompile Include="ShaderLoader.cpp">
       <Filter>Src\Resources\Loaders</Filter>
     </ClCompile>
-    <ClCompile Include="GlDebugNames.cpp">
+    <ClCompile Include="gl\GlDebugNames.cpp">
       <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsPipeline.cpp">
+    <ClCompile Include="gl\GraphicsPipeline.cpp">
       <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
-    <ClCompile Include="CmdList.cpp">
+    <ClCompile Include="gl\CmdList.cpp">
       <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
-    <ClCompile Include="CmdQueue.cpp">
+    <ClCompile Include="gl\CmdQueue.cpp">
       <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
@@ -228,10 +228,10 @@
     <ClCompile Include="Gamepad.cpp">
       <Filter>Src\Input</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsInstances.cpp">
+    <ClCompile Include="vulkan\GraphicsInstance.cpp">
       <Filter>Src\Graphics\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsInstance.cpp">
+    <ClCompile Include="gl\GraphicsInstance.cpp">
       <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
   </ItemGroup>

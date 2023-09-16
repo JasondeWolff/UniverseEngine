@@ -1,11 +1,11 @@
-#include "GraphicsPipeline.h"
+#include "../GraphicsPipeline.h"
 
 #include <GL/glew.h>
 
+#include "../Format.h"
+#include "../Logging.h"
+#include "../ShaderRenderable.h"
 #include "GlDebugNames.h"
-#include "Format.h"
-#include "Logging.h"
-#include "ShaderRenderable.h"
 
 namespace UniverseEngine {
     GraphicsPipeline::GraphicsPipeline(const std::vector<ShaderRenderable*>& shaders) {
@@ -13,7 +13,8 @@ namespace UniverseEngine {
 
         std::string debugName = "";
         for (auto shader : shaders) {
-            debugName += Format("- %s\n", GlDebugNames::Get(GL_SHADER, shader->GetShader()).c_str());
+            debugName +=
+                Format("- %s\n", GlDebugNames::Get(GL_SHADER, shader->GetShader()).c_str());
         }
         debugName = Format("[\n%s]", debugName.c_str());
         GlDebugNames::Set(GL_PROGRAM, this->shaderProgram, debugName);

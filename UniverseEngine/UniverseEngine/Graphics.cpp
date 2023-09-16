@@ -9,6 +9,7 @@ struct MVPPushConstant {
 namespace UniverseEngine {
     Graphics::Graphics() {
         this->window = std::move(std::unique_ptr<Window>(new Window("Universe Engine")));
+        this->instance = GraphicsAPI::Init();
 
         auto& resources = Engine::GetResources();
 

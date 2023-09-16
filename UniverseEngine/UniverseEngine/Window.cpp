@@ -49,7 +49,6 @@ namespace UniverseEngine {
         UE_ASSERT_MSG(this->glfwWindow, "Failed to create window.");
 
         glfwMakeContextCurrent(this->glfwWindow);
-        GraphicsAPI::Init();
 
         glfwSetWindowUserPointer(this->glfwWindow, static_cast<void*>(this));
         glfwSetWindowSizeCallback(this->glfwWindow, Window::GlfwWindowSizeCallback);

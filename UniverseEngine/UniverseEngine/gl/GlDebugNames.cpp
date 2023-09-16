@@ -1,6 +1,6 @@
 #include "GlDebugNames.h"
 
-#include "Logging.h"
+#include "../Logging.h"
 
 namespace UniverseEngine {
     void GlDebugNames::Set(GLenum identifier, GLuint object, const std::string& name) {

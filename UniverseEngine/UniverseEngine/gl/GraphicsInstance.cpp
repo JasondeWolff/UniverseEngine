@@ -1,8 +1,8 @@
-#include "GraphicsAPI.h"
+#include "../GraphicsInstance.h"
 
 #include <GL/glew.h>
 
-#include "Logging.h"
+#include "../Logging.h"
 
 namespace UniverseEngine {
     void GlDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
@@ -10,7 +10,7 @@ namespace UniverseEngine {
         UE_ASSERT_MSG(severity != GL_DEBUG_SEVERITY_HIGH, "GL: %s", message);
     }
 
-    void GraphicsAPI::Init() {
+    GraphicsInstance::GraphicsInstance() {
         glewInit();
 
 #ifndef NDEBUG
@@ -20,7 +20,6 @@ namespace UniverseEngine {
 #endif
     }
 
-    const char* GraphicsAPI::ShaderDir() {
-        return "GL/";
+    GraphicsInstance::~GraphicsInstance() {
     }
-}  // namespace UniverseEngine
+}
