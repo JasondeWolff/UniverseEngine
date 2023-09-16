@@ -27,10 +27,10 @@ void FreeFormCamera::Update(float deltaTime) {
 	if (input.GetKey(KeyCode::A)) {
 		translation -= camera.transform.GetRight();
 	}
-	if (input.GetKey(KeyCode::E)) {
+	if (input.GetKey(KeyCode::E) || gamepad.GetButton(GamepadButton::B)) {
 		translation += camera.transform.GetUp();
 	}
-	if (input.GetKey(KeyCode::Q)) {
+	if (input.GetKey(KeyCode::Q) || gamepad.GetButton(GamepadButton::A)) {
 		translation -= camera.transform.GetUp();
 	}
 

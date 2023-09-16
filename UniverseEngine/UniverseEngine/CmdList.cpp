@@ -33,6 +33,10 @@ namespace UniverseEngine {
 
     void CmdList::BindGraphicsPipeline(std::shared_ptr<GraphicsPipeline> graphicsPipeline) {
         glUseProgram(graphicsPipeline->ShaderProgram());
+
+        // TODO: pipeline states like blending, depth etc.
+        glEnable(GL_DEPTH_TEST);
+
         this->graphicsPipeline = graphicsPipeline;
     }
 
