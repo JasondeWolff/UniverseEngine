@@ -5,7 +5,7 @@ namespace UniverseEngine{
     Plane::Plane(int width, int height, int widthSegments, int heightSegments)
         : m_Width(width), m_Height(height), m_WidthSegments(widthSegments), m_HeightSegments(heightSegments)
     {
-        const int width_half = width / 2;
+       /* const int width_half = width / 2;
         const int height_half = height / 2;
 
         const int gridX = widthSegments;
@@ -44,6 +44,6 @@ namespace UniverseEngine{
                 indices.emplace_back(a, b, d);
                 indices.emplace_back(b, c, d);
             }
-        }
+        }*/
     }
 }
