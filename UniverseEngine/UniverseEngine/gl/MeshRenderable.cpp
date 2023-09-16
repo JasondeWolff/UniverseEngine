@@ -1,10 +1,10 @@
 #include <GL/glew.h>
 
-#include "CmdList.h"
+#include "../CmdList.h"
+#include "../Format.h"
+#include "../Logging.h"
+#include "../Mesh.h"
 #include "GlDebugNames.h"
-#include "Format.h"
-#include "Logging.h"
-#include "Mesh.h"
 
 namespace UniverseEngine {
     MeshRenderable::MeshRenderable(const Mesh& mesh)
@@ -13,7 +13,7 @@ namespace UniverseEngine {
         UE_ASSERT(mesh.indices.size() > 0);
 
         glGenVertexArrays(1, &this->vao);
-        glGenBuffers(1, &this->vbo);  
+        glGenBuffers(1, &this->vbo);
         glGenBuffers(1, &this->ebo);
 
         glBindVertexArray(this->vao);
@@ -23,8 +23,7 @@ namespace UniverseEngine {
             glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
             GlDebugNames::Set(GL_BUFFER, this->vbo, Format("%s_VBO", mesh.name.c_str()));
             glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(Vertex),
-                         mesh.vertices.data(),
-                         GL_STATIC_DRAW);
+                         mesh.vertices.data(), GL_STATIC_DRAW);
 
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
             GlDebugNames::Set(GL_BUFFER, this->ebo, Format("%s_EBO", mesh.name.c_str()));

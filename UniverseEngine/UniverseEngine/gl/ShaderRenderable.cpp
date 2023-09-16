@@ -1,10 +1,10 @@
-#include "ShaderRenderable.h"
+#include "../ShaderRenderable.h"
 
 #include <GL/glew.h>
 
+#include "../Logging.h"
+#include "../Shader.h"
 #include "GlDebugNames.h"
-#include "Logging.h"
-#include "Shader.h"
 
 namespace UniverseEngine {
     GLenum GetShaderType(const Shader& shader) {
@@ -35,7 +35,8 @@ namespace UniverseEngine {
         glGetShaderiv(this->shader, GL_COMPILE_STATUS, &success);
         if (!success) {
             glGetShaderInfoLog(this->shader, sizeof(log), NULL, log);
-            UE_FATAL("Failed to compile shader '%s'.\n---------------------------------\n%s", shader.name.c_str(), log);
+            UE_FATAL("Failed to compile shader '%s'.\n---------------------------------\n%s",
+                     shader.name.c_str(), log);
         }
     }
 
