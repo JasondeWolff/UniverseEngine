@@ -15,7 +15,7 @@ namespace UniverseEngine {
 
     private:
         friend class GraphicsAPI;
-        GraphicsInstance();
+        GraphicsInstance(bool debug);
 
 #ifdef GRAPHICS_API_GL
 #elif defined(GRAPHICS_API_VULKAN)

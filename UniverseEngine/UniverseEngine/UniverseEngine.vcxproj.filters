@@ -44,6 +44,9 @@
     <Filter Include="Src\Graphics\Vulkan">
       <UniqueIdentifier>{3a7e04a3-f9e4-490a-8f29-b0c1680a92fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Graphics\Vulkan\Assets">
+      <UniqueIdentifier>{40ef5870-e7e2-45e6-b8e0-53446baf3f78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UniverseEngine.h">
@@ -240,6 +243,22 @@
     <ClCompile Include="Plane.cpp">
       <Filter>Src\Resources\Assets</Filter>
     </ClCompile>
+    <ClCompile Include="vulkan\CmdList.cpp">
+      <Filter>Src\Graphics\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\CmdQueue.cpp">
+      <Filter>Src\Graphics\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\GraphicsAPI.cpp">
+      <Filter>Src\Graphics\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\GraphicsPipeline.cpp">
+      <Filter>Src\Graphics\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\MeshRenderable.cpp">
+      <Filter>Src\Graphics\Vulkan\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\ShaderRenderable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
