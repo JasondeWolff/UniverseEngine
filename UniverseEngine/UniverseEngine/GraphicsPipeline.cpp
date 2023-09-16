@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 
-#include "DebugNames.h"
+#include "GlDebugNames.h"
 #include "Format.h"
 #include "Logging.h"
 #include "ShaderRenderable.h"
@@ -13,10 +13,10 @@ namespace UniverseEngine {
 
         std::string debugName = "";
         for (auto shader : shaders) {
-            debugName += Format("- %s\n", DebugNames::Get(GL_SHADER, shader->GetShader()).c_str());
+            debugName += Format("- %s\n", GlDebugNames::Get(GL_SHADER, shader->GetShader()).c_str());
         }
         debugName = Format("[\n%s]", debugName.c_str());
-        DebugNames::Set(GL_PROGRAM, this->shaderProgram, debugName);
+        GlDebugNames::Set(GL_PROGRAM, this->shaderProgram, debugName);
 
         for (auto shader : shaders) {
             glAttachShader(this->shaderProgram, shader->GetShader());

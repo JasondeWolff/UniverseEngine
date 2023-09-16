@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 
-#include "DebugNames.h"
+#include "GlDebugNames.h"
 #include "Logging.h"
 #include "Shader.h"
 
@@ -24,7 +24,7 @@ namespace UniverseEngine {
         UE_ASSERT_MSG(shader.sourceCode.size() > 0, "Cannot build renderable from empty shader.");
 
         this->shader = glCreateShader(GetShaderType(shader));
-        DebugNames::Set(GL_SHADER, this->shader, shader.name);
+        GlDebugNames::Set(GL_SHADER, this->shader, shader.name);
 
         const char* pSourceCode = shader.sourceCode.c_str();
         glShaderSource(this->shader, 1, &pSourceCode, NULL);

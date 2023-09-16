@@ -1,7 +1,7 @@
 #include <GL/glew.h>
 
 #include "CmdList.h"
-#include "DebugNames.h"
+#include "GlDebugNames.h"
 #include "Format.h"
 #include "Logging.h"
 #include "Mesh.h"
@@ -18,16 +18,16 @@ namespace UniverseEngine {
 
         glBindVertexArray(this->vao);
         {
-            DebugNames::Set(GL_VERTEX_ARRAY, this->vao, Format("%s_VAO", mesh.name.c_str()));
+            GlDebugNames::Set(GL_VERTEX_ARRAY, this->vao, Format("%s_VAO", mesh.name.c_str()));
 
             glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-            DebugNames::Set(GL_BUFFER, this->vbo, Format("%s_VBO", mesh.name.c_str()));
+            GlDebugNames::Set(GL_BUFFER, this->vbo, Format("%s_VBO", mesh.name.c_str()));
             glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(Vertex),
                          mesh.vertices.data(),
                          GL_STATIC_DRAW);
 
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
-            DebugNames::Set(GL_BUFFER, this->ebo, Format("%s_EBO", mesh.name.c_str()));
+            GlDebugNames::Set(GL_BUFFER, this->ebo, Format("%s_EBO", mesh.name.c_str()));
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indices.size() * sizeof(uint32_t),
                          mesh.indices.data(), GL_STATIC_DRAW);
 

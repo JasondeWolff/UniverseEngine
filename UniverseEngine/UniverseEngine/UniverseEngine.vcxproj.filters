@@ -41,6 +41,9 @@
     <Filter Include="Src\Graphics\GL\Assets">
       <UniqueIdentifier>{fa285c54-669d-4b7d-91ba-413b509ef73b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Graphics\Vulkan">
+      <UniqueIdentifier>{3a7e04a3-f9e4-490a-8f29-b0c1680a92fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UniverseEngine.h">
@@ -106,7 +109,7 @@
     <ClInclude Include="ShaderRenderable.h">
       <Filter>Src\Graphics\Common\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="DebugNames.h">
+    <ClInclude Include="GlDebugNames.h">
       <Filter>Src\Graphics\GL</Filter>
     </ClInclude>
     <ClInclude Include="Format.h">
@@ -141,6 +144,9 @@
     </ClInclude>
     <ClInclude Include="Gamepad.h">
       <Filter>Src\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsInstance.h">
+      <Filter>Src\Graphics\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -201,7 +207,7 @@
     <ClCompile Include="ShaderLoader.cpp">
       <Filter>Src\Resources\Loaders</Filter>
     </ClCompile>
-    <ClCompile Include="DebugNames.cpp">
+    <ClCompile Include="GlDebugNames.cpp">
       <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsPipeline.cpp">
@@ -221,6 +227,12 @@
     </ClCompile>
     <ClCompile Include="Gamepad.cpp">
       <Filter>Src\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsInstances.cpp">
+      <Filter>Src\Graphics\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsInstance.cpp">
+      <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
