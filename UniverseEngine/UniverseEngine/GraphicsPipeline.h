@@ -11,7 +11,6 @@ namespace UniverseEngine {
     public:
         GraphicsPipeline(const std::vector<ShaderRenderable*>& shaders);
         ~GraphicsPipeline();
-
         GraphicsPipeline(const GraphicsPipeline& other) = delete;
         GraphicsPipeline& operator=(const GraphicsPipeline& other) = delete;
 

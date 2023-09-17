@@ -46,6 +46,7 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UniverseEngine.h" />
+    <ClInclude Include="Swapchain.h" />
     <ClInclude Include="vulkan\VkExtensions.h" />
     <ClInclude Include="vulkan\VkValidation.h" />
     <ClInclude Include="Window.h" />
@@ -89,6 +90,8 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="USDLoader.cpp" />
+    <ClCompile Include="gl\Swapchain.cpp" />
+    <ClCompile Include="vulkan\Swapchain.cpp" />
     <ClCompile Include="vulkan\VkExtensions.cpp" />
     <ClCompile Include="vulkan\VkValidation.cpp" />
     <ClCompile Include="Window.cpp" />

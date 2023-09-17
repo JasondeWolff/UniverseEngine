@@ -9,6 +9,7 @@
 #include "PhysicalDevice.h"
 #include "Resources.h"
 #include "Window.h"
+#include "Swapchain.h"
 
 namespace UniverseEngine {
     class Engine;
@@ -29,6 +30,7 @@ namespace UniverseEngine {
         std::unique_ptr<GraphicsInstance> instance;
         std::unique_ptr<PhysicalDevice> physicalDevice;
         std::unique_ptr<LogicalDevice> device;
+        std::unique_ptr<Swapchain> swapchain;
         std::unique_ptr<CmdQueue> cmdQueue;
 
         std::shared_ptr<GraphicsPipeline> unlitPipeline;

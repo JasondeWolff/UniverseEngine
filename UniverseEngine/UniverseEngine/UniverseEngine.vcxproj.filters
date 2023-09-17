@@ -47,6 +47,12 @@
     <Filter Include="Src\Graphics\Vulkan\Assets">
       <UniqueIdentifier>{40ef5870-e7e2-45e6-b8e0-53446baf3f78}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Graphics\GL\Specific">
+      <UniqueIdentifier>{25ae8e87-0e92-4291-bbb6-3c3367a2e862}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Graphics\Vulkan\Specific">
+      <UniqueIdentifier>{87f5b487-77f0-4bcc-894b-e38252c33612}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UniverseEngine.h">
@@ -112,9 +118,6 @@
     <ClInclude Include="ShaderRenderable.h">
       <Filter>Src\Graphics\Common\Assets</Filter>
     </ClInclude>
-    <ClInclude Include="gl\GlDebugNames.h">
-      <Filter>Src\Graphics\GL</Filter>
-    </ClInclude>
     <ClInclude Include="Format.h">
       <Filter>Src\Utils</Filter>
     </ClInclude>
@@ -160,11 +163,17 @@
     <ClInclude Include="LogicalDevice.h">
       <Filter>Src\Graphics\Common</Filter>
     </ClInclude>
-    <ClInclude Include="vulkan\VkValidation.h">
-      <Filter>Src\Graphics\Vulkan</Filter>
+    <ClInclude Include="Swapchain.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="gl\GlDebugNames.h">
+      <Filter>Src\Graphics\GL\Specific</Filter>
     </ClInclude>
     <ClInclude Include="vulkan\VkExtensions.h">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+    </ClInclude>
+    <ClInclude Include="vulkan\VkValidation.h">
+      <Filter>Src\Graphics\Vulkan\Specific</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -225,9 +234,6 @@
     <ClCompile Include="ShaderLoader.cpp">
       <Filter>Src\Resources\Loaders</Filter>
     </ClCompile>
-    <ClCompile Include="gl\GlDebugNames.cpp">
-      <Filter>Src\Graphics\GL</Filter>
-    </ClCompile>
     <ClCompile Include="gl\GraphicsPipeline.cpp">
       <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
@@ -285,11 +291,20 @@
     <ClCompile Include="vulkan\LogicalDevice.cpp">
       <Filter>Src\Graphics\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="vulkan\VkValidation.cpp">
+    <ClCompile Include="gl\Swapchain.cpp">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\Swapchain.cpp">
       <Filter>Src\Graphics\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="gl\GlDebugNames.cpp">
+      <Filter>Src\Graphics\GL\Specific</Filter>
+    </ClCompile>
     <ClCompile Include="vulkan\VkExtensions.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\VkValidation.cpp">
+      <Filter>Src\Graphics\Vulkan\Specific</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
