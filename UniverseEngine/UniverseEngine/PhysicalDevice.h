@@ -11,6 +11,7 @@ namespace UniverseEngine {
 #ifdef GRAPHICS_API_VULKAN
     public:
         VkPhysicalDevice GetPhysicalDevice() const;
+        uint32_t GraphicsFamily() const;
     private:
         VkPhysicalDevice physicalDevice;
         uint32_t graphicsFamily;

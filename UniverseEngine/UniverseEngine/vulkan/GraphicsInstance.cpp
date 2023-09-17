@@ -1,36 +1,14 @@
 #include "../GraphicsAPI.h"
 #ifdef GRAPHICS_API_VULKAN
 
-#include "../GraphicsInstance.h"
-
 #include <vector>
 
+#include "../GraphicsInstance.h"
 #include "../Logging.h"
+#include "../PhysicalDevice.h"
+#include "VkValidation.h"
 
 namespace UniverseEngine {
-    static const std::vector<const char*> validationLayers = {"VK_LAYER_KHRONOS_validation"};
-
-    void CheckValidationLayerSupport() {
-        uint32_t layerCount;
-        vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
-
-        std::vector<VkLayerProperties> availableLayers(layerCount);
-        vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
-
-        for (const char* layerName : validationLayers) {
-            bool layerFound = false;
-
-            for (const auto& layerProperties : availableLayers) {
-                if (strcmp(layerName, layerProperties.layerName) == 0) {
-                    layerFound = true;
-                    break;
-                }
-            }
-
-            UE_ASSERT_MSG(layerFound, "Validation layer '%s' is not supported.", layerName);
-        }
-    }
-
     VkInstance CreateInstance(bool debug) {
         VkApplicationInfo appInfo{};
         appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;

@@ -62,5 +62,9 @@ namespace UniverseEngine {
     VkPhysicalDevice PhysicalDevice::GetPhysicalDevice() const {
         return this->physicalDevice;
     }
+
+    uint32_t PhysicalDevice::GraphicsFamily() const {
+        return this->graphicsFamily;
+    }
 }  // namespace UniverseEngine
 #endif

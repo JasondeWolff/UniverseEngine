@@ -8,8 +8,12 @@ struct MVPPushConstant {
 
 namespace UniverseEngine {
     Graphics::Graphics() {
+        bool enableDebug = true;
+
         this->window = std::move(std::unique_ptr<Window>(new Window("Universe Engine")));
-        this->instance = GraphicsAPI::Init(*this->window, true);
+        this->instance = std::make_unique<GraphicsInstance>(*this->window, enableDebug);
+        this->physicalDevice = std::make_unique<PhysicalDevice>(*this->instance);
+        this->device = std::make_unique<LogicalDevice>(*this->physicalDevice, enableDebug);
 
         auto& resources = Engine::GetResources();
 

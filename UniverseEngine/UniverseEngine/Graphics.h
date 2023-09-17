@@ -6,6 +6,8 @@
 #include "GraphicsPipeline.h"
 #include "Resources.h"
 #include "Window.h"
+#include "PhysicalDevice.h"
+#include "LogicalDevice.h"
 
 namespace UniverseEngine {
     class Engine;
@@ -24,6 +26,9 @@ namespace UniverseEngine {
 
         std::unique_ptr<Window> window;
         std::unique_ptr<GraphicsInstance> instance;
+        std::unique_ptr<PhysicalDevice> physicalDevice;
+        std::unique_ptr<LogicalDevice> device;
+
         std::shared_ptr<GraphicsPipeline> unlitPipeline;
     };
 }  // namespace UniverseEngine

@@ -157,6 +157,12 @@
     <ClInclude Include="PhysicalDevice.h">
       <Filter>Src\Graphics\Common</Filter>
     </ClInclude>
+    <ClInclude Include="LogicalDevice.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="vulkan\VkValidation.h">
+      <Filter>Src\Graphics\Vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -268,6 +274,15 @@
       <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="gl\PhysicalDevice.cpp">
+      <Filter>Src\Graphics\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="gl\LogicalDevice.cpp">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\LogicalDevice.cpp">
+      <Filter>Src\Graphics\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\VkValidation.cpp">
       <Filter>Src\Graphics\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>

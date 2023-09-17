@@ -20,6 +20,7 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Format.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="LogicalDevice.h" />
     <ClInclude Include="GraphicsAPI.h" />
     <ClInclude Include="GraphicsInstance.h" />
     <ClInclude Include="GraphicsPipeline.h" />
@@ -45,12 +46,15 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UniverseEngine.h" />
+    <ClInclude Include="vulkan\VkValidation.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="gl\LogicalDevice.cpp" />
     <ClCompile Include="gl\PhysicalDevice.cpp" />
+    <ClCompile Include="vulkan\LogicalDevice.cpp" />
     <ClCompile Include="vulkan\PhysicalDevice.cpp" />
     <ClCompile Include="vulkan\CmdList.cpp" />
     <ClCompile Include="vulkan\CmdQueue.cpp" />
@@ -84,6 +88,7 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="USDLoader.cpp" />
+    <ClCompile Include="vulkan\VkValidation.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>

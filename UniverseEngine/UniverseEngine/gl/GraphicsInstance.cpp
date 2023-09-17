@@ -13,7 +13,7 @@ namespace UniverseEngine {
         UE_ASSERT_MSG(severity != GL_DEBUG_SEVERITY_HIGH, "GL: %s", message);
     }
 
-    GraphicsInstance::GraphicsInstance(bool debug) {
+    GraphicsInstance::GraphicsInstance(const Window& window, bool debug) {
         glewInit();
 
         if (debug) {
