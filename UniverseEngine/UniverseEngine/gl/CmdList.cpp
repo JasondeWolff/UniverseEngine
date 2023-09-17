@@ -78,6 +78,9 @@ namespace UniverseEngine {
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
         glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, size);
+
+        // TODO: fix memory leak
+        // glDeleteBuffers(1, &ubo);
     }
 }  // namespace UniverseEngine
 #endif

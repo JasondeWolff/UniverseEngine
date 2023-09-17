@@ -4,10 +4,7 @@
 #include "../CmdQueue.h"
 
 namespace UniverseEngine {
-    CmdQueue::CmdQueue() {
-    }
-
-    CmdQueue::~CmdQueue() {
+    CmdQueue::CmdQueue(const LogicalDevice& device, const PhysicalDevice& physicalDevice) {
     }
 }  // namespace UniverseEngine
 #endif

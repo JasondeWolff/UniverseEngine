@@ -3,11 +3,12 @@
 #include <memory>
 
 #include "CmdList.h"
+#include "CmdQueue.h"
 #include "GraphicsPipeline.h"
+#include "LogicalDevice.h"
+#include "PhysicalDevice.h"
 #include "Resources.h"
 #include "Window.h"
-#include "PhysicalDevice.h"
-#include "LogicalDevice.h"
 
 namespace UniverseEngine {
     class Engine;
@@ -28,6 +29,7 @@ namespace UniverseEngine {
         std::unique_ptr<GraphicsInstance> instance;
         std::unique_ptr<PhysicalDevice> physicalDevice;
         std::unique_ptr<LogicalDevice> device;
+        std::unique_ptr<CmdQueue> cmdQueue;
 
         std::shared_ptr<GraphicsPipeline> unlitPipeline;
     };

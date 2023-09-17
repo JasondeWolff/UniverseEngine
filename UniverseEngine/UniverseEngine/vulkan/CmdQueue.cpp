@@ -1,13 +1,17 @@
 #include "../GraphicsAPI.h"
 #ifdef GRAPHICS_API_VULKAN
 
+#include <vector>
+
 #include "../CmdQueue.h"
 
 namespace UniverseEngine {
-    CmdQueue::CmdQueue() {
+    CmdQueue::CmdQueue(const LogicalDevice& device, const PhysicalDevice& physicalDevice) {
+        vkGetDeviceQueue(device.GetDevice(), physicalDevice.GraphicsFamily(), 0, &this->queue);
     }
 
-    CmdQueue::~CmdQueue() {
+    VkQueue CmdQueue::GetQueue() const {
+        return this->queue;
     }
 }  // namespace UniverseEngine
 #endif

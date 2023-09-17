@@ -12,9 +12,11 @@ namespace UniverseEngine {
     public:
         VkPhysicalDevice GetPhysicalDevice() const;
         uint32_t GraphicsFamily() const;
+        uint32_t PresentFamily() const;
     private:
         VkPhysicalDevice physicalDevice;
         uint32_t graphicsFamily;
+        uint32_t presentFamily;
 #endif
     };
 }  // namespace UniverseEngine

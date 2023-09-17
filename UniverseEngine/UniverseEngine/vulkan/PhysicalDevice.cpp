@@ -1,10 +1,88 @@
 #include "../GraphicsAPI.h"
-#ifdef GRAPHICS_API_GL
+#ifdef GRAPHICS_API_VULKAN
 
+#include <numeric>
+#include <vector>
+
+#include "../Logging.h"
 #include "../PhysicalDevice.h"
+#include "VkExtensions.h"
 
 namespace UniverseEngine {
+    bool IsDeviceSuitable(VkPhysicalDevice device) {
+        VkPhysicalDeviceProperties deviceProperties;
+        VkPhysicalDeviceFeatures deviceFeatures;
+        vkGetPhysicalDeviceProperties(device, &deviceProperties);
+        vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
+
+        bool extensionsSupported = CheckDeviceExtensionSupport(device);
+
+        return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU &&
+               extensionsSupported;
+    }
+
+    VkPhysicalDevice PickPhysicalDevice(VkInstance instance, VkSurfaceKHR surface) {
+        VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+
+        uint32_t deviceCount = 0;
+        vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+        UE_ASSERT_MSG(deviceCount > 0, "No vulkan compatible device found.");
+
+        std::vector<VkPhysicalDevice> devices(deviceCount);
+        vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
+
+        for (auto& device : devices) {
+            if (IsDeviceSuitable(device)) {
+                physicalDevice = device;
+                break;
+            }
+        }
+
+        UE_ASSERT_MSG(physicalDevice != VK_NULL_HANDLE, "No vulkan compatible device found.");
+        return physicalDevice;
+    }
+
     PhysicalDevice::PhysicalDevice(const GraphicsInstance& instance) {
+        this->physicalDevice = PickPhysicalDevice(instance.GetInstance(), instance.GetSurface());
+
+        uint32_t queueFamilyCount = 0;
+        vkGetPhysicalDeviceQueueFamilyProperties(this->physicalDevice, &queueFamilyCount, nullptr);
+        std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+        vkGetPhysicalDeviceQueueFamilyProperties(this->physicalDevice, &queueFamilyCount,
+                                                 queueFamilies.data());
+
+        this->graphicsFamily = UINT_MAX;
+        this->presentFamily = UINT_MAX;
+        for (size_t i = 0; i < queueFamilyCount; i++) {
+            if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+                this->graphicsFamily = static_cast<uint32_t>(i);
+            }
+
+            VkBool32 presentSupport = false;
+            vkGetPhysicalDeviceSurfaceSupportKHR(this->physicalDevice, static_cast<uint32_t>(i),
+                                                 instance.GetSurface(), &presentSupport);
+            if (presentSupport) {
+                this->presentFamily = static_cast<uint32_t>(i);
+            }
+
+            if (this->graphicsFamily != UINT_MAX && this->presentFamily != UINT_MAX) {
+                return;
+            }
+        }
+
+        UE_FATAL("Missing queue families!");
+    }
+
+    VkPhysicalDevice PhysicalDevice::GetPhysicalDevice() const {
+        return this->physicalDevice;
+    }
+
+    uint32_t PhysicalDevice::GraphicsFamily() const {
+        return this->graphicsFamily;
+    }
+
+    uint32_t PhysicalDevice::PresentFamily() const {
+        return this->presentFamily;
     }
 }  // namespace UniverseEngine
 #endif

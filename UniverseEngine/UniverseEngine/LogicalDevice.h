@@ -12,6 +12,8 @@ namespace UniverseEngine {
         LogicalDevice& operator=(const LogicalDevice& other) = delete;
 
 #ifdef GRAPHICS_API_VULKAN
+    public:
+        VkDevice GetDevice() const;
     private:
         VkDevice device;
 #endif

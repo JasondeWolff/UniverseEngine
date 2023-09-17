@@ -3,6 +3,7 @@
 
 #include "../Logging.h"
 #include "../LogicalDevice.h"
+#include "VkExtensions.h"
 #include "VkValidation.h"
 
 namespace UniverseEngine {
@@ -22,7 +23,8 @@ namespace UniverseEngine {
         createInfo.pQueueCreateInfos = &queueCreateInfo;
         createInfo.queueCreateInfoCount = 1;
         createInfo.pEnabledFeatures = &deviceFeatures;
-        createInfo.enabledExtensionCount = 0;
+        createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
+        createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 
         if (debug) {
             createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
@@ -31,13 +33,17 @@ namespace UniverseEngine {
             createInfo.enabledLayerCount = 0;
         }
 
-        UE_ASSERT_MSG(
-            !vkCreateDevice(physicalDevice.GetPhysicalDevice(), &createInfo, nullptr, &this->device),
-            "Failed to create logical device.");
+        UE_ASSERT_MSG(!vkCreateDevice(physicalDevice.GetPhysicalDevice(), &createInfo, nullptr,
+                                      &this->device),
+                      "Failed to create logical device.");
     }
 
     LogicalDevice::~LogicalDevice() {
         vkDestroyDevice(this->device, nullptr);
+    }
+
+    VkDevice LogicalDevice::GetDevice() const {
+        return this->device;
     }
 }  // namespace UniverseEngine
 #endif

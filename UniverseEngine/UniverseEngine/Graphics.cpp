@@ -14,6 +14,7 @@ namespace UniverseEngine {
         this->instance = std::make_unique<GraphicsInstance>(*this->window, enableDebug);
         this->physicalDevice = std::make_unique<PhysicalDevice>(*this->instance);
         this->device = std::make_unique<LogicalDevice>(*this->physicalDevice, enableDebug);
+        this->cmdQueue = std::make_unique<CmdQueue>(*this->device, *this->physicalDevice);
 
         auto& resources = Engine::GetResources();
 
