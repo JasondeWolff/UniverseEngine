@@ -1,3 +1,6 @@
+#include "../GraphicsAPI.h"
+#ifdef GRAPHICS_API_VULKAN
+
 #include "../CmdQueue.h"
 
 namespace UniverseEngine {
@@ -7,3 +10,4 @@ namespace UniverseEngine {
     CmdQueue::~CmdQueue() {
     }
 }  // namespace UniverseEngine
+#endif

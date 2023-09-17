@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GraphicsAPI.h"
+
 #ifdef GRAPHICS_API_VULKAN
 #include <vulkan/vulkan.h>
 #endif

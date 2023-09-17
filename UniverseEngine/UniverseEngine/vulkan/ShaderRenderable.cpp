@@ -1,3 +1,6 @@
+#include "../GraphicsAPI.h"
+#ifdef GRAPHICS_API_VULKAN
+
 #include "../ShaderRenderable.h"
 
 #include "../Logging.h"
@@ -11,3 +14,4 @@ namespace UniverseEngine {
     ShaderRenderable::~ShaderRenderable() {
     }
 }  // namespace UniverseEngine
+#endif

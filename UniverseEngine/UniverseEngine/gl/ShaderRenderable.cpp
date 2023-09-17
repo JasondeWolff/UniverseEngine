@@ -1,3 +1,6 @@
+#include "../GraphicsAPI.h"
+#ifdef GRAPHICS_API_GL
+
 #include "../ShaderRenderable.h"
 
 #include <GL/glew.h>
@@ -48,3 +51,4 @@ namespace UniverseEngine {
         return this->shader;
     }
 }  // namespace UniverseEngine
+#endif

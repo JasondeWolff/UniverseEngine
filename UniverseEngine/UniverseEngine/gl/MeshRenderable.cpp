@@ -1,3 +1,6 @@
+#include "../GraphicsAPI.h"
+#ifdef GRAPHICS_API_GL
+
 #include <GL/glew.h>
 
 #include "../CmdList.h"
@@ -57,3 +60,4 @@ namespace UniverseEngine {
         glBindVertexArray(0);
     }
 }  // namespace UniverseEngine
+#endif

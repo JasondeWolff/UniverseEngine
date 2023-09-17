@@ -1,5 +1,8 @@
 #pragma once
 
+// #define GRAPHICS_API_GL
+#define GRAPHICS_API_VULKAN
+
 #include <memory>
 
 #include "GraphicsInstance.h"

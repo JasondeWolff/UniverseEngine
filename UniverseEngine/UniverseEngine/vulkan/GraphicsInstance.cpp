@@ -1,3 +1,6 @@
+#include "../GraphicsAPI.h"
+#ifdef GRAPHICS_API_VULKAN
+
 #include "../GraphicsInstance.h"
 
 #include <GLFW/glfw3.h>
@@ -67,3 +70,4 @@ namespace UniverseEngine {
     }
 
 }  // namespace UniverseEngine
+#endif

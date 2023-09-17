@@ -1,3 +1,6 @@
+#include "../GraphicsAPI.h"
+#ifdef GRAPHICS_API_GL
+
 #include "../CmdList.h"
 
 #include <GL/glew.h>
@@ -77,3 +80,4 @@ namespace UniverseEngine {
         glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, size);
     }
 }  // namespace UniverseEngine
+#endif

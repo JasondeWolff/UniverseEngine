@@ -1,4 +1,5 @@
 #include "../GraphicsAPI.h"
+#ifdef GRAPHICS_API_GL
 
 namespace UniverseEngine {
     std::unique_ptr<GraphicsInstance> GraphicsAPI::Init(bool debug) {
@@ -9,3 +10,4 @@ namespace UniverseEngine {
         return "GL/";
     }
 }  // namespace UniverseEngine
+#endif

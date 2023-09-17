@@ -3,7 +3,7 @@
 #include <UniverseEngine.h>
 using namespace UniverseEngine;
 
-FreeFormCamera::FreeFormCamera() : movementSpeed(5.0), lookSensitivity(0.3) {}
+FreeFormCamera::FreeFormCamera() : movementSpeed(5.0f), lookSensitivity(0.3f) {}
 
 void FreeFormCamera::Start() {
 	Engine::GetInput().SetCursorMode(CursorMode::DISABLED);
@@ -37,8 +37,8 @@ void FreeFormCamera::Update(float deltaTime) {
 	this->rotationEuler.x -= input.GetMouseDelta().y * this->lookSensitivity;
 	this->rotationEuler.z -= input.GetMouseDelta().x * this->lookSensitivity;
 
-	this->rotationEuler.x -= gamepad.GetAxis(GamepadAxis::RIGHT_Y) * this->lookSensitivity * 4.0;
-	this->rotationEuler.z -= gamepad.GetAxis(GamepadAxis::RIGHT_X) * this->lookSensitivity * 4.0;
+	this->rotationEuler.x -= gamepad.GetAxis(GamepadAxis::RIGHT_Y) * this->lookSensitivity * 4.0f;
+	this->rotationEuler.z -= gamepad.GetAxis(GamepadAxis::RIGHT_X) * this->lookSensitivity * 4.0f;
 	translation += gamepad.GetAxis(GamepadAxis::LEFT_X) * camera.transform.GetRight() + gamepad.GetAxis(GamepadAxis::LEFT_Y) * -camera.transform.GetForward();
 
 	if (glm::dot(translation, translation) > 0.0) {

@@ -1,3 +1,6 @@
+#include "../GraphicsAPI.h"
+#ifdef GRAPHICS_API_VULKAN
+
 #include "../CmdList.h"
 
 #include "../GraphicsPipeline.h"
@@ -38,3 +41,4 @@ namespace UniverseEngine {
     void CmdList::PushConstant(const std::string& name, void* constant, size_t size) {
     }
 }  // namespace UniverseEngine
+#endif

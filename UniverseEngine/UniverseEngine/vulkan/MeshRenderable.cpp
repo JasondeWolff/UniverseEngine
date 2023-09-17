@@ -1,3 +1,6 @@
+#include "../GraphicsAPI.h"
+#ifdef GRAPHICS_API_VULKAN
+
 #include "../CmdList.h"
 #include "../Format.h"
 #include "../Logging.h"
@@ -16,3 +19,4 @@ namespace UniverseEngine {
     void MeshRenderable::Draw(CmdList& cmdList) {
     }
 }  // namespace UniverseEngine
+#endif

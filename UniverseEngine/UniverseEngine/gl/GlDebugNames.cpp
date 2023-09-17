@@ -1,6 +1,8 @@
-#include "GlDebugNames.h"
+#include "../GraphicsAPI.h"
+#ifdef GRAPHICS_API_GL
 
 #include "../Logging.h"
+#include "GlDebugNames.h"
 
 namespace UniverseEngine {
     void GlDebugNames::Set(GLenum identifier, GLuint object, const std::string& name) {
@@ -17,4 +19,5 @@ namespace UniverseEngine {
         glGetObjectLabel(identifier, object, sizeof(name), &length, name);
         return std::string(name);
     }
-}
+}  // namespace UniverseEngine
+#endif

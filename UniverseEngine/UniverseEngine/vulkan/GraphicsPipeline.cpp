@@ -1,3 +1,6 @@
+#include "../GraphicsAPI.h"
+#ifdef GRAPHICS_API_VULKAN
+
 #include "../GraphicsPipeline.h"
 
 #include "../Format.h"
@@ -11,3 +14,4 @@ namespace UniverseEngine {
     GraphicsPipeline::~GraphicsPipeline() {
     }
 }  // namespace UniverseEngine
+#endif

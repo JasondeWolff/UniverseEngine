@@ -1,3 +1,6 @@
+#include "../GraphicsAPI.h"
+#ifdef GRAPHICS_API_GL
+
 #include "../GraphicsInstance.h"
 
 #include <GL/glew.h>
@@ -23,3 +26,4 @@ namespace UniverseEngine {
     GraphicsInstance::~GraphicsInstance() {
     }
 }  // namespace UniverseEngine
+#endif
