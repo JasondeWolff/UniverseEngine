@@ -258,7 +258,9 @@
     <ClCompile Include="vulkan\MeshRenderable.cpp">
       <Filter>Src\Graphics\Vulkan\Assets</Filter>
     </ClCompile>
-    <ClCompile Include="vulkan\ShaderRenderable.cpp" />
+    <ClCompile Include="vulkan\ShaderRenderable.cpp">
+      <Filter>Src\Graphics\Vulkan\Assets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
