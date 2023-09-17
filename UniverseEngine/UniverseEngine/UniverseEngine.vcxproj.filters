@@ -154,6 +154,9 @@
     <ClInclude Include="Plane.h">
       <Filter>Src\Resources\Assets</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicalDevice.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -260,6 +263,12 @@
     </ClCompile>
     <ClCompile Include="vulkan\ShaderRenderable.cpp">
       <Filter>Src\Graphics\Vulkan\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\PhysicalDevice.cpp">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="gl\PhysicalDevice.cpp">
+      <Filter>Src\Graphics\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

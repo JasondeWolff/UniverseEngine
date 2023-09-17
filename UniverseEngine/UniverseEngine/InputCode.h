@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef DELETE
+#undef DELETE
+#endif
+
 namespace UniverseEngine {
     enum class KeyCode {
         SPACE = 32,

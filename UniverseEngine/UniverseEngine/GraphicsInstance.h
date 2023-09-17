@@ -1,10 +1,7 @@
 #pragma once
 
 #include "GraphicsAPI.h"
-
-#ifdef GRAPHICS_API_VULKAN
-#include <vulkan/vulkan.h>
-#endif
+#include "Window.h"
 
 namespace UniverseEngine {
     class GraphicsAPI;
@@ -17,11 +14,16 @@ namespace UniverseEngine {
 
     private:
         friend class GraphicsAPI;
-        GraphicsInstance(bool debug);
+        GraphicsInstance(const Window& window, bool debug);
 
 #ifdef GRAPHICS_API_GL
 #elif defined(GRAPHICS_API_VULKAN)
+    public:
+        VkInstance GetInstance() const;
+        VkSurfaceKHR GetSurface() const;
+    private:
         VkInstance instance;
+        VkSurfaceKHR surface;
 #endif
     };
 }  // namespace UniverseEngine

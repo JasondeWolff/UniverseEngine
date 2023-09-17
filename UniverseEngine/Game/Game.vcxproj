@@ -46,20 +46,20 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)UniverseEngine\;$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\TinyUSD\include\;C:\VulkanSDK\1.3.261.1\Include\</IncludePath>
+    <IncludePath>$(SolutionDir)UniverseEngine\;$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\TinyUSD\include\;C:\VulkanSDK\1.3.261.1\Include\;$(SolutionDir)Dependencies\GLFW\include\</IncludePath>
     <LibraryPath>$(SolutionDir)bin\UniverseEngine\$(Configuration)\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)UniverseEngine\;$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\TinyUSD\include\;C:\VulkanSDK\1.3.261.1\Include\</IncludePath>
+    <IncludePath>$(SolutionDir)UniverseEngine\;$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\TinyUSD\include\;C:\VulkanSDK\1.3.261.1\Include\;$(SolutionDir)Dependencies\GLFW\include\</IncludePath>
     <LibraryPath>$(SolutionDir)bin\UniverseEngine\$(Configuration)\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -76,7 +76,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

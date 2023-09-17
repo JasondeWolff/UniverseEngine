@@ -1,5 +1,8 @@
 #pragma once
 
+#include "../GraphicsAPI.h"
+#ifdef GRAPHICS_API_GL
+
 #include <GL/glew.h>
 
 #include <string>
@@ -11,3 +14,4 @@ namespace UniverseEngine {
         static std::string Get(GLenum identifier, GLuint object);
     };
 }  // namespace UniverseEngine
+#endif

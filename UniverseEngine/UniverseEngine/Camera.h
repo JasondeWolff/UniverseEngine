@@ -2,6 +2,13 @@
 
 #include "Transform.h"
 
+#ifdef near
+#undef near
+#endif
+#ifdef far
+#undef far
+#endif
+
 namespace UniverseEngine {
     class Camera {
     public:
