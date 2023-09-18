@@ -9,7 +9,7 @@
 #include "../GraphicsPipeline.h"
 
 namespace UniverseEngine {
-    CmdList::CmdList() {
+    CmdList::CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue) : device(device) {
     }
 
     CmdList::~CmdList() {

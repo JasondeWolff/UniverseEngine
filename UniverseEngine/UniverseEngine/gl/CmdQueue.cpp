@@ -2,9 +2,18 @@
 #ifdef GRAPHICS_API_GL
 
 #include "../CmdQueue.h"
+#include "../CmdList.h"
 
 namespace UniverseEngine {
-    CmdQueue::CmdQueue(const LogicalDevice& device, const PhysicalDevice& physicalDevice) {
+    CmdQueue::CmdQueue(const std::shared_ptr<LogicalDevice> device,
+                       const PhysicalDevice& physicalDevice) : device(device) {
+    }
+
+    CmdQueue::~CmdQueue() {
+    }
+
+    std::shared_ptr<CmdList> CmdQueue::GetCmdList() {
+        return std::move(std::shared_ptr<CmdList>(new CmdList(this->device, *this)));
     }
 }  // namespace UniverseEngine
 #endif

@@ -5,9 +5,18 @@
 
 #include "../GraphicsPipeline.h"
 #include "../Logging.h"
+#include "../CmdQueue.h"
 
 namespace UniverseEngine {
-    CmdList::CmdList() {
+    CmdList::CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue) : device(device) {
+        VkCommandBufferAllocateInfo allocInfo{};
+        allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        allocInfo.commandPool = cmdQueue.GetCmdPool();
+        allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        allocInfo.commandBufferCount = 1;
+
+        UE_ASSERT_MSG(!vkAllocateCommandBuffers(device->GetDevice(), &allocInfo, &this->cmdBuffer),
+                      "Failed to allocate command buffer.");
     }
 
     CmdList::~CmdList() {

@@ -2,18 +2,19 @@
 
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
-#include <string>
 #include <memory>
+#include <string>
 
 #include "GraphicsAPI.h"
 #include "Rect2D.h"
 
 namespace UniverseEngine {
     class GraphicsPipeline;
+    class CmdQueue;
+    class LogicalDevice;
 
     class CmdList {
     public:
-        CmdList();
         ~CmdList();
         CmdList(const CmdList& other) = delete;
         CmdList& operator=(const CmdList& other) = delete;
@@ -37,7 +38,17 @@ namespace UniverseEngine {
             this->PushConstant(name, static_cast<void*>(&constant), sizeof(T));
         }
 
-    private:
+        private:
+        friend class CmdQueue;
+            CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue);
+    
+        const std::shared_ptr<LogicalDevice> device;
+
+#ifdef GRAPHICS_API_GL
+#elif defined(GRAPHICS_API_VULKAN)
+        VkCommandBuffer cmdBuffer;
+#endif
+
         void PushConstant(const std::string& name, void* constant, size_t size);
 
         std::shared_ptr<GraphicsPipeline> graphicsPipeline;

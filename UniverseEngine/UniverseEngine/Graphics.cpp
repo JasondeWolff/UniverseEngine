@@ -16,7 +16,7 @@ namespace UniverseEngine {
         this->device = std::make_shared<LogicalDevice>(this->instance, *this->physicalDevice, enableDebug);
         this->swapchain = std::make_unique<Swapchain>(*this->window, *this->instance, this->device,
                                                       *this->physicalDevice);
-        this->cmdQueue = std::make_unique<CmdQueue>(*this->device, *this->physicalDevice);
+        this->cmdQueue = std::make_unique<CmdQueue>(this->device, *this->physicalDevice);
 
         this->renderPass = std::make_shared<RenderPass>(this->device, this->swapchain->Format());
         this->swapchain->RebuildFramebuffers(*this->renderPass);
@@ -59,14 +59,14 @@ namespace UniverseEngine {
         const glm::mat4& projectionMatrix = camera.GetMatrix();
         const glm::mat4 vpMatrix = projectionMatrix * glm::inverse(viewMatrix);
 
-        CmdList cmdList{};
+        std::shared_ptr<CmdList> cmdList = this->cmdQueue->GetCmdList();
 
-        cmdList.SetScissor(swapchainExtent);
-        cmdList.SetViewport(swapchainExtent);
+        cmdList->SetScissor(swapchainExtent);
+        cmdList->SetViewport(swapchainExtent);
 
-        cmdList.Clear(glm::vec4(0.0, 0.05, 0.07, 1.0));
+        cmdList->Clear(glm::vec4(0.0, 0.05, 0.07, 1.0));
 
-        cmdList.BindGraphicsPipeline(this->unlitPipeline);
+        cmdList->BindGraphicsPipeline(this->unlitPipeline);
 
         auto sceneInstances = world.GetAllSceneInstances();
         for (auto sceneInstance : sceneInstances) {
@@ -75,8 +75,8 @@ namespace UniverseEngine {
             for (Mesh& mesh : scene.meshes) {
                 MVPPushConstant pushConstant{vpMatrix};
 
-                cmdList.PushConstant("PushConstants", pushConstant);
-                mesh.renderable->Draw(cmdList);
+                cmdList->PushConstant("PushConstants", pushConstant);
+                mesh.renderable->Draw(*cmdList);
             }
         }
 
