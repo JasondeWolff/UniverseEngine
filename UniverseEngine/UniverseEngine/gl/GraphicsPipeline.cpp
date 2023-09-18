@@ -1,17 +1,19 @@
 #include "../GraphicsAPI.h"
 #ifdef GRAPHICS_API_GL
 
-#include "../GraphicsPipeline.h"
-
 #include <GL/glew.h>
 
 #include "../Format.h"
+#include "../GraphicsPipeline.h"
 #include "../Logging.h"
+#include "../LogicalDevice.h"
 #include "../ShaderRenderable.h"
 #include "GlDebugNames.h"
 
 namespace UniverseEngine {
-    GraphicsPipeline::GraphicsPipeline(const std::vector<ShaderRenderable*>& shaders) {
+    GraphicsPipeline::GraphicsPipeline(std::shared_ptr<LogicalDevice> device,
+                                       const std::vector<ShaderRenderable*>& shaders)
+        : device(device) {
         this->shaderProgram = glCreateProgram();
 
         std::string debugName = "";

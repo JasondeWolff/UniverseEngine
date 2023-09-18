@@ -8,6 +8,7 @@
 #include "LogicalDevice.h"
 #include "PhysicalDevice.h"
 #include "Window.h"
+#include "Rect2D.h"
 
 namespace UniverseEngine {
     class Swapchain {
@@ -18,7 +19,11 @@ namespace UniverseEngine {
         Swapchain(const Swapchain& other) = delete;
         Swapchain& operator=(const Swapchain& other) = delete;
 
-#ifdef GRAPHICS_API_VULKAN
+        Rect2D Extent() const;
+
+#ifdef GRAPHICS_API_GL
+        uint32_t width, height;
+#elif defined(GRAPHICS_API_VULKAN)
     private:
         const std::shared_ptr<LogicalDevice> device;
 

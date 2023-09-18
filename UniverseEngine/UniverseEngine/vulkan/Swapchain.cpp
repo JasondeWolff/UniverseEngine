@@ -150,5 +150,9 @@ namespace UniverseEngine {
         }
         vkDestroySwapchainKHR(this->device->GetDevice(), this->swapChain, nullptr);
     }
+
+    Rect2D Swapchain::Extent() const {
+        return Rect2D(this->extent.width, this->extent.height);
+    }
 }  // namespace UniverseEngine
 #endif

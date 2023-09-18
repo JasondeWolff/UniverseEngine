@@ -7,9 +7,15 @@ namespace UniverseEngine {
     Swapchain::Swapchain(const Window& window, const GraphicsInstance& instance,
                          std::shared_ptr<LogicalDevice> device,
                          const PhysicalDevice& physicalDevice) {
+        this->width = window.Width();
+        this->height = window.Height();
     }
 
     Swapchain::~Swapchain() {
+    }
+
+    Rect2D Swapchain::Extent() const {
+        return Rect2D(this->width, this->height);
     }
 }  // namespace UniverseEngine
 #endif

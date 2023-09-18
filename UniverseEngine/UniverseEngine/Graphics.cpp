@@ -27,7 +27,7 @@ namespace UniverseEngine {
         std::vector<ShaderRenderable*> unlitShaders = {
             resources.GetShader(hShaderUnlitVS).Value().renderable.get(),
             resources.GetShader(hShaderUnlitFS).Value().renderable.get()};
-        this->unlitPipeline = std::make_shared<GraphicsPipeline>(unlitShaders);
+        this->unlitPipeline = std::make_shared<GraphicsPipeline>(this->device, unlitShaders);
 
         resources.DeleteShader(hShaderUnlitVS);
         resources.DeleteShader(hShaderUnlitFS);
@@ -44,9 +44,12 @@ namespace UniverseEngine {
         Camera& camera = world.camera;
         Resources& resources = Engine::GetResources();
 
+        Rect2D swapchainExtent = this->swapchain->Extent();
+
         uint32_t width = GetWindow().Width();
         uint32_t height = GetWindow().Height();
-        camera.SetAspect(static_cast<float>(width) / static_cast<float>(height));
+        camera.SetAspect(static_cast<float>(swapchainExtent.extent.x) /
+                         static_cast<float>(swapchainExtent.extent.y));
 
         const glm::mat4& viewMatrix = camera.transform.GetMatrix();
         const glm::mat4& projectionMatrix = camera.GetMatrix();
@@ -54,8 +57,8 @@ namespace UniverseEngine {
 
         CmdList cmdList{};
 
-        cmdList.SetScissor(Rect2D(width, height));
-        cmdList.SetViewport(Rect2D(width, height));
+        cmdList.SetScissor(swapchainExtent);
+        cmdList.SetViewport(swapchainExtent);
 
         cmdList.Clear(glm::vec4(0.0, 0.05, 0.07, 1.0));
 
