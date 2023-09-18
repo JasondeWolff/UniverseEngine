@@ -18,6 +18,8 @@ namespace UniverseEngine {
                                                       *this->physicalDevice);
         this->cmdQueue = std::make_unique<CmdQueue>(*this->device, *this->physicalDevice);
 
+        this->renderPass = std::make_shared<RenderPass>(this->device, this->swapchain->Format());
+
         auto& resources = Engine::GetResources();
 
         Handle<Shader> hShaderUnlitVS = resources.LoadShader("Assets/Shaders/unlit.vert");
@@ -27,7 +29,8 @@ namespace UniverseEngine {
         std::vector<ShaderRenderable*> unlitShaders = {
             resources.GetShader(hShaderUnlitVS).Value().renderable.get(),
             resources.GetShader(hShaderUnlitFS).Value().renderable.get()};
-        this->unlitPipeline = std::make_shared<GraphicsPipeline>(this->device, unlitShaders);
+        this->unlitPipeline =
+            std::make_shared<GraphicsPipeline>(this->device, unlitShaders, this->renderPass);
 
         resources.DeleteShader(hShaderUnlitVS);
         resources.DeleteShader(hShaderUnlitFS);

@@ -14,6 +14,10 @@ namespace UniverseEngine {
     Swapchain::~Swapchain() {
     }
 
+    GraphicsFormat Swapchain::Format() const {
+        return GraphicsFormat::UNDEFINED;
+    }
+
     Rect2D Swapchain::Extent() const {
         return Rect2D(this->width, this->height);
     }

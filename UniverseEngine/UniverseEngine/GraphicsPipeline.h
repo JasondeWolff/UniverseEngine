@@ -8,11 +8,12 @@
 namespace UniverseEngine {
     class ShaderRenderable;
     class LogicalDevice;
+    class RenderPass;
 
     class GraphicsPipeline {
     public:
         GraphicsPipeline(
-            std::shared_ptr<LogicalDevice> device, const std::vector<ShaderRenderable*>& shaders);
+            std::shared_ptr<LogicalDevice> device, const std::vector<ShaderRenderable*>& shaders, std::shared_ptr<RenderPass> renderPass);
         ~GraphicsPipeline();
         GraphicsPipeline(const GraphicsPipeline& other) = delete;
         GraphicsPipeline& operator=(const GraphicsPipeline& other) = delete;

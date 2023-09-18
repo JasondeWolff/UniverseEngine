@@ -7,9 +7,10 @@
 #include "GraphicsPipeline.h"
 #include "LogicalDevice.h"
 #include "PhysicalDevice.h"
+#include "RenderPass.h"
 #include "Resources.h"
-#include "Window.h"
 #include "Swapchain.h"
+#include "Window.h"
 
 namespace UniverseEngine {
     class Engine;
@@ -33,6 +34,7 @@ namespace UniverseEngine {
         std::unique_ptr<Swapchain> swapchain;
         std::unique_ptr<CmdQueue> cmdQueue;
 
+        std::shared_ptr<RenderPass> renderPass;
         std::shared_ptr<GraphicsPipeline> unlitPipeline;
     };
 }  // namespace UniverseEngine

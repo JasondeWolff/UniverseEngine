@@ -5,6 +5,7 @@
 
 #include "../Logging.h"
 #include "../Swapchain.h"
+#include "VkGraphicsFormat.h"
 
 namespace UniverseEngine {
     VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const GraphicsInstance& instance,
@@ -149,6 +150,10 @@ namespace UniverseEngine {
             vkDestroyImageView(this->device->GetDevice(), imageView, nullptr);
         }
         vkDestroySwapchainKHR(this->device->GetDevice(), this->swapChain, nullptr);
+    }
+
+    GraphicsFormat Swapchain::Format() const {
+        return VkGraphicsFormat::From(this->format.format);
     }
 
     Rect2D Swapchain::Extent() const {

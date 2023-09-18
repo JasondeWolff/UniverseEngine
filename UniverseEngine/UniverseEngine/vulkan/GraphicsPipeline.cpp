@@ -5,11 +5,13 @@
 #include "../GraphicsPipeline.h"
 #include "../Logging.h"
 #include "../LogicalDevice.h"
+#include "../RenderPass.h"
 #include "../ShaderRenderable.h"
 
 namespace UniverseEngine {
     GraphicsPipeline::GraphicsPipeline(std::shared_ptr<LogicalDevice> device,
-                                       const std::vector<ShaderRenderable*>& shaders)
+                                       const std::vector<ShaderRenderable*>& shaders,
+                                       std::shared_ptr<RenderPass> renderPass)
         : device(device) {
         // TODO: make more dynamic
         VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
@@ -51,6 +53,7 @@ namespace UniverseEngine {
         rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
         rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
         rasterizer.depthBiasEnable = VK_FALSE;
+        rasterizer.lineWidth = 1.0;
 
         VkPipelineMultisampleStateCreateInfo multisampling{};
         multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
@@ -78,9 +81,49 @@ namespace UniverseEngine {
         UE_ASSERT_MSG(!vkCreatePipelineLayout(device->GetDevice(), &pipelineLayoutInfo, nullptr,
                                               &this->pipelineLayout),
                       "Failed to create pipeline layout.");
+
+        VkViewport viewport{};
+        viewport.x = 0.0f;
+        viewport.y = 0.0f;
+        viewport.width = 0.0f;
+        viewport.height = 0.0f;
+        viewport.minDepth = 0.0f;
+        viewport.maxDepth = 1.0f;
+
+        VkRect2D scissor{};
+        scissor.offset = {0, 0};
+        scissor.extent = {0, 0};
+
+        VkPipelineViewportStateCreateInfo viewportState{};
+        viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+        viewportState.viewportCount = 1;
+        viewportState.pViewports = &viewport;
+        viewportState.scissorCount = 1;
+        viewportState.pScissors = &scissor;
+
+        VkGraphicsPipelineCreateInfo pipelineInfo{};
+        pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+        pipelineInfo.stageCount = 2;
+        pipelineInfo.pStages = shaderStages;
+        pipelineInfo.pVertexInputState = &vertexInputInfo;
+        pipelineInfo.pInputAssemblyState = &inputAssembly;
+        pipelineInfo.pViewportState = &viewportState;
+        pipelineInfo.pRasterizationState = &rasterizer;
+        pipelineInfo.pMultisampleState = &multisampling;
+        pipelineInfo.pDepthStencilState = nullptr;  // Optional
+        pipelineInfo.pColorBlendState = &colorBlending;
+        pipelineInfo.pDynamicState = &dynamicState;
+        pipelineInfo.layout = this->pipelineLayout;
+        pipelineInfo.renderPass = renderPass->GetRenderPass();
+        pipelineInfo.subpass = 0;
+
+        UE_ASSERT_MSG(!vkCreateGraphicsPipelines(device->GetDevice(), VK_NULL_HANDLE, 1,
+                                                 &pipelineInfo, nullptr, &this->pipeline),
+                      "Failed to create graphics pipeline.");
     }
 
     GraphicsPipeline::~GraphicsPipeline() {
+        vkDestroyPipeline(this->device->GetDevice(), this->pipeline, nullptr);
         vkDestroyPipelineLayout(this->device->GetDevice(), this->pipelineLayout, nullptr);
     }
 }  // namespace UniverseEngine

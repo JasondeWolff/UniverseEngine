@@ -9,6 +9,7 @@
 #include "PhysicalDevice.h"
 #include "Window.h"
 #include "Rect2D.h"
+#include "GraphicsFormat.h"
 
 namespace UniverseEngine {
     class Swapchain {
@@ -19,6 +20,7 @@ namespace UniverseEngine {
         Swapchain(const Swapchain& other) = delete;
         Swapchain& operator=(const Swapchain& other) = delete;
 
+        GraphicsFormat Format() const;
         Rect2D Extent() const;
 
 #ifdef GRAPHICS_API_GL

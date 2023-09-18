@@ -181,6 +181,18 @@
     <ClInclude Include="vulkan\VkPFN.h">
       <Filter>Src\Graphics\Vulkan\Specific</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPass.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsFormat.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="gl\GlGraphicsFormat.h">
+      <Filter>Src\Graphics\GL\Specific</Filter>
+    </ClInclude>
+    <ClInclude Include="vulkan\VkGraphicsFormat.h">
+      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -317,6 +329,12 @@
     </ClCompile>
     <ClCompile Include="vulkan\VkPFN.cpp">
       <Filter>Src\Graphics\Vulkan\Specific</Filter>
+    </ClCompile>
+    <ClCompile Include="gl\RenderPass.cpp">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\RenderPass.cpp">
+      <Filter>Src\Graphics\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

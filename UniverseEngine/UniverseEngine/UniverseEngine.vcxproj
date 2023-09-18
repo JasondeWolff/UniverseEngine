@@ -20,6 +20,7 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Format.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="gl\GlGraphicsFormat.h" />
     <ClInclude Include="LogicalDevice.h" />
     <ClInclude Include="GraphicsAPI.h" />
     <ClInclude Include="GraphicsInstance.h" />
@@ -37,6 +38,7 @@
     <ClInclude Include="Plane.h" />
     <ClInclude Include="Pool.h" />
     <ClInclude Include="Rect2D.h" />
+    <ClInclude Include="RenderPass.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
@@ -47,6 +49,8 @@
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UniverseEngine.h" />
     <ClInclude Include="Swapchain.h" />
+    <ClInclude Include="GraphicsFormat.h" />
+    <ClInclude Include="vulkan\VkGraphicsFormat.h" />
     <ClInclude Include="vulkan\VkPFN.h" />
     <ClInclude Include="vulkan\VkDebugNames.h" />
     <ClInclude Include="vulkan\VkExtensions.h" />
@@ -57,6 +61,8 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="gl\LogicalDevice.cpp" />
+    <ClCompile Include="gl\RenderPass.cpp" />
+    <ClCompile Include="vulkan\RenderPass.cpp" />
     <ClCompile Include="vulkan\VkPFN.cpp" />
     <ClCompile Include="vulkan\VkDebugNames.cpp" />
     <ClCompile Include="vulkan\PhysicalDevice.cpp" />
