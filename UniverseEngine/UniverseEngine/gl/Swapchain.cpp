@@ -14,6 +14,9 @@ namespace UniverseEngine {
     Swapchain::~Swapchain() {
     }
 
+    void Swapchain::RebuildFramebuffers(const RenderPass& renderPass) {
+    }
+
     GraphicsFormat Swapchain::Format() const {
         return GraphicsFormat::UNDEFINED;
     }

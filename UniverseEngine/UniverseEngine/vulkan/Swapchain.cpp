@@ -146,10 +146,37 @@ namespace UniverseEngine {
     }
 
     Swapchain::~Swapchain() {
+        for (auto framebuffer : this->swapChainFramebuffers) {
+            vkDestroyFramebuffer(this->device->GetDevice(), framebuffer, nullptr);
+        }
         for (auto imageView : this->swapChainImageViews) {
             vkDestroyImageView(this->device->GetDevice(), imageView, nullptr);
         }
         vkDestroySwapchainKHR(this->device->GetDevice(), this->swapChain, nullptr);
+    }
+
+    void Swapchain::RebuildFramebuffers(const RenderPass& renderPass) {
+        for (auto framebuffer : this->swapChainFramebuffers) {
+            vkDestroyFramebuffer(this->device->GetDevice(), framebuffer, nullptr);
+        }
+
+        this->swapChainFramebuffers.resize(this->swapChainImageViews.size());
+        for (size_t i = 0; i < this->swapChainImageViews.size(); i++) {
+            VkImageView attachments[] = {this->swapChainImageViews[i]};
+
+            VkFramebufferCreateInfo framebufferInfo{};
+            framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+            framebufferInfo.renderPass = renderPass.GetRenderPass();
+            framebufferInfo.attachmentCount = 1;
+            framebufferInfo.pAttachments = attachments;
+            framebufferInfo.width = this->extent.width;
+            framebufferInfo.height = this->extent.height;
+            framebufferInfo.layers = 1;
+
+            UE_ASSERT_MSG(!vkCreateFramebuffer(this->device->GetDevice(), &framebufferInfo, nullptr,
+                                               &this->swapChainFramebuffers[i]),
+                          "Failed to create frame buffer.");
+        }
     }
 
     GraphicsFormat Swapchain::Format() const {

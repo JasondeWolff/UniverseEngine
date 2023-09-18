@@ -19,6 +19,7 @@ namespace UniverseEngine {
         this->cmdQueue = std::make_unique<CmdQueue>(*this->device, *this->physicalDevice);
 
         this->renderPass = std::make_shared<RenderPass>(this->device, this->swapchain->Format());
+        this->swapchain->RebuildFramebuffers(*this->renderPass);
 
         auto& resources = Engine::GetResources();
 

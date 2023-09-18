@@ -10,6 +10,7 @@
 #include "Window.h"
 #include "Rect2D.h"
 #include "GraphicsFormat.h"
+#include "RenderPass.h"
 
 namespace UniverseEngine {
     class Swapchain {
@@ -19,6 +20,8 @@ namespace UniverseEngine {
         ~Swapchain();
         Swapchain(const Swapchain& other) = delete;
         Swapchain& operator=(const Swapchain& other) = delete;
+
+        void RebuildFramebuffers(const RenderPass& renderPass);
 
         GraphicsFormat Format() const;
         Rect2D Extent() const;
@@ -37,6 +40,7 @@ namespace UniverseEngine {
         uint32_t imageCount;
         std::vector<VkImage> swapChainImages;
         std::vector<VkImageView> swapChainImageViews;
+        std::vector<VkFramebuffer> swapChainFramebuffers;
 #endif
     };
 }  // namespace UniverseEngine
