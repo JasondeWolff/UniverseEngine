@@ -18,9 +18,9 @@ namespace UniverseEngine {
         parsedShader.sourceCode = buffer.str();
 
         std::string extension = filePath.extension().string();
-        if (extension == ".vs")
+        if (extension == ".vert")
             parsedShader.type = ShaderType::VERTEX;
-        if (extension == ".fs")
+        if (extension == ".frag")
             parsedShader.type = ShaderType::FRAGMENT;
 
         Handle<Shader> handle = this->shaders->Alloc();

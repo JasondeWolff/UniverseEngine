@@ -16,6 +16,9 @@
     <Filter Include="Assets\Models">
       <UniqueIdentifier>{004a1f60-8978-4974-98a5-f119bb2ef635}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets\Shaders\Vulkan">
+      <UniqueIdentifier>{ab3785a9-6ddd-4fb0-8376-e3fe270c66c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -30,10 +33,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\UniverseEngine\.clang-format" />
-    <None Include="Assets\Shaders\GL\unlit.fs">
+    <None Include="Assets\Shaders\GL\unlit.frag">
       <Filter>Assets\Shaders\GL</Filter>
     </None>
-    <None Include="Assets\Shaders\GL\unlit.vs">
+    <None Include="Assets\Shaders\GL\unlit.vert">
       <Filter>Assets\Shaders\GL</Filter>
     </None>
     <None Include="Assets\templates\ad_3dsmax_maps.mdl">
@@ -63,6 +66,8 @@
     <None Include="Assets\templates\vray_materials.mdl">
       <Filter>Assets\Models</Filter>
     </None>
+    <None Include="Assets\Shaders\Vulkan\unlit.frag" />
+    <None Include="Assets\Shaders\Vulkan\unlit.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyGame.h">

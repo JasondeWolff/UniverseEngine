@@ -60,7 +60,7 @@ namespace UniverseEngine {
         if (shader != this->shaderPaths.end())
             return shader->second;
 
-        static const std::string supportedExtensions[2] = {".vs", ".fs"};
+        static const std::string supportedExtensions[2] = {".vert", ".frag"};
 
         fs::path extension = filePath.extension();
         for (size_t i = 0; i < 2; i++) {

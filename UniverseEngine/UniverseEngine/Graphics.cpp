@@ -20,8 +20,8 @@ namespace UniverseEngine {
 
         auto& resources = Engine::GetResources();
 
-        Handle<Shader> hShaderUnlitVS = resources.LoadShader("Assets/Shaders/unlit.vs");
-        Handle<Shader> hShaderUnlitFS = resources.LoadShader("Assets/Shaders/unlit.fs");
+        Handle<Shader> hShaderUnlitVS = resources.LoadShader("Assets/Shaders/unlit.vert");
+        Handle<Shader> hShaderUnlitFS = resources.LoadShader("Assets/Shaders/unlit.frag");
         this->BuildRenderables();
 
         std::vector<ShaderRenderable*> unlitShaders = {

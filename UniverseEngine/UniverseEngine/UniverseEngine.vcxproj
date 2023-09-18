@@ -198,6 +198,9 @@
     <Lib>
       <AdditionalDependencies>dtinyusdz_static.lib;glfw3.lib;glew32.lib;opengl32.lib;vulkan-1.lib</AdditionalDependencies>
     </Lib>
+    <PostBuildEvent>
+      <Command>$(SolutionDir)compile_shaders.bat</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -221,6 +224,9 @@
     <Lib>
       <AdditionalDependencies>tinyusdz_static.lib;glfw3.lib;glew32.lib;opengl32.lib;vulkan-1.lib</AdditionalDependencies>
     </Lib>
+    <PostBuildEvent>
+      <Command>$(SolutionDir)compile_shaders.bat</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

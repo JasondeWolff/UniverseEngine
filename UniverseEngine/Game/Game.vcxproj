@@ -102,14 +102,16 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </None>
     <None Include="Assets\home_flower.usd" />
-    <None Include="Assets\Shaders\GL\unlit.fs">
+    <None Include="Assets\Shaders\GL\unlit.frag">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </None>
-    <None Include="Assets\Shaders\GL\unlit.vs">
+    <None Include="Assets\Shaders\GL\unlit.vert">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </None>
+    <None Include="Assets\Shaders\Vulkan\unlit.frag" />
+    <None Include="Assets\Shaders\Vulkan\unlit.vert" />
     <None Include="Assets\susan.mtl">
       <FileType>Document</FileType>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
