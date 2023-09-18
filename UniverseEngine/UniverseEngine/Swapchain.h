@@ -23,11 +23,13 @@ namespace UniverseEngine {
         const LogicalDevice& device;
 
         VkSwapchainKHR swapChain;
-
         VkSurfaceFormatKHR format;
         VkPresentModeKHR presentMode;
         VkExtent2D extent;
+
         uint32_t imageCount;
+        std::vector<VkImage> swapChainImages;
+        std::vector<VkImageView> swapChainImageViews;
 #endif
     };
 }  // namespace UniverseEngine

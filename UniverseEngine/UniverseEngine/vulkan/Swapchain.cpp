@@ -3,15 +3,15 @@
 
 #include <algorithm>
 
-#include "../Swapchain.h"
 #include "../Logging.h"
+#include "../Swapchain.h"
 
 namespace UniverseEngine {
-    VkSurfaceFormatKHR ChooseSwapSurfaceFormat(
-        const GraphicsInstance& instance, const PhysicalDevice& physicalDevice) {
+    VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const GraphicsInstance& instance,
+                                               const PhysicalDevice& physicalDevice) {
         uint32_t formatCount;
-        vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice.GetPhysicalDevice(), instance.GetSurface(),
-                                             &formatCount, nullptr);
+        vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice.GetPhysicalDevice(),
+                                             instance.GetSurface(), &formatCount, nullptr);
         UE_ASSERT_MSG(formatCount > 0, "No swapchain formats found.");
 
         std::vector<VkSurfaceFormatKHR> formats(formatCount);
@@ -75,17 +75,17 @@ namespace UniverseEngine {
         VkSurfaceCapabilitiesKHR capabilities;
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice.GetPhysicalDevice(),
                                                   instance.GetSurface(), &capabilities);
-        
+
         uint32_t imageCount = capabilities.minImageCount + 1;
-        if (capabilities.maxImageCount > 0 &&
-            imageCount > capabilities.maxImageCount) {
+        if (capabilities.maxImageCount > 0 && imageCount > capabilities.maxImageCount) {
             imageCount = capabilities.maxImageCount;
         }
         return imageCount;
     }
 
-    Swapchain::Swapchain(const Window& window, const GraphicsInstance& instance, const LogicalDevice& device,
-                         const PhysicalDevice& physicalDevice) : device(device) {
+    Swapchain::Swapchain(const Window& window, const GraphicsInstance& instance,
+                         const LogicalDevice& device, const PhysicalDevice& physicalDevice)
+        : device(device) {
         this->format = ChooseSwapSurfaceFormat(instance, physicalDevice);
         this->presentMode = ChooseSwapPresentMode(instance, physicalDevice);
         this->extent = ChooseSwapExtent(window, instance, physicalDevice);
@@ -114,9 +114,39 @@ namespace UniverseEngine {
         UE_ASSERT_MSG(
             !vkCreateSwapchainKHR(device.GetDevice(), &createInfo, nullptr, &this->swapChain),
             "Failed to create swapchain.");
+
+        vkGetSwapchainImagesKHR(device.GetDevice(), this->swapChain, &this->imageCount, nullptr);
+        swapChainImages.resize(this->imageCount);
+        vkGetSwapchainImagesKHR(device.GetDevice(), this->swapChain, &this->imageCount,
+                                this->swapChainImages.data());
+
+        this->swapChainImageViews.resize(this->swapChainImages.size());
+        for (size_t i = 0; i < this->swapChainImages.size(); i++) {
+            VkImageViewCreateInfo createInfo{};
+            createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+            createInfo.image = this->swapChainImages[i];
+            createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+            createInfo.format = this->format.format;
+            createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+            createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+            createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+            createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+            createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            createInfo.subresourceRange.baseMipLevel = 0;
+            createInfo.subresourceRange.levelCount = 1;
+            createInfo.subresourceRange.baseArrayLayer = 0;
+            createInfo.subresourceRange.layerCount = 1;
+
+            UE_ASSERT_MSG(!vkCreateImageView(device.GetDevice(), &createInfo, nullptr,
+                                             &this->swapChainImageViews[i]),
+                          "Failed to create image view.");
+        }
     }
 
     Swapchain::~Swapchain() {
+        for (auto imageView : this->swapChainImageViews) {
+            vkDestroyImageView(this->device.GetDevice(), imageView, nullptr);
+        }
         vkDestroySwapchainKHR(this->device.GetDevice(), this->swapChain, nullptr);
     }
 }  // namespace UniverseEngine
