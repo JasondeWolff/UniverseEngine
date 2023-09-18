@@ -29,7 +29,7 @@ namespace UniverseEngine {
         std::unique_ptr<Window> window;
         std::unique_ptr<GraphicsInstance> instance;
         std::unique_ptr<PhysicalDevice> physicalDevice;
-        std::unique_ptr<LogicalDevice> device;
+        std::shared_ptr<LogicalDevice> device;
         std::unique_ptr<Swapchain> swapchain;
         std::unique_ptr<CmdQueue> cmdQueue;
 

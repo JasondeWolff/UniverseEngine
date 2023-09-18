@@ -7,6 +7,8 @@
 #include "../Logging.h"
 #include "../PhysicalDevice.h"
 #include "VkValidation.h"
+#include "VkExtensions.h"
+#include "VkPFN.h"
 
 namespace UniverseEngine {
     VkInstance CreateInstance(bool debug) {
@@ -19,14 +21,21 @@ namespace UniverseEngine {
         appInfo.apiVersion = VK_API_VERSION_1_0;
 
         uint32_t glfwExtensionCount = 0;
-        const char** glfwExtensions;
-        glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+        const char** ppGlfwExtensions;
+        ppGlfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+        std::vector<const char*> extensions(glfwExtensionCount);
+        for (size_t i = 0; i < static_cast<size_t>(glfwExtensionCount); i++) {
+            extensions[i] = ppGlfwExtensions[i];
+        }
+        for (size_t i = 0; i < instanceExtensions.size(); i++) {
+            extensions.push_back(instanceExtensions[i]);
+        }
 
         VkInstanceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
         createInfo.pApplicationInfo = &appInfo;
-        createInfo.enabledExtensionCount = glfwExtensionCount;
-        createInfo.ppEnabledExtensionNames = glfwExtensions;
+        createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+        createInfo.ppEnabledExtensionNames = extensions.data();
 
         if (debug) {
             CheckValidationLayerSupport();
@@ -57,6 +66,8 @@ namespace UniverseEngine {
     GraphicsInstance::GraphicsInstance(const Window& window, bool debug) {
         this->instance = CreateInstance(debug);
         this->surface = CreateSurface(window.GlfwWindow(), this->instance);
+
+        VkPFN::Load(this->instance);
     }
 
     GraphicsInstance::~GraphicsInstance() {

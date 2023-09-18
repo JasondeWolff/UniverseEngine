@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "ShaderRenderable.h"
 #include "ShaderType.h"
@@ -12,7 +13,9 @@ namespace UniverseEngine {
     struct Shader {
         std::string name;
         ShaderType type;
+
         std::string sourceCode;
+        std::vector<char> source;
 
     private:
         friend class Graphics;

@@ -5,5 +5,9 @@ namespace UniverseEngine {
     const char* GraphicsAPI::ShaderDir() {
         return "GL/";
     }
+
+    const char* GraphicsAPI::ShaderAppendix() {
+        return "";
+    }
 }  // namespace UniverseEngine
 #endif

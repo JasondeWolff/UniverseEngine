@@ -3,7 +3,11 @@
 
 namespace UniverseEngine {
     const char* GraphicsAPI::ShaderDir() {
-        return "GL/";
+        return "Vulkan/";
+    }
+
+    const char* GraphicsAPI::ShaderAppendix() {
+        return ".spv";
     }
 }  // namespace UniverseEngine
 #endif

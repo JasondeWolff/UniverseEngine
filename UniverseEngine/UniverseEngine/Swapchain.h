@@ -12,7 +12,7 @@
 namespace UniverseEngine {
     class Swapchain {
     public:
-        Swapchain(const Window& window, const GraphicsInstance& instance, const LogicalDevice& device,
+        Swapchain(const Window& window, const GraphicsInstance& instance, std::shared_ptr<LogicalDevice> device,
                   const PhysicalDevice& physicalDevice);
         ~Swapchain();
         Swapchain(const Swapchain& other) = delete;
@@ -20,7 +20,7 @@ namespace UniverseEngine {
 
 #ifdef GRAPHICS_API_VULKAN
     private:
-        const LogicalDevice& device;
+        const std::shared_ptr<LogicalDevice> device;
 
         VkSwapchainKHR swapChain;
         VkSurfaceFormatKHR format;

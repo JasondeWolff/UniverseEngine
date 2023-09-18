@@ -47,6 +47,8 @@
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UniverseEngine.h" />
     <ClInclude Include="Swapchain.h" />
+    <ClInclude Include="vulkan\VkPFN.h" />
+    <ClInclude Include="vulkan\VkDebugNames.h" />
     <ClInclude Include="vulkan\VkExtensions.h" />
     <ClInclude Include="vulkan\VkValidation.h" />
     <ClInclude Include="Window.h" />
@@ -55,6 +57,8 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="gl\LogicalDevice.cpp" />
+    <ClCompile Include="vulkan\VkPFN.cpp" />
+    <ClCompile Include="vulkan\VkDebugNames.cpp" />
     <ClCompile Include="vulkan\PhysicalDevice.cpp" />
     <ClCompile Include="vulkan\LogicalDevice.cpp" />
     <ClCompile Include="gl\PhysicalDevice.cpp" />

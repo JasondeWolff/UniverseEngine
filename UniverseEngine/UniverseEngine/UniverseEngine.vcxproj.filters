@@ -175,6 +175,12 @@
     <ClInclude Include="vulkan\VkValidation.h">
       <Filter>Src\Graphics\Vulkan\Specific</Filter>
     </ClInclude>
+    <ClInclude Include="vulkan\VkDebugNames.h">
+      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+    </ClInclude>
+    <ClInclude Include="vulkan\VkPFN.h">
+      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -304,6 +310,12 @@
       <Filter>Src\Graphics\Vulkan\Specific</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\VkValidation.cpp">
+      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\VkDebugNames.cpp">
+      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\VkPFN.cpp">
       <Filter>Src\Graphics\Vulkan\Specific</Filter>
     </ClCompile>
   </ItemGroup>

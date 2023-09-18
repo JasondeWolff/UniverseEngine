@@ -3,8 +3,6 @@
 #include "../GraphicsAPI.h"
 #ifdef GRAPHICS_API_GL
 
-#include <GL/glew.h>
-
 #include <string>
 
 namespace UniverseEngine {

@@ -1,12 +1,12 @@
 #include "../GraphicsAPI.h"
 #ifdef GRAPHICS_API_GL
 
-#include "../ShaderRenderable.h"
-
 #include <GL/glew.h>
 
 #include "../Logging.h"
+#include "../LogicalDevice.h"
 #include "../Shader.h"
+#include "../ShaderRenderable.h"
 #include "GlDebugNames.h"
 
 namespace UniverseEngine {
@@ -23,7 +23,8 @@ namespace UniverseEngine {
         }
     }
 
-    ShaderRenderable::ShaderRenderable(const Shader& shader) {
+    ShaderRenderable::ShaderRenderable(std::shared_ptr<LogicalDevice> device, const Shader& shader)
+        : device(device), type(shader.type) {
         UE_ASSERT_MSG(shader.sourceCode.size() > 0, "Cannot build renderable from empty shader.");
 
         this->shader = glCreateShader(GetShaderType(shader));

@@ -5,7 +5,7 @@
 
 namespace UniverseEngine {
     Swapchain::Swapchain(const Window& window, const GraphicsInstance& instance,
-                         const LogicalDevice& device,
+                         std::shared_ptr<LogicalDevice> device,
                          const PhysicalDevice& physicalDevice) {
     }
 

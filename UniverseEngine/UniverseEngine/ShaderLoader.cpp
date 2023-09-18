@@ -7,21 +7,33 @@ namespace fs = std::filesystem;
 
 namespace UniverseEngine {
     Handle<Shader> Resources::LoadShaderSource(const fs::path& filePath) {
-        const fs::path shaderFile = filePath.parent_path() / GraphicsAPI::ShaderDir() / filePath.filename();
+        const fs::path shaderFile = filePath.parent_path() / GraphicsAPI::ShaderDir() / fs::path(filePath.filename().string() + GraphicsAPI::ShaderAppendix());
 
         Shader parsedShader;
 
-        std::ifstream t(shaderFile);
-        std::stringstream buffer;
-        buffer << t.rdbuf();
         parsedShader.name = shaderFile.filename().string();
-        parsedShader.sourceCode = buffer.str();
-
         std::string extension = filePath.extension().string();
         if (extension == ".vert")
             parsedShader.type = ShaderType::VERTEX;
         if (extension == ".frag")
             parsedShader.type = ShaderType::FRAGMENT;
+
+        {
+            std::ifstream t(shaderFile);
+            std::stringstream buffer;
+            buffer << t.rdbuf();
+            parsedShader.sourceCode = buffer.str();
+        }
+
+        {
+            std::ifstream t(shaderFile, std::ios::ate | std::ios::binary);
+            size_t fileSize = (size_t)t.tellg();
+            std::vector<char> data(fileSize);
+            t.seekg(0);
+            t.read(data.data(), fileSize);
+            t.close();
+            parsedShader.source = data;
+        }
 
         Handle<Shader> handle = this->shaders->Alloc();
         this->shaders->Value(handle).Value() = std::move(parsedShader);

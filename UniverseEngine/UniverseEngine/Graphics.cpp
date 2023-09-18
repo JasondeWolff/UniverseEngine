@@ -13,8 +13,8 @@ namespace UniverseEngine {
         this->window = std::move(std::unique_ptr<Window>(new Window("Universe Engine")));
         this->instance = std::make_unique<GraphicsInstance>(*this->window, enableDebug);
         this->physicalDevice = std::make_unique<PhysicalDevice>(*this->instance);
-        this->device = std::make_unique<LogicalDevice>(*this->physicalDevice, enableDebug);
-        this->swapchain = std::make_unique<Swapchain>(*this->window, *this->instance, *this->device,
+        this->device = std::make_shared<LogicalDevice>(*this->physicalDevice, enableDebug);
+        this->swapchain = std::make_unique<Swapchain>(*this->window, *this->instance, this->device,
                                                       *this->physicalDevice);
         this->cmdQueue = std::make_unique<CmdQueue>(*this->device, *this->physicalDevice);
 
@@ -90,7 +90,7 @@ namespace UniverseEngine {
 
             if (!shader.renderable) {
                 shader.renderable =
-                    std::move(std::unique_ptr<ShaderRenderable>(new ShaderRenderable(shader)));
+                    std::move(std::unique_ptr<ShaderRenderable>(new ShaderRenderable(this->device, shader)));
                 shader.ClearCPUData();
             }
         }
