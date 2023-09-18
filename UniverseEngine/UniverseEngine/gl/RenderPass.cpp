@@ -4,7 +4,7 @@
 #include "../RenderPass.h"
 
 namespace UniverseEngine {
-    RenderPass::RenderPass(std::shared_ptr<LogicalDevice> device) : device(device) {
+    RenderPass::RenderPass(std::shared_ptr<LogicalDevice> device, GraphicsFormat colorFormat) : device(device) {
     }
 
     RenderPass::~RenderPass() {
