@@ -27,7 +27,7 @@ namespace UniverseEngine {
         void BuildRenderables();
 
         std::unique_ptr<Window> window;
-        std::unique_ptr<GraphicsInstance> instance;
+        std::shared_ptr<GraphicsInstance> instance;
         std::unique_ptr<PhysicalDevice> physicalDevice;
         std::shared_ptr<LogicalDevice> device;
         std::unique_ptr<Swapchain> swapchain;

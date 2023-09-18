@@ -4,7 +4,9 @@
 #include "../LogicalDevice.h"
 
 namespace UniverseEngine {
-    LogicalDevice::LogicalDevice(const PhysicalDevice& physicalDevice, bool debug) {
+    LogicalDevice::LogicalDevice(std::shared_ptr<GraphicsInstance> instance, const
+                                     PhysicalDevice& physicalDevice,
+                                 bool debug) : instance(instance) {
     }
 
     LogicalDevice::~LogicalDevice() {

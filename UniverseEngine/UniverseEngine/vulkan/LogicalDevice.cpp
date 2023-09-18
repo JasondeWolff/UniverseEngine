@@ -7,7 +7,9 @@
 #include "VkValidation.h"
 
 namespace UniverseEngine {
-    LogicalDevice::LogicalDevice(const PhysicalDevice& physicalDevice, bool debug) {
+    LogicalDevice::LogicalDevice(std::shared_ptr<GraphicsInstance> instance,
+                                 const PhysicalDevice& physicalDevice, bool debug)
+        : instance(instance) {
         VkDeviceQueueCreateInfo queueCreateInfo{};
         queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queueCreateInfo.queueFamilyIndex = physicalDevice.GraphicsFamily();
