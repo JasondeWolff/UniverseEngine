@@ -3,9 +3,9 @@
 
 #include <vector>
 
+#include "../CmdList.h"
 #include "../CmdQueue.h"
 #include "../Logging.h"
-#include "../CmdList.h"
 
 namespace UniverseEngine {
     CmdQueue::CmdQueue(const std::shared_ptr<LogicalDevice> device,
@@ -28,7 +28,7 @@ namespace UniverseEngine {
     }
 
     std::shared_ptr<CmdList> CmdQueue::GetCmdList() {
-        return std::move(std::shared_ptr<CmdList>(new CmdList(this->device, *this)));
+        return std::shared_ptr<CmdList>(new CmdList(this->device, *this));
     }
 
     VkQueue CmdQueue::GetQueue() const {

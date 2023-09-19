@@ -9,7 +9,7 @@
 #include "../Swapchain.h"
 
 namespace UniverseEngine {
-    CmdList::CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue) : device(device) {
+    CmdList::CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue) : device(device), cmdQueue(cmdQueue) {
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         allocInfo.commandPool = cmdQueue.GetCmdPool();
@@ -21,6 +21,8 @@ namespace UniverseEngine {
     }
 
     CmdList::~CmdList() {
+        vkFreeCommandBuffers(this->device->GetDevice(), this->cmdQueue.GetCmdPool(), 1,
+                             &this->cmdBuffer);
     }
 
     void CmdList::Begin() {

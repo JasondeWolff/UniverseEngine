@@ -33,7 +33,8 @@ namespace UniverseEngine {
         void SetViewport(const Rect2D& rect2D);
 
         // TODO: Replace swapchain with a framebuffer abstraction
-        void BeginRenderPass(std::shared_ptr<RenderPass> renderPass, const Framebuffer& framebuffer);
+        void BeginRenderPass(std::shared_ptr<RenderPass> renderPass,
+                             const Framebuffer& framebuffer);
         void EndRenderPass();
 
         void BindGraphicsPipeline(std::shared_ptr<GraphicsPipeline> graphicsPipeline);
@@ -48,11 +49,12 @@ namespace UniverseEngine {
             this->PushConstant(name, static_cast<void*>(&constant), sizeof(T));
         }
 
-        private:
+    private:
         friend class CmdQueue;
-            CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue);
-    
+        CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue);
+
         const std::shared_ptr<LogicalDevice> device;
+        const CmdQueue& cmdQueue;
 
 #ifdef GRAPHICS_API_GL
 #elif defined(GRAPHICS_API_VULKAN)

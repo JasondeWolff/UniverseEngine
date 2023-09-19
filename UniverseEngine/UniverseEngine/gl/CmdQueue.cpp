@@ -13,7 +13,7 @@ namespace UniverseEngine {
     }
 
     std::shared_ptr<CmdList> CmdQueue::GetCmdList() {
-        return std::move(std::shared_ptr<CmdList>(new CmdList(this->device, *this)));
+        return std::shared_ptr<CmdList>(new CmdList(this->device, *this));
     }
 }  // namespace UniverseEngine
 #endif
