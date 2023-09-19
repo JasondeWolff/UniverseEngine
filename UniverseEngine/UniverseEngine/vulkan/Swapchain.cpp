@@ -87,7 +87,7 @@ namespace UniverseEngine {
     Swapchain::Swapchain(const Window& window, const GraphicsInstance& instance,
                          std::shared_ptr<LogicalDevice> device,
                          const PhysicalDevice& physicalDevice)
-        : device(device) {
+        : device(device), currentFrame(0), imageAvailableSemaphores{} {
         this->format = ChooseSwapSurfaceFormat(instance, physicalDevice);
         this->presentMode = ChooseSwapPresentMode(instance, physicalDevice);
         this->extent = ChooseSwapExtent(window, instance, physicalDevice);
@@ -148,6 +148,12 @@ namespace UniverseEngine {
         for (size_t i = 0; i < swapChainImages.size(); i++) {
             this->images.push_back(std::make_shared<Image>(device, swapChainImages[i], swapChainImageViews[i],
                                          this->extent.width, this->extent.height));
+        }
+
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            imageAvailableSemaphores.emplace_back(std::move(Semaphore(device)));
+            renderFinishedSemaphores.emplace_back(std::move(Semaphore(device)));
+            inflightFences.emplace_back(std::move(Fence(device)));
         }
     }
 

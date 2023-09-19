@@ -14,8 +14,20 @@ namespace UniverseEngine {
                       "Failed to create fence.");
     }
 
+    Fence::Fence(Fence&& other) noexcept : device(other.device), fence(other.fence) {
+        other.fence = VK_NULL_HANDLE;
+    }
+
+    Fence& Fence::operator=(Fence&& other) noexcept {
+        this->fence = other.fence;
+        other.fence = VK_NULL_HANDLE;
+        return *this;
+    }
+
     Fence::~Fence() {
-        vkDestroyFence(this->device->GetDevice(), this->fence, nullptr);
+        if (this->fence) {
+            vkDestroyFence(this->device->GetDevice(), this->fence, nullptr);
+        }
     }
 
     bool Fence::IsComplete() const {

@@ -6,11 +6,16 @@
 
 namespace UniverseEngine {
     Fence::Fence(std::shared_ptr<LogicalDevice> device, bool signaled) : device(device) {
-        
+    }
+
+    Fence::Fence(Fence&& other) noexcept : device(other.device) {
+    }
+
+    Fence& Fence::operator=(Fence&& other) noexcept {
+        return *this;
     }
 
     Fence::~Fence() {
-        
     }
 
     bool Fence::IsComplete() const {
@@ -18,11 +23,9 @@ namespace UniverseEngine {
     }
 
     void Fence::Wait() const {
-        
     }
 
     void Fence::Reset() {
-        
     }
 }  // namespace UniverseEngine
 #endif

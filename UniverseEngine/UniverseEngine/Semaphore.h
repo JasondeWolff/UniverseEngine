@@ -11,8 +11,10 @@ namespace UniverseEngine {
     public:
         Semaphore(std::shared_ptr<LogicalDevice> device);
         ~Semaphore();
-        Semaphore(const Semaphore& other) = delete;
+        explicit Semaphore(const Semaphore& other) = delete;
         Semaphore& operator=(const Semaphore& other) = delete;
+        explicit Semaphore(Semaphore&& other) noexcept;
+        Semaphore& operator=(Semaphore&& other) noexcept;
 
     private:
         const std::shared_ptr<LogicalDevice> device;

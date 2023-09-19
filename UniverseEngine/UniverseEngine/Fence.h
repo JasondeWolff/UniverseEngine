@@ -11,8 +11,10 @@ namespace UniverseEngine {
     public:
         Fence(std::shared_ptr<LogicalDevice> device, bool signaled = false);
         ~Fence();
-        Fence(const Fence& other) = delete;
+        explicit Fence(const Fence& other) = delete;
         Fence& operator=(const Fence& other) = delete;
+        explicit Fence(Fence&& other) noexcept;
+        Fence& operator=(Fence&& other) noexcept;
 
         bool IsComplete() const;
         void Wait() const;

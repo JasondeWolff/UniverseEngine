@@ -14,8 +14,20 @@ namespace UniverseEngine {
             "Failed to create semaphore.");
     }
 
+    Semaphore::Semaphore(Semaphore&& other) noexcept : device(other.device), semaphore(other.semaphore) {
+        other.semaphore = VK_NULL_HANDLE;
+    }
+
+    Semaphore& Semaphore::operator=(Semaphore&& other) noexcept {
+        this->semaphore = other.semaphore;
+        other.semaphore = VK_NULL_HANDLE;
+        return *this;
+    }
+
     Semaphore::~Semaphore() {
-        vkDestroySemaphore(this->device->GetDevice(), this->semaphore, nullptr);
+        if (this->semaphore) {
+            vkDestroySemaphore(this->device->GetDevice(), this->semaphore, nullptr);
+        }
     }
 
     VkSemaphore Semaphore::GetSemaphore() const {

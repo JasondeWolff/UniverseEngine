@@ -13,6 +13,8 @@
 #include "Rect2D.h"
 #include "RenderPass.h"
 #include "Window.h"
+#include "Semaphore.h"
+#include "Fence.h"
 
 namespace UniverseEngine {
     class Swapchain {
@@ -29,8 +31,15 @@ namespace UniverseEngine {
         GraphicsFormat Format() const;
         Rect2D Extent() const;
 
+        const static uint32_t MAX_FRAMES_IN_FLIGHT = 3;
+
     private:
         const std::shared_ptr<LogicalDevice> device;
+
+        uint32_t currentFrame;
+        std::vector<Semaphore> imageAvailableSemaphores;
+        std::vector<Semaphore> renderFinishedSemaphores;
+        std::vector<Fence> inflightFences;
 
 #ifdef GRAPHICS_API_GL
     private:
