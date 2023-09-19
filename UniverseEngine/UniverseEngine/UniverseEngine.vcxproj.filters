@@ -199,6 +199,12 @@
     <ClInclude Include="Image.h">
       <Filter>Src\Graphics\Common</Filter>
     </ClInclude>
+    <ClInclude Include="Semaphore.h">
+      <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="Fence.h">
+      <Filter>Src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -354,6 +360,10 @@
     <ClCompile Include="vulkan\Image.cpp">
       <Filter>Src\Graphics\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="vulkan\Semaphore.cpp" />
+    <ClCompile Include="vulkan\Fence.cpp" />
+    <ClCompile Include="gl\Fence.cpp" />
+    <ClCompile Include="gl\Semaphore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />

@@ -15,6 +15,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CmdList.h" />
     <ClInclude Include="CmdQueue.h" />
+    <ClInclude Include="Fence.h" />
     <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="Gamepad.h" />
     <ClInclude Include="gl\GlDebugNames.h" />
@@ -42,6 +43,7 @@
     <ClInclude Include="RenderPass.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Semaphore.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderRenderable.h" />
     <ClInclude Include="ShaderType.h" />
@@ -62,13 +64,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="gl\Fence.cpp" />
     <ClCompile Include="gl\Framebuffer.cpp" />
     <ClCompile Include="gl\Image.cpp" />
     <ClCompile Include="gl\LogicalDevice.cpp" />
     <ClCompile Include="gl\RenderPass.cpp" />
+    <ClCompile Include="gl\Semaphore.cpp" />
+    <ClCompile Include="vulkan\Fence.cpp" />
     <ClCompile Include="vulkan\Framebuffer.cpp" />
     <ClCompile Include="vulkan\Image.cpp" />
     <ClCompile Include="vulkan\RenderPass.cpp" />
+    <ClCompile Include="vulkan\Semaphore.cpp" />
     <ClCompile Include="vulkan\VkPFN.cpp" />
     <ClCompile Include="vulkan\VkDebugNames.cpp" />
     <ClCompile Include="vulkan\PhysicalDevice.cpp" />
