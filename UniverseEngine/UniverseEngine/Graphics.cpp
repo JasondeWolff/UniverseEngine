@@ -65,7 +65,8 @@ namespace UniverseEngine {
         cmdList->SetScissor(swapchainExtent);
         cmdList->SetViewport(swapchainExtent);
 
-        cmdList->Clear(glm::vec4(0.0, 0.05, 0.07, 1.0));
+        cmdList->BeginRenderPass(this->renderPass, this->swapchain->GetCurrentFramebuffer(),
+                                 glm::vec4(0.0, 0.05, 0.07, 1.0));
 
         cmdList->BindGraphicsPipeline(this->unlitPipeline);
 

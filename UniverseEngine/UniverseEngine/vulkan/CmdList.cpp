@@ -44,9 +44,6 @@ namespace UniverseEngine {
         this->trackedRenderPasses.clear();
     }
 
-    void CmdList::Clear(const glm::vec4& clearColor) {
-    }
-
     void CmdList::SetScissor(const Rect2D& rect2D) {
         VkRect2D vkRect{};
         vkRect.offset.x = static_cast<uint32_t>(rect2D.offset.x);
@@ -69,11 +66,19 @@ namespace UniverseEngine {
     }
 
     void CmdList::BeginRenderPass(std::shared_ptr<RenderPass> renderPass,
-                                  const Framebuffer& framebuffer) {
+                                  const Framebuffer& framebuffer, const glm::vec4& clearColor) {
         VkRenderPassBeginInfo renderPassInfo{};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         renderPassInfo.renderPass = renderPass->GetRenderPass();
         renderPassInfo.framebuffer = framebuffer.GetFramebuffer();
+        renderPassInfo.renderArea.extent =
+            VkExtent2D{framebuffer.image->Width(), framebuffer.image->Height()};
+
+        VkClearValue vkClearColor = {{{clearColor.r, clearColor.g, clearColor.b, clearColor.a}}};
+        renderPassInfo.clearValueCount = 1;
+        renderPassInfo.pClearValues = &vkClearColor;
+
+        vkCmdBeginRenderPass(this->cmdBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
         this->trackedRenderPasses.push_back(renderPass);
     }

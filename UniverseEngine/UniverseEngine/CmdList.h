@@ -27,14 +27,12 @@ namespace UniverseEngine {
         void End();
         void Reset();
 
-        void Clear(const glm::vec4& clearColor);
-
         void SetScissor(const Rect2D& rect2D);
         void SetViewport(const Rect2D& rect2D);
 
         // TODO: Replace swapchain with a framebuffer abstraction
-        void BeginRenderPass(std::shared_ptr<RenderPass> renderPass,
-                             const Framebuffer& framebuffer);
+        void BeginRenderPass(std::shared_ptr<RenderPass> renderPass, const Framebuffer& framebuffer,
+                             const glm::vec4& clearColor);
         void EndRenderPass();
 
         void BindGraphicsPipeline(std::shared_ptr<GraphicsPipeline> graphicsPipeline);

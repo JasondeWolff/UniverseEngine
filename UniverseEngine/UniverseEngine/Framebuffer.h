@@ -20,9 +20,10 @@ namespace UniverseEngine {
         explicit Framebuffer(Framebuffer&& other) noexcept;
         Framebuffer& operator=(Framebuffer&& other) noexcept;
 
+        const std::shared_ptr<Image> image;
+
     private:
         const std::shared_ptr<LogicalDevice> device;
-        const std::shared_ptr<Image> image;
         const std::shared_ptr<RenderPass> renderPass;
 
 #ifdef GRAPHICS_API_GL

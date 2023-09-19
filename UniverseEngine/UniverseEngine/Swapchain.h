@@ -29,19 +29,22 @@ namespace UniverseEngine {
         GraphicsFormat Format() const;
         Rect2D Extent() const;
 
-#ifdef GRAPHICS_API_GL
-        uint32_t width, height;
-#elif defined(GRAPHICS_API_VULKAN)
     private:
         const std::shared_ptr<LogicalDevice> device;
 
+#ifdef GRAPHICS_API_GL
+    private:
+        uint32_t width, height;
+        std::unique_ptr<Framebuffer> framebuffer;
+#elif defined(GRAPHICS_API_VULKAN)
+    private:
         VkSwapchainKHR swapChain;
         VkSurfaceFormatKHR format;
         VkPresentModeKHR presentMode;
         VkExtent2D extent;
 
         uint32_t imageCount;
-        std::vector<std::shared_ptr<Image>> images;
+        std::vector<std::shared_ptr<Image> > images;
         std::vector<Framebuffer> framebuffers;
 #endif
     };

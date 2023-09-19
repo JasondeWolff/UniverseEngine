@@ -9,7 +9,7 @@
 #include "../GraphicsPipeline.h"
 
 namespace UniverseEngine {
-    CmdList::CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue) : device(device) {
+    CmdList::CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue) : device(device), cmdQueue(cmdQueue) {
     }
 
     CmdList::~CmdList() {
@@ -22,12 +22,7 @@ namespace UniverseEngine {
     }
 
     void CmdList::Reset() {
-        this->graphicsPipeline.reset();
-    }
-
-    void CmdList::Clear(const glm::vec4& clearColor) {
-        glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        this->boundGraphicsPipeline.reset();
     }
 
     void CmdList::SetScissor(const Rect2D& rect2D) {
@@ -41,7 +36,9 @@ namespace UniverseEngine {
     }
 
     void CmdList::BeginRenderPass(std::shared_ptr<RenderPass> renderPass,
-                                  const Swapchain& swapchain) {
+                                  const Framebuffer& framebuffer, const glm::vec4& clearColor) {
+        glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     void CmdList::EndRenderPass() {
