@@ -29,6 +29,9 @@ namespace UniverseEngine {
     private:
         unsigned shaderProgram;
 #elif defined(GRAPHICS_API_VULKAN)
+    public:
+        VkPipeline GetPipeline() const;
+
     private:
         VkPipelineLayout pipelineLayout;
         VkPipeline pipeline;

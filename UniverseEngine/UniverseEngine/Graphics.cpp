@@ -62,11 +62,11 @@ namespace UniverseEngine {
         std::shared_ptr<CmdList> cmdList = this->cmdQueue->GetCmdList();
         cmdList->Begin();
 
-        cmdList->SetScissor(swapchainExtent);
-        cmdList->SetViewport(swapchainExtent);
-
         cmdList->BeginRenderPass(this->renderPass, this->swapchain->GetCurrentFramebuffer(),
                                  glm::vec4(0.0, 0.05, 0.07, 1.0));
+
+        cmdList->SetScissor(swapchainExtent);
+        cmdList->SetViewport(swapchainExtent);
 
         cmdList->BindGraphicsPipeline(this->unlitPipeline);
 
@@ -81,6 +81,11 @@ namespace UniverseEngine {
                 mesh.renderable->Draw(*cmdList);
             }
         }
+
+        cmdList->Draw(3);
+
+        cmdList->EndRenderPass();
+        cmdList->End();
 
         this->window->Update();
     }

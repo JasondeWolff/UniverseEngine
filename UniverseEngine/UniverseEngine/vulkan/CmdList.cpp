@@ -35,7 +35,7 @@ namespace UniverseEngine {
 
     void CmdList::End() {
         UE_ASSERT_MSG(!vkEndCommandBuffer(this->cmdBuffer),
-                      "Failed to begin command buffer.");
+                      "Failed to end command buffer.");
     }
 
     void CmdList::Reset() {
@@ -84,15 +84,19 @@ namespace UniverseEngine {
     }
 
     void CmdList::EndRenderPass() {
-    
+        vkCmdEndRenderPass(this->cmdBuffer);
     }
 
     void CmdList::BindGraphicsPipeline(std::shared_ptr<GraphicsPipeline> graphicsPipeline) {
+        vkCmdBindPipeline(this->cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+                          graphicsPipeline->GetPipeline());
+        
         this->boundGraphicsPipeline = graphicsPipeline;
     }
 
     void CmdList::Draw(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex,
                        uint32_t firstInstance) {
+        vkCmdDraw(this->cmdBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
     }
 
     void CmdList::DrawElements(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex,

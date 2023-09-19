@@ -126,5 +126,9 @@ namespace UniverseEngine {
         vkDestroyPipeline(this->device->GetDevice(), this->pipeline, nullptr);
         vkDestroyPipelineLayout(this->device->GetDevice(), this->pipelineLayout, nullptr);
     }
+
+    VkPipeline GraphicsPipeline::GetPipeline() const {
+        return this->pipeline;
+    }
 }  // namespace UniverseEngine
 #endif
