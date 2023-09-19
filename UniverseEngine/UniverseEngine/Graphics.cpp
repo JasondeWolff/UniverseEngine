@@ -19,7 +19,7 @@ namespace UniverseEngine {
         this->cmdQueue = std::make_unique<CmdQueue>(this->device, *this->physicalDevice);
 
         this->renderPass = std::make_shared<RenderPass>(this->device, this->swapchain->Format());
-        this->swapchain->RebuildFramebuffers(*this->renderPass);
+        this->swapchain->RebuildFramebuffers(this->renderPass);
 
         auto& resources = Engine::GetResources();
 
@@ -60,6 +60,7 @@ namespace UniverseEngine {
         const glm::mat4 vpMatrix = projectionMatrix * glm::inverse(viewMatrix);
 
         std::shared_ptr<CmdList> cmdList = this->cmdQueue->GetCmdList();
+        cmdList->Begin();
 
         cmdList->SetScissor(swapchainExtent);
         cmdList->SetViewport(swapchainExtent);

@@ -118,15 +118,15 @@ namespace UniverseEngine {
             "Failed to create swapchain.");
 
         vkGetSwapchainImagesKHR(device->GetDevice(), this->swapChain, &this->imageCount, nullptr);
-        swapChainImages.resize(this->imageCount);
+        std::vector<VkImage> swapChainImages(this->imageCount);
         vkGetSwapchainImagesKHR(device->GetDevice(), this->swapChain, &this->imageCount,
-                                this->swapChainImages.data());
+                                swapChainImages.data());
 
-        this->swapChainImageViews.resize(this->swapChainImages.size());
-        for (size_t i = 0; i < this->swapChainImages.size(); i++) {
+        std::vector<VkImageView> swapChainImageViews(swapChainImages.size());
+        for (size_t i = 0; i < swapChainImages.size(); i++) {
             VkImageViewCreateInfo createInfo{};
             createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-            createInfo.image = this->swapChainImages[i];
+            createInfo.image = swapChainImages[i];
             createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
             createInfo.format = this->format.format;
             createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -140,42 +140,29 @@ namespace UniverseEngine {
             createInfo.subresourceRange.layerCount = 1;
 
             UE_ASSERT_MSG(!vkCreateImageView(device->GetDevice(), &createInfo, nullptr,
-                                             &this->swapChainImageViews[i]),
+                                             &swapChainImageViews[i]),
                           "Failed to create image view.");
+        }
+
+        this->images.reserve(swapChainImages.size());
+        for (size_t i = 0; i < swapChainImages.size(); i++) {
+            this->images.push_back(std::make_shared<Image>(device, swapChainImages[i], swapChainImageViews[i],
+                                         this->extent.width, this->extent.height));
         }
     }
 
     Swapchain::~Swapchain() {
-        for (auto framebuffer : this->swapChainFramebuffers) {
-            vkDestroyFramebuffer(this->device->GetDevice(), framebuffer, nullptr);
-        }
-        for (auto imageView : this->swapChainImageViews) {
-            vkDestroyImageView(this->device->GetDevice(), imageView, nullptr);
-        }
         vkDestroySwapchainKHR(this->device->GetDevice(), this->swapChain, nullptr);
     }
 
-    void Swapchain::RebuildFramebuffers(const RenderPass& renderPass) {
-        for (auto framebuffer : this->swapChainFramebuffers) {
-            vkDestroyFramebuffer(this->device->GetDevice(), framebuffer, nullptr);
-        }
+    const Framebuffer& Swapchain::GetCurrentFramebuffer() {
+        return this->framebuffers[0];
+    }
 
-        this->swapChainFramebuffers.resize(this->swapChainImageViews.size());
-        for (size_t i = 0; i < this->swapChainImageViews.size(); i++) {
-            VkImageView attachments[] = {this->swapChainImageViews[i]};
-
-            VkFramebufferCreateInfo framebufferInfo{};
-            framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-            framebufferInfo.renderPass = renderPass.GetRenderPass();
-            framebufferInfo.attachmentCount = 1;
-            framebufferInfo.pAttachments = attachments;
-            framebufferInfo.width = this->extent.width;
-            framebufferInfo.height = this->extent.height;
-            framebufferInfo.layers = 1;
-
-            UE_ASSERT_MSG(!vkCreateFramebuffer(this->device->GetDevice(), &framebufferInfo, nullptr,
-                                               &this->swapChainFramebuffers[i]),
-                          "Failed to create frame buffer.");
+    void Swapchain::RebuildFramebuffers(std::shared_ptr<RenderPass> renderPass) {
+        this->framebuffers.clear();
+        for (auto image : this->images) {
+            this->framebuffers.emplace_back(std::move(Framebuffer(this->device, image, renderPass)));
         }
     }
 

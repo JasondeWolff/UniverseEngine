@@ -15,6 +15,12 @@ namespace UniverseEngine {
     CmdList::~CmdList() {
     }
 
+    void CmdList::Begin() {
+    }
+
+    void CmdList::End() {
+    }
+
     void CmdList::Reset() {
         this->graphicsPipeline.reset();
     }
@@ -34,13 +40,20 @@ namespace UniverseEngine {
                   static_cast<GLsizei>(rect2D.extent.x), static_cast<GLsizei>(rect2D.extent.y));
     }
 
+    void CmdList::BeginRenderPass(std::shared_ptr<RenderPass> renderPass,
+                                  const Swapchain& swapchain) {
+    }
+
+    void CmdList::EndRenderPass() {
+    }
+
     void CmdList::BindGraphicsPipeline(std::shared_ptr<GraphicsPipeline> graphicsPipeline) {
         glUseProgram(graphicsPipeline->ShaderProgram());
 
         // TODO: pipeline states like blending, depth etc.
         glEnable(GL_DEPTH_TEST);
 
-        this->graphicsPipeline = graphicsPipeline;
+        this->boundGraphicsPipeline = graphicsPipeline;
     }
 
     void CmdList::Draw(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex,
@@ -62,9 +75,9 @@ namespace UniverseEngine {
     }
 
     void CmdList::PushConstant(const std::string& name, void* constant, size_t size) {
-        UE_ASSERT_MSG(this->graphicsPipeline, "No graphics pipeline bound.");
+        UE_ASSERT_MSG(this->boundGraphicsPipeline, "No graphics pipeline bound.");
 
-        unsigned shaderProgram = this->graphicsPipeline->ShaderProgram();
+        unsigned shaderProgram = this->boundGraphicsPipeline->ShaderProgram();
         unsigned blockIndex = glGetUniformBlockIndex(shaderProgram, name.c_str());
         UE_ASSERT_MSG(blockIndex != GL_INVALID_INDEX, "Cannot find push constant '%s'.",
                       name.c_str());

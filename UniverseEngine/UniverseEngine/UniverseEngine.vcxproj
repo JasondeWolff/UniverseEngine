@@ -15,6 +15,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CmdList.h" />
     <ClInclude Include="CmdQueue.h" />
+    <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="Gamepad.h" />
     <ClInclude Include="gl\GlDebugNames.h" />
     <ClInclude Include="Engine.h" />
@@ -50,6 +51,7 @@
     <ClInclude Include="UniverseEngine.h" />
     <ClInclude Include="Swapchain.h" />
     <ClInclude Include="GraphicsFormat.h" />
+    <ClInclude Include="Image.h" />
     <ClInclude Include="vulkan\VkGraphicsFormat.h" />
     <ClInclude Include="vulkan\VkPFN.h" />
     <ClInclude Include="vulkan\VkDebugNames.h" />
@@ -60,8 +62,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="gl\Framebuffer.cpp" />
+    <ClCompile Include="gl\Image.cpp" />
     <ClCompile Include="gl\LogicalDevice.cpp" />
     <ClCompile Include="gl\RenderPass.cpp" />
+    <ClCompile Include="vulkan\Framebuffer.cpp" />
+    <ClCompile Include="vulkan\Image.cpp" />
     <ClCompile Include="vulkan\RenderPass.cpp" />
     <ClCompile Include="vulkan\VkPFN.cpp" />
     <ClCompile Include="vulkan\VkDebugNames.cpp" />

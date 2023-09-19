@@ -4,6 +4,7 @@
 #include <glm/vec4.hpp>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "GraphicsAPI.h"
 #include "Rect2D.h"
@@ -12,6 +13,9 @@ namespace UniverseEngine {
     class GraphicsPipeline;
     class CmdQueue;
     class LogicalDevice;
+    class Swapchain;
+    class RenderPass;
+    class Framebuffer;
 
     class CmdList {
     public:
@@ -19,12 +23,18 @@ namespace UniverseEngine {
         CmdList(const CmdList& other) = delete;
         CmdList& operator=(const CmdList& other) = delete;
 
+        void Begin();
+        void End();
         void Reset();
 
         void Clear(const glm::vec4& clearColor);
 
         void SetScissor(const Rect2D& rect2D);
         void SetViewport(const Rect2D& rect2D);
+
+        // TODO: Replace swapchain with a framebuffer abstraction
+        void BeginRenderPass(std::shared_ptr<RenderPass> renderPass, const Framebuffer& framebuffer);
+        void EndRenderPass();
 
         void BindGraphicsPipeline(std::shared_ptr<GraphicsPipeline> graphicsPipeline);
 
@@ -51,6 +61,7 @@ namespace UniverseEngine {
 
         void PushConstant(const std::string& name, void* constant, size_t size);
 
-        std::shared_ptr<GraphicsPipeline> graphicsPipeline;
+        std::shared_ptr<GraphicsPipeline> boundGraphicsPipeline;
+        std::vector<std::shared_ptr<RenderPass>> trackedRenderPasses;
     };
 }  // namespace UniverseEngine
