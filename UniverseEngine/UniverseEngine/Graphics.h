@@ -26,7 +26,10 @@ namespace UniverseEngine {
         Graphics();
 
         void Update();
-
+        void Render();
+        
+        void BuildSwapchain();
+        void BuildPipelines();
         void BuildRenderables();
 
         std::unique_ptr<Window> window;

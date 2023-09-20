@@ -16,6 +16,7 @@ namespace UniverseEngine {
         Window* window = static_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
         window->width = static_cast<unsigned>(width);
         window->height = static_cast<unsigned>(height);
+        window->wasResized = true;
     }
 
     void Window::GlfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -38,7 +39,7 @@ namespace UniverseEngine {
         Engine::GetInput().mouseButtons[static_cast<size_t>(button)] = (action != GLFW_RELEASE);
     }
 
-    Window::Window(const char* title) : width(640), height(480) {
+    Window::Window(const char* title) : width(640), height(480), wasResized(false) {
         UE_ASSERT_MSG(glfwInit(), "Failed to init glfw.");
         glfwSetErrorCallback(GlfwErrorCallback);
 
@@ -68,6 +69,10 @@ namespace UniverseEngine {
         glfwSetWindowShouldClose(this->glfwWindow, GLFW_TRUE);
     }
 
+    bool Window::IsMinimized() const {
+        return this->width == 0 || this->height == 0;
+    }
+
     uint32_t Window::Width() const {
         return this->width;
     }
@@ -76,7 +81,13 @@ namespace UniverseEngine {
         return this->height;
     }
 
+    bool Window::WasResized() const {
+        return this->wasResized;
+    }
+
     void Window::Update() {
+        this->wasResized = false;
+
         glfwSwapBuffers(this->glfwWindow);
         glfwPollEvents();
     }

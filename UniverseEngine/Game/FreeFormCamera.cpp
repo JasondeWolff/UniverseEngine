@@ -6,7 +6,7 @@ using namespace UniverseEngine;
 FreeFormCamera::FreeFormCamera() : movementSpeed(5.0f), lookSensitivity(0.3f) {}
 
 void FreeFormCamera::Start() {
-	Engine::GetInput().SetCursorMode(CursorMode::DISABLED);
+	// Engine::GetInput().SetCursorMode(CursorMode::DISABLED);
 }
 
 void FreeFormCamera::Update(float deltaTime) {

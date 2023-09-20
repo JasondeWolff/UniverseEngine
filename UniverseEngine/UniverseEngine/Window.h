@@ -13,8 +13,10 @@ namespace UniverseEngine {
         bool ShouldClose() const;
         void Close() const;
 
+        bool IsMinimized() const;
         uint32_t Width() const;
         uint32_t Height() const;
+        bool WasResized() const;
 
     private:
         friend class Graphics;
@@ -25,10 +27,12 @@ namespace UniverseEngine {
         GLFWwindow* glfwWindow;
         unsigned width;
         unsigned height;
+        bool wasResized;
 
         static void GlfwWindowSizeCallback(GLFWwindow* glfwWindow, int width, int height);
-        static void GlfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+        static void GlfwKeyCallback(GLFWwindow* window, int key, int scancode, int action,
+                                    int mods);
         static void GlfwCursorPositionCallback(GLFWwindow* window, double xpos, double ypos);
         static void GlfwMouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
     };
-}
+}  // namespace UniverseEngine

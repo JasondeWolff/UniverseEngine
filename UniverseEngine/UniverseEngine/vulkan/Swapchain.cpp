@@ -57,19 +57,22 @@ namespace UniverseEngine {
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice.GetPhysicalDevice(),
                                                   instance.GetSurface(), &capabilities);
 
+        VkExtent2D extent;
         if (capabilities.currentExtent.width != UINT_MAX) {
-            return capabilities.currentExtent;
+            extent = capabilities.currentExtent;
         } else {
-            VkExtent2D actualExtent = {window.Width(), window.Height()};
+            extent = {window.Width(), window.Height()};
 
-            actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width,
+            extent.width = std::clamp(extent.width, capabilities.minImageExtent.width,
                                             capabilities.maxImageExtent.width);
-            actualExtent.height =
-                std::clamp(actualExtent.height, capabilities.minImageExtent.height,
+            extent.height = std::clamp(extent.height, capabilities.minImageExtent.height,
                            capabilities.maxImageExtent.height);
-
-            return actualExtent;
         }
+
+        extent.width = std::max(2U, extent.width);
+        extent.height = std::max(2U, extent.height);
+
+        return extent;
     }
 
     uint32_t ChooseImageCount(const GraphicsInstance& instance,
