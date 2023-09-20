@@ -53,6 +53,9 @@
     <Filter Include="Src\Graphics\Vulkan\Specific">
       <UniqueIdentifier>{87f5b487-77f0-4bcc-894b-e38252c33612}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Resources\Assets\Primitives">
+      <UniqueIdentifier>{f1364e37-3949-4072-a679-7a8b3b2fe0c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UniverseEngine.h">
@@ -154,9 +157,6 @@
     <ClInclude Include="GraphicsInstance.h">
       <Filter>Src\Graphics\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Plane.h">
-      <Filter>Src\Resources\Assets</Filter>
-    </ClInclude>
     <ClInclude Include="PhysicalDevice.h">
       <Filter>Src\Graphics\Common</Filter>
     </ClInclude>
@@ -204,6 +204,9 @@
     </ClInclude>
     <ClInclude Include="Semaphore.h">
       <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>Src\Resources\Assets\Primitives</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -288,9 +291,6 @@
     <ClCompile Include="gl\GraphicsInstance.cpp">
       <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
-    <ClCompile Include="Plane.cpp">
-      <Filter>Src\Resources\Assets</Filter>
-    </ClCompile>
     <ClCompile Include="vulkan\CmdList.cpp">
       <Filter>Src\Graphics\Vulkan</Filter>
     </ClCompile>
@@ -374,6 +374,9 @@
     </ClCompile>
     <ClCompile Include="CmdQueue.cpp">
       <Filter>Src\Graphics\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
+      <Filter>Src\Resources\Assets\Primitives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
