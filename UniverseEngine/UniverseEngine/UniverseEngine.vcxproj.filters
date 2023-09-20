@@ -384,6 +384,9 @@
     <ClCompile Include="Voxel.cpp">
       <Filter>Src\Resources\Assets</Filter>
     </ClCompile>
+    <ClCompile Include="GLTFLoader.cpp">
+      <Filter>Src\Resources\Loaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
