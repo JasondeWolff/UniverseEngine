@@ -82,6 +82,13 @@ namespace UniverseEngine {
 
     void Resources::DeleteShader(Handle<Shader> hShader) {
         this->shaders->Free(hShader);
+        
+        for (auto& pair : this->shaderPaths) {
+            if (pair.second == hShader) {
+                this->shaderPaths.erase(pair.first);
+                return;
+            }
+        }
     }
 
     OptionalPtr<Scene> Resources::GetScene(Handle<Scene> hScene) {

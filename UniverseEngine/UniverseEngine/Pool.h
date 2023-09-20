@@ -36,6 +36,10 @@ namespace UniverseEngine {
             return this->index < other.index;
         }
 
+        bool operator==(const Handle<T>& other) const {
+            return this->index == other.index && this->generation == other.generation;
+        }
+
     private:
         friend class Pool<T>;
         Handle(size_t index, size_t generation) : index(index), generation(generation) {

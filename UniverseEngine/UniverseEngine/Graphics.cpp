@@ -15,27 +15,10 @@ namespace UniverseEngine {
         this->physicalDevice = std::make_unique<PhysicalDevice>(*this->instance);
         this->device =
             std::make_shared<LogicalDevice>(this->instance, *this->physicalDevice, enableDebug);
-        this->swapchain = std::make_unique<Swapchain>(*this->window, *this->instance, this->device,
-                                                      *this->physicalDevice);
         this->cmdQueue = std::make_unique<CmdQueue>(this->device, *this->physicalDevice);
 
-        this->renderPass = std::make_shared<RenderPass>(this->device, this->swapchain->Format());
-        this->swapchain->RebuildFramebuffers(this->renderPass);
-
-        auto& resources = Engine::GetResources();
-
-        Handle<Shader> hShaderUnlitVS = resources.LoadShader("Assets/Shaders/unlit.vert");
-        Handle<Shader> hShaderUnlitFS = resources.LoadShader("Assets/Shaders/unlit.frag");
-        this->BuildRenderables();
-
-        std::vector<ShaderRenderable*> unlitShaders = {
-            resources.GetShader(hShaderUnlitVS).Value().renderable.get(),
-            resources.GetShader(hShaderUnlitFS).Value().renderable.get()};
-        this->unlitPipeline =
-            std::make_shared<GraphicsPipeline>(this->device, unlitShaders, this->renderPass);
-
-        resources.DeleteShader(hShaderUnlitVS);
-        resources.DeleteShader(hShaderUnlitFS);
+        this->BuildSwapchain();
+        this->BuildPipelines();
     }
 
     Graphics::~Graphics() {
@@ -50,6 +33,20 @@ namespace UniverseEngine {
         this->BuildRenderables();
         this->cmdQueue->ProcessCmdLists();
 
+        if (!this->window->IsMinimized()) {
+            if (this->window->WasResized()) {
+                this->device->WaitIdle();
+                this->BuildSwapchain();
+                this->BuildPipelines();
+            }
+
+            this->Render();
+        }
+
+        this->window->Update();
+    }
+
+    void Graphics::Render() {
         World& world = Engine::GetWorld();
         Camera& camera = world.camera;
         Resources& resources = Engine::GetResources();
@@ -88,7 +85,7 @@ namespace UniverseEngine {
             }
         }
 
-        cmdList->Draw(3);
+        // cmdList->Draw(3);
 
         cmdList->EndRenderPass();
 
@@ -97,8 +94,30 @@ namespace UniverseEngine {
         this->cmdQueue->SubmitCmdList(cmdList, fence, waitSemaphores, signalSemaphores);
 
         this->swapchain->Present(*this->cmdQueue, *fence, signalSemaphores);
+    }
 
-        this->window->Update();
+    void Graphics::BuildSwapchain() {
+        this->swapchain.reset();
+        this->swapchain = std::make_unique<Swapchain>(*this->window, *this->instance, this->device,
+                                                      *this->physicalDevice);
+        this->renderPass = std::make_shared<RenderPass>(this->device, this->swapchain->Format());
+        this->swapchain->RebuildFramebuffers(this->renderPass);
+    }
+
+    void Graphics::BuildPipelines() {
+        auto& resources = Engine::GetResources();
+        Handle<Shader> hShaderUnlitVS = resources.LoadShader("Assets/Shaders/unlit.vert");
+        Handle<Shader> hShaderUnlitFS = resources.LoadShader("Assets/Shaders/unlit.frag");
+        this->BuildRenderables();
+
+        std::vector<ShaderRenderable*> unlitShaders = {
+            resources.GetShader(hShaderUnlitVS).Value().renderable.get(),
+            resources.GetShader(hShaderUnlitFS).Value().renderable.get()};
+        this->unlitPipeline =
+            std::make_shared<GraphicsPipeline>(this->device, unlitShaders, this->renderPass);
+
+        resources.DeleteShader(hShaderUnlitVS);
+        resources.DeleteShader(hShaderUnlitFS);
     }
 
     void Graphics::BuildRenderables() {
