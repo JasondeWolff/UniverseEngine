@@ -208,6 +208,9 @@
     <ClInclude Include="Plane.h">
       <Filter>Src\Resources\Assets\Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="Voxel.h">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -377,6 +380,9 @@
     </ClCompile>
     <ClCompile Include="Plane.cpp">
       <Filter>Src\Resources\Assets\Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Voxel.cpp">
+      <Filter>Src\Resources\Assets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

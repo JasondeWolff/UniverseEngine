@@ -54,6 +54,7 @@
     <ClInclude Include="Swapchain.h" />
     <ClInclude Include="GraphicsFormat.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="Voxel.h" />
     <ClInclude Include="vulkan\VkGraphicsFormat.h" />
     <ClInclude Include="vulkan\VkPFN.h" />
     <ClInclude Include="vulkan\VkDebugNames.h" />
@@ -71,6 +72,7 @@
     <ClCompile Include="gl\LogicalDevice.cpp" />
     <ClCompile Include="gl\RenderPass.cpp" />
     <ClCompile Include="gl\Semaphore.cpp" />
+    <ClCompile Include="Voxel.cpp" />
     <ClCompile Include="vulkan\Fence.cpp" />
     <ClCompile Include="vulkan\Framebuffer.cpp" />
     <ClCompile Include="vulkan\Image.cpp" />
