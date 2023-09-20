@@ -38,6 +38,10 @@ namespace UniverseEngine {
         resources.DeleteShader(hShaderUnlitFS);
     }
 
+    Graphics::~Graphics() {
+        this->device->WaitIdle();
+    }
+
     const Window& Graphics::GetWindow() const {
         return *this->window.get();
     }
@@ -67,10 +71,10 @@ namespace UniverseEngine {
         cmdList->BeginRenderPass(this->renderPass, this->swapchain->GetCurrentFramebuffer(),
                                  glm::vec4(0.0, 0.05, 0.07, 1.0));
 
+        cmdList->BindGraphicsPipeline(this->unlitPipeline);
+
         cmdList->SetScissor(swapchainExtent);
         cmdList->SetViewport(swapchainExtent);
-
-        cmdList->BindGraphicsPipeline(this->unlitPipeline);
 
         auto sceneInstances = world.GetAllSceneInstances();
         for (auto sceneInstance : sceneInstances) {
@@ -84,13 +88,15 @@ namespace UniverseEngine {
             }
         }
 
-        //cmdList->Draw(3);
+        cmdList->Draw(3);
 
         cmdList->EndRenderPass();
 
         std::vector<Semaphore*> waitSemaphores{&this->swapchain->GetImageAvailableSemaphore()};
         std::vector<Semaphore*> signalSemaphores{&this->swapchain->GetRenderFinishedSemaphore()};
         this->cmdQueue->SubmitCmdList(cmdList, fence, waitSemaphores, signalSemaphores);
+
+        this->swapchain->Present(*this->cmdQueue, *fence, signalSemaphores);
 
         this->window->Update();
     }

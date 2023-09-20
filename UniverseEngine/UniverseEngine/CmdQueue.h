@@ -19,7 +19,7 @@ namespace UniverseEngine {
         CmdQueue(const CmdQueue& other) = delete;
         CmdQueue& operator=(const CmdQueue& other) = delete;
 
-        void ProcessCmdLists();
+        void ProcessCmdLists(bool wait = false);
         std::shared_ptr<CmdList> GetCmdList();
         void SubmitCmdList(std::shared_ptr<CmdList> cmdList, std::shared_ptr<Fence> fence,
                            const std::vector<Semaphore*>& waitSemaphores,

@@ -26,6 +26,9 @@ namespace UniverseEngine {
     }
 
     CmdQueue::~CmdQueue() {
+        this->ProcessCmdLists(true);
+        std::queue<std::shared_ptr<CmdList>>().swap(this->idleCmdLists);
+
         vkDestroyCommandPool(this->device->GetDevice(), this->cmdPool, nullptr);
     }
 

@@ -5,14 +5,14 @@
 #include "Fence.h"
 
 namespace UniverseEngine {
-    void CmdQueue::ProcessCmdLists() {
+    void CmdQueue::ProcessCmdLists(bool wait) {
         while (!this->busyCmdLists.empty()) {
             auto busyCmdList = this->busyCmdLists.front();
             if (busyCmdList.fence->IsComplete()) {
                 busyCmdList.cmdList->Reset();
                 this->idleCmdLists.push(busyCmdList.cmdList);
                 this->busyCmdLists.pop();
-            } else {
+            } else if(!wait) {
                 break;
             }
         }

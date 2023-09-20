@@ -2,14 +2,14 @@
 #ifdef GRAPHICS_API_VULKAN
 
 #include "../CmdList.h"
-
+#include "../CmdQueue.h"
 #include "../GraphicsPipeline.h"
 #include "../Logging.h"
-#include "../CmdQueue.h"
 #include "../Swapchain.h"
 
 namespace UniverseEngine {
-    CmdList::CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue) : device(device), cmdQueue(cmdQueue) {
+    CmdList::CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue)
+        : device(device), cmdQueue(cmdQueue) {
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         allocInfo.commandPool = cmdQueue.GetCmdPool();
@@ -34,8 +34,7 @@ namespace UniverseEngine {
     }
 
     void CmdList::End() {
-        UE_ASSERT_MSG(!vkEndCommandBuffer(this->cmdBuffer),
-                      "Failed to end command buffer.");
+        UE_ASSERT_MSG(!vkEndCommandBuffer(this->cmdBuffer), "Failed to end command buffer.");
     }
 
     void CmdList::Reset() {
@@ -91,7 +90,7 @@ namespace UniverseEngine {
     void CmdList::BindGraphicsPipeline(std::shared_ptr<GraphicsPipeline> graphicsPipeline) {
         vkCmdBindPipeline(this->cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
                           graphicsPipeline->GetPipeline());
-        
+
         this->boundGraphicsPipeline = graphicsPipeline;
     }
 

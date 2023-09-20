@@ -17,6 +17,8 @@ namespace UniverseEngine {
 
     class Graphics {
     public:
+        ~Graphics();
+
         const Window& GetWindow() const;
 
     private:
