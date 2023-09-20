@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include "GraphicsAPI.h"
 
@@ -9,7 +10,7 @@ namespace UniverseEngine {
 
     class Semaphore {
     public:
-        Semaphore(std::shared_ptr<LogicalDevice> device);
+        Semaphore(const std::string& name, std::shared_ptr<LogicalDevice> device);
         ~Semaphore();
         explicit Semaphore(const Semaphore& other) = delete;
         Semaphore& operator=(const Semaphore& other) = delete;

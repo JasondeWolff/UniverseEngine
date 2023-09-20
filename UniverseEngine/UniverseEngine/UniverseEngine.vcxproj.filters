@@ -372,6 +372,9 @@
     <ClCompile Include="vulkan\Fence.cpp">
       <Filter>Src\Graphics\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="CmdQueue.cpp">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />

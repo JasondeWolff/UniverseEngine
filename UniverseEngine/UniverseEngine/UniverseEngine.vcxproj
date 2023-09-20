@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CmdQueue.cpp" />
     <ClCompile Include="gl\Fence.cpp" />
     <ClCompile Include="gl\Framebuffer.cpp" />
     <ClCompile Include="gl\Image.cpp" />

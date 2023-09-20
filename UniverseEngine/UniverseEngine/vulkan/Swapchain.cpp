@@ -3,6 +3,7 @@
 
 #include <algorithm>
 
+#include "../Format.h"
 #include "../Logging.h"
 #include "../Swapchain.h"
 #include "VkGraphicsFormat.h"
@@ -87,7 +88,7 @@ namespace UniverseEngine {
     Swapchain::Swapchain(const Window& window, const GraphicsInstance& instance,
                          std::shared_ptr<LogicalDevice> device,
                          const PhysicalDevice& physicalDevice)
-        : device(device), currentFrame(0), imageAvailableSemaphores{} {
+        : device(device), currentFrame(0), currentImage(0) {
         this->format = ChooseSwapSurfaceFormat(instance, physicalDevice);
         this->presentMode = ChooseSwapPresentMode(instance, physicalDevice);
         this->extent = ChooseSwapExtent(window, instance, physicalDevice);
@@ -146,14 +147,17 @@ namespace UniverseEngine {
 
         this->images.reserve(swapChainImages.size());
         for (size_t i = 0; i < swapChainImages.size(); i++) {
-            this->images.push_back(std::make_shared<Image>(device, swapChainImages[i], swapChainImageViews[i],
-                                         this->extent.width, this->extent.height));
+            this->images.push_back(
+                std::make_shared<Image>(device, swapChainImages[i], swapChainImageViews[i],
+                                        this->extent.width, this->extent.height));
         }
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-            imageAvailableSemaphores.emplace_back(std::move(Semaphore(device)));
-            renderFinishedSemaphores.emplace_back(std::move(Semaphore(device)));
-            inflightFences.emplace_back(std::move(Fence(device)));
+            imageAvailableSemaphores.emplace_back(
+                std::move(Semaphore(UniverseEngine::Format("Image Available %i", i), device)));
+            renderFinishedSemaphores.emplace_back(
+                std::move(Semaphore(UniverseEngine::Format("Render Finished %i", i), device)));
+            inflightFences.emplace_back(std::move(std::make_shared<Fence>(device, true)));
         }
     }
 
@@ -162,14 +166,60 @@ namespace UniverseEngine {
     }
 
     const Framebuffer& Swapchain::GetCurrentFramebuffer() {
-        return this->framebuffers[0];
+        UE_ASSERT_MSG(!this->framebuffers.empty(), "Rebuild framebuffers first!");
+        return this->framebuffers[static_cast<size_t>(this->currentImage)];
+    }
+
+    const Image& Swapchain::GetCurrentImage() {
+        return *this->images[static_cast<size_t>(this->currentImage)];
+    }
+
+    Semaphore& Swapchain::GetImageAvailableSemaphore() {
+        return this->imageAvailableSemaphores[static_cast<size_t>(this->currentFrame)];
+    }
+
+    Semaphore& Swapchain::GetRenderFinishedSemaphore() {
+        return this->renderFinishedSemaphores[static_cast<size_t>(this->currentFrame)];
     }
 
     void Swapchain::RebuildFramebuffers(std::shared_ptr<RenderPass> renderPass) {
         this->framebuffers.clear();
-        for (auto image : this->images) {
-            this->framebuffers.emplace_back(std::move(Framebuffer(this->device, image, renderPass)));
+        for (auto& image : this->images) {
+            this->framebuffers.emplace_back(
+                std::move(Framebuffer(this->device, image, renderPass)));
         }
+    }
+
+    std::shared_ptr<Fence> Swapchain::NextImage() {
+        this->inflightFences[this->currentFrame]->Wait();
+        this->inflightFences[this->currentFrame]->Reset();
+
+        vkAcquireNextImageKHR(
+            this->device->GetDevice(), this->swapChain, std::numeric_limits<uint64_t>::max(),
+            this->GetImageAvailableSemaphore().GetSemaphore(), VK_NULL_HANDLE, &this->currentImage);
+
+        return this->inflightFences[this->currentFrame];
+    }
+
+    void Swapchain::Present(const CmdQueue& queue, const Fence& fence,
+                            const std::vector<Semaphore*>& semaphores) {
+        std::vector<VkSemaphore> vkSemaphores;
+        for (auto& semaphore : semaphores) {
+            vkSemaphores.push_back(semaphore->GetSemaphore());
+        }
+
+        VkPresentInfoKHR presentInfo{};
+        presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+        presentInfo.waitSemaphoreCount = static_cast<uint32_t>(vkSemaphores.size());
+        presentInfo.pWaitSemaphores = vkSemaphores.data();
+        VkSwapchainKHR swapChains[] = {this->swapChain};
+        presentInfo.swapchainCount = 1;
+        presentInfo.pSwapchains = swapChains;
+        presentInfo.pImageIndices = &this->currentImage;
+
+        vkQueuePresentKHR(queue.GetQueue(), &presentInfo);
+
+        this->currentFrame = (this->currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
     }
 
     GraphicsFormat Swapchain::Format() const {

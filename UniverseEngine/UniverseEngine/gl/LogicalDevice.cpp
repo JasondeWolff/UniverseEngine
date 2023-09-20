@@ -4,12 +4,15 @@
 #include "../LogicalDevice.h"
 
 namespace UniverseEngine {
-    LogicalDevice::LogicalDevice(std::shared_ptr<GraphicsInstance> instance, const
-                                     PhysicalDevice& physicalDevice,
-                                 bool debug) : instance(instance) {
+    LogicalDevice::LogicalDevice(std::shared_ptr<GraphicsInstance> instance,
+                                 const PhysicalDevice& physicalDevice, bool debug)
+        : instance(instance) {
     }
 
     LogicalDevice::~LogicalDevice() {
+    }
+
+    void LogicalDevice::WaitIdle() const {
     }
 }  // namespace UniverseEngine
 #endif

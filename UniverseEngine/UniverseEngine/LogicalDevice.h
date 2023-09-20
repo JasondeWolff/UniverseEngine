@@ -14,6 +14,8 @@ namespace UniverseEngine {
         LogicalDevice(const LogicalDevice& other) = delete;
         LogicalDevice& operator=(const LogicalDevice& other) = delete;
 
+        void WaitIdle() const;
+
     private:
         const std::shared_ptr<GraphicsInstance> instance;
 

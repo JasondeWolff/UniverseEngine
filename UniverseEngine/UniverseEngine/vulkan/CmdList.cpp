@@ -39,8 +39,9 @@ namespace UniverseEngine {
     }
 
     void CmdList::Reset() {
-        this->boundGraphicsPipeline.reset();
+        vkResetCommandBuffer(this->cmdBuffer, 0);
 
+        this->boundGraphicsPipeline.reset();
         this->trackedRenderPasses.clear();
     }
 

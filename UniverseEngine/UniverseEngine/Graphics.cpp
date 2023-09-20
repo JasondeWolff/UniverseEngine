@@ -13,7 +13,8 @@ namespace UniverseEngine {
         this->window = std::move(std::unique_ptr<Window>(new Window("Universe Engine")));
         this->instance = std::make_shared<GraphicsInstance>(*this->window, enableDebug);
         this->physicalDevice = std::make_unique<PhysicalDevice>(*this->instance);
-        this->device = std::make_shared<LogicalDevice>(this->instance, *this->physicalDevice, enableDebug);
+        this->device =
+            std::make_shared<LogicalDevice>(this->instance, *this->physicalDevice, enableDebug);
         this->swapchain = std::make_unique<Swapchain>(*this->window, *this->instance, this->device,
                                                       *this->physicalDevice);
         this->cmdQueue = std::make_unique<CmdQueue>(this->device, *this->physicalDevice);
@@ -43,13 +44,13 @@ namespace UniverseEngine {
 
     void Graphics::Update() {
         this->BuildRenderables();
+        this->cmdQueue->ProcessCmdLists();
 
         World& world = Engine::GetWorld();
         Camera& camera = world.camera;
         Resources& resources = Engine::GetResources();
 
         Rect2D swapchainExtent = this->swapchain->Extent();
-
         uint32_t width = GetWindow().Width();
         uint32_t height = GetWindow().Height();
         camera.SetAspect(static_cast<float>(swapchainExtent.extent.x) /
@@ -59,8 +60,9 @@ namespace UniverseEngine {
         const glm::mat4& projectionMatrix = camera.GetMatrix();
         const glm::mat4 vpMatrix = projectionMatrix * glm::inverse(viewMatrix);
 
+        auto fence = this->swapchain->NextImage();
+
         std::shared_ptr<CmdList> cmdList = this->cmdQueue->GetCmdList();
-        cmdList->Begin();
 
         cmdList->BeginRenderPass(this->renderPass, this->swapchain->GetCurrentFramebuffer(),
                                  glm::vec4(0.0, 0.05, 0.07, 1.0));
@@ -70,7 +72,7 @@ namespace UniverseEngine {
 
         cmdList->BindGraphicsPipeline(this->unlitPipeline);
 
-        auto sceneInstances = world.GetAllSceneInstances();
+        /*auto sceneInstances = world.GetAllSceneInstances();
         for (auto sceneInstance : sceneInstances) {
             Scene& scene = resources.GetScene(sceneInstance.get().hScene).Value();
 
@@ -80,12 +82,15 @@ namespace UniverseEngine {
                 cmdList->PushConstant("PushConstants", pushConstant);
                 mesh.renderable->Draw(*cmdList);
             }
-        }
+        }*/
 
         cmdList->Draw(3);
 
         cmdList->EndRenderPass();
-        cmdList->End();
+
+        std::vector<Semaphore*> waitSemaphores{&this->swapchain->GetImageAvailableSemaphore()};
+        std::vector<Semaphore*> signalSemaphores{&this->swapchain->GetRenderFinishedSemaphore()};
+        this->cmdQueue->SubmitCmdList(cmdList, fence, waitSemaphores, signalSemaphores);
 
         this->window->Update();
     }
@@ -103,8 +108,8 @@ namespace UniverseEngine {
             Shader& shader = optionalShader.Value();
 
             if (!shader.renderable) {
-                shader.renderable =
-                    std::move(std::unique_ptr<ShaderRenderable>(new ShaderRenderable(this->device, shader)));
+                shader.renderable = std::move(
+                    std::unique_ptr<ShaderRenderable>(new ShaderRenderable(this->device, shader)));
                 shader.ClearCPUData();
             }
         }

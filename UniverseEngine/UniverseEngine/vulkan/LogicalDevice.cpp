@@ -41,7 +41,12 @@ namespace UniverseEngine {
     }
 
     LogicalDevice::~LogicalDevice() {
+        this->WaitIdle();
         vkDestroyDevice(this->device, nullptr);
+    }
+
+    void LogicalDevice::WaitIdle() const {
+        vkDeviceWaitIdle(this->device);
     }
 
     VkDevice LogicalDevice::GetDevice() const {

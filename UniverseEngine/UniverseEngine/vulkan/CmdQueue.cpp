@@ -6,6 +6,8 @@
 #include "../CmdList.h"
 #include "../CmdQueue.h"
 #include "../Logging.h"
+#include "../Semaphore.h"
+#include "../Fence.h"
 
 namespace UniverseEngine {
     CmdQueue::CmdQueue(const std::shared_ptr<LogicalDevice> device,
@@ -27,8 +29,35 @@ namespace UniverseEngine {
         vkDestroyCommandPool(this->device->GetDevice(), this->cmdPool, nullptr);
     }
 
-    std::shared_ptr<CmdList> CmdQueue::GetCmdList() {
-        return std::shared_ptr<CmdList>(new CmdList(this->device, *this));
+    void CmdQueue::SubmitCmdList(std::shared_ptr<CmdList> cmdList, std::shared_ptr<Fence> fence,
+                       const std::vector<Semaphore*>& waitSemaphores,
+                       const std::vector<Semaphore*>& signalSemaphores) {
+        cmdList->End();
+
+        std::vector<VkSemaphore> vkWaitSemaphores;
+        std::vector<VkSemaphore> vkSignalSemaphores;
+        for (auto& waitSemaphore : waitSemaphores) {
+            vkWaitSemaphores.push_back(waitSemaphore->GetSemaphore());
+        }
+        for (auto& signalSemaphore : signalSemaphores) {
+            vkSignalSemaphores.push_back(signalSemaphore->GetSemaphore());
+        }
+
+        VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+
+        VkSubmitInfo submitInfo{};
+        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submitInfo.waitSemaphoreCount = static_cast<uint32_t>(vkWaitSemaphores.size());
+        submitInfo.pWaitSemaphores = vkWaitSemaphores.data();
+        submitInfo.signalSemaphoreCount = static_cast<uint32_t>(vkSignalSemaphores.size());
+        submitInfo.pSignalSemaphores = vkSignalSemaphores.data();
+        submitInfo.commandBufferCount = 1;
+        submitInfo.pCommandBuffers = &cmdList->cmdBuffer;
+        submitInfo.pWaitDstStageMask = waitStages;
+
+        vkQueueSubmit(this->queue, 1, &submitInfo, fence->GetFence());
+
+        this->busyCmdLists.push(InFlightCmdList{fence, cmdList});
     }
 
     VkQueue CmdQueue::GetQueue() const {
