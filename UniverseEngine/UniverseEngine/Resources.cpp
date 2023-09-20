@@ -21,6 +21,8 @@ namespace UniverseEngine {
             hScene = LoadUSD(filePath);
         else if (extension == ".obj")
             hScene = LoadOBJ(filePath);
+        else if (extension == ".gltf")
+            hScene = LoadGLTF(filePath);
         else
             UE_FATAL("Cannot load unsupported scene type '%s'.", extension);
 
