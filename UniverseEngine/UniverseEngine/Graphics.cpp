@@ -73,7 +73,7 @@ namespace UniverseEngine {
         cmdList->SetScissor(swapchainExtent);
         cmdList->SetViewport(swapchainExtent);
 
-        /*auto sceneInstances = world.GetAllSceneInstances();
+        auto sceneInstances = world.GetAllSceneInstances();
         for (auto sceneInstance : sceneInstances) {
             Scene& scene = resources.GetScene(sceneInstance.get().hScene).Value();
 
@@ -83,9 +83,9 @@ namespace UniverseEngine {
                 cmdList->PushConstant("PushConstants", pushConstant);
                 mesh.renderable->Draw(*cmdList);
             }
-        }*/
+        }
 
-        cmdList->Draw(3);
+        // cmdList->Draw(3);
 
         cmdList->EndRenderPass();
 
