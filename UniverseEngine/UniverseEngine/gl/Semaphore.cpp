@@ -5,7 +5,8 @@
 #include "../LogicalDevice.h"
 
 namespace UniverseEngine {
-    Semaphore::Semaphore(std::shared_ptr<LogicalDevice> device) : device(device) {
+    Semaphore::Semaphore(const std::string& name, std::shared_ptr<LogicalDevice> device)
+        : device(device) {
     }
 
     Semaphore::Semaphore(Semaphore&& other) noexcept : device(other.device) {
