@@ -66,8 +66,6 @@
     <None Include="Assets\templates\vray_materials.mdl">
       <Filter>Assets\Models</Filter>
     </None>
-    <None Include="Assets\Shaders\Vulkan\unlit.frag" />
-    <None Include="Assets\Shaders\Vulkan\unlit.vert" />
     <None Include="Assets\cube.gltf">
       <Filter>Assets\Models</Filter>
     </None>
@@ -79,6 +77,11 @@
     </None>
     <None Include="Assets\susanMultiple.gltf">
       <Filter>Assets\Models</Filter>
+    <None Include="Assets\Shaders\Vulkan\unlit.frag">
+      <Filter>Assets\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="Assets\Shaders\Vulkan\unlit.vert">
+      <Filter>Assets\Shaders\Vulkan</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
