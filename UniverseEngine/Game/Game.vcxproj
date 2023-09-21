@@ -96,6 +96,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\UniverseEngine\.clang-format" />
+    <None Include="Assets\cube.bin" />
+    <None Include="Assets\cube.gltf" />
     <None Include="Assets\cube.usd">
       <FileType>Document</FileType>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>

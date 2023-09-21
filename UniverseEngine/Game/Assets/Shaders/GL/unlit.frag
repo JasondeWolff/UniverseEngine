@@ -7,7 +7,7 @@ in vec3 Color;
 
 void main()
 {   
-    vec3 lightDir = vec3(0.1, -1.0, 0.0);
-    float attenuation = clamp(dot(Normal, -lightDir), 0.2, 1.0);
+    vec3 lightDir = vec3(1.1, -1.0, 1.0);
+    float attenuation = clamp(dot(Normal, -lightDir), 0.1, 1.0);
     FragColor = vec4(1.0, 1.0, 1.0, 1.0) * attenuation;
 }

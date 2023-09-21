@@ -44,6 +44,7 @@ namespace UniverseEngine {
         std::vector<Handle<Shader>> newShaders;
 
         Handle<Scene> LoadOBJ(const std::filesystem::path& filePath);
+        Handle<Scene> LoadGLTF(const std::filesystem::path& filePath);
         Handle<Scene> LoadUSD(const std::filesystem::path& filePath);
         AtomicHandle<Texture> LoadIMG(const std::filesystem::path& filePath);
         Handle<Shader> LoadShaderSource(const std::filesystem::path& filePath);

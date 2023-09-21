@@ -66,6 +66,7 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CmdQueue.cpp" />
+    <ClCompile Include="GLTFLoader.cpp" />
     <ClCompile Include="gl\Fence.cpp" />
     <ClCompile Include="gl\Framebuffer.cpp" />
     <ClCompile Include="gl\Image.cpp" />
@@ -181,7 +182,7 @@
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
     <PublicIncludeDirectories>$(PublicIncludeDirectories)</PublicIncludeDirectories>
-    <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\TinyUSD\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\tree\include\;C:\VulkanSDK\1.3.261.1\Include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\TinyUSD\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\tinygltf\include\;$(SolutionDir)Dependencies\tree\include\;C:\VulkanSDK\1.3.261.1\Include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Dependencies\TinyUSD\bin\;$(SolutionDir)Dependencies\GLFW\bin\;$(SolutionDir)Dependencies\glew\bin\;C:\VulkanSDK\1.3.261.1\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugVulkan|x64'">
@@ -207,7 +208,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level2</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NOMINMAX;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
