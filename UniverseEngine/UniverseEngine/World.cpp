@@ -1,4 +1,6 @@
 #include "World.h"
+#include "Engine.h"
+#include "TerrianGenerator.h"
 
 namespace UniverseEngine {
     World::World() : camera{}, newInstances{} {
@@ -25,5 +27,7 @@ namespace UniverseEngine {
     }
 
     void World::Update() {
+        
+
     }
 }  // namespace UniverseEngine

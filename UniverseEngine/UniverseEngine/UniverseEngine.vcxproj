@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="AtomicPool.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Chunk.h" />
     <ClInclude Include="CmdList.h" />
     <ClInclude Include="CmdQueue.h" />
     <ClInclude Include="Fence.h" />
@@ -47,6 +48,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderRenderable.h" />
     <ClInclude Include="ShaderType.h" />
+    <ClInclude Include="TerrianGenerator.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h" />
@@ -65,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="CmdQueue.cpp" />
     <ClCompile Include="GLTFLoader.cpp" />
     <ClCompile Include="gl\Fence.cpp" />
@@ -73,6 +76,7 @@
     <ClCompile Include="gl\LogicalDevice.cpp" />
     <ClCompile Include="gl\RenderPass.cpp" />
     <ClCompile Include="gl\Semaphore.cpp" />
+    <ClCompile Include="TerrianGenerator.cpp" />
     <ClCompile Include="Voxel.cpp" />
     <ClCompile Include="vulkan\Fence.cpp" />
     <ClCompile Include="vulkan\Framebuffer.cpp" />

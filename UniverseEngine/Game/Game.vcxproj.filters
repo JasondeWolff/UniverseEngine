@@ -74,6 +74,12 @@
     <None Include="Assets\cube.bin">
       <Filter>Assets\Models</Filter>
     </None>
+    <None Include="Assets\susanMultiple.bin">
+      <Filter>Assets\Models</Filter>
+    </None>
+    <None Include="Assets\susanMultiple.gltf">
+      <Filter>Assets\Models</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyGame.h">
