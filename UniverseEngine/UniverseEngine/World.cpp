@@ -28,6 +28,8 @@ namespace UniverseEngine {
 
     void World::Update() {
         
+        auto b = GetAllSceneInstances();
 
+        int debug = 0;
     }
 }  // namespace UniverseEngine
