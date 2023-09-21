@@ -7,8 +7,45 @@
 #include "../LogicalDevice.h"
 #include "../RenderPass.h"
 #include "../ShaderRenderable.h"
+#include "../Mesh.h"
 
 namespace UniverseEngine {
+    VkVertexInputBindingDescription VertexBindingDescription() {
+        VkVertexInputBindingDescription bindingDescription{};
+        bindingDescription.binding = 0;
+        bindingDescription.stride = sizeof(Vertex);
+        bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+        return bindingDescription;
+    }
+
+    std::array<VkVertexInputAttributeDescription, 4> VertexAttributeDescriptions(
+        uint32_t binding = 0) {
+        std::array<VkVertexInputAttributeDescription, 4> attributeDescriptions{};
+
+        attributeDescriptions[0].binding = binding;
+        attributeDescriptions[0].location = 0;
+        attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+        attributeDescriptions[0].offset = offsetof(Vertex, position);
+
+        attributeDescriptions[1].binding = binding;
+        attributeDescriptions[1].location = 1;
+        attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+        attributeDescriptions[1].offset = offsetof(Vertex, normal);
+
+        attributeDescriptions[2].binding = binding;
+        attributeDescriptions[2].location = 2;
+        attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+        attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
+
+        attributeDescriptions[3].binding = binding;
+        attributeDescriptions[3].location = 3;
+        attributeDescriptions[3].format = VK_FORMAT_R32G32B32_SFLOAT;
+        attributeDescriptions[3].offset = offsetof(Vertex, color);
+
+        return attributeDescriptions;
+    }
+
     GraphicsPipeline::GraphicsPipeline(std::shared_ptr<LogicalDevice> device,
                                        const std::vector<ShaderRenderable*>& shaders,
                                        std::shared_ptr<RenderPass> renderPass)
@@ -34,11 +71,13 @@ namespace UniverseEngine {
         dynamicState.pDynamicStates = dynamicStates.data();
 
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
+        auto vertexBindingDescription = VertexBindingDescription();
+        auto vertexAttributeDescriptions = VertexAttributeDescriptions();
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-        vertexInputInfo.vertexBindingDescriptionCount = 0;
-        vertexInputInfo.pVertexBindingDescriptions = nullptr;  // Optional
-        vertexInputInfo.vertexAttributeDescriptionCount = 0;
-        vertexInputInfo.pVertexAttributeDescriptions = nullptr;  // Optional
+        vertexInputInfo.vertexBindingDescriptionCount = 1;
+        vertexInputInfo.pVertexBindingDescriptions = &vertexBindingDescription;
+        vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexAttributeDescriptions.size());
+        vertexInputInfo.pVertexAttributeDescriptions = vertexAttributeDescriptions.data();
 
         VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
         inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
