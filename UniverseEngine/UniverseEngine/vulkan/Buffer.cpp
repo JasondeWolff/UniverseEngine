@@ -9,22 +9,22 @@ namespace UniverseEngine {
     VkBufferUsageFlags GetVkUsageFlags(BufferUsage usage) {
         VkBufferUsageFlags flags = 0;
 
-        if (usage.test(GetBufferUsageBitIndex(BufferUsageBit::TRANSFER_SRC))) {
+        if (usage.test(GetBufferUsageBitIndex(BufferUsageBits::TRANSFER_SRC))) {
             flags |= VkBufferUsageFlagBits::VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
         }
-        if (usage.test(GetBufferUsageBitIndex(BufferUsageBit::TRANSFER_DST))) {
+        if (usage.test(GetBufferUsageBitIndex(BufferUsageBits::TRANSFER_DST))) {
             flags |= VkBufferUsageFlagBits::VK_BUFFER_USAGE_TRANSFER_DST_BIT;
         }
-        if (usage.test(GetBufferUsageBitIndex(BufferUsageBit::UNIFORM_BUFFER))) {
+        if (usage.test(GetBufferUsageBitIndex(BufferUsageBits::UNIFORM_BUFFER))) {
             flags |= VkBufferUsageFlagBits::VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
         }
-        if (usage.test(GetBufferUsageBitIndex(BufferUsageBit::STORAGE_BUFFER))) {
+        if (usage.test(GetBufferUsageBitIndex(BufferUsageBits::STORAGE_BUFFER))) {
             flags |= VkBufferUsageFlagBits::VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
         }
-        if (usage.test(GetBufferUsageBitIndex(BufferUsageBit::INDEX_BUFFER))) {
+        if (usage.test(GetBufferUsageBitIndex(BufferUsageBits::INDEX_BUFFER))) {
             flags |= VkBufferUsageFlagBits::VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
         }
-        if (usage.test(GetBufferUsageBitIndex(BufferUsageBit::VERTEX_BUFFER))) {
+        if (usage.test(GetBufferUsageBitIndex(BufferUsageBits::VERTEX_BUFFER))) {
             flags |= VkBufferUsageFlagBits::VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
         }
 

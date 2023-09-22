@@ -1,5 +1,5 @@
 #pragma once
 
 namespace UniverseEngine {
-    enum ShaderType { VERTEX, FRAGMENT };
+    enum ShaderType { SHADER_VERTEX, SHADER_FRAGMENT };
 }

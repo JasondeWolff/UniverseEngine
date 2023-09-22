@@ -17,6 +17,8 @@
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="CmdList.h" />
     <ClInclude Include="CmdQueue.h" />
+    <ClInclude Include="DescriptorLayoutBinding.h" />
+    <ClInclude Include="DescriptorSetLayout.h" />
     <ClInclude Include="Fence.h" />
     <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="Gamepad.h" />
@@ -71,6 +73,9 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="CmdQueue.cpp" />
+    <ClCompile Include="DescriptorLayoutBinding.cpp" />
+    <ClCompile Include="gl\DescriptorSetLayout.cpp" />
+    <ClCompile Include="vulkan\DescriptorSetLayout.cpp" />
     <ClCompile Include="GLTFLoader.cpp" />
     <ClCompile Include="gl\Fence.cpp" />
     <ClCompile Include="gl\Framebuffer.cpp" />

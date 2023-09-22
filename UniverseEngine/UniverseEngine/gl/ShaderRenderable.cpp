@@ -12,9 +12,9 @@
 namespace UniverseEngine {
     GLenum GetShaderType(const Shader& shader) {
         switch (shader.type) {
-            case ShaderType::VERTEX:
+            case ShaderType::SHADER_VERTEX:
                 return GL_VERTEX_SHADER;
-            case ShaderType::FRAGMENT:
+            case ShaderType::SHADER_FRAGMENT:
                 return GL_FRAGMENT_SHADER;
             default: {
                 UE_FATAL("Unsupported shader type.");

@@ -8,6 +8,7 @@
 #include "../RenderPass.h"
 #include "../ShaderRenderable.h"
 #include "../Mesh.h"
+#include "../DescriptorSetLayout.h"
 
 namespace UniverseEngine {
     VkVertexInputBindingDescription VertexBindingDescription() {
@@ -48,8 +49,9 @@ namespace UniverseEngine {
 
     GraphicsPipeline::GraphicsPipeline(std::shared_ptr<LogicalDevice> device,
                                        const std::vector<ShaderRenderable*>& shaders,
-                                       std::shared_ptr<RenderPass> renderPass)
-        : device(device) {
+                                       std::shared_ptr<RenderPass> renderPass,
+                                       std::shared_ptr<DescriptorSetLayout> descriptorSetLayout)
+        : device(device), renderPass(renderPass), descriptorSetLayout(descriptorSetLayout) {
         // TODO: make more dynamic
         VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
         vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -112,8 +114,9 @@ namespace UniverseEngine {
 
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = 0;             // Optional
-        pipelineLayoutInfo.pSetLayouts = nullptr;          // Optional
+        pipelineLayoutInfo.setLayoutCount = 1;
+        VkDescriptorSetLayout descriptorSetLayouts[] = {descriptorSetLayout->GetLayout()};
+        pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts;
         pipelineLayoutInfo.pushConstantRangeCount = 0;     // Optional
         pipelineLayoutInfo.pPushConstantRanges = nullptr;  // Optional
 

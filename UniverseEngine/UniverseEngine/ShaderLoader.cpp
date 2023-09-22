@@ -14,9 +14,9 @@ namespace UniverseEngine {
         parsedShader.name = shaderFile.filename().string();
         std::string extension = filePath.extension().string();
         if (extension == ".vert")
-            parsedShader.type = ShaderType::VERTEX;
+            parsedShader.type = ShaderType::SHADER_VERTEX;
         if (extension == ".frag")
-            parsedShader.type = ShaderType::FRAGMENT;
+            parsedShader.type = ShaderType::SHADER_FRAGMENT;
 
         {
             std::ifstream t(shaderFile);

@@ -11,7 +11,7 @@ namespace UniverseEngine {
     class PhysicalDevice;
 
     typedef std::bitset<6> BufferUsage;
-    enum BufferUsageBit {
+    enum BufferUsageBits {
         TRANSFER_SRC = 0x0001,
         TRANSFER_DST = 0x0002,
         UNIFORM_BUFFER = 0x0004,
@@ -19,7 +19,7 @@ namespace UniverseEngine {
         INDEX_BUFFER = 0x0010,
         VERTEX_BUFFER = 0x0020
     };
-    size_t GetBufferUsageBitIndex(BufferUsageBit bit);
+    size_t GetBufferUsageBitIndex(BufferUsageBits bits);
 
     enum class BufferLocation { GPU_ONLY, CPU_TO_GPU };
 

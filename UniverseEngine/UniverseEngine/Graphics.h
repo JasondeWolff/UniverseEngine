@@ -4,6 +4,8 @@
 
 #include "CmdList.h"
 #include "CmdQueue.h"
+#include "DescriptorLayoutBinding.h"
+#include "DescriptorSetLayout.h"
 #include "GraphicsPipeline.h"
 #include "LogicalDevice.h"
 #include "PhysicalDevice.h"
@@ -27,7 +29,7 @@ namespace UniverseEngine {
 
         void Update();
         void Render();
-        
+
         void BuildSwapchain();
         void BuildPipelines();
         void BuildRenderables();

@@ -21,11 +21,11 @@ namespace UniverseEngine {
 
         std::shared_ptr<Buffer> stagingVertexBuffer =
             std::make_shared<Buffer>(Format("%s_STAGING_VERTEX_BUFFER", mesh.name.c_str()), device,
-                                     physicalDevice, BufferUsageBit::TRANSFER_SRC,
+                                     physicalDevice, BufferUsageBits::TRANSFER_SRC,
                                      static_cast<uint64_t>(vertexSize), BufferLocation::CPU_TO_GPU);
         std::shared_ptr<Buffer> stagingIndexBuffer =
             std::make_shared<Buffer>(Format("%s_STAGING_INDEX_BUFFER", mesh.name.c_str()), device,
-                                     physicalDevice, BufferUsageBit::TRANSFER_SRC,
+                                     physicalDevice, BufferUsageBits::TRANSFER_SRC,
                                      static_cast<uint64_t>(indexSize), BufferLocation::CPU_TO_GPU);
 
         void* data = stagingVertexBuffer->Map();
@@ -38,11 +38,11 @@ namespace UniverseEngine {
 
         this->vertexBuffer = std::make_shared<Buffer>(
             Format("%s_VERTEX_BUFFER", mesh.name.c_str()), device, physicalDevice,
-            BufferUsageBit::TRANSFER_DST | BufferUsageBit::VERTEX_BUFFER,
+            BufferUsageBits::TRANSFER_DST | BufferUsageBits::VERTEX_BUFFER,
             static_cast<uint64_t>(vertexSize), BufferLocation::GPU_ONLY);
         this->indexBuffer = std::make_shared<Buffer>(
             Format("%s_INDEX_BUFFER", mesh.name.c_str()), device, physicalDevice,
-            BufferUsageBit::TRANSFER_DST | BufferUsageBit::INDEX_BUFFER,
+            BufferUsageBits::TRANSFER_DST | BufferUsageBits::INDEX_BUFFER,
             static_cast<uint64_t>(indexSize), BufferLocation::GPU_ONLY);
 
         uploadCmdList.CopyBuffers(stagingVertexBuffer, this->vertexBuffer);

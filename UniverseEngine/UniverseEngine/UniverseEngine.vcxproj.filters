@@ -223,6 +223,12 @@
     <ClInclude Include="TerrianGenerator.h">
       <Filter>Src\Core</Filter>
     </ClInclude>
+    <ClInclude Include="DescriptorSetLayout.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorLayoutBinding.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -410,6 +416,15 @@
     </ClCompile>
     <ClCompile Include="TerrianGenerator.cpp">
       <Filter>Src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\DescriptorSetLayout.cpp">
+      <Filter>Src\Graphics\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="DescriptorLayoutBinding.cpp">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="gl\DescriptorSetLayout.cpp">
+      <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

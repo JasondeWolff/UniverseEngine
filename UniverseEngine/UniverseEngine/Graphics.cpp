@@ -103,6 +103,12 @@ namespace UniverseEngine {
     }
 
     void Graphics::BuildPipelines() {
+        std::shared_ptr<DescriptorSetLayout> descriptorSetLayout =
+            std::make_shared<DescriptorSetLayout>(
+                this->device,
+                std::vector<DescriptorLayoutBinding>{DescriptorLayoutBinding(
+                    "ubo", 0, DescriptorType::UNIFORM_BUFFER, DescriptorStageFlagBits::VERTEX)});
+
         auto& resources = Engine::GetResources();
         Handle<Shader> hShaderUnlitVS = resources.LoadShader("Assets/Shaders/unlit.vert");
         Handle<Shader> hShaderUnlitFS = resources.LoadShader("Assets/Shaders/unlit.frag");
@@ -111,8 +117,8 @@ namespace UniverseEngine {
         std::vector<ShaderRenderable*> unlitShaders = {
             resources.GetShader(hShaderUnlitVS).Value().renderable.get(),
             resources.GetShader(hShaderUnlitFS).Value().renderable.get()};
-        this->unlitPipeline =
-            std::make_shared<GraphicsPipeline>(this->device, unlitShaders, this->renderPass);
+        this->unlitPipeline = std::make_shared<GraphicsPipeline>(
+            this->device, unlitShaders, this->renderPass, descriptorSetLayout);
 
         resources.DeleteShader(hShaderUnlitVS);
         resources.DeleteShader(hShaderUnlitFS);
