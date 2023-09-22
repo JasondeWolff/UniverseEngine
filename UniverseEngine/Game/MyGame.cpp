@@ -6,8 +6,8 @@ void MyGame::OnStart() {
 	Resources& resources = Engine::GetResources();
 	World& world = Engine::GetWorld();
 
-	/*this->hSusan = resources.LoadScene("Assets/susanMultiple.obj");
-	this->hSusanInstance = world.AddSceneInstance(this->hSusan);*/
+	this->hSusan = resources.LoadScene("Assets/susanMultiple.obj");
+	this->hSusanInstance = world.AddSceneInstance(this->hSusan);
 
 	this->hCube = resources.LoadScene("Assets/cube.gltf");
 	this->hCubeInstance = world.AddSceneInstance(this->hCube);

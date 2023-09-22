@@ -28,6 +28,8 @@ namespace UniverseEngine {
         void End();
         void Reset();
 
+        void CopyBuffers(std::shared_ptr<Buffer> src, std::shared_ptr<Buffer> dst);
+
         void SetScissor(const Rect2D& rect2D);
         void SetViewport(const Rect2D& rect2D);
 

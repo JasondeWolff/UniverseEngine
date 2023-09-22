@@ -10,20 +10,27 @@
 
 namespace UniverseEngine {
     MeshRenderable::MeshRenderable(std::shared_ptr<LogicalDevice> device,
-                                   const PhysicalDevice& physicalDevice, const Mesh& mesh)
+                                   const PhysicalDevice& physicalDevice,
+                                   CmdList& uploadCmdList, const Mesh& mesh)
         : indexCount(static_cast<uint32_t>(mesh.vertices.size())) {
         UE_ASSERT(mesh.vertices.size() > 0);
         UE_ASSERT(mesh.indices.size() > 0);
 
         size_t size = sizeof(Vertex) * mesh.vertices.size();
 
+        std::shared_ptr<Buffer> stagingVertexBuffer = std::make_shared<Buffer>(
+            Format("%s_STAGING_VERTEX_BUFFER", mesh.name.c_str()), device, physicalDevice,
+            BufferUsageBit::TRANSFER_SRC, static_cast<uint64_t>(size), BufferLocation::GPU_ONLY);
+
+        void* data = stagingVertexBuffer->Map();
+        memcpy(data, mesh.vertices.data(), size);
+        stagingVertexBuffer->Unmap();
+
         this->vertexBuffer = std::make_shared<Buffer>(
             Format("%s_VERTEX_BUFFER", mesh.name.c_str()), device, physicalDevice,
-            BufferUsageBit::VERTEX_BUFFER, static_cast<uint64_t>(size), BufferLocation::GPU_ONLY);
+            BufferUsageBit::TRANSFER_DST | BufferUsageBit::VERTEX_BUFFER, static_cast<uint64_t>(size), BufferLocation::GPU_ONLY);
 
-        void* data = this->vertexBuffer->Map();
-        memcpy(data, mesh.vertices.data(), size);
-        this->vertexBuffer->Unmap();
+        uploadCmdList.CopyBuffers(stagingVertexBuffer, this->vertexBuffer);
     }
 
     MeshRenderable::~MeshRenderable() {

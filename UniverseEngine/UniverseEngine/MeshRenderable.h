@@ -10,6 +10,7 @@ namespace UniverseEngine {
     class CmdList;
     class LogicalDevice;
     class PhysicalDevice;
+    class CmdList;
 
     class MeshRenderable {
     public:
@@ -17,7 +18,7 @@ namespace UniverseEngine {
 
     private:
         friend class Graphics;
-        MeshRenderable(std::shared_ptr<LogicalDevice> device, const PhysicalDevice& physicalDevice, const Mesh& mesh);
+        MeshRenderable(std::shared_ptr<LogicalDevice> device, const PhysicalDevice& physicalDevice, CmdList& uploadCmdList, const Mesh& mesh);
 
         void Draw(CmdList& cmdList);
 

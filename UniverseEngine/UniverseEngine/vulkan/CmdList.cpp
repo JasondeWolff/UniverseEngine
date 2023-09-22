@@ -46,6 +46,19 @@ namespace UniverseEngine {
         this->trackedBuffers.clear();
     }
 
+    void CmdList::CopyBuffers(std::shared_ptr<Buffer> src, std::shared_ptr<Buffer> dst) {
+        UE_ASSERT_MSG(src->Size() == dst->Size(),
+                      "Copy buffers src and dst must have the same size.");
+
+        VkBufferCopy copyRegion{};
+        copyRegion.size = src->Size();
+
+        vkCmdCopyBuffer(this->cmdBuffer, src->GetBuffer(), dst->GetBuffer(), 1, &copyRegion);
+        
+        this->trackedBuffers.push_back(src);
+        this->trackedBuffers.push_back(dst);
+    }
+
     void CmdList::SetScissor(const Rect2D& rect2D) {
         VkRect2D vkRect{};
         vkRect.offset.x = static_cast<uint32_t>(rect2D.offset.x);

@@ -8,7 +8,7 @@ struct MVPPushConstant {
 
 namespace UniverseEngine {
     Graphics::Graphics() {
-        bool enableDebug = false;
+        bool enableDebug = true;
 
         this->window = std::move(std::unique_ptr<Window>(new Window("Universe Engine")));
         this->instance = std::make_shared<GraphicsInstance>(*this->window, enableDebug);
@@ -121,6 +121,7 @@ namespace UniverseEngine {
     void Graphics::BuildRenderables() {
         World& world = Engine::GetWorld();
         Resources& resources = Engine::GetResources();
+        std::shared_ptr<CmdList> uploadCmdList = this->cmdQueue->GetCmdList();
 
         auto hShaders = resources.GetNewShaders();
         for (auto hShader : hShaders) {
@@ -148,12 +149,17 @@ namespace UniverseEngine {
 
             for (Mesh& mesh : scene.meshes) {
                 if (!mesh.renderable) {
-                    mesh.renderable =
-                        std::move(std::unique_ptr<MeshRenderable>(new MeshRenderable(this->device, *this->physicalDevice, mesh)));
+                    mesh.renderable = std::move(std::unique_ptr<MeshRenderable>(new MeshRenderable(
+                        this->device, *this->physicalDevice, *uploadCmdList, mesh)));
                     mesh.ClearCPUData();
                 }
             }
         }
         world.newInstances.clear();
+
+        // TODO: Use signal semaphore to not block entire cpu
+        auto fence = std::make_shared<Fence>(this->device);
+        this->cmdQueue->SubmitCmdList(uploadCmdList, fence, {}, {});
+        fence->Wait();
     }
 }  // namespace UniverseEngine
