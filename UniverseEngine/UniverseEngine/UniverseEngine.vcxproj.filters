@@ -216,6 +216,7 @@
     </ClInclude>
     <ClInclude Include="Buffer.h">
       <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
     <ClInclude Include="Chunk.h">
       <Filter>Src\Resources\Assets</Filter>
     </ClInclude>
@@ -403,6 +404,7 @@
     </ClCompile>
     <ClCompile Include="Buffer.cpp">
       <Filter>Src\Graphics\Common</Filter>
+    </ClCompile>
     <ClCompile Include="Chunk.cpp">
       <Filter>Src\Resources\Assets</Filter>
     </ClCompile>
