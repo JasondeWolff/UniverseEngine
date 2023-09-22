@@ -1,6 +1,7 @@
 #include "Logging.h"
 
 #include <assert.h>
+#include <fstream>
 
 namespace UniverseEngine {
     Logging& Logging::Instance() {
@@ -64,6 +65,18 @@ namespace UniverseEngine {
             fprintf(stdout, " ");
             fprintf(stdout, t);
             fprintf(stdout, "\n");
+        }
+
+        {
+            FILE* fp = fopen(".log", "w+");
+            std::string f(file);
+            fprintf(fp, "[%s]", level);
+            if (showFile)
+                fprintf(fp, "[%s: %d]", f.substr(f.find_last_of("/\\") + 1).c_str(), line);
+
+            fprintf(fp, " ");
+            fprintf(fp, t);
+            fprintf(fp, "\n");
         }
 
         if (crash) {
