@@ -30,6 +30,7 @@ namespace UniverseEngine {
         unsigned ebo;
 #elif defined(GRAPHICS_API_VULKAN)
         std::shared_ptr<Buffer> vertexBuffer;
+        std::shared_ptr<Buffer> indexBuffer;
 #endif
     };
 }  // namespace UniverseEngine

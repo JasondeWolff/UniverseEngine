@@ -1,2 +1,2 @@
-START /D Game bin\game\release\x64\Game.exe
+START /D Game bin\game\debug\x64\Game.exe
 pause

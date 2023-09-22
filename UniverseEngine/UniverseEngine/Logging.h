@@ -37,6 +37,7 @@
 namespace UniverseEngine {
     class Logging {
     public:
+        ~Logging();
         static Logging& Instance();
 
         void Debug(const char* file, int line, const char* fmt, ...);
@@ -46,6 +47,10 @@ namespace UniverseEngine {
         void Fatal(const char* file, int line, const char* fmt, ...);
 
     private:
+        Logging();
+
+        FILE* stdOut;
+
         std::mutex printMutex{};
 
         void Print(const char* level, const char* file, int line,

@@ -130,6 +130,7 @@ namespace UniverseEngine {
 
     void CmdList::DrawElements(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex,
                                uint32_t firstInstance) {
+        vkCmdDrawIndexed(this->cmdBuffer, indexCount, instanceCount, firstIndex, 0, firstInstance);
     }
 
     void CmdList::PushConstant(const std::string& name, void* constant, size_t size) {

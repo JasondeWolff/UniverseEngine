@@ -2,8 +2,20 @@
 
 #include <assert.h>
 #include <fstream>
+#include <iostream>
+
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
 namespace UniverseEngine {
+    Logging::Logging() {
+        this->stdOut = freopen(".stdlog", "w", stderr);
+    }
+
+    Logging::~Logging() {
+        fflush(this->stdOut);
+    }
+
     Logging& Logging::Instance() {
         static Logging logger;
         return logger;
@@ -77,6 +89,7 @@ namespace UniverseEngine {
             fprintf(fp, " ");
             fprintf(fp, t);
             fprintf(fp, "\n");
+            fflush(fp);
         }
 
         if (crash) {
