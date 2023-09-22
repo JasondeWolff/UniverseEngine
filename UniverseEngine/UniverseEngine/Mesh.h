@@ -39,6 +39,7 @@ namespace UniverseEngine {
 
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
+        glm::vec3 worldPosition;
         size_t materialIdx;
 
     private:

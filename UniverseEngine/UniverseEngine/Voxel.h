@@ -3,19 +3,22 @@
 
 namespace UniverseEngine {
     enum VoxelType {
-        Water,
-        Land,
+        None,
+        Block,
     };
 
-    class Voxel : Mesh {
+    /*class Voxel : Mesh {
     public:
-        Voxel(int width = 1, int height = 1);
-        ~Voxel();
+        Voxel();
+        ~Voxel(); 
 
     private:
-        int m_Width;
-        int m_Height;
         VoxelType type;
+        std::vector<Vertex> vertices;
+        std::vector<uint32_t> indices;
+    };*/
 
+    struct Voxel {
+        VoxelType type;
     };
 }  // namespace UniverseEngine

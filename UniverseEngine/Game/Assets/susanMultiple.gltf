@@ -1,0 +1,303 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v3.3.32",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0,
+                1,
+                2,
+                3
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "name" : "susan",
+            "rotation" : [
+                0.7071068286895752,
+                0,
+                0,
+                0.7071067094802856
+            ]
+        },
+        {
+            "mesh" : 0,
+            "name" : "Suzanne",
+            "rotation" : [
+                0.7071068286895752,
+                0,
+                0,
+                0.7071067094802856
+            ]
+        },
+        {
+            "mesh" : 1,
+            "name" : "Suzanne.001",
+            "rotation" : [
+                0.7071068286895752,
+                0,
+                0,
+                0.7071067094802856
+            ]
+        },
+        {
+            "mesh" : 2,
+            "name" : "Suzanne.002",
+            "rotation" : [
+                0.7071068286895752,
+                0,
+                0,
+                0.7071067094802856
+            ]
+        }
+    ],
+    "materials" : [
+        {
+            "doubleSided" : true,
+            "name" : "Default OBJ",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.800000011920929,
+                    0.800000011920929,
+                    0.800000011920929,
+                    1
+                ],
+                "metallicFactor" : 0,
+                "roughnessFactor" : 0.5
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Suzanne",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2
+                    },
+                    "indices" : 3,
+                    "material" : 0
+                }
+            ]
+        },
+        {
+            "name" : "Suzanne.001",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 4,
+                        "NORMAL" : 5,
+                        "TEXCOORD_0" : 6
+                    },
+                    "indices" : 7,
+                    "material" : 0
+                }
+            ]
+        },
+        {
+            "name" : "Suzanne.002",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 8,
+                        "NORMAL" : 9,
+                        "TEXCOORD_0" : 10
+                    },
+                    "indices" : 11,
+                    "material" : 0
+                }
+            ]
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 2793,
+            "max" : [
+                1.3671879768371582,
+                0.8515620231628418,
+                0.984375
+            ],
+            "min" : [
+                -1.3671879768371582,
+                -0.8515620231628418,
+                -0.984375
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 2793,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 2793,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5123,
+            "count" : 2901,
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5126,
+            "count" : 2793,
+            "max" : [
+                -1.8124289512634277,
+                2.808150053024292,
+                -0.29643699526786804
+            ],
+            "min" : [
+                -4.248376846313477,
+                0.6488929986953735,
+                -2.1666131019592285
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 5,
+            "componentType" : 5126,
+            "count" : 2793,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 6,
+            "componentType" : 5126,
+            "count" : 2793,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 7,
+            "componentType" : 5123,
+            "count" : 2901,
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 8,
+            "componentType" : 5126,
+            "count" : 2793,
+            "max" : [
+                3.8491029739379883,
+                1.1996279954910278,
+                -1.3019499778747559
+            ],
+            "min" : [
+                1.2463680505752563,
+                -0.6309419870376587,
+                -3.2803139686584473
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 9,
+            "componentType" : 5126,
+            "count" : 2793,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 10,
+            "componentType" : 5126,
+            "count" : 2793,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 11,
+            "componentType" : 5123,
+            "count" : 2901,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 33516,
+            "byteOffset" : 0,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 33516,
+            "byteOffset" : 33516,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 22344,
+            "byteOffset" : 67032,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 5802,
+            "byteOffset" : 89376,
+            "target" : 34963
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 33516,
+            "byteOffset" : 95180,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 33516,
+            "byteOffset" : 128696,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 22344,
+            "byteOffset" : 162212,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 5802,
+            "byteOffset" : 184556,
+            "target" : 34963
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 33516,
+            "byteOffset" : 190360,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 33516,
+            "byteOffset" : 223876,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 22344,
+            "byteOffset" : 257392,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 5802,
+            "byteOffset" : 279736,
+            "target" : 34963
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 285540,
+            "uri" : "susanMultiple.bin"
+        }
+    ]
+}

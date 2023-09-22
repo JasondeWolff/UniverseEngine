@@ -94,18 +94,18 @@ namespace UniverseEngine {
                         }
                     }
 
-                    if (positions.size() < 0) {
-                        UE_ERROR("Could not find any position data %s", mesh.name);
+                    if (positions.size() <= 0) {
+                        UE_ERROR("Failed to load position data. Mesh: %s", mesh.name.c_str());
                         return Handle<Scene>::Invalid();
                     }
-                    if (normals.size() < 0) {
-                        UE_ERROR("Could not find any position data %s", mesh.name);
+                    if (normals.size() <= 0) {
+                        UE_ERROR("Failed to load normal data. Mesh: %s", mesh.name.c_str());
                         return Handle<Scene>::Invalid();
                     }
-                    if (texCoords.size() < 0)
-                        UE_WARNING("Could not find any position data %s", mesh.name);
-                    if (colors.size() < 0)
-                        UE_WARNING("Could not find any position data %s", mesh.name);
+                    if (texCoords.size() <= 0)
+                        UE_WARNING("Failed to load texCoord data. Mesh: %s", mesh.name.c_str());
+                    if (colors.size() <= 0)
+                        UE_WARNING("Failed to load color data. Mesh: %s", mesh.name.c_str());
 
                     const auto& accessor = model.accessors[primitive.indices];
                     const auto& view = model.bufferViews[accessor.bufferView];

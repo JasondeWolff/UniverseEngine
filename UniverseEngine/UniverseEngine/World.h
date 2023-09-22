@@ -4,6 +4,7 @@
 
 #include "Resources.h"
 #include "Camera.h"
+#include "TerrianGenerator.h"
 
 namespace UniverseEngine {
     class Engine;
@@ -24,6 +25,8 @@ namespace UniverseEngine {
         World();
 
         void Update();
+
+        TerrianGenerator tg;
 
         std::unique_ptr<Pool<SceneInstance>> sceneInstances;
         std::set<Handle<SceneInstance>> newInstances;

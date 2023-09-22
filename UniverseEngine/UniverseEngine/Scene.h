@@ -32,6 +32,7 @@ namespace UniverseEngine {
         tree<MeshInstance> meshHierarchy;
         std::vector<Mesh> meshes;
         std::vector<Material> materials;
+        std::vector<glm::vec3> worldPosition;
 
         tree<MeshInstance> TransformedMeshHierarchy(const Transform& root) const;
     };

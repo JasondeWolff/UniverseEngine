@@ -1,7 +1,7 @@
 #pragma once
 
-// #define GRAPHICS_API_GL
-#define GRAPHICS_API_VULKAN
+#define GRAPHICS_API_GL
+//#define GRAPHICS_API_VULKAN
 
 #ifdef GRAPHICS_API_GL
 #include <GL/glew.h>

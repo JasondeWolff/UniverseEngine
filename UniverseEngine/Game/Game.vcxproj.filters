@@ -72,6 +72,11 @@
     <None Include="Assets\cube.bin">
       <Filter>Assets\Models</Filter>
     </None>
+    <None Include="Assets\susanMultiple.bin">
+      <Filter>Assets\Models</Filter>
+    </None>
+    <None Include="Assets\susanMultiple.gltf">
+      <Filter>Assets\Models</Filter>
     <None Include="Assets\Shaders\Vulkan\unlit.frag">
       <Filter>Assets\Shaders\Vulkan</Filter>
     </None>

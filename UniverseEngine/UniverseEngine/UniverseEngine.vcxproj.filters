@@ -56,6 +56,9 @@
     <Filter Include="Src\Resources\Assets\Primitives">
       <UniqueIdentifier>{f1364e37-3949-4072-a679-7a8b3b2fe0c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Math\NoiseGenerators">
+      <UniqueIdentifier>{51b61802-7ce8-4480-8168-4ed99d334f4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="UniverseEngine.h">
@@ -213,6 +216,11 @@
     </ClInclude>
     <ClInclude Include="Buffer.h">
       <Filter>Src\Graphics\Common</Filter>
+    <ClInclude Include="Chunk.h">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrianGenerator.h">
+      <Filter>Src\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -395,6 +403,11 @@
     </ClCompile>
     <ClCompile Include="Buffer.cpp">
       <Filter>Src\Graphics\Common</Filter>
+    <ClCompile Include="Chunk.cpp">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrianGenerator.cpp">
+      <Filter>Src\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

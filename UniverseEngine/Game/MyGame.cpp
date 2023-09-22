@@ -3,11 +3,22 @@
 using namespace UniverseEngine;
 
 void MyGame::OnStart() {
-	this->hSusan = Engine::GetResources().LoadScene("Assets/susanMultiple.obj");
-	this->hCube = Engine::GetResources().LoadScene("Assets/cube.gltf");
+	Resources& resources = Engine::GetResources();
+	World& world = Engine::GetWorld();
 
-	this->hSusanInstance = Engine::GetWorld().AddSceneInstance(this->hSusan);
-	this->hCubeInstance = Engine::GetWorld().AddSceneInstance(this->hCube);
+	/*this->hSusan = resources.LoadScene("Assets/susanMultiple.obj");
+	this->hSusanInstance = world.AddSceneInstance(this->hSusan);*/
+
+	this->hCube = resources.LoadScene("Assets/cube.gltf");
+	this->hCubeInstance = world.AddSceneInstance(this->hCube);
+
+	Scene& scene = resources.GetScene(hCube).Value();
+	scene.worldPosition.resize(scene.meshes.size());
+	scene.worldPosition.at(0) = glm::vec3(5, 0, 0);
+
+
+	TerrianGenerator customTerrian;
+	customTerrian.GenerateRandomChunk();
 
 	this->camera.Start();
 }
