@@ -16,6 +16,7 @@ namespace UniverseEngine {
     class Swapchain;
     class RenderPass;
     class Framebuffer;
+    class Buffer;
 
     class CmdList {
     public:
@@ -29,6 +30,9 @@ namespace UniverseEngine {
 
         void SetScissor(const Rect2D& rect2D);
         void SetViewport(const Rect2D& rect2D);
+
+        void BindVertexBuffer(std::shared_ptr<Buffer> vertexBuffer);
+        void BindIndexBuffer(std::shared_ptr<Buffer> indexBuffer);
 
         // TODO: Replace swapchain with a framebuffer abstraction
         void BeginRenderPass(std::shared_ptr<RenderPass> renderPass, const Framebuffer& framebuffer,
@@ -63,5 +67,6 @@ namespace UniverseEngine {
 
         std::shared_ptr<GraphicsPipeline> boundGraphicsPipeline;
         std::vector<std::shared_ptr<RenderPass>> trackedRenderPasses;
+        std::vector<std::shared_ptr<Buffer>> trackedBuffers;
     };
 }  // namespace UniverseEngine

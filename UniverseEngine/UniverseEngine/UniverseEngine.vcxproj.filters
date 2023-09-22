@@ -211,6 +211,9 @@
     <ClInclude Include="Voxel.h">
       <Filter>Src\Resources\Assets</Filter>
     </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -386,6 +389,12 @@
     </ClCompile>
     <ClCompile Include="GLTFLoader.cpp">
       <Filter>Src\Resources\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\Buffer.cpp">
+      <Filter>Src\Graphics\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Buffer.cpp">
+      <Filter>Src\Graphics\Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

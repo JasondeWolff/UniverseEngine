@@ -2,10 +2,14 @@
 
 #include "GraphicsAPI.h"
 
+#include "Buffer.h"
+
 namespace UniverseEngine {
     class Graphics;
     struct Mesh;
     class CmdList;
+    class LogicalDevice;
+    class PhysicalDevice;
 
     class MeshRenderable {
     public:
@@ -13,7 +17,7 @@ namespace UniverseEngine {
 
     private:
         friend class Graphics;
-        MeshRenderable(const Mesh& mesh);
+        MeshRenderable(std::shared_ptr<LogicalDevice> device, const PhysicalDevice& physicalDevice, const Mesh& mesh);
 
         void Draw(CmdList& cmdList);
 
@@ -23,6 +27,8 @@ namespace UniverseEngine {
         unsigned vao;
         unsigned vbo;
         unsigned ebo;
+#elif defined(GRAPHICS_API_VULKAN)
+        std::shared_ptr<Buffer> vertexBuffer;
 #endif
     };
 }  // namespace UniverseEngine

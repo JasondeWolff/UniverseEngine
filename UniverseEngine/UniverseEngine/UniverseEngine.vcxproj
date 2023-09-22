@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AtomicPool.h" />
+    <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CmdList.h" />
     <ClInclude Include="CmdQueue.h" />
@@ -64,6 +65,7 @@
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CmdQueue.cpp" />
     <ClCompile Include="GLTFLoader.cpp" />
@@ -73,6 +75,7 @@
     <ClCompile Include="gl\LogicalDevice.cpp" />
     <ClCompile Include="gl\RenderPass.cpp" />
     <ClCompile Include="gl\Semaphore.cpp" />
+    <ClCompile Include="vulkan\Buffer.cpp" />
     <ClCompile Include="Voxel.cpp" />
     <ClCompile Include="vulkan\Fence.cpp" />
     <ClCompile Include="vulkan\Framebuffer.cpp" />

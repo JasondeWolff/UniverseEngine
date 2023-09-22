@@ -6,6 +6,7 @@
 #include "../GraphicsPipeline.h"
 #include "../Logging.h"
 #include "../Swapchain.h"
+#include "../Buffer.h"
 
 namespace UniverseEngine {
     CmdList::CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue)
@@ -42,6 +43,7 @@ namespace UniverseEngine {
 
         this->boundGraphicsPipeline.reset();
         this->trackedRenderPasses.clear();
+        this->trackedBuffers.clear();
     }
 
     void CmdList::SetScissor(const Rect2D& rect2D) {
@@ -63,6 +65,20 @@ namespace UniverseEngine {
         viewport.maxDepth = 1.0;
 
         vkCmdSetViewport(this->cmdBuffer, 0, 1, &viewport);
+    }
+
+    void CmdList::BindVertexBuffer(std::shared_ptr<Buffer> vertexBuffer) {
+        VkBuffer vertexBuffers[] = {vertexBuffer->GetBuffer()};
+        VkDeviceSize offsets[] = {0};
+        vkCmdBindVertexBuffers(this->cmdBuffer, 0, 1, vertexBuffers, offsets);
+
+        this->trackedBuffers.push_back(vertexBuffer);
+    }
+
+    void CmdList::BindIndexBuffer(std::shared_ptr<Buffer> indexBuffer) {
+        vkCmdBindIndexBuffer(this->cmdBuffer, indexBuffer->GetBuffer(), 0, VkIndexType::VK_INDEX_TYPE_UINT32);
+
+        this->trackedBuffers.push_back(indexBuffer);
     }
 
     void CmdList::BeginRenderPass(std::shared_ptr<RenderPass> renderPass,

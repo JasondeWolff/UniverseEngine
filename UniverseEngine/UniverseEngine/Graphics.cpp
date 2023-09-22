@@ -85,8 +85,6 @@ namespace UniverseEngine {
             }
         }
 
-        // cmdList->Draw(3);
-
         cmdList->EndRenderPass();
 
         std::vector<Semaphore*> waitSemaphores{&this->swapchain->GetImageAvailableSemaphore()};
@@ -151,7 +149,7 @@ namespace UniverseEngine {
             for (Mesh& mesh : scene.meshes) {
                 if (!mesh.renderable) {
                     mesh.renderable =
-                        std::move(std::unique_ptr<MeshRenderable>(new MeshRenderable(mesh)));
+                        std::move(std::unique_ptr<MeshRenderable>(new MeshRenderable(this->device, *this->physicalDevice, mesh)));
                     mesh.ClearCPUData();
                 }
             }
