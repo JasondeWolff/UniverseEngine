@@ -7,6 +7,8 @@ namespace fs = std::filesystem;
 // Define these only in *one* .cc file.
 #define TINYGLTF_IMPLEMENTATION
 //#define TINYGLTF_NOEXCEPTION // optional. disable exception handling.
+#pragma warning(disable : 4018)
+#pragma warning(disable : 4267)
 #include "tiny_gltf.h"
 
 namespace UniverseEngine {

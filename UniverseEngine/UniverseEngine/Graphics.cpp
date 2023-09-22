@@ -8,7 +8,7 @@ struct MVPPushConstant {
 
 namespace UniverseEngine {
     Graphics::Graphics() {
-        bool enableDebug = true;
+        bool enableDebug = false;
 
         this->window = std::move(std::unique_ptr<Window>(new Window("Universe Engine")));
         this->instance = std::make_shared<GraphicsInstance>(*this->window, enableDebug);
