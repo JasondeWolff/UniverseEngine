@@ -456,6 +456,9 @@
     <ClCompile Include="vulkan\TextureRenderable.cpp">
       <Filter>Src\Graphics\Vulkan\Assets</Filter>
     </ClCompile>
+    <ClCompile Include="gl\TextureRenderable.cpp">
+      <Filter>Src\Graphics\GL\Assets</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />

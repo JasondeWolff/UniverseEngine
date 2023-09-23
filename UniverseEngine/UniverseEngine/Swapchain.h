@@ -53,6 +53,7 @@ namespace UniverseEngine {
 #ifdef GRAPHICS_API_GL
     private:
         uint32_t width, height;
+        std::shared_ptr<Image> image;
         std::unique_ptr<Framebuffer> framebuffer;
 #elif defined(GRAPHICS_API_VULKAN)
     private:

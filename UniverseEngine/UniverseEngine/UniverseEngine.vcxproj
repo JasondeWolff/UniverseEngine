@@ -79,6 +79,7 @@
     <ClCompile Include="gl\Buffer.cpp" />
     <ClCompile Include="gl\DescriptorPool.cpp" />
     <ClCompile Include="gl\DescriptorSet.cpp" />
+    <ClCompile Include="gl\TextureRenderable.cpp" />
     <ClCompile Include="vulkan\TextureRenderable.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="vulkan\VkConversion.cpp" />

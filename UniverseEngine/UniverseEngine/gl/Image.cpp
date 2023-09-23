@@ -4,7 +4,8 @@
 #include "../Image.h"
 
 namespace UniverseEngine {
-    Image::Image(std::shared_ptr<LogicalDevice> device, uint32_t width, uint32_t height,
+    Image::Image(const std::string& name, std::shared_ptr<LogicalDevice> device,
+                 const PhysicalDevice& physicalDevice, uint32_t width, uint32_t height,
                  GraphicsFormat format) {
     
     }

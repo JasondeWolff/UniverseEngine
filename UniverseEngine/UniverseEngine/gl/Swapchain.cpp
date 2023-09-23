@@ -12,6 +12,11 @@ namespace UniverseEngine {
         this->width = window.Width();
         this->height = window.Height();
 
+        this->image =
+            std::make_shared<Image>("SwapchainFramebuffer", this->device, physicalDevice,
+                                    this->width,
+                                    this->height, GraphicsFormat::R8G8B8A8_SRGB);
+
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
             imageAvailableSemaphores.emplace_back(
                 std::move(Semaphore(UniverseEngine::Format("Image Available %i", i), device)));
@@ -48,8 +53,7 @@ namespace UniverseEngine {
         this->framebuffer.reset();
         this->framebuffer = std::move(std::make_unique<Framebuffer>(
             this->device,
-            std::make_shared<Image>(this->device, this->width, this->height,
-                                    GraphicsFormat::R8G8B8A8_SRGB),
+            this->image,
             renderPass));
     }
 
