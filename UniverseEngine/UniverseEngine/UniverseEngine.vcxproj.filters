@@ -444,6 +444,15 @@
     <ClCompile Include="vulkan\VkConversion.cpp">
       <Filter>Src\Graphics\Vulkan\Specific</Filter>
     </ClCompile>
+    <ClCompile Include="gl\DescriptorSet.cpp">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="gl\Buffer.cpp">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="gl\DescriptorPool.cpp">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />

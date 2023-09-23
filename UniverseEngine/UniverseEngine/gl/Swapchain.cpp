@@ -24,12 +24,16 @@ namespace UniverseEngine {
     Swapchain::~Swapchain() {
     }
 
-    const Framebuffer& Swapchain::GetCurrentFramebuffer() {
+    const Framebuffer& Swapchain::GetCurrentFramebuffer() const {
         return *this->framebuffer;
     }
 
-    const Image& Swapchain::GetCurrentImage() {
+    const Image& Swapchain::GetCurrentImage() const {
         return *this->framebuffer->image;
+    }
+
+    uint32_t Swapchain::GetCurrentFrameIdx() const {
+        return this->currentFrame;
     }
 
     Semaphore& Swapchain::GetImageAvailableSemaphore() {

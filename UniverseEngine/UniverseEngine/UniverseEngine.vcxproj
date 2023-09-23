@@ -77,6 +77,9 @@
     <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="CmdQueue.cpp" />
     <ClCompile Include="DescriptorLayoutBinding.cpp" />
+    <ClCompile Include="gl\Buffer.cpp" />
+    <ClCompile Include="gl\DescriptorPool.cpp" />
+    <ClCompile Include="gl\DescriptorSet.cpp" />
     <ClCompile Include="vulkan\VkConversion.cpp" />
     <ClCompile Include="vulkan\DescriptorSet.cpp" />
     <ClCompile Include="vulkan\DescriptorPool.cpp" />
