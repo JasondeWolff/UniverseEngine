@@ -39,8 +39,8 @@ namespace UniverseEngine {
             parsedMaterial.baseColor =
                 glm::vec4(material.diffuse[0], material.diffuse[1], material.diffuse[2], 1.0);
             if (!material.diffuse_texname.empty()) {
-                parsedMaterial.baseColorMap =
-                    Engine::GetResources().LoadTexture(material.diffuse_texname);
+                parsedMaterial.baseColorMap = Engine::GetResources().LoadTexture(
+                    filePath.parent_path() / material.diffuse_texname);
             } else {
                 parsedMaterial.baseColorMap = nullptr;
             }
