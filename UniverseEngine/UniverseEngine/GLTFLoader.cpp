@@ -1,18 +1,19 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
+#include "Logging.h"
 #include "MathUtil.h"
 #include "Resources.h"
 
 // Define these only in *one* .cc file.
 #define TINYGLTF_IMPLEMENTATION
-//#define TINYGLTF_NOEXCEPTION // optional. disable exception handling.
+// #define TINYGLTF_NOEXCEPTION // optional. disable exception handling.
 #pragma warning(disable : 4018)
 #pragma warning(disable : 4267)
 #include "tiny_gltf.h"
 
 namespace UniverseEngine {
-    Handle<Scene> Resources::LoadGLTF(const fs::path& filePath) {
+    std::shared_ptr<Scene> Resources::LoadGLTF(const fs::path& filePath) {
         std::string filename = filePath.string();
 
         tinygltf::Model model;
@@ -40,13 +41,12 @@ namespace UniverseEngine {
         gltfScene.name = model.scenes[0].name;
 
         for (auto node : model.nodes) {
-            
             std::vector<Mesh> meshes;
             for (tinygltf::Mesh mesh : model.meshes) {
                 Mesh UEMesh;
                 UEMesh.name = mesh.name;
 
-                //TODO Material loading
+                // TODO Material loading
 
                 for (auto& primitive : mesh.primitives) {
                     std::vector<glm::vec3> positions;
@@ -66,22 +66,19 @@ namespace UniverseEngine {
                             memcpy(positions.data(),
                                    &buffer.data.at(view.byteOffset + accessor.byteOffset),
                                    accessor.count * sizeof(float) * 3);
-                        } 
-                        else if (attribute.first == "NORMAL") {
+                        } else if (attribute.first == "NORMAL") {
                             normals.reserve(accessor.count);
                             normals.resize(accessor.count);
                             memcpy(normals.data(),
                                    &buffer.data.at(view.byteOffset + accessor.byteOffset),
                                    accessor.count * sizeof(float) * 3);
-                        } 
-                        else if (attribute.first == "TEXCOORD_0") {
+                        } else if (attribute.first == "TEXCOORD_0") {
                             texCoords.reserve(accessor.count);
                             texCoords.resize(accessor.count);
                             memcpy(texCoords.data(),
                                    &buffer.data.at(view.byteOffset + accessor.byteOffset),
                                    accessor.count * sizeof(float) * 2);
-                        } 
-                        else if (attribute.first == "COLOR_0") {
+                        } else if (attribute.first == "COLOR_0") {
                             colors.reserve(accessor.count);
                             colors.resize(accessor.count);
                             memcpy(colors.data(),
@@ -98,11 +95,11 @@ namespace UniverseEngine {
 
                     if (positions.size() <= 0) {
                         UE_ERROR("Failed to load position data. Mesh: %s", mesh.name.c_str());
-                        return Handle<Scene>::Invalid();
+                        return nullptr;
                     }
                     if (normals.size() <= 0) {
                         UE_ERROR("Failed to load normal data. Mesh: %s", mesh.name.c_str());
-                        return Handle<Scene>::Invalid();
+                        return nullptr;
                     }
                     if (texCoords.size() <= 0)
                         UE_WARNING("Failed to load texCoord data. Mesh: %s", mesh.name.c_str());
@@ -143,26 +140,22 @@ namespace UniverseEngine {
 
                         if (positions.size() > 0) {
                             vert.position = positions[i];
-                        }
-                        else {
-                            vert.position = glm::vec3(0,0,0);
+                        } else {
+                            vert.position = glm::vec3(0, 0, 0);
                         }
                         if (normals.size() > 0) {
                             vert.normal = normals[i];
-                        } 
-                        else {
+                        } else {
                             vert.normal = glm::vec3(0, 0, 0);
                         }
                         if (texCoords.size() > 0) {
                             vert.texCoord = texCoords[i];
-                        } 
-                        else {
+                        } else {
                             vert.texCoord = glm::vec2(0, 0);
                         }
                         if (colors.size() > 0) {
                             vert.color = colors[i];
-                        } 
-                        else {
+                        } else {
                             vert.color = glm::vec3(0, 0, 0);
                         }
 
@@ -183,9 +176,7 @@ namespace UniverseEngine {
             gltfScene.meshes = std::move(meshes);
         }
 
-        Handle<Scene> handle = this->scenes->Alloc();
-        this->scenes->Value(handle).Value() = std::move(gltfScene);
-        return handle;
+        return std::make_shared<Scene>(std::move(gltfScene));
     }
-    
+
 }  // namespace UniverseEngine

@@ -6,7 +6,7 @@ namespace fs = std::filesystem;
 #include "Resources.h"
 
 namespace UniverseEngine {
-    Handle<Shader> Resources::LoadShaderSource(const fs::path& filePath) {
+    std::shared_ptr<Shader> Resources::LoadShaderSource(const fs::path& filePath) {
         const fs::path shaderFile = filePath.parent_path() / GraphicsAPI::ShaderDir() / fs::path(filePath.filename().string() + GraphicsAPI::ShaderAppendix());
 
         Shader parsedShader;
@@ -35,8 +35,6 @@ namespace UniverseEngine {
             parsedShader.source = data;
         }
 
-        Handle<Shader> handle = this->shaders->Alloc();
-        this->shaders->Value(handle).Value() = std::move(parsedShader);
-        return handle;
+        return std::make_shared<Shader>(std::move(parsedShader));
     }
 }  // namespace UniverseEngine

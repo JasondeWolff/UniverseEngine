@@ -14,10 +14,8 @@ namespace UniverseEngine {
     public:
         Camera camera;
 
-        Handle<SceneInstance> AddSceneInstance(Handle<Scene> hScene);
-        void RemoveSceneInstance(Handle<SceneInstance> hSceneInstance);
-        OptionalPtr<SceneInstance> GetSceneInstance(Handle<SceneInstance> hSceneInstance);
-        std::vector<std::reference_wrapper<SceneInstance>> GetAllSceneInstances();
+        std::shared_ptr<SceneInstance> AddSceneInstance(std::shared_ptr<Scene> hScene);
+        const std::vector<std::shared_ptr<SceneInstance>>& GetAllSceneInstances() const;
 
     private:
         friend class Engine;
@@ -28,7 +26,7 @@ namespace UniverseEngine {
 
         TerrianGenerator tg;
 
-        std::unique_ptr<Pool<SceneInstance>> sceneInstances;
-        std::set<Handle<SceneInstance>> newInstances;
+        std::vector<std::shared_ptr<SceneInstance>> sceneInstances;
+        std::vector<std::shared_ptr<SceneInstance>> newInstances;
     };
 }  // namespace UniverseEngine

@@ -64,16 +64,10 @@
     <ClInclude Include="UniverseEngine.h">
       <Filter>Src</Filter>
     </ClInclude>
-    <ClInclude Include="AtomicPool.h">
-      <Filter>Src\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Logging.h">
       <Filter>Src\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Option.h">
-      <Filter>Src\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Pool.h">
       <Filter>Src\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">

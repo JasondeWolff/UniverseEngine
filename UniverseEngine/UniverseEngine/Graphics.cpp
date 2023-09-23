@@ -21,11 +21,10 @@ namespace UniverseEngine {
         this->cmdQueue = std::make_unique<CmdQueue>(this->device, *this->physicalDevice);
         this->descriptorPool = std::make_shared<DescriptorPool>(this->device);
 
-        this->descriptorSetLayout =
-            std::make_shared<DescriptorSetLayout>(
-                this->device,
-                std::vector<DescriptorLayoutBinding>{DescriptorLayoutBinding(
-                    "ubo", 0, DescriptorType::UNIFORM_BUFFER, DescriptorStageFlagBits::VERTEX)});
+        this->descriptorSetLayout = std::make_shared<DescriptorSetLayout>(
+            this->device,
+            std::vector<DescriptorLayoutBinding>{DescriptorLayoutBinding(
+                "ubo", 0, DescriptorType::UNIFORM_BUFFER, DescriptorStageFlagBits::VERTEX)});
 
         for (size_t i = 0; i < this->uniformBuffers.size(); i++) {
             this->uniformBuffers[i] =
@@ -98,9 +97,9 @@ namespace UniverseEngine {
 
         auto sceneInstances = world.GetAllSceneInstances();
         for (auto sceneInstance : sceneInstances) {
-            Scene& scene = resources.GetScene(sceneInstance.get().hScene).Value();
+            auto scene = sceneInstance->hScene;
 
-            for (Mesh& mesh : scene.meshes) {
+            for (Mesh& mesh : scene->meshes) {
                 MVPUniformBuffer uniformBuffer{glm::mat4(1.0), viewMatrix, projectionMatrix};
 
                 void* uniformBufferData = this->uniformBuffers[currentFrame]->Map();
@@ -109,7 +108,7 @@ namespace UniverseEngine {
 
                 cmdList->BindDescriptorSet(this->descriptorSets[currentFrame]);
 
-                //cmdList->PushConstant("UniformBufferObject", uniformBuffer);
+                // cmdList->PushConstant("UniformBufferObject", uniformBuffer);
                 mesh.renderable->Draw(*cmdList);
             }
         }
@@ -133,18 +132,14 @@ namespace UniverseEngine {
 
     void Graphics::BuildPipelines() {
         auto& resources = Engine::GetResources();
-        Handle<Shader> hShaderUnlitVS = resources.LoadShader("Assets/Shaders/unlit.vert");
-        Handle<Shader> hShaderUnlitFS = resources.LoadShader("Assets/Shaders/unlit.frag");
+        std::shared_ptr<Shader> hShaderUnlitVS = resources.LoadShader("Assets/Shaders/unlit.vert");
+        std::shared_ptr<Shader> hShaderUnlitFS = resources.LoadShader("Assets/Shaders/unlit.frag");
         this->BuildRenderables();
 
-        std::vector<ShaderRenderable*> unlitShaders = {
-            resources.GetShader(hShaderUnlitVS).Value().renderable.get(),
-            resources.GetShader(hShaderUnlitFS).Value().renderable.get()};
+        std::vector<ShaderRenderable*> unlitShaders = {hShaderUnlitVS->renderable.get(),
+                                                       hShaderUnlitFS->renderable.get()};
         this->unlitPipeline = std::make_shared<GraphicsPipeline>(
             this->device, unlitShaders, this->renderPass, descriptorSetLayout);
-
-        resources.DeleteShader(hShaderUnlitVS);
-        resources.DeleteShader(hShaderUnlitFS);
     }
 
     void Graphics::BuildRenderables() {
@@ -152,31 +147,20 @@ namespace UniverseEngine {
         Resources& resources = Engine::GetResources();
         std::shared_ptr<CmdList> uploadCmdList = this->cmdQueue->GetCmdList();
 
-        auto hShaders = resources.GetNewShaders();
-        for (auto hShader : hShaders) {
-            auto optionalShader = resources.GetShader(hShader);
-            if (!optionalShader)
-                continue;
-
-            Shader& shader = optionalShader.Value();
-
-            if (!shader.renderable) {
-                shader.renderable = std::move(
-                    std::unique_ptr<ShaderRenderable>(new ShaderRenderable(this->device, shader)));
-                shader.ClearCPUData();
+        auto shaders = resources.GetNewShaders();
+        for (auto shader : shaders) {
+            if (!shader->renderable) {
+                shader->renderable = std::move(
+                    std::unique_ptr<ShaderRenderable>(new ShaderRenderable(this->device, *shader)));
+                shader->ClearCPUData();
             }
         }
 
-        auto& hSceneInstances = world.newInstances;
-        for (auto hSceneInstance : hSceneInstances) {
-            auto optiontalSceneInstance = world.GetSceneInstance(hSceneInstance);
-            if (!optiontalSceneInstance)
-                continue;
+        auto& sceneInstances = world.newInstances;
+        for (auto sceneInstance : sceneInstances) {
+            auto scene = sceneInstance->hScene;
 
-            SceneInstance& sceneInstance = optiontalSceneInstance.Value();
-            Scene& scene = resources.GetScene(sceneInstance.hScene).Value();
-
-            for (Mesh& mesh : scene.meshes) {
+            for (Mesh& mesh : scene->meshes) {
                 if (!mesh.renderable) {
                     mesh.renderable = std::move(std::unique_ptr<MeshRenderable>(new MeshRenderable(
                         this->device, *this->physicalDevice, *uploadCmdList, mesh)));

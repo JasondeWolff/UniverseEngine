@@ -4,8 +4,6 @@
 #include <memory>
 #include <unordered_map>
 
-#include "AtomicPool.h"
-#include "Pool.h"
 #include "Scene.h"
 #include "Shader.h"
 
@@ -14,20 +12,11 @@ namespace UniverseEngine {
 
     class Resources {
     public:
-        Handle<Scene> CreateScene(Scene&& scene);
+        std::shared_ptr<Scene> LoadScene(const std::filesystem::path& filePath);
+        std::shared_ptr<Texture> LoadTexture(const std::filesystem::path& filePath);
+        std::shared_ptr<Shader> LoadShader(const std::filesystem::path& filePath);
 
-        Handle<Scene> LoadScene(const std::filesystem::path& filePath);
-        AtomicHandle<Texture> LoadTexture(const std::filesystem::path& filePath);
-        Handle<Shader> LoadShader(const std::filesystem::path& filePath);
-
-        void DeleteScene(Handle<Scene> hScene);
-        void DeleteShader(Handle<Shader> hShader);
-
-        OptionalPtr<Scene> GetScene(Handle<Scene> hScene);
-        OptionalPtr<Texture> GetTexture(AtomicHandle<Texture> hTexture);
-        OptionalPtr<Shader> GetShader(Handle<Shader> hShader);
-
-        const std::vector<Handle<Shader>>& GetNewShaders();
+        const std::vector<std::shared_ptr<Shader>>& GetNewShaders();
 
     private:
         friend class Engine;
@@ -35,20 +24,20 @@ namespace UniverseEngine {
 
         void Update();
 
-        std::unique_ptr<Pool<Scene>> scenes;
-        std::unique_ptr<AtomicPool<Texture>> textures;
-        std::unique_ptr<Pool<Shader>> shaders;
+        std::vector<std::shared_ptr<Scene>> scenes;
+        std::vector<std::shared_ptr<Texture>> textures;
+        std::vector<std::shared_ptr<Shader>> shaders;
 
-        std::unordered_map<std::filesystem::path, Handle<Scene>> scenePaths;
-        std::unordered_map<std::filesystem::path, WeakAtomicHandle<Texture>> texturePaths;
-        std::unordered_map<std::filesystem::path, Handle<Shader>> shaderPaths;
+        std::unordered_map<std::filesystem::path, std::shared_ptr<Scene>> scenePaths;
+        std::unordered_map<std::filesystem::path, std::shared_ptr<Texture>> texturePaths;
+        std::unordered_map<std::filesystem::path, std::shared_ptr<Shader>> shaderPaths;
 
-        std::vector<Handle<Shader>> newShaders;
+        std::vector<std::shared_ptr<Shader>> newShaders;
 
-        Handle<Scene> LoadGLTF(const std::filesystem::path& filePath);
-        Handle<Scene> LoadOBJ(const std::filesystem::path& filePath);
-        Handle<Scene> LoadUSD(const std::filesystem::path& filePath);
-        AtomicHandle<Texture> LoadIMG(const std::filesystem::path& filePath);
-        Handle<Shader> LoadShaderSource(const std::filesystem::path& filePath);
+        std::shared_ptr<Scene> LoadGLTF(const std::filesystem::path& filePath);
+        std::shared_ptr<Scene> LoadOBJ(const std::filesystem::path& filePath);
+        std::shared_ptr<Scene> LoadUSD(const std::filesystem::path& filePath);
+        std::shared_ptr<Texture> LoadIMG(const std::filesystem::path& filePath);
+        std::shared_ptr<Shader> LoadShaderSource(const std::filesystem::path& filePath);
     };
 }  // namespace UniverseEngine

@@ -1,6 +1,8 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
+#include <memory>
+
 #include "Engine.h"
 #include "Logging.h"
 #include "MathUtil.h"
@@ -10,7 +12,7 @@ namespace fs = std::filesystem;
 #include <tiny_obj_loader.h>
 
 namespace UniverseEngine {
-    Handle<Scene> Resources::LoadOBJ(const fs::path& filePath) {
+    std::shared_ptr<Scene> Resources::LoadOBJ(const fs::path& filePath) {
         tinyobj::ObjReaderConfig reader_config;
         reader_config.mtl_search_path = (fs::path(".") / filePath.parent_path()).string();
         reader_config.triangulate = true;
@@ -37,10 +39,10 @@ namespace UniverseEngine {
             parsedMaterial.baseColor =
                 glm::vec4(material.diffuse[0], material.diffuse[1], material.diffuse[2], 1.0);
             if (!material.diffuse_texname.empty()) {
-                parsedMaterial.baseColorMap = std::make_optional(
-                    Engine::GetResources().LoadTexture(material.diffuse_texname));
+                parsedMaterial.baseColorMap =
+                    Engine::GetResources().LoadTexture(material.diffuse_texname);
             } else {
-                parsedMaterial.baseColorMap = std::nullopt;
+                parsedMaterial.baseColorMap = nullptr;
             }
 
             parsedScene.materials.emplace_back(parsedMaterial);
@@ -90,18 +92,17 @@ namespace UniverseEngine {
 
                     // TODO: Use proper indices
                     parsedMesh.vertices.emplace_back(parsedVertex);
-                    parsedMesh.indices.emplace_back(static_cast<uint32_t>(parsedMesh.vertices.size() - 1));
+                    parsedMesh.indices.emplace_back(
+                        static_cast<uint32_t>(parsedMesh.vertices.size() - 1));
                 }
                 index_offset += fv;
             }
 
             parsedScene.meshes.emplace_back(std::move(parsedMesh));
             parsedScene.meshHierarchy.append_child(instanceRoot,
-                                                  MeshInstance(parsedScene.meshes.size() - 1));
+                                                   MeshInstance(parsedScene.meshes.size() - 1));
         }
 
-        Handle<Scene> handle = this->scenes->Alloc();
-        this->scenes->Value(handle).Value() = std::move(parsedScene);
-        return handle;
+        return std::make_shared<Scene>(std::move(parsedScene));
     }
 }  // namespace UniverseEngine

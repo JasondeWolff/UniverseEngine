@@ -3,33 +3,20 @@
 #include "TerrianGenerator.h"
 
 namespace UniverseEngine {
-    World::World() : camera{}, newInstances{} {
-        this->sceneInstances = std::make_unique<Pool<SceneInstance>>();
+    World::World() : camera{}, sceneInstances{} {
     }
 
-    Handle<SceneInstance> World::AddSceneInstance(Handle<Scene> hScene) {
-        Handle<SceneInstance> hSceneInstance = this->sceneInstances->Alloc();
-        this->sceneInstances->Value(hSceneInstance).Value() = SceneInstance(hScene);
-        this->newInstances.insert(hSceneInstance);
-        return hSceneInstance;
+    std::shared_ptr<SceneInstance> World::AddSceneInstance(std::shared_ptr<Scene> hScene) {
+        auto sceneInstance = std::make_shared<SceneInstance>(hScene);
+        this->sceneInstances.push_back(sceneInstance);
+        this->newInstances.push_back(sceneInstance);
+        return sceneInstance;
     }
 
-    void World::RemoveSceneInstance(Handle<SceneInstance> hSceneInstance) {
-        this->sceneInstances->Free(hSceneInstance);
-    }
-
-    OptionalPtr<SceneInstance> World::GetSceneInstance(Handle<SceneInstance> hSceneInstance) {
-        return this->sceneInstances->Value(hSceneInstance);
-    }
-
-    std::vector<std::reference_wrapper<SceneInstance>> World::GetAllSceneInstances() {
-        return this->sceneInstances->AllValues();
+    const std::vector<std::shared_ptr<SceneInstance>>& World::GetAllSceneInstances() const {
+        return this->sceneInstances;
     }
 
     void World::Update() {
-        
-        auto b = GetAllSceneInstances();
-
-        int debug = 0;
     }
 }  // namespace UniverseEngine

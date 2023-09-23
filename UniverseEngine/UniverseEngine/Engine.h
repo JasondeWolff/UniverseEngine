@@ -6,6 +6,7 @@
 #include "Game.h"
 #include "Graphics.h"
 #include "Input.h"
+#include "Logging.h"
 #include "Resources.h"
 #include "Timer.h"
 #include "World.h"
@@ -41,7 +42,7 @@ namespace UniverseEngine {
         void Run();
     };
 
-    template<typename T>
+    template <typename T>
     void Engine::Start() {
         static_assert(std::is_base_of<Game, T>::value, "T must derive from Game.");
         UE_ASSERT_MSG(this->game == nullptr, "Game is already running.");

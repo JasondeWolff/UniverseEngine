@@ -1,20 +1,18 @@
 #include "Resources.h"
 
+#include "Logging.h"
 namespace fs = std::filesystem;
 
 namespace UniverseEngine {
-    Resources::Resources() : scenePaths{}, texturePaths{} {
-        this->scenes = std::make_unique<Pool<Scene>>();
-        this->textures = std::make_unique<AtomicPool<Texture>>();
-        this->shaders = std::make_unique<Pool<Shader>>();
+    Resources::Resources() : scenes{}, textures{}, shaders{}, scenePaths{}, texturePaths{} {
     }
 
-    Handle<Scene> Resources::LoadScene(const std::filesystem::path& filePath) {
+    std::shared_ptr<Scene> Resources::LoadScene(const std::filesystem::path& filePath) {
         auto scene = scenePaths.find(filePath);
         if (scene != scenePaths.end())
             return scene->second;
 
-        Handle<Scene> hScene;
+        std::shared_ptr<Scene> hScene;
 
         std::string extension = filePath.extension().string();
         if (extension == ".usd")  // TODO: Look into usdz
@@ -30,16 +28,10 @@ namespace UniverseEngine {
         return hScene;
     }
 
-    AtomicHandle<Texture> Resources::LoadTexture(const fs::path& filePath) {
+    std::shared_ptr<Texture> Resources::LoadTexture(const fs::path& filePath) {
         auto texture = texturePaths.find(filePath);
-        if (texture != texturePaths.end()) {
-            auto& weak = texture->second;
-            if (weak.IsAlive()) {
-                return weak.Strong();
-            } else {
-                texturePaths.erase(texture);
-            }
-        }
+        if (texture != texturePaths.end())
+            return texture->second;
 
         static const std::string supportedExtensions[8] = {".jpg", ".png", ".tga", ".bmp",
                                                            ".psd", ".gif", ".hdr", ".pic"};
@@ -47,17 +39,17 @@ namespace UniverseEngine {
         fs::path extension = filePath.extension();
         for (size_t i = 0; i < 8; i++) {
             if (supportedExtensions[i] == extension) {
-                AtomicHandle<Texture> hTexture = LoadIMG(filePath);
-                texturePaths.insert(std::make_pair(filePath, hTexture.Weak()));
+                std::shared_ptr<Texture> hTexture = LoadIMG(filePath);
+                texturePaths.insert(std::make_pair(filePath, hTexture));
                 return hTexture;
             }
         }
 
         UE_FATAL("Cannot load unsupported texture type '%s'.", extension);
-        return AtomicHandle<Texture>::Invalid();
+        return nullptr;
     }
 
-    Handle<Shader> Resources::LoadShader(const std::filesystem::path& filePath) {
+    std::shared_ptr<Shader> Resources::LoadShader(const std::filesystem::path& filePath) {
         auto shader = this->shaderPaths.find(filePath);
         if (shader != this->shaderPaths.end())
             return shader->second;
@@ -67,7 +59,7 @@ namespace UniverseEngine {
         fs::path extension = filePath.extension();
         for (size_t i = 0; i < 2; i++) {
             if (supportedExtensions[i] == extension) {
-                Handle<Shader> hShader = LoadShaderSource(filePath);
+                std::shared_ptr<Shader> hShader = LoadShaderSource(filePath);
                 this->shaderPaths.insert(std::make_pair(filePath, hShader));
                 this->newShaders.push_back(hShader);
                 return hShader;
@@ -75,37 +67,25 @@ namespace UniverseEngine {
         }
 
         UE_FATAL("Cannot load unsupported shader type '%s'.", extension);
-        return Handle<Shader>::Invalid();
+        return nullptr;
     }
 
-    void Resources::DeleteScene(Handle<Scene> hScene) {
+   /* void Resources::DeleteScene(Handle<Scene> hScene) {
         this->scenes->Free(hScene);
     }
 
     void Resources::DeleteShader(Handle<Shader> hShader) {
         this->shaders->Free(hShader);
-        
+
         for (auto& pair : this->shaderPaths) {
             if (pair.second == hShader) {
                 this->shaderPaths.erase(pair.first);
                 return;
             }
         }
-    }
+    }*/
 
-    OptionalPtr<Scene> Resources::GetScene(Handle<Scene> hScene) {
-        return this->scenes->Value(hScene);
-    }
-
-    OptionalPtr<Texture> Resources::GetTexture(AtomicHandle<Texture> hTexture) {
-        return this->textures->Value(hTexture);
-    }
-
-    OptionalPtr<Shader> Resources::GetShader(Handle<Shader> hShader) {
-        return this->shaders->Value(hShader);
-    }
-
-    const std::vector<Handle<Shader>>& Resources::GetNewShaders() {
+    const std::vector<std::shared_ptr<Shader>>& Resources::GetNewShaders() {
         return this->newShaders;
     }
 

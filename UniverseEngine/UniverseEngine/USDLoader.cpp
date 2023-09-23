@@ -17,7 +17,7 @@ namespace fs = std::filesystem;
 #include <tinyusdz/value-pprint.hh>
 
 namespace UniverseEngine {
-    Handle<Scene> Resources::LoadUSD(const fs::path& filePath) {
+    std::shared_ptr<Scene> Resources::LoadUSD(const fs::path& filePath) {
         std::string filename = filePath.string();
 
         std::string err;
@@ -37,7 +37,7 @@ namespace UniverseEngine {
             if (!err.empty()) {
                 std::cerr << "Failed to load USD file: " << filename << "\n";
                 std::cerr << "ERR : " << err << "\n";
-                return Handle<Scene>::Invalid();
+                return nullptr;
             }
         }
 
@@ -63,7 +63,7 @@ namespace UniverseEngine {
         if (!ret) {
             std::cerr << "Failed to convert USD Stage to RenderScene: \n"
                       << converter.GetError() << "\n";
-            return Handle<Scene>::Invalid();
+            return nullptr;
         }
 
         if (converter.GetWarning().size()) {
@@ -120,8 +120,6 @@ namespace UniverseEngine {
             USDscene.meshes.emplace_back(std::move(parsedMesh));
         }
 
-        Handle<Scene> handle = this->scenes->Alloc();
-        this->scenes->Value(handle).Value() = std::move(USDscene);
-        return handle;
+        return std::make_shared<Scene>(std::move(USDscene));
     }
 }  // namespace UniverseEngine

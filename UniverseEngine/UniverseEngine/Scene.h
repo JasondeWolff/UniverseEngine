@@ -5,7 +5,6 @@
 
 #include "Material.h"
 #include "Mesh.h"
-#include "Pool.h"
 
 namespace UniverseEngine {
     struct Scene;
@@ -13,11 +12,11 @@ namespace UniverseEngine {
     struct SceneInstance {
         SceneInstance() : transform{}, hScene{} {
         }
-        SceneInstance(Handle<Scene> hScene) : transform{}, hScene(hScene) {
+        SceneInstance(std::shared_ptr<Scene> hScene) : transform{}, hScene(hScene) {
         }
 
         Transform transform;
-        Handle<Scene> hScene;
+        std::shared_ptr<Scene> hScene;
     };
 
     struct Scene {
