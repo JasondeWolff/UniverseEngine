@@ -44,7 +44,8 @@ namespace UniverseEngine {
               strongCount(other.strongCount),
               mutex(other.mutex),
               pool(other.pool) {
-            *other.strongCount = 0;
+            if (other.strongCount)
+                *other.strongCount = 0;
         }
 
         AtomicHandle& operator=(AtomicHandle&& other) {
@@ -102,7 +103,7 @@ namespace UniverseEngine {
         }
 
         void Clean() {
-            if (*this->strongCount == 0)
+            if (!this->strongCount || *this->strongCount == 0)
                 return;
 
             {
@@ -111,8 +112,6 @@ namespace UniverseEngine {
             }
 
             if (*this->strongCount == 0) {
-                this->strongCount = nullptr;
-                this->mutex = nullptr;
                 this->pool->Free(*this);
             }
         }
@@ -230,6 +229,8 @@ namespace UniverseEngine {
     void AtomicPool<T>::Free(AtomicHandle<T> handle) {
         UE_ASSERT_MSG(handle.Index() < this->capacity, "Invalid handle.");
 
-        this->freeHandles.push(handle);
+        handle.strongCount = nullptr;
+        handle.mutex = nullptr;
+        this->freeHandles.emplace(std::move(handle));
     }
 }  // namespace UniverseEngine

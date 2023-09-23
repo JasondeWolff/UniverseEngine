@@ -6,16 +6,14 @@ void MyGame::OnStart() {
 	Resources& resources = Engine::GetResources();
 	World& world = Engine::GetWorld();
 
-	this->hSusan = resources.LoadScene("Assets/susanMultiple.obj");
+	/*this->hSusan = resources.LoadScene("Assets/susanMultiple.obj");
 	this->hSusanInstance = world.AddSceneInstance(this->hSusan);
 
 	this->hCube = resources.LoadScene("Assets/cube.gltf");
-	this->hCubeInstance = world.AddSceneInstance(this->hCube);
+	this->hCubeInstance = world.AddSceneInstance(this->hCube);*/
 
-	Scene& scene = resources.GetScene(hCube).Value();
-	scene.worldPosition.resize(scene.meshes.size());
-	scene.worldPosition.at(0) = glm::vec3(5, 0, 0);
-
+	this->hSpot = resources.LoadScene("Assets/spot.obj");
+	this->hSpotInstance = world.AddSceneInstance(this->hSpot);
 
 	TerrianGenerator customTerrian;
 	customTerrian.GenerateRandomChunk();

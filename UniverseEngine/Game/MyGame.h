@@ -15,7 +15,9 @@ private:
 
 	UniverseEngine::Handle<UniverseEngine::Scene> hSusan;
 	UniverseEngine::Handle<UniverseEngine::Scene> hCube;
+	UniverseEngine::Handle<UniverseEngine::Scene> hSpot;
 
 	UniverseEngine::Handle<UniverseEngine::SceneInstance> hSusanInstance;
 	UniverseEngine::Handle<UniverseEngine::SceneInstance> hCubeInstance;
+	UniverseEngine::Handle<UniverseEngine::SceneInstance> hSpotInstance;
 };
