@@ -26,8 +26,9 @@ namespace UniverseEngine {
         Swapchain(const Swapchain& other) = delete;
         Swapchain& operator=(const Swapchain& other) = delete;
 
-        const Framebuffer& GetCurrentFramebuffer();
-        const Image& GetCurrentImage();
+        const Framebuffer& GetCurrentFramebuffer() const;
+        const Image& GetCurrentImage() const;
+        uint32_t GetCurrentFrameIdx() const;
         Semaphore& GetImageAvailableSemaphore();
         Semaphore& GetRenderFinishedSemaphore();
 

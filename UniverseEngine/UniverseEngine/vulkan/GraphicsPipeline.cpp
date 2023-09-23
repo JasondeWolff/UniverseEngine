@@ -172,5 +172,9 @@ namespace UniverseEngine {
     VkPipeline GraphicsPipeline::GetPipeline() const {
         return this->pipeline;
     }
+
+    VkPipelineLayout GraphicsPipeline::GetLayout() const {
+        return this->pipelineLayout;
+    }
 }  // namespace UniverseEngine
 #endif

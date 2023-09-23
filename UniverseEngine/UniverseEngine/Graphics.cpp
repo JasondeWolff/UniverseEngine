@@ -1,9 +1,12 @@
 #include "Graphics.h"
 
 #include "Engine.h"
+#include "Format.h"
 
-struct MVPPushConstant {
-    glm::mat4 mvp;
+struct MVPUniformBuffer {
+    glm::mat4 model;
+    glm::mat4 view;
+    glm::mat4 proj;
 };
 
 namespace UniverseEngine {
@@ -16,6 +19,26 @@ namespace UniverseEngine {
         this->device =
             std::make_shared<LogicalDevice>(this->instance, *this->physicalDevice, enableDebug);
         this->cmdQueue = std::make_unique<CmdQueue>(this->device, *this->physicalDevice);
+        this->descriptorPool = std::make_shared<DescriptorPool>(this->device);
+
+        this->descriptorSetLayout =
+            std::make_shared<DescriptorSetLayout>(
+                this->device,
+                std::vector<DescriptorLayoutBinding>{DescriptorLayoutBinding(
+                    "ubo", 0, DescriptorType::UNIFORM_BUFFER, DescriptorStageFlagBits::VERTEX)});
+
+        for (size_t i = 0; i < this->uniformBuffers.size(); i++) {
+            this->uniformBuffers[i] =
+                std::make_shared<Buffer>(Format("MVPUniformBuffer_%i", i), this->device,
+                                         *this->physicalDevice, BufferUsageBits::UNIFORM_BUFFER,
+                                         sizeof(MVPUniformBuffer), BufferLocation::GPU_ONLY);
+
+            this->descriptorSets[i] = std::make_shared<DescriptorSet>(
+                this->device, this->descriptorPool, this->descriptorSetLayout);
+
+            this->descriptorSets[i]->SetBuffer(0, 0, DescriptorType::UNIFORM_BUFFER,
+                                               *this->uniformBuffers[i]);
+        }
 
         this->BuildSwapchain();
         this->BuildPipelines();
@@ -57,11 +80,11 @@ namespace UniverseEngine {
         camera.SetAspect(static_cast<float>(swapchainExtent.extent.x) /
                          static_cast<float>(swapchainExtent.extent.y));
 
-        const glm::mat4& viewMatrix = camera.transform.GetMatrix();
+        const glm::mat4& viewMatrix = glm::inverse(camera.transform.GetMatrix());
         const glm::mat4& projectionMatrix = camera.GetMatrix();
-        const glm::mat4 vpMatrix = projectionMatrix * glm::inverse(viewMatrix);
 
         auto fence = this->swapchain->NextImage();
+        size_t currentFrame = static_cast<size_t>(this->swapchain->GetCurrentFrameIdx());
 
         std::shared_ptr<CmdList> cmdList = this->cmdQueue->GetCmdList();
 
@@ -78,9 +101,13 @@ namespace UniverseEngine {
             Scene& scene = resources.GetScene(sceneInstance.get().hScene).Value();
 
             for (Mesh& mesh : scene.meshes) {
-                MVPPushConstant pushConstant{vpMatrix};
+                MVPUniformBuffer uniformBuffer{glm::mat4(1.0), viewMatrix, projectionMatrix};
+                void* uniformBufferData = this->uniformBuffers[currentFrame]->Map();
+                memcpy(uniformBufferData, &uniformBuffer, sizeof(MVPUniformBuffer));
+                this->uniformBuffers[currentFrame]->Unmap();
 
-                cmdList->PushConstant("PushConstants", pushConstant);
+                cmdList->BindDescriptorSet(this->descriptorSets[currentFrame]);
+                //cmdList->PushConstant("PushConstants", uniformBuffer);
                 mesh.renderable->Draw(*cmdList);
             }
         }
@@ -103,12 +130,6 @@ namespace UniverseEngine {
     }
 
     void Graphics::BuildPipelines() {
-        std::shared_ptr<DescriptorSetLayout> descriptorSetLayout =
-            std::make_shared<DescriptorSetLayout>(
-                this->device,
-                std::vector<DescriptorLayoutBinding>{DescriptorLayoutBinding(
-                    "ubo", 0, DescriptorType::UNIFORM_BUFFER, DescriptorStageFlagBits::VERTEX)});
-
         auto& resources = Engine::GetResources();
         Handle<Shader> hShaderUnlitVS = resources.LoadShader("Assets/Shaders/unlit.vert");
         Handle<Shader> hShaderUnlitFS = resources.LoadShader("Assets/Shaders/unlit.frag");

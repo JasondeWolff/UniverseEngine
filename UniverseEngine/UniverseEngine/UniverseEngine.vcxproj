@@ -18,6 +18,8 @@
     <ClInclude Include="CmdList.h" />
     <ClInclude Include="CmdQueue.h" />
     <ClInclude Include="DescriptorLayoutBinding.h" />
+    <ClInclude Include="DescriptorPool.h" />
+    <ClInclude Include="DescriptorSet.h" />
     <ClInclude Include="DescriptorSetLayout.h" />
     <ClInclude Include="Fence.h" />
     <ClInclude Include="Framebuffer.h" />
@@ -59,6 +61,7 @@
     <ClInclude Include="Swapchain.h" />
     <ClInclude Include="GraphicsFormat.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="vulkan\VkConversion.h" />
     <ClInclude Include="Voxel.h" />
     <ClInclude Include="vulkan\VkGraphicsFormat.h" />
     <ClInclude Include="vulkan\VkPFN.h" />
@@ -74,6 +77,9 @@
     <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="CmdQueue.cpp" />
     <ClCompile Include="DescriptorLayoutBinding.cpp" />
+    <ClCompile Include="vulkan\VkConversion.cpp" />
+    <ClCompile Include="vulkan\DescriptorSet.cpp" />
+    <ClCompile Include="vulkan\DescriptorPool.cpp" />
     <ClCompile Include="gl\DescriptorSetLayout.cpp" />
     <ClCompile Include="vulkan\DescriptorSetLayout.cpp" />
     <ClCompile Include="GLTFLoader.cpp" />

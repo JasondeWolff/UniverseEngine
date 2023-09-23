@@ -229,6 +229,15 @@
     <ClInclude Include="DescriptorLayoutBinding.h">
       <Filter>Src\Graphics\Common</Filter>
     </ClInclude>
+    <ClInclude Include="DescriptorPool.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorSet.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="vulkan\VkConversion.h">
+      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -425,6 +434,15 @@
     </ClCompile>
     <ClCompile Include="gl\DescriptorSetLayout.cpp">
       <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\DescriptorPool.cpp">
+      <Filter>Src\Graphics\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\DescriptorSet.cpp">
+      <Filter>Src\Graphics\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\VkConversion.cpp">
+      <Filter>Src\Graphics\Vulkan\Specific</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

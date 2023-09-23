@@ -17,6 +17,7 @@ namespace UniverseEngine {
     class RenderPass;
     class Framebuffer;
     class Buffer;
+    class DescriptorSet;
 
     class CmdList {
     public:
@@ -36,10 +37,11 @@ namespace UniverseEngine {
         void BindVertexBuffer(std::shared_ptr<Buffer> vertexBuffer);
         void BindIndexBuffer(std::shared_ptr<Buffer> indexBuffer);
 
-        // TODO: Replace swapchain with a framebuffer abstraction
         void BeginRenderPass(std::shared_ptr<RenderPass> renderPass, const Framebuffer& framebuffer,
                              const glm::vec4& clearColor);
         void EndRenderPass();
+
+        void BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet);
 
         void BindGraphicsPipeline(std::shared_ptr<GraphicsPipeline> graphicsPipeline);
 
@@ -70,5 +72,6 @@ namespace UniverseEngine {
         std::shared_ptr<GraphicsPipeline> boundGraphicsPipeline;
         std::vector<std::shared_ptr<RenderPass>> trackedRenderPasses;
         std::vector<std::shared_ptr<Buffer>> trackedBuffers;
+        std::vector<std::shared_ptr<DescriptorSet>> trackedDescriptorSets;
     };
 }  // namespace UniverseEngine

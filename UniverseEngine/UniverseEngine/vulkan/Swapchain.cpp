@@ -168,13 +168,17 @@ namespace UniverseEngine {
         vkDestroySwapchainKHR(this->device->GetDevice(), this->swapChain, nullptr);
     }
 
-    const Framebuffer& Swapchain::GetCurrentFramebuffer() {
+    const Framebuffer& Swapchain::GetCurrentFramebuffer() const {
         UE_ASSERT_MSG(!this->framebuffers.empty(), "Rebuild framebuffers first!");
         return this->framebuffers[static_cast<size_t>(this->currentImage)];
     }
 
-    const Image& Swapchain::GetCurrentImage() {
+    const Image& Swapchain::GetCurrentImage() const {
         return *this->images[static_cast<size_t>(this->currentImage)];
+    }
+
+    uint32_t Swapchain::GetCurrentFrameIdx() const {
+        return this->currentFrame;
     }
 
     Semaphore& Swapchain::GetImageAvailableSemaphore() {

@@ -7,6 +7,7 @@
 #include "../Logging.h"
 #include "../Swapchain.h"
 #include "../Buffer.h"
+#include "../DescriptorSet.h"
 
 namespace UniverseEngine {
     CmdList::CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue)
@@ -71,10 +72,10 @@ namespace UniverseEngine {
 
     void CmdList::SetViewport(const Rect2D& rect2D) {
         VkViewport viewport{};
-        viewport.x = static_cast<float>(rect2D.offset.x);
-        viewport.y = static_cast<float>(rect2D.offset.y);
         viewport.width = static_cast<float>(rect2D.extent.x);
-        viewport.height = static_cast<float>(rect2D.extent.y);
+        viewport.height = -static_cast<float>(rect2D.extent.y);
+        viewport.x = static_cast<float>(rect2D.offset.x);
+        viewport.y = static_cast<float>(rect2D.offset.y) - viewport.height;
         viewport.maxDepth = 1.0;
 
         vkCmdSetViewport(this->cmdBuffer, 0, 1, &viewport);
@@ -114,6 +115,15 @@ namespace UniverseEngine {
 
     void CmdList::EndRenderPass() {
         vkCmdEndRenderPass(this->cmdBuffer);
+    }
+
+    void CmdList::BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet) {
+        VkDescriptorSet descriptorSets[] = {descriptorSet->GetDescriptorSet()};
+        vkCmdBindDescriptorSets(this->cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+                                this->boundGraphicsPipeline->GetLayout(), 0, 1, descriptorSets, 0,
+                                nullptr);
+
+        trackedDescriptorSets.push_back(descriptorSet);
     }
 
     void CmdList::BindGraphicsPipeline(std::shared_ptr<GraphicsPipeline> graphicsPipeline) {

@@ -5,6 +5,8 @@
 #include "CmdList.h"
 #include "CmdQueue.h"
 #include "DescriptorLayoutBinding.h"
+#include "DescriptorPool.h"
+#include "DescriptorSet.h"
 #include "DescriptorSetLayout.h"
 #include "GraphicsPipeline.h"
 #include "LogicalDevice.h"
@@ -40,8 +42,13 @@ namespace UniverseEngine {
         std::shared_ptr<LogicalDevice> device;
         std::unique_ptr<Swapchain> swapchain;
         std::unique_ptr<CmdQueue> cmdQueue;
+        std::shared_ptr<DescriptorPool> descriptorPool;
 
         std::shared_ptr<RenderPass> renderPass;
         std::shared_ptr<GraphicsPipeline> unlitPipeline;
+
+        std::shared_ptr<DescriptorSetLayout> descriptorSetLayout;
+        std::array<std::shared_ptr<Buffer>, Swapchain::MAX_FRAMES_IN_FLIGHT> uniformBuffers;
+        std::array<std::shared_ptr<DescriptorSet>, Swapchain::MAX_FRAMES_IN_FLIGHT> descriptorSets;
     };
 }  // namespace UniverseEngine

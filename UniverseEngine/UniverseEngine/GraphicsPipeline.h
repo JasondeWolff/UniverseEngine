@@ -35,6 +35,7 @@ namespace UniverseEngine {
 #elif defined(GRAPHICS_API_VULKAN)
     public:
         VkPipeline GetPipeline() const;
+        VkPipelineLayout GetLayout() const;
 
     private:
         VkPipelineLayout pipelineLayout;
