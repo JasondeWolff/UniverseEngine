@@ -10,7 +10,6 @@ namespace UniverseEngine {
     class CmdList;
     class LogicalDevice;
     class PhysicalDevice;
-    class CmdList;
 
     class MeshRenderable {
     public:

@@ -232,6 +232,9 @@
     <ClInclude Include="vulkan\VkConversion.h">
       <Filter>Src\Graphics\Vulkan\Specific</Filter>
     </ClInclude>
+    <ClInclude Include="TextureRenderable.h">
+      <Filter>Src\Graphics\Common\Assets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -446,6 +449,12 @@
     </ClCompile>
     <ClCompile Include="gl\DescriptorPool.cpp">
       <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\TextureRenderable.cpp">
+      <Filter>Src\Graphics\Vulkan\Assets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

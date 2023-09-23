@@ -84,5 +84,21 @@ namespace UniverseEngine {
     uint32_t PhysicalDevice::PresentFamily() const {
         return this->presentFamily;
     }
+
+    uint32_t PhysicalDevice::FindMemoryType(uint32_t typeFilter,
+                            VkMemoryPropertyFlags properties) const {
+        VkPhysicalDeviceMemoryProperties memProperties;
+        vkGetPhysicalDeviceMemoryProperties(this->physicalDevice, &memProperties);
+
+        for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
+            if ((typeFilter & (1 << i)) &&
+                (memProperties.memoryTypes[i].propertyFlags & properties) == properties) {
+                return i;
+            }
+        }
+
+        UE_FATAL("Failed to find suitable memory type.");
+        return 0;
+    }
 }  // namespace UniverseEngine
 #endif

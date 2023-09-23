@@ -156,6 +156,15 @@ namespace UniverseEngine {
             }
         }
 
+        auto textures = resources.GetNewTextures();
+        for (auto texture : textures) {
+            if (!texture->renderable) {
+                texture->renderable = std::move(std::unique_ptr<TextureRenderable>(
+                    new TextureRenderable(this->device, *this->physicalDevice, *uploadCmdList, *texture)));
+                texture->ClearCPUData();
+            }
+        }
+
         auto& sceneInstances = world.newInstances;
         for (auto sceneInstance : sceneInstances) {
             auto scene = sceneInstance->hScene;

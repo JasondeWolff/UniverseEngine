@@ -13,6 +13,9 @@ namespace UniverseEngine {
         VkPhysicalDevice GetPhysicalDevice() const;
         uint32_t GraphicsFamily() const;
         uint32_t PresentFamily() const;
+
+        uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
+
     private:
         VkPhysicalDevice physicalDevice;
         uint32_t graphicsFamily;

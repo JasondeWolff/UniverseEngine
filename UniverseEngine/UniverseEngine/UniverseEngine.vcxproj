@@ -28,6 +28,7 @@
     <ClInclude Include="Format.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="gl\GlGraphicsFormat.h" />
+    <ClInclude Include="TextureRenderable.h" />
     <ClInclude Include="LogicalDevice.h" />
     <ClInclude Include="GraphicsAPI.h" />
     <ClInclude Include="GraphicsInstance.h" />
@@ -78,6 +79,8 @@
     <ClCompile Include="gl\Buffer.cpp" />
     <ClCompile Include="gl\DescriptorPool.cpp" />
     <ClCompile Include="gl\DescriptorSet.cpp" />
+    <ClCompile Include="vulkan\TextureRenderable.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="vulkan\VkConversion.cpp" />
     <ClCompile Include="vulkan\DescriptorSet.cpp" />
     <ClCompile Include="vulkan\DescriptorPool.cpp" />

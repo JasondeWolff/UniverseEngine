@@ -8,6 +8,7 @@
 
 #include "GraphicsAPI.h"
 #include "Rect2D.h"
+#include "Image.h"
 
 namespace UniverseEngine {
     class GraphicsPipeline;
@@ -30,6 +31,10 @@ namespace UniverseEngine {
         void Reset();
 
         void CopyBuffers(std::shared_ptr<Buffer> src, std::shared_ptr<Buffer> dst);
+        void CopyBuffers(std::shared_ptr<Buffer> src, std::shared_ptr<Image> dst);
+
+        void TransitionImageLayout(std::shared_ptr<Image> image, ImageLayout oldLayout,
+                                   ImageLayout newLayout);
 
         void SetScissor(const Rect2D& rect2D);
         void SetViewport(const Rect2D& rect2D);
@@ -72,6 +77,7 @@ namespace UniverseEngine {
         std::shared_ptr<GraphicsPipeline> boundGraphicsPipeline;
         std::vector<std::shared_ptr<RenderPass>> trackedRenderPasses;
         std::vector<std::shared_ptr<Buffer>> trackedBuffers;
+        std::vector<std::shared_ptr<Image>> trackedImages;
         std::vector<std::shared_ptr<DescriptorSet>> trackedDescriptorSets;
     };
 }  // namespace UniverseEngine

@@ -85,11 +85,16 @@ namespace UniverseEngine {
         }
     }*/
 
+    const std::vector<std::shared_ptr<Texture>>& Resources::GetNewTextures() {
+        return this->newTextures;
+    }
+
     const std::vector<std::shared_ptr<Shader>>& Resources::GetNewShaders() {
         return this->newShaders;
     }
 
     void Resources::Update() {
+        this->newTextures.clear();
         this->newShaders.clear();
     }
 }  // namespace UniverseEngine

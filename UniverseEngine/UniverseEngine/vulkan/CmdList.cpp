@@ -1,15 +1,39 @@
 #include "../GraphicsAPI.h"
 #ifdef GRAPHICS_API_VULKAN
 
+#include "../Buffer.h"
 #include "../CmdList.h"
 #include "../CmdQueue.h"
+#include "../DescriptorSet.h"
 #include "../GraphicsPipeline.h"
 #include "../Logging.h"
 #include "../Swapchain.h"
-#include "../Buffer.h"
-#include "../DescriptorSet.h"
 
 namespace UniverseEngine {
+    VkImageLayout GetVkImageLayout(ImageLayout layout) {
+        switch (layout) {
+            case ImageLayout::UNDEFINED:
+                return VkImageLayout::VK_IMAGE_LAYOUT_UNDEFINED;
+            case ImageLayout::GENERAL:
+                return VkImageLayout::VK_IMAGE_LAYOUT_GENERAL;
+            case ImageLayout::COLOR_ATTACHMENT_OPTIMAL:
+                return VkImageLayout::VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+            case ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
+                return VkImageLayout::VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+            case ImageLayout::DEPTH_STENCIL_READ_ONLY_OPTIMAL:
+                return VkImageLayout::VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
+            case ImageLayout::SHADER_READ_ONLY_OPTIMAL:
+                return VkImageLayout::VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            case ImageLayout::TRANSFER_SRC_OPTIMAL:
+                return VkImageLayout::VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+            case ImageLayout::TRANSFER_DST_OPTIMAL:
+                return VkImageLayout::VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        }
+
+        UE_FATAL("Unsupported image layout");
+        return VkImageLayout::VK_IMAGE_LAYOUT_UNDEFINED;
+    }
+
     CmdList::CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue)
         : device(device), cmdQueue(cmdQueue) {
         VkCommandBufferAllocateInfo allocInfo{};
@@ -45,6 +69,7 @@ namespace UniverseEngine {
         this->boundGraphicsPipeline.reset();
         this->trackedRenderPasses.clear();
         this->trackedBuffers.clear();
+        this->trackedImages.clear();
         this->trackedDescriptorSets.clear();
     }
 
@@ -56,9 +81,71 @@ namespace UniverseEngine {
         copyRegion.size = src->Size();
 
         vkCmdCopyBuffer(this->cmdBuffer, src->GetBuffer(), dst->GetBuffer(), 1, &copyRegion);
-        
+
         this->trackedBuffers.push_back(src);
         this->trackedBuffers.push_back(dst);
+    }
+
+    void CmdList::CopyBuffers(std::shared_ptr<Buffer> src, std::shared_ptr<Image> dst) {
+        VkBufferImageCopy copyRegion{};
+        copyRegion.bufferOffset = 0;
+        copyRegion.bufferRowLength = 0;
+        copyRegion.bufferImageHeight = 0;
+        copyRegion.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        copyRegion.imageSubresource.mipLevel = 0;
+        copyRegion.imageSubresource.baseArrayLayer = 0;
+        copyRegion.imageSubresource.layerCount = 1;
+        copyRegion.imageOffset = {0, 0, 0};
+        copyRegion.imageExtent = {dst->Width(), dst->Height(), 1};
+
+        vkCmdCopyBufferToImage(this->cmdBuffer, src->GetBuffer(), dst->GetImage(),
+                               VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &copyRegion);
+
+        this->trackedBuffers.push_back(src);
+        this->trackedImages.push_back(dst);
+    }
+
+    void CmdList::TransitionImageLayout(std::shared_ptr<Image> image, ImageLayout oldLayout,
+                                        ImageLayout newLayout) {
+        VkImageLayout vkOldLayout = GetVkImageLayout(oldLayout);
+        VkImageLayout vkNewLayout = GetVkImageLayout(newLayout);
+
+        VkImageMemoryBarrier barrier{};
+        barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        barrier.oldLayout = vkOldLayout;
+        barrier.newLayout = vkNewLayout;
+        barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        barrier.image = image->GetImage();
+        barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        barrier.subresourceRange.baseMipLevel = 0;
+        barrier.subresourceRange.levelCount = 1;
+        barrier.subresourceRange.baseArrayLayer = 0;
+        barrier.subresourceRange.layerCount = 1;
+
+        VkPipelineStageFlags sourceStage;
+        VkPipelineStageFlags destinationStage;
+
+        if (vkOldLayout == VK_IMAGE_LAYOUT_UNDEFINED &&
+            vkNewLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
+            barrier.srcAccessMask = 0;
+            barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+            sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+            destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+        } else if (vkOldLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL &&
+                   vkNewLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
+            barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+            barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+            sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+            destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+        } else {
+            UE_FATAL("Unsupported image layout transition.");
+        }
+
+        vkCmdPipelineBarrier(this->cmdBuffer, sourceStage, destinationStage, 0, 0, nullptr, 0,
+                             nullptr, 1, &barrier);
+
+        this->trackedImages.push_back(image);
     }
 
     void CmdList::SetScissor(const Rect2D& rect2D) {
@@ -91,7 +178,8 @@ namespace UniverseEngine {
     }
 
     void CmdList::BindIndexBuffer(std::shared_ptr<Buffer> indexBuffer) {
-        vkCmdBindIndexBuffer(this->cmdBuffer, indexBuffer->GetBuffer(), 0, VkIndexType::VK_INDEX_TYPE_UINT32);
+        vkCmdBindIndexBuffer(this->cmdBuffer, indexBuffer->GetBuffer(), 0,
+                             VkIndexType::VK_INDEX_TYPE_UINT32);
 
         this->trackedBuffers.push_back(indexBuffer);
     }

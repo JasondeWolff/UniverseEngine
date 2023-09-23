@@ -16,6 +16,7 @@ namespace UniverseEngine {
         std::shared_ptr<Texture> LoadTexture(const std::filesystem::path& filePath);
         std::shared_ptr<Shader> LoadShader(const std::filesystem::path& filePath);
 
+        const std::vector<std::shared_ptr<Texture>>& GetNewTextures();
         const std::vector<std::shared_ptr<Shader>>& GetNewShaders();
 
     private:
@@ -32,6 +33,7 @@ namespace UniverseEngine {
         std::unordered_map<std::filesystem::path, std::shared_ptr<Texture>> texturePaths;
         std::unordered_map<std::filesystem::path, std::shared_ptr<Shader>> shaderPaths;
 
+        std::vector<std::shared_ptr<Texture>> newTextures;
         std::vector<std::shared_ptr<Shader>> newShaders;
 
         std::shared_ptr<Scene> LoadGLTF(const std::filesystem::path& filePath);

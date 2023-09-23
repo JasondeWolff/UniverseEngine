@@ -1,7 +1,5 @@
 #pragma once
 
-#include "GraphicsFormat.h"
-
 namespace UniverseEngine {
     enum class GraphicsFormat {
         UNDEFINED = 0,
