@@ -102,12 +102,14 @@ namespace UniverseEngine {
 
             for (Mesh& mesh : scene.meshes) {
                 MVPUniformBuffer uniformBuffer{glm::mat4(1.0), viewMatrix, projectionMatrix};
-                //void* uniformBufferData = this->uniformBuffers[currentFrame]->Map();
-                //memcpy(uniformBufferData, &uniformBuffer, sizeof(MVPUniformBuffer));
-                //this->uniformBuffers[currentFrame]->Unmap();
 
-                //cmdList->BindDescriptorSet(this->descriptorSets[currentFrame]);
-                cmdList->PushConstant("UniformBufferObject", uniformBuffer);
+                void* uniformBufferData = this->uniformBuffers[currentFrame]->Map();
+                memcpy(uniformBufferData, &uniformBuffer, sizeof(MVPUniformBuffer));
+                this->uniformBuffers[currentFrame]->Unmap();
+
+                cmdList->BindDescriptorSet(this->descriptorSets[currentFrame]);
+
+                //cmdList->PushConstant("UniformBufferObject", uniformBuffer);
                 mesh.renderable->Draw(*cmdList);
             }
         }

@@ -23,6 +23,9 @@ namespace UniverseEngine {
 
     void CmdList::Reset() {
         this->boundGraphicsPipeline.reset();
+        this->trackedRenderPasses.clear();
+        this->trackedBuffers.clear();
+        this->trackedDescriptorSets.clear();
     }
 
     void CmdList::SetScissor(const Rect2D& rect2D) {
@@ -42,6 +45,12 @@ namespace UniverseEngine {
     }
 
     void CmdList::EndRenderPass() {
+    }
+
+    void CmdList::BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet) {
+        
+
+        trackedDescriptorSets.push_back(descriptorSet);
     }
 
     void CmdList::BindGraphicsPipeline(std::shared_ptr<GraphicsPipeline> graphicsPipeline) {
@@ -73,12 +82,6 @@ namespace UniverseEngine {
 
     void CmdList::PushConstant(const std::string& name, void* constant, size_t size) {
         UE_ASSERT_MSG(this->boundGraphicsPipeline, "No graphics pipeline bound.");
-
-        unsigned shaderProgram = this->boundGraphicsPipeline->ShaderProgram();
-        unsigned blockIndex = glGetUniformBlockIndex(shaderProgram, name.c_str());
-        UE_ASSERT_MSG(blockIndex != GL_INVALID_INDEX, "Cannot find push constant '%s'.",
-                      name.c_str());
-        glUniformBlockBinding(shaderProgram, blockIndex, 0);
 
         unsigned ubo;
         glGenBuffers(1, &ubo);

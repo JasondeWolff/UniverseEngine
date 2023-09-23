@@ -55,7 +55,7 @@ namespace UniverseEngine {
     void MeshRenderable::Draw(CmdList& cmdList) {
         cmdList.BindVertexBuffer(this->vertexBuffer);
         cmdList.BindIndexBuffer(this->indexBuffer);
-        cmdList.Draw(this->indexCount);
+        cmdList.DrawElements(this->indexCount);
     }
 }  // namespace UniverseEngine
 #endif

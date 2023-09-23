@@ -45,6 +45,7 @@ namespace UniverseEngine {
         this->boundGraphicsPipeline.reset();
         this->trackedRenderPasses.clear();
         this->trackedBuffers.clear();
+        this->trackedDescriptorSets.clear();
     }
 
     void CmdList::CopyBuffers(std::shared_ptr<Buffer> src, std::shared_ptr<Buffer> dst) {
