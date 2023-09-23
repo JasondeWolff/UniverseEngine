@@ -44,7 +44,14 @@ namespace UniverseEngine {
 
         uint64_t size;
 
-#ifdef GRAPHICS_API_VULKAN
+#ifdef GRAPHICS_API_GL
+    public:
+        unsigned GetBuffer() const;
+    private:
+        unsigned buffer;
+        void* bufferMemory;
+        unsigned identifier;
+#elif defined(GRAPHICS_API_VULKAN)
     public:
         VkBuffer GetBuffer() const;
 

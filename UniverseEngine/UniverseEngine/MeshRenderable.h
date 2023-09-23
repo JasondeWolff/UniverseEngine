@@ -26,8 +26,8 @@ namespace UniverseEngine {
 
 #ifdef GRAPHICS_API_GL
         unsigned vao;
-        unsigned vbo;
-        unsigned ebo;
+        std::shared_ptr<Buffer> vertexBuffer;
+        std::shared_ptr<Buffer> indexBuffer;
 #elif defined(GRAPHICS_API_VULKAN)
         std::shared_ptr<Buffer> vertexBuffer;
         std::shared_ptr<Buffer> indexBuffer;

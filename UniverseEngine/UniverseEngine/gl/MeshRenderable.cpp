@@ -18,22 +18,30 @@ namespace UniverseEngine {
         UE_ASSERT(mesh.indices.size() > 0);
 
         glGenVertexArrays(1, &this->vao);
-        glGenBuffers(1, &this->vbo);
-        glGenBuffers(1, &this->ebo);
 
         glBindVertexArray(this->vao);
         {
             GlDebugNames::Set(GL_VERTEX_ARRAY, this->vao, Format("%s_VAO", mesh.name.c_str()));
 
-            glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-            GlDebugNames::Set(GL_BUFFER, this->vbo, Format("%s_VBO", mesh.name.c_str()));
-            glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(Vertex),
-                         mesh.vertices.data(), GL_STATIC_DRAW);
+            size_t vertexSize = sizeof(Vertex) * mesh.vertices.size();
+            size_t indexSize = sizeof(uint32_t) * mesh.indices.size();
 
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
-            GlDebugNames::Set(GL_BUFFER, this->ebo, Format("%s_EBO", mesh.name.c_str()));
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indices.size() * sizeof(uint32_t),
-                         mesh.indices.data(), GL_STATIC_DRAW);
+            this->vertexBuffer = std::make_shared<Buffer>(
+                Format("%s_VERTEX_BUFFER", mesh.name.c_str()), device, physicalDevice,
+                BufferUsageBits::VERTEX_BUFFER,
+                static_cast<uint64_t>(vertexSize), BufferLocation::GPU_ONLY);
+            this->indexBuffer = std::make_shared<Buffer>(
+                Format("%s_INDEX_BUFFER", mesh.name.c_str()), device, physicalDevice,
+                BufferUsageBits::INDEX_BUFFER,
+                static_cast<uint64_t>(indexSize), BufferLocation::GPU_ONLY);
+
+            void* data = this->vertexBuffer->Map();
+            memcpy(data, mesh.vertices.data(), vertexSize);
+            this->vertexBuffer->Unmap();
+
+            data = this->indexBuffer->Map();
+            memcpy(data, mesh.indices.data(), indexSize);
+            this->indexBuffer->Unmap();
 
             glEnableVertexAttribArray(0);
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
@@ -51,8 +59,6 @@ namespace UniverseEngine {
     }
 
     MeshRenderable::~MeshRenderable() {
-        glDeleteBuffers(1, &this->vbo);
-        glDeleteBuffers(1, &this->ebo);
         glDeleteVertexArrays(1, &this->vao);
     }
 

@@ -80,12 +80,14 @@ namespace UniverseEngine {
         vkBindBufferMemory(device->GetDevice(), this->buffer, this->bufferMemory, 0);
     }
 
-    Buffer::Buffer(Buffer&& other) noexcept : device(other.device), buffer(other.buffer), bufferMemory(other.bufferMemory) {
+    Buffer::Buffer(Buffer&& other) noexcept
+        : device(other.device), size(other.size), buffer(other.buffer), bufferMemory(other.bufferMemory) {
         other.buffer = VK_NULL_HANDLE;
         other.bufferMemory = VK_NULL_HANDLE;
     }
 
     Buffer& Buffer::operator=(Buffer&& other) noexcept {
+        this->size = other.size;
         this->buffer = other.buffer;
         this->bufferMemory = other.bufferMemory;
         other.buffer = VK_NULL_HANDLE;
