@@ -8,22 +8,28 @@
 #include "../RenderPass.h"
 
 namespace UniverseEngine {
-    Framebuffer::Framebuffer(std::shared_ptr<LogicalDevice> device, std::shared_ptr<Image> image,
+    Framebuffer::Framebuffer(std::shared_ptr<LogicalDevice> device, std::vector<std::shared_ptr<Image>> images,
                              std::shared_ptr<RenderPass> renderPass)
-        : device(device), image(image), renderPass(renderPass) {
+        : device(device), images(images), renderPass(renderPass) {
     }
 
     Framebuffer::Framebuffer(Framebuffer&& other) noexcept
         : device(other.device),
-          image(other.image),
+          images(other.images),
           renderPass(other.renderPass) {
     }
 
     Framebuffer& Framebuffer::operator=(Framebuffer&& other) noexcept {
+        this->images = other.images;
+        this->renderPass = other.renderPass;
         return *this;
     }
 
     Framebuffer::~Framebuffer() {
+    }
+
+    const std::vector<std::shared_ptr<Image>>& Framebuffer::Images() const {
+        return this->images;
     }
 }  // namespace UniverseEngine
 #endif

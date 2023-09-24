@@ -7,7 +7,7 @@
 namespace UniverseEngine {
     Image::Image(const std::string& name, std::shared_ptr<LogicalDevice> device,
                  const PhysicalDevice& physicalDevice, uint32_t width, uint32_t height,
-                 GraphicsFormat format) : width(width), height(height) {
+                 ImageUsage usage, GraphicsFormat format) : width(width), height(height) {
     
     }
 

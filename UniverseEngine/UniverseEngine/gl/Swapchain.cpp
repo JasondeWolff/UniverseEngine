@@ -1,8 +1,8 @@
 #include "../GraphicsAPI.h"
 #ifdef GRAPHICS_API_GL
 
-#include "../Swapchain.h"
 #include "../Format.h"
+#include "../Swapchain.h"
 
 namespace UniverseEngine {
     Swapchain::Swapchain(const Window& window, const GraphicsInstance& instance,
@@ -12,10 +12,9 @@ namespace UniverseEngine {
         this->width = window.Width();
         this->height = window.Height();
 
-        this->image =
-            std::make_shared<Image>("SwapchainFramebuffer", this->device, physicalDevice,
-                                    this->width,
-                                    this->height, GraphicsFormat::R8G8B8A8_SRGB);
+        this->image = std::make_shared<Image>(
+            "SwapchainFramebuffer", this->device, physicalDevice, this->width, this->height,
+            ImageUsageBits::STORAGE_IMAGE, GraphicsFormat::R8G8B8A8_SRGB);
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
             imageAvailableSemaphores.emplace_back(
@@ -34,7 +33,7 @@ namespace UniverseEngine {
     }
 
     const Image& Swapchain::GetCurrentImage() const {
-        return *this->framebuffer->image;
+        return *this->framebuffer->Images()[0];
     }
 
     uint32_t Swapchain::GetCurrentFrameIdx() const {
@@ -49,12 +48,11 @@ namespace UniverseEngine {
         return this->renderFinishedSemaphores[static_cast<size_t>(this->currentFrame)];
     }
 
-    void Swapchain::RebuildFramebuffers(std::shared_ptr<RenderPass> renderPass) {
+    void Swapchain::RebuildFramebuffers(std::shared_ptr<RenderPass> renderPass,
+                                        std::shared_ptr<Image> depthImage) {
         this->framebuffer.reset();
         this->framebuffer = std::move(std::make_unique<Framebuffer>(
-            this->device,
-            this->image,
-            renderPass));
+            this->device, std::vector<std::shared_ptr<Image>>{this->image}, renderPass));
     }
 
     std::shared_ptr<Fence> Swapchain::NextImage() {

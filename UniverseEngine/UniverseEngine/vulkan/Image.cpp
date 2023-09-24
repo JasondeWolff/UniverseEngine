@@ -105,18 +105,6 @@ namespace UniverseEngine {
         }
     }
 
-    uint32_t Image::Width() const {
-        return this->width;
-    }
-
-    uint32_t Image::Height() const {
-        return this->height;
-    }
-
-    GraphicsFormat Image::Format() const {
-        return this->format;
-    }
-
     VkImage Image::GetImage() const {
         return this->image;
     }
