@@ -10,7 +10,6 @@ namespace UniverseEngine {
         B5G6R5_UNORM_PACK16 = 5,
         R5G5B5A1_UNORM_PACK16 = 6,
         B5G5R5A1_UNORM_PACK16 = 7,
-        A1R5G5B5_UNORM_PACK16 = 8,
         R8_UNORM = 9,
         R8_SNORM = 10,
         R8_USCALED = 11,

@@ -7,6 +7,7 @@
 
 #include "../Logging.h"
 #include "../GraphicsPipeline.h"
+#include "../DescriptorSet.h"
 
 namespace UniverseEngine {
     CmdList::CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue) : device(device), cmdQueue(cmdQueue) {
@@ -48,7 +49,16 @@ namespace UniverseEngine {
     }
 
     void CmdList::BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet) {
+        // TODO: bind buffers, now it's a miracle it works
         
+        for (auto& imageBinding : descriptorSet->Images()) {
+            uint32_t binding = imageBinding.first;
+            auto& image = imageBinding.second.first;
+            auto& sampler = imageBinding.second.second;
+
+            glActiveTexture(GL_TEXTURE0 + binding);
+            glBindTexture(GL_TEXTURE_2D, image->GetTexture());
+        }
 
         trackedDescriptorSets.push_back(descriptorSet);
     }
@@ -56,7 +66,7 @@ namespace UniverseEngine {
     void CmdList::BindGraphicsPipeline(std::shared_ptr<GraphicsPipeline> graphicsPipeline) {
         glUseProgram(graphicsPipeline->ShaderProgram());
 
-        // TODO: pipeline states like blending, depth etc.
+        // TODO: set pipeline states like blending, depth etc.
         glEnable(GL_DEPTH_TEST);
 
         this->boundGraphicsPipeline = graphicsPipeline;

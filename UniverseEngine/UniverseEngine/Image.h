@@ -23,8 +23,9 @@ namespace UniverseEngine {
 
     class Image {
     public:
-        Image(const std::string& name, std::shared_ptr<LogicalDevice> device, const PhysicalDevice& physicalDevice,
-              uint32_t width, uint32_t height, GraphicsFormat format);
+        Image(const std::string& name, std::shared_ptr<LogicalDevice> device,
+              const PhysicalDevice& physicalDevice, uint32_t width, uint32_t height,
+              GraphicsFormat format);
         ~Image();
         Image(const Image& other) = delete;
         Image& operator=(const Image& other) = delete;
@@ -35,8 +36,15 @@ namespace UniverseEngine {
     private:
         uint32_t width;
         uint32_t height;
-#ifdef GRAPHICS_API_GL
 
+#ifdef GRAPHICS_API_GL
+    public:
+        Image(void* data, uint32_t width, uint32_t height, GraphicsFormat format);
+
+        unsigned GetTexture() const;
+
+    private:
+        unsigned texture;
 #elif defined(GRAPHICS_API_VULKAN)
     public:
         Image(std::shared_ptr<LogicalDevice> device, VkImage image, VkImageView imageView,

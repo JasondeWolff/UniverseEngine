@@ -114,7 +114,7 @@ namespace UniverseEngine {
                 Material& material = scene->materials[mesh.materialIdx];
                 auto& baseColorImage = material.baseColorMap->renderable->image;
                 this->descriptorSets[currentFrame]->SetImage(
-                    1, DescriptorType::COMBINED_IMAGE_SAMPLER, *baseColorImage, *this->sampler);
+                    1, DescriptorType::COMBINED_IMAGE_SAMPLER, baseColorImage, this->sampler);
 
                 cmdList->BindDescriptorSet(this->descriptorSets[currentFrame]);
 
