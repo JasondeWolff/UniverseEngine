@@ -21,10 +21,6 @@ namespace UniverseEngine {
                           const PhysicalDevice& physicalDevice,
                        CmdList& uploadCmdList, const Texture& texture);
 
-#ifdef GRAPHICS_API_GL
-        
-#elif defined(GRAPHICS_API_VULKAN)
         std::shared_ptr<Image> image;
-#endif
     };
 }  // namespace UniverseEngine

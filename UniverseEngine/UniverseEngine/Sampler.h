@@ -13,11 +13,13 @@ namespace UniverseEngine {
     class Sampler {
     public:
         Sampler(const std::string& name, std::shared_ptr<LogicalDevice> device,
-              const PhysicalDevice& physicalDevice);
+                const PhysicalDevice& physicalDevice);
         ~Sampler();
         Sampler(const Sampler& other) = delete;
         Sampler& operator=(const Sampler& other) = delete;
 
+    private:
+        const std::shared_ptr<LogicalDevice> device;
 #ifdef GRAPHICS_API_GL
 
 #elif defined(GRAPHICS_API_VULKAN)
@@ -25,8 +27,6 @@ namespace UniverseEngine {
         VkSampler GetSampler() const;
 
     private:
-        const std::shared_ptr<LogicalDevice> device;
-
         VkSampler sampler;
 #endif
     };

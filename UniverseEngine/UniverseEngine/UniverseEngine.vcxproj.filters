@@ -465,6 +465,9 @@
     <ClCompile Include="vulkan\Sampler.cpp">
       <Filter>Src\Graphics\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="gl\Sampler.cpp">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
