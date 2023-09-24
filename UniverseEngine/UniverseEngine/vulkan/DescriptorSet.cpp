@@ -51,11 +51,11 @@ namespace UniverseEngine {
         vkUpdateDescriptorSets(this->device->GetDevice(), 1, &writeInfo, 0, nullptr);
     }
 
-    void DescriptorSet::SetImage(uint32_t binding, DescriptorType type, const Image& image, const Sampler& sampler) {
+    void DescriptorSet::SetImage(uint32_t binding, DescriptorType type, std::shared_ptr<Image> image, std::shared_ptr<Sampler> sampler) {
         VkDescriptorImageInfo imageInfo{};
         imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-        imageInfo.imageView = image.GetImageView();
-        imageInfo.sampler = sampler.GetSampler();
+        imageInfo.imageView = image->GetImageView();
+        imageInfo.sampler = sampler->GetSampler();
 
         VkWriteDescriptorSet writeInfo{};
         writeInfo.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

@@ -22,8 +22,6 @@ namespace UniverseEngine {
                     return VkFormat::VK_FORMAT_R5G5B5A1_UNORM_PACK16;
                 case GraphicsFormat::B5G5R5A1_UNORM_PACK16:
                     return VkFormat::VK_FORMAT_B5G5R5A1_UNORM_PACK16;
-                case GraphicsFormat::A1R5G5B5_UNORM_PACK16:
-                    return VkFormat::VK_FORMAT_A1R5G5B5_UNORM_PACK16;
                 case GraphicsFormat::R8_UNORM:
                     return VkFormat::VK_FORMAT_R8_UNORM;
                 case GraphicsFormat::R8_SNORM:
@@ -128,8 +126,6 @@ namespace UniverseEngine {
                     return GraphicsFormat::R5G5B5A1_UNORM_PACK16;
                 case VkFormat::VK_FORMAT_B5G5R5A1_UNORM_PACK16:
                     return GraphicsFormat::B5G5R5A1_UNORM_PACK16;
-                case VkFormat::VK_FORMAT_A1R5G5B5_UNORM_PACK16:
-                    return GraphicsFormat::A1R5G5B5_UNORM_PACK16;
                 case VkFormat::VK_FORMAT_R8_UNORM:
                     return GraphicsFormat::R8_UNORM;
                 case VkFormat::VK_FORMAT_R8_SNORM:
