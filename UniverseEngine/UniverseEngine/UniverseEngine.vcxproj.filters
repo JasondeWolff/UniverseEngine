@@ -468,6 +468,9 @@
     <ClCompile Include="gl\Sampler.cpp">
       <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />

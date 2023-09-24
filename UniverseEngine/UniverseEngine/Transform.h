@@ -1,5 +1,9 @@
 #pragma once
 
+#include "GraphicsAPI.h"
+#ifdef GRAPHICS_API_VULKAN
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#endif
 #include <glm/mat4x4.hpp>
 
 #include "MathUtil.h"

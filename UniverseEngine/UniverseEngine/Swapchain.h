@@ -32,7 +32,7 @@ namespace UniverseEngine {
         Semaphore& GetImageAvailableSemaphore();
         Semaphore& GetRenderFinishedSemaphore();
 
-        void RebuildFramebuffers(std::shared_ptr<RenderPass> renderPass);
+        void RebuildFramebuffers(std::shared_ptr<RenderPass> renderPass, std::shared_ptr<Image> depthImage);
         std::shared_ptr<Fence> NextImage();
         void Present(const CmdQueue& queue, const Fence& fence, const std::vector<Semaphore*>& semaphores);
 

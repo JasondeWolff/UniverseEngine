@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "GraphicsAPI.h"
 
@@ -11,7 +12,7 @@ namespace UniverseEngine {
 
     class Framebuffer {
     public:
-        Framebuffer(std::shared_ptr<LogicalDevice> device, std::shared_ptr<Image> image,
+        Framebuffer(std::shared_ptr<LogicalDevice> device, std::vector<std::shared_ptr<Image>> images,
                     std::shared_ptr<RenderPass> renderPass);
         ~Framebuffer();
 
@@ -20,11 +21,12 @@ namespace UniverseEngine {
         explicit Framebuffer(Framebuffer&& other) noexcept;
         Framebuffer& operator=(Framebuffer&& other) noexcept;
 
-        const std::shared_ptr<Image> image;
+        const std::vector<std::shared_ptr<Image>>& Images() const;
 
     private:
         const std::shared_ptr<LogicalDevice> device;
-        const std::shared_ptr<RenderPass> renderPass;
+        std::shared_ptr<RenderPass> renderPass;
+        std::vector<std::shared_ptr<Image>> images;
 
 #ifdef GRAPHICS_API_GL
 

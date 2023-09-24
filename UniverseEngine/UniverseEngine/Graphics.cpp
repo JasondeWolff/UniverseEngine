@@ -136,8 +136,15 @@ namespace UniverseEngine {
         this->swapchain.reset();
         this->swapchain = std::make_unique<Swapchain>(*this->window, *this->instance, this->device,
                                                       *this->physicalDevice);
-        this->renderPass = std::make_shared<RenderPass>(this->device, this->swapchain->Format());
-        this->swapchain->RebuildFramebuffers(this->renderPass);
+
+        uint32_t width = this->swapchain->Extent().extent.x;
+        uint32_t height = this->swapchain->Extent().extent.y;
+        this->depthImage =
+            std::make_shared<Image>("Depth Image", this->device, *this->physicalDevice, width,
+                                    height, ImageUsageBits::DEPTH_STENCIL_ATTACHMENT, GraphicsFormat::D32_SFLOAT);
+
+        this->renderPass = std::make_shared<RenderPass>(this->device, std::vector<GraphicsFormat>{this->swapchain->Format()}, std::make_optional<GraphicsFormat>(this->depthImage->Format()));
+        this->swapchain->RebuildFramebuffers(this->renderPass, this->depthImage);
     }
 
     void Graphics::BuildPipelines() {

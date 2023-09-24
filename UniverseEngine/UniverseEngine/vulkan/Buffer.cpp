@@ -9,10 +9,10 @@ namespace UniverseEngine {
     VkBufferUsageFlags GetVkUsageFlags(BufferUsage usage) {
         VkBufferUsageFlags flags = 0;
 
-        if (usage.test(GetBufferUsageBitIndex(BufferUsageBits::TRANSFER_SRC))) {
+        if (usage.test(GetBufferUsageBitIndex(BufferUsageBits::TRANSFER_SRC_BUFFER))) {
             flags |= VkBufferUsageFlagBits::VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
         }
-        if (usage.test(GetBufferUsageBitIndex(BufferUsageBits::TRANSFER_DST))) {
+        if (usage.test(GetBufferUsageBitIndex(BufferUsageBits::TRANSFER_DST_BUFFER))) {
             flags |= VkBufferUsageFlagBits::VK_BUFFER_USAGE_TRANSFER_DST_BIT;
         }
         if (usage.test(GetBufferUsageBitIndex(BufferUsageBits::UNIFORM_BUFFER))) {

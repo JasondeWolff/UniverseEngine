@@ -1,6 +1,8 @@
 #include "../GraphicsAPI.h"
 #ifdef GRAPHICS_API_VULKAN
 
+#include <array>
+
 #include "../Buffer.h"
 #include "../CmdList.h"
 #include "../CmdQueue.h"
@@ -191,11 +193,14 @@ namespace UniverseEngine {
         renderPassInfo.renderPass = renderPass->GetRenderPass();
         renderPassInfo.framebuffer = framebuffer.GetFramebuffer();
         renderPassInfo.renderArea.extent =
-            VkExtent2D{framebuffer.image->Width(), framebuffer.image->Height()};
+            VkExtent2D{framebuffer.Images()[0]->Width(), framebuffer.Images()[0]->Height()};
 
-        VkClearValue vkClearColor = {{{clearColor.r, clearColor.g, clearColor.b, clearColor.a}}};
-        renderPassInfo.clearValueCount = 1;
-        renderPassInfo.pClearValues = &vkClearColor;
+        std::array<VkClearValue, 2> clearValues{};
+        clearValues[0].color = {clearColor.r, clearColor.g, clearColor.b, clearColor.a};
+        clearValues[1].depthStencil = {1.0f, 0};
+        
+        renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+        renderPassInfo.pClearValues = clearValues.data();
 
         vkCmdBeginRenderPass(this->cmdBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 

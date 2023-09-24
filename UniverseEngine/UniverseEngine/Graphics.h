@@ -42,6 +42,7 @@ namespace UniverseEngine {
         std::unique_ptr<PhysicalDevice> physicalDevice;
         std::shared_ptr<LogicalDevice> device;
         std::unique_ptr<Swapchain> swapchain;
+        std::shared_ptr<Image> depthImage;
         std::unique_ptr<CmdQueue> cmdQueue;
         std::shared_ptr<DescriptorPool> descriptorPool;
 

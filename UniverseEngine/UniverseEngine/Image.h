@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <bitset>
 
 #include "GraphicsAPI.h"
 #include "GraphicsFormat.h"
@@ -9,6 +10,16 @@
 namespace UniverseEngine {
     class LogicalDevice;
     class PhysicalDevice;
+
+    typedef std::bitset<6> ImageUsage;
+    enum ImageUsageBits {
+        TRANSFER_SRC_IMAGE = 0x0001,
+        TRANSFER_DST_IMAGE = 0x0002,
+        SAMPLED_IMAGE = 0x0004,
+        STORAGE_IMAGE = 0x0008,
+        DEPTH_STENCIL_ATTACHMENT = 0x0010,
+    };
+    size_t GetImageUsageBitIndex(ImageUsageBits bits);
 
     enum class ImageLayout {
         UNDEFINED,
@@ -25,17 +36,19 @@ namespace UniverseEngine {
     public:
         Image(const std::string& name, std::shared_ptr<LogicalDevice> device,
               const PhysicalDevice& physicalDevice, uint32_t width, uint32_t height,
-              GraphicsFormat format);
+              ImageUsage usage, GraphicsFormat format);
         ~Image();
         Image(const Image& other) = delete;
         Image& operator=(const Image& other) = delete;
 
         uint32_t Width() const;
         uint32_t Height() const;
+        GraphicsFormat Format() const;
 
     private:
         uint32_t width;
         uint32_t height;
+        GraphicsFormat format;
 
 #ifdef GRAPHICS_API_GL
     public:

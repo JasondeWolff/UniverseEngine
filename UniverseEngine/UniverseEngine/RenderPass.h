@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <vector>
 
 #include "GraphicsAPI.h"
@@ -11,7 +12,7 @@ namespace UniverseEngine {
 
     class RenderPass {
     public:
-        RenderPass(std::shared_ptr<LogicalDevice> device, GraphicsFormat colorFormat);
+        RenderPass(std::shared_ptr<LogicalDevice> device, const std::vector<GraphicsFormat>& colorFormats, std::optional<GraphicsFormat> depthFormat);
         ~RenderPass();
         RenderPass(const RenderPass& other) = delete;
         RenderPass& operator=(const RenderPass& other) = delete;

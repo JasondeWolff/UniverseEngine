@@ -189,11 +189,17 @@ namespace UniverseEngine {
         return this->renderFinishedSemaphores[static_cast<size_t>(this->currentFrame)];
     }
 
-    void Swapchain::RebuildFramebuffers(std::shared_ptr<RenderPass> renderPass) {
+    void Swapchain::RebuildFramebuffers(std::shared_ptr<RenderPass> renderPass,
+                                        std::shared_ptr<Image> depthImage) {
         this->framebuffers.clear();
         for (auto& image : this->images) {
+            std::vector<std::shared_ptr<Image>> images{image};
+            if (depthImage) {
+                images.push_back(depthImage);
+            }
+
             this->framebuffers.emplace_back(
-                std::move(Framebuffer(this->device, image, renderPass)));
+                std::move(Framebuffer(this->device, images, renderPass)));
         }
     }
 

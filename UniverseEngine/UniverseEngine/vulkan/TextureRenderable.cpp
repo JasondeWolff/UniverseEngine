@@ -16,7 +16,7 @@ namespace UniverseEngine {
 
         std::shared_ptr<Buffer> stagingBuffer =
             std::make_shared<Buffer>(Format("%s_STAGING_IMAGE_BUFFER", texture.name.c_str()),
-                                     device, physicalDevice, BufferUsageBits::TRANSFER_SRC,
+                                     device, physicalDevice, BufferUsageBits::TRANSFER_SRC_BUFFER,
                                      static_cast<uint64_t>(imageSize), BufferLocation::CPU_TO_GPU);
 
         void* data = stagingBuffer->Map();
@@ -25,6 +25,7 @@ namespace UniverseEngine {
 
         this->image = std::make_shared<Image>(texture.name, device, physicalDevice, texture.width,
                                               texture.height,
+                                              ImageUsageBits::TRANSFER_DST_IMAGE | ImageUsageBits::SAMPLED_IMAGE,
                                               GraphicsFormat::R8G8B8A8_SRGB);
 
         uploadCmdList.TransitionImageLayout(this->image, ImageLayout::UNDEFINED,

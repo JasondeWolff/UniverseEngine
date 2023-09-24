@@ -106,6 +106,8 @@ namespace UniverseEngine {
                     return VkFormat::VK_FORMAT_B8G8R8A8_SINT;
                 case GraphicsFormat::B8G8R8A8_SRGB:
                     return VkFormat::VK_FORMAT_B8G8R8A8_SRGB;
+                case GraphicsFormat::D32_SFLOAT:
+                    return VkFormat::VK_FORMAT_D32_SFLOAT;
             }
             return VkFormat::VK_FORMAT_UNDEFINED;
         }
@@ -210,6 +212,8 @@ namespace UniverseEngine {
                     return GraphicsFormat::B8G8R8A8_SINT;
                 case VkFormat::VK_FORMAT_B8G8R8A8_SRGB:
                     return GraphicsFormat::B8G8R8A8_SRGB;
+                case VkFormat::VK_FORMAT_D32_SFLOAT:
+                    return GraphicsFormat::D32_SFLOAT;
             }
             return GraphicsFormat::UNDEFINED;
         }

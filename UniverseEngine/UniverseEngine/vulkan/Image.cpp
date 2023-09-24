@@ -9,10 +9,32 @@
 #include "VkDebugNames.h"
 
 namespace UniverseEngine {
+    VkImageUsageFlags GetVkImageUsageFlags(ImageUsage usage) {
+        VkImageUsageFlags flags = 0;
+
+        if (usage.test(GetImageUsageBitIndex(ImageUsageBits::TRANSFER_SRC_IMAGE))) {
+            flags |= VkImageUsageFlagBits::VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+        }
+        if (usage.test(GetImageUsageBitIndex(ImageUsageBits::TRANSFER_DST_IMAGE))) {
+            flags |= VkImageUsageFlagBits::VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+        }
+        if (usage.test(GetImageUsageBitIndex(ImageUsageBits::SAMPLED_IMAGE))) {
+            flags |= VkImageUsageFlagBits::VK_IMAGE_USAGE_SAMPLED_BIT;
+        }
+        if (usage.test(GetImageUsageBitIndex(ImageUsageBits::STORAGE_IMAGE))) {
+            flags |= VkImageUsageFlagBits::VK_IMAGE_USAGE_STORAGE_BIT;
+        }
+        if (usage.test(GetImageUsageBitIndex(ImageUsageBits::DEPTH_STENCIL_ATTACHMENT))) {
+            flags |= VkImageUsageFlagBits::VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+        }
+
+        return flags;
+    }
+
     Image::Image(const std::string& name, std::shared_ptr<LogicalDevice> device,
                  const PhysicalDevice& physicalDevice,
-                 uint32_t width, uint32_t height, GraphicsFormat format)
-        : device(device), width(width), height(height), imageView(VK_NULL_HANDLE) {
+                 uint32_t width, uint32_t height, ImageUsage usage, GraphicsFormat format)
+        : device(device), width(width), height(height), format(format), imageView(VK_NULL_HANDLE) {
         VkImageCreateInfo createInfo{};
         createInfo.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
         createInfo.imageType = VkImageType::VK_IMAGE_TYPE_2D;
@@ -23,8 +45,7 @@ namespace UniverseEngine {
         createInfo.format = VkGraphicsFormat::To(format);
         createInfo.tiling = VkImageTiling::VK_IMAGE_TILING_OPTIMAL;
         createInfo.arrayLayers = 1;
-        createInfo.usage = VkImageUsageFlagBits::VK_IMAGE_USAGE_TRANSFER_DST_BIT |
-                           VkImageUsageFlagBits::VK_IMAGE_USAGE_SAMPLED_BIT;
+        createInfo.usage = GetVkImageUsageFlags(usage);
         createInfo.initialLayout = VkImageLayout::VK_IMAGE_LAYOUT_UNDEFINED;
         createInfo.samples = VkSampleCountFlagBits::VK_SAMPLE_COUNT_1_BIT;
 
@@ -46,7 +67,7 @@ namespace UniverseEngine {
             !vkAllocateMemory(device->GetDevice(), &allocInfo, nullptr, &this->imageMemory),
             "Failed to allocate image memory.");
         VkDebugNames::Set(*device, VK_OBJECT_TYPE_DEVICE_MEMORY,
-                          reinterpret_cast<uint64_t>(this->imageMemory), Format("%s_MEMORY", name.c_str()));
+                          reinterpret_cast<uint64_t>(this->imageMemory), UniverseEngine::Format("%s_MEMORY", name.c_str()));
         vkBindImageMemory(device->GetDevice(), this->image, this->imageMemory, 0);
     
         VkImageViewCreateInfo viewInfo{};
@@ -54,7 +75,8 @@ namespace UniverseEngine {
         viewInfo.image = this->image;
         viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
         viewInfo.format = VkGraphicsFormat::To(format);
-        viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        viewInfo.subresourceRange.aspectMask =
+            IsDepthFormat(format) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
         viewInfo.subresourceRange.baseMipLevel = 0;
         viewInfo.subresourceRange.levelCount = 1;
         viewInfo.subresourceRange.baseArrayLayer = 0;
@@ -89,6 +111,10 @@ namespace UniverseEngine {
 
     uint32_t Image::Height() const {
         return this->height;
+    }
+
+    GraphicsFormat Image::Format() const {
+        return this->format;
     }
 
     VkImage Image::GetImage() const {

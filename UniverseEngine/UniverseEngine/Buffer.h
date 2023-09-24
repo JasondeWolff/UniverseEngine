@@ -12,8 +12,8 @@ namespace UniverseEngine {
 
     typedef std::bitset<6> BufferUsage;
     enum BufferUsageBits {
-        TRANSFER_SRC = 0x0001,
-        TRANSFER_DST = 0x0002,
+        TRANSFER_SRC_BUFFER = 0x0001,
+        TRANSFER_DST_BUFFER = 0x0002,
         UNIFORM_BUFFER = 0x0004,
         STORAGE_BUFFER = 0x0008,
         INDEX_BUFFER = 0x0010,

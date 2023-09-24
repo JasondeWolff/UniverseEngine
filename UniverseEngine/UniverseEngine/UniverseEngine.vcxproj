@@ -82,6 +82,7 @@
     <ClCompile Include="gl\DescriptorSet.cpp" />
     <ClCompile Include="gl\TextureRenderable.cpp" />
     <ClCompile Include="gl\Sampler.cpp" />
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="vulkan\Sampler.cpp" />
     <ClCompile Include="vulkan\TextureRenderable.cpp" />
     <ClCompile Include="Texture.cpp" />
