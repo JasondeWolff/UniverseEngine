@@ -17,8 +17,8 @@ namespace UniverseEngine {
         float queuePriority = 1.0;
         queueCreateInfo.pQueuePriorities = &queuePriority;
 
-        // TODO: Move as a getter from physicalDevice
         VkPhysicalDeviceFeatures deviceFeatures{};
+        deviceFeatures.samplerAnisotropy = VK_TRUE;
 
         VkDeviceCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;

@@ -3,6 +3,7 @@
 
 #include "../Image.h"
 #include "../Logging.h"
+#include "../Format.h"
 #include "../LogicalDevice.h"
 #include "VkGraphicsFormat.h"
 #include "VkDebugNames.h"
@@ -44,8 +45,23 @@ namespace UniverseEngine {
         UE_ASSERT_MSG(
             !vkAllocateMemory(device->GetDevice(), &allocInfo, nullptr, &this->imageMemory),
             "Failed to allocate image memory.");
-
+        VkDebugNames::Set(*device, VK_OBJECT_TYPE_DEVICE_MEMORY,
+                          reinterpret_cast<uint64_t>(this->imageMemory), Format("%s_MEMORY", name.c_str()));
         vkBindImageMemory(device->GetDevice(), this->image, this->imageMemory, 0);
+    
+        VkImageViewCreateInfo viewInfo{};
+        viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        viewInfo.image = this->image;
+        viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        viewInfo.format = VkGraphicsFormat::To(format);
+        viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        viewInfo.subresourceRange.baseMipLevel = 0;
+        viewInfo.subresourceRange.levelCount = 1;
+        viewInfo.subresourceRange.baseArrayLayer = 0;
+        viewInfo.subresourceRange.layerCount = 1;
+
+        UE_ASSERT_MSG(!vkCreateImageView(device->GetDevice(), &viewInfo, nullptr, &this->imageView),
+                      "Failed to create image view");
     }
 
     Image::Image(std::shared_ptr<LogicalDevice> device, VkImage image, VkImageView imageView,

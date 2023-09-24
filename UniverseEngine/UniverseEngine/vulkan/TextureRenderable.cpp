@@ -25,7 +25,7 @@ namespace UniverseEngine {
 
         this->image = std::make_shared<Image>(texture.name, device, physicalDevice, texture.width,
                                               texture.height,
-                                              GraphicsFormat::B8G8R8A8_SRGB);
+                                              GraphicsFormat::R8G8B8A8_SRGB);
 
         uploadCmdList.TransitionImageLayout(this->image, ImageLayout::UNDEFINED,
                                             ImageLayout::TRANSFER_DST_OPTIMAL);

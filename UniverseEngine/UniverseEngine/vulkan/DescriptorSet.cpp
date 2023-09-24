@@ -6,6 +6,8 @@
 #include "../DescriptorSetLayout.h"
 #include "../Logging.h"
 #include "../LogicalDevice.h"
+#include "../Image.h"
+#include "../Sampler.h"
 #include "VkConversion.h"
 
 namespace UniverseEngine {
@@ -31,7 +33,7 @@ namespace UniverseEngine {
                              &this->descriptorSet);
     }
 
-    void DescriptorSet::SetBuffer(uint32_t set, uint32_t binding, DescriptorType type,
+    void DescriptorSet::SetBuffer(uint32_t binding, DescriptorType type,
                                   const Buffer& buffer) {
         VkDescriptorBufferInfo bufferInfo{};
         bufferInfo.buffer = buffer.GetBuffer();
@@ -45,6 +47,23 @@ namespace UniverseEngine {
         writeInfo.descriptorCount = 1;
         writeInfo.descriptorType = GetVkDescriptorType(type);
         writeInfo.pBufferInfo = &bufferInfo;
+
+        vkUpdateDescriptorSets(this->device->GetDevice(), 1, &writeInfo, 0, nullptr);
+    }
+
+    void DescriptorSet::SetImage(uint32_t binding, DescriptorType type, const Image& image, const Sampler& sampler) {
+        VkDescriptorImageInfo imageInfo{};
+        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        imageInfo.imageView = image.GetImageView();
+        imageInfo.sampler = sampler.GetSampler();
+
+        VkWriteDescriptorSet writeInfo{};
+        writeInfo.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        writeInfo.dstSet = this->descriptorSet;
+        writeInfo.dstBinding = binding;
+        writeInfo.descriptorCount = 1;
+        writeInfo.descriptorType = GetVkDescriptorType(type);
+        writeInfo.pImageInfo = &imageInfo;
 
         vkUpdateDescriptorSets(this->device->GetDevice(), 1, &writeInfo, 0, nullptr);
     }

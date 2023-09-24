@@ -11,6 +11,8 @@ namespace UniverseEngine {
     class DescriptorPool;
     class DescriptorSetLayout;
     class Buffer;
+    class Image;
+    class Sampler;
 
     class DescriptorSet {
     public:
@@ -21,7 +23,8 @@ namespace UniverseEngine {
         DescriptorSet(const DescriptorSet& other) = delete;
         DescriptorSet& operator=(const DescriptorSet& other) = delete;
 
-        void SetBuffer(uint32_t set, uint32_t binding, DescriptorType type, const Buffer& buffer);
+        void SetBuffer(uint32_t binding, DescriptorType type, const Buffer& buffer);
+        void SetImage(uint32_t binding, DescriptorType type, const Image& image, const Sampler& sampler);
 
     private:
         const std::shared_ptr<LogicalDevice> device;

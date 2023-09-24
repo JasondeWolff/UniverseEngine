@@ -40,7 +40,8 @@ namespace UniverseEngine {
         for (size_t i = 0; i < 8; i++) {
             if (supportedExtensions[i] == extension) {
                 std::shared_ptr<Texture> hTexture = LoadIMG(filePath);
-                texturePaths.insert(std::make_pair(filePath, hTexture));
+                this->texturePaths.insert(std::make_pair(filePath, hTexture));
+                this->newTextures.push_back(hTexture);
                 return hTexture;
             }
         }
@@ -70,21 +71,6 @@ namespace UniverseEngine {
         return nullptr;
     }
 
-   /* void Resources::DeleteScene(Handle<Scene> hScene) {
-        this->scenes->Free(hScene);
-    }
-
-    void Resources::DeleteShader(Handle<Shader> hShader) {
-        this->shaders->Free(hShader);
-
-        for (auto& pair : this->shaderPaths) {
-            if (pair.second == hShader) {
-                this->shaderPaths.erase(pair.first);
-                return;
-            }
-        }
-    }*/
-
     const std::vector<std::shared_ptr<Texture>>& Resources::GetNewTextures() {
         return this->newTextures;
     }
@@ -96,5 +82,53 @@ namespace UniverseEngine {
     void Resources::Update() {
         this->newTextures.clear();
         this->newShaders.clear();
+
+        for (size_t i = 0; i < this->scenes.size(); i++) {
+            if (this->scenes[i].use_count() <= 2) {
+                auto& sceneToRemove = this->scenes[i];
+
+                for (auto& pair : this->scenePaths) {
+                    if (pair.second == sceneToRemove) {
+                        this->scenePaths.erase(pair.first);
+                        break;
+                    }
+                }
+
+                this->scenes.erase(this->scenes.begin() + i);
+                i--;
+            }
+        }
+
+        for (size_t i = 0; i < this->textures.size(); i++) {
+            if (this->textures[i].use_count() <= 2) {
+                auto& textureToRemove = this->textures[i];
+
+                for (auto& pair : this->texturePaths) {
+                    if (pair.second == textureToRemove) {
+                        this->texturePaths.erase(pair.first);
+                        break;
+                    }
+                }
+
+                this->textures.erase(this->textures.begin() + i);
+                i--;
+            }
+        }
+
+        for (size_t i = 0; i < this->shaders.size(); i++) {
+            if (this->shaders[i].use_count() <= 2) {
+                auto& shaderToRemove = this->shaders[i];
+
+                for (auto& pair : this->shaderPaths) {
+                    if (pair.second == shaderToRemove) {
+                        this->shaderPaths.erase(pair.first);
+                        break;
+                    }
+                }
+
+                this->shaders.erase(this->shaders.begin() + i);
+                i--;
+            }
+        }
     }
 }  // namespace UniverseEngine

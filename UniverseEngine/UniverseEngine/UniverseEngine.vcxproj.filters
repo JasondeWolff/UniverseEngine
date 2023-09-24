@@ -235,6 +235,9 @@
     <ClInclude Include="TextureRenderable.h">
       <Filter>Src\Graphics\Common\Assets</Filter>
     </ClInclude>
+    <ClInclude Include="Sampler.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -458,6 +461,9 @@
     </ClCompile>
     <ClCompile Include="gl\TextureRenderable.cpp">
       <Filter>Src\Graphics\GL\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\Sampler.cpp">
+      <Filter>Src\Graphics\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

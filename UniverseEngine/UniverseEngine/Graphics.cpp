@@ -23,8 +23,11 @@ namespace UniverseEngine {
 
         this->descriptorSetLayout = std::make_shared<DescriptorSetLayout>(
             this->device,
-            std::vector<DescriptorLayoutBinding>{DescriptorLayoutBinding(
-                "ubo", 0, DescriptorType::UNIFORM_BUFFER, DescriptorStageFlagBits::VERTEX)});
+            std::vector<DescriptorLayoutBinding>{
+                DescriptorLayoutBinding("ubo", 0, DescriptorType::UNIFORM_BUFFER,
+                                        DescriptorStageFlagBits::VERTEX),
+                DescriptorLayoutBinding("baseColorMap", 1, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                                        DescriptorStageFlagBits::FRAGMENT)});
 
         for (size_t i = 0; i < this->uniformBuffers.size(); i++) {
             this->uniformBuffers[i] =
@@ -35,9 +38,11 @@ namespace UniverseEngine {
             this->descriptorSets[i] = std::make_shared<DescriptorSet>(
                 this->device, this->descriptorPool, this->descriptorSetLayout);
 
-            this->descriptorSets[i]->SetBuffer(0, 0, DescriptorType::UNIFORM_BUFFER,
+            this->descriptorSets[i]->SetBuffer(0, DescriptorType::UNIFORM_BUFFER,
                                                *this->uniformBuffers[i]);
         }
+
+        this->sampler = std::make_shared<Sampler>("Sampler", this->device, *this->physicalDevice);
 
         this->BuildSwapchain();
         this->BuildPipelines();
@@ -106,6 +111,11 @@ namespace UniverseEngine {
                 memcpy(uniformBufferData, &uniformBuffer, sizeof(MVPUniformBuffer));
                 this->uniformBuffers[currentFrame]->Unmap();
 
+                Material& material = scene->materials[mesh.materialIdx];
+                auto& baseColorImage = material.baseColorMap->renderable->image;
+                this->descriptorSets[currentFrame]->SetImage(
+                    1, DescriptorType::COMBINED_IMAGE_SAMPLER, *baseColorImage, *this->sampler);
+
                 cmdList->BindDescriptorSet(this->descriptorSets[currentFrame]);
 
                 // cmdList->PushConstant("UniformBufferObject", uniformBuffer);
@@ -159,8 +169,9 @@ namespace UniverseEngine {
         auto textures = resources.GetNewTextures();
         for (auto texture : textures) {
             if (!texture->renderable) {
-                texture->renderable = std::move(std::unique_ptr<TextureRenderable>(
-                    new TextureRenderable(this->device, *this->physicalDevice, *uploadCmdList, *texture)));
+                texture->renderable =
+                    std::move(std::unique_ptr<TextureRenderable>(new TextureRenderable(
+                        this->device, *this->physicalDevice, *uploadCmdList, *texture)));
                 texture->ClearCPUData();
             }
         }
