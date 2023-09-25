@@ -39,6 +39,11 @@ namespace UniverseEngine {
         }
 
         UE_ASSERT_MSG(physicalDevice != VK_NULL_HANDLE, "No vulkan compatible device found.");
+
+        VkPhysicalDeviceProperties deviceProperties;
+        vkGetPhysicalDeviceProperties(physicalDevice, &deviceProperties);
+        UE_INFO("Using Device: %s", deviceProperties.deviceName);
+
         return physicalDevice;
     }
 

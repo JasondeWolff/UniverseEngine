@@ -110,12 +110,21 @@ namespace UniverseEngine {
         createInfo.imageExtent = this->extent;
         createInfo.imageArrayLayers = 1;
         createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-        createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
         createInfo.preTransform = capabilities.currentTransform;
         createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
         createInfo.presentMode = this->presentMode;
         createInfo.clipped = VK_TRUE;
-        createInfo.oldSwapchain = VK_NULL_HANDLE;
+        
+        if (physicalDevice.GraphicsFamily() != physicalDevice.PresentFamily()) {
+            uint32_t queueFamilyIndices[] = {physicalDevice.GraphicsFamily(),
+                                             physicalDevice.PresentFamily()};
+
+            createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+            createInfo.queueFamilyIndexCount = 2;
+            createInfo.pQueueFamilyIndices = queueFamilyIndices;
+        } else {
+            createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        }
 
         UE_ASSERT_MSG(
             !vkCreateSwapchainKHR(device->GetDevice(), &createInfo, nullptr, &this->swapChain),

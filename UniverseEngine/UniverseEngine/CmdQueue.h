@@ -12,9 +12,15 @@ namespace UniverseEngine {
     class Semaphore;
     class Fence;
 
+    enum class QueueType {
+        GRAPHICS,
+        PRESENT
+    };
+
     class CmdQueue {
     public:
-        CmdQueue(const std::shared_ptr<LogicalDevice> device, const PhysicalDevice& physicalDevice);
+        CmdQueue(const std::shared_ptr<LogicalDevice> device, const PhysicalDevice& physicalDevice,
+                 QueueType type);
         ~CmdQueue();
         CmdQueue(const CmdQueue& other) = delete;
         CmdQueue& operator=(const CmdQueue& other) = delete;

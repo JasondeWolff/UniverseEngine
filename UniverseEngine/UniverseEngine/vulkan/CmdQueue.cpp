@@ -11,7 +11,7 @@
 
 namespace UniverseEngine {
     CmdQueue::CmdQueue(const std::shared_ptr<LogicalDevice> device,
-                       const PhysicalDevice& physicalDevice)
+                       const PhysicalDevice& physicalDevice, QueueType type)
         : device(device) {
         vkGetDeviceQueue(device->GetDevice(), physicalDevice.GraphicsFamily(), 0, &this->queue);
 
@@ -19,7 +19,10 @@ namespace UniverseEngine {
         poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
         poolInfo.flags =
             VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT | VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-        poolInfo.queueFamilyIndex = physicalDevice.GraphicsFamily();
+        if (type == QueueType::GRAPHICS)
+            poolInfo.queueFamilyIndex = physicalDevice.GraphicsFamily();
+        else
+            poolInfo.queueFamilyIndex = physicalDevice.PresentFamily();
 
         UE_ASSERT_MSG(!vkCreateCommandPool(device->GetDevice(), &poolInfo, nullptr, &this->cmdPool),
                       "Failed to create command pool.");

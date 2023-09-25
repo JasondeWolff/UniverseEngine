@@ -45,6 +45,7 @@ namespace UniverseEngine {
         std::unique_ptr<Swapchain> swapchain;
         std::shared_ptr<Image> depthImage;
         std::unique_ptr<CmdQueue> cmdQueue;
+        std::unique_ptr<CmdQueue> presentQueue;
         std::shared_ptr<DescriptorPool> descriptorPool;
 
         std::shared_ptr<RenderPass> renderPass;

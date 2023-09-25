@@ -6,7 +6,7 @@
 
 namespace UniverseEngine {
     CmdQueue::CmdQueue(const std::shared_ptr<LogicalDevice> device,
-                       const PhysicalDevice& physicalDevice)
+                       const PhysicalDevice& physicalDevice, QueueType type)
         : device(device) {
     }
 

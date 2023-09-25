@@ -21,7 +21,8 @@ namespace UniverseEngine {
         this->physicalDevice = std::make_unique<PhysicalDevice>(*this->instance);
         this->device =
             std::make_shared<LogicalDevice>(this->instance, *this->physicalDevice, enableDebug);
-        this->cmdQueue = std::make_unique<CmdQueue>(this->device, *this->physicalDevice);
+        this->cmdQueue = std::make_unique<CmdQueue>(this->device, *this->physicalDevice, QueueType::GRAPHICS);
+        this->presentQueue = std::make_unique<CmdQueue>(this->device, *this->physicalDevice, QueueType::PRESENT);
         this->descriptorPool = std::make_shared<DescriptorPool>(this->device);
 
         this->descriptorSetLayout = std::make_shared<DescriptorSetLayout>(
@@ -149,7 +150,7 @@ namespace UniverseEngine {
         std::vector<Semaphore*> signalSemaphores{&this->swapchain->GetRenderFinishedSemaphore()};
         this->cmdQueue->SubmitCmdList(cmdList, fence, waitSemaphores, signalSemaphores);
 
-        this->swapchain->Present(*this->cmdQueue, *fence, signalSemaphores);
+        this->swapchain->Present(*this->presentQueue, *fence, signalSemaphores);
     }
 
     void Graphics::BuildSwapchain() {
