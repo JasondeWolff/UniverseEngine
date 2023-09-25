@@ -34,11 +34,11 @@ namespace UniverseEngine {
     }
 
     void DescriptorSet::SetBuffer(uint32_t binding, DescriptorType type,
-                                  const Buffer& buffer) {
+                                  std::shared_ptr<Buffer> buffer) {
         VkDescriptorBufferInfo bufferInfo{};
-        bufferInfo.buffer = buffer.GetBuffer();
+        bufferInfo.buffer = buffer->GetBuffer();
         bufferInfo.offset = 0;
-        bufferInfo.range = buffer.Size();
+        bufferInfo.range = buffer->Size();
 
         VkWriteDescriptorSet writeInfo{};
         writeInfo.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

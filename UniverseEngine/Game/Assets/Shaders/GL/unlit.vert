@@ -1,4 +1,4 @@
-#version 450
+#version 450 core
 #extension GL_KHR_vulkan_glsl: enable
 
 layout (location = 0) in vec3 inPosition;
@@ -10,17 +10,17 @@ layout(location = 0) out vec3 fragColor;
 layout(location = 1) out vec3 fragNormal;
 layout(location = 2) out vec2 fragTexCoord;
 
-layout(binding = 0) uniform UniformBufferObject {
+layout(std140, binding = 0) uniform UniformBufferObject {
     mat4 view;
     mat4 proj;
-} ubo;
+};
 
-layout(binding = 1) uniform PushConstant {
+layout(std140, binding = 1) uniform PushConstant {
     mat4 model;
-} pc;
+};
 
 void main() {
-    gl_Position = ubo.proj * ubo.view * vec4(inPosition, 1.0);
+    gl_Position = proj * view * model * vec4(inPosition, 1.0);
     fragColor = inColor;
     fragNormal = inNormal;
     fragTexCoord = inTexCoord;

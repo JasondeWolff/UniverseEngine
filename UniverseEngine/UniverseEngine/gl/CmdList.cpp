@@ -53,7 +53,7 @@ namespace UniverseEngine {
         for (auto& bufferBinding : descriptorSet->Buffers()) {
             uint32_t binding = bufferBinding.first;
             auto& buffer = bufferBinding.second;
-            glBindBufferRange(buffer->GetIdentifier(), 0, buffer->GetBuffer(), 0, buffer->Size());
+            glBindBufferRange(buffer->GetIdentifier(), binding, buffer->GetBuffer(), 0, buffer->Size());
         }
        
         for (auto& imageBinding : descriptorSet->Images()) {
@@ -97,7 +97,7 @@ namespace UniverseEngine {
 
     void CmdList::PushConstant(const std::string& name, void* constant, size_t size, GraphicsStageFlags stageFlags) {
         UE_ASSERT_MSG(this->boundGraphicsPipeline, "No graphics pipeline bound.");
-        return;
+
         unsigned ubo;
         glGenBuffers(1, &ubo);
 

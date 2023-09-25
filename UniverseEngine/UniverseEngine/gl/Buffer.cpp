@@ -28,6 +28,7 @@ namespace UniverseEngine {
         glGenBuffers(1, &this->buffer);
         glBindBuffer(this->identifier, this->buffer);
         GlDebugNames::Set(GL_BUFFER, this->buffer, name);
+
         this->bufferMemory = malloc(static_cast<size_t>(size));
     }
 
@@ -56,6 +57,7 @@ namespace UniverseEngine {
     }
 
     void Buffer::Unmap() {
+        glBindBuffer(this->identifier, this->buffer);
         glBufferData(this->identifier, this->size,
                      this->bufferMemory, GL_STATIC_DRAW);
     }
