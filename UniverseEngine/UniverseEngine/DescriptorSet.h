@@ -24,7 +24,7 @@ namespace UniverseEngine {
         DescriptorSet(const DescriptorSet& other) = delete;
         DescriptorSet& operator=(const DescriptorSet& other) = delete;
 
-        void SetBuffer(uint32_t binding, DescriptorType type, const Buffer& buffer);
+        void SetBuffer(uint32_t binding, DescriptorType type, std::shared_ptr<Buffer> buffer);
         void SetImage(uint32_t binding, DescriptorType type, std::shared_ptr<Image> image,
                       std::shared_ptr<Sampler> sampler);
 
@@ -39,9 +39,12 @@ namespace UniverseEngine {
                                  std::pair<std::shared_ptr<Image>, std::shared_ptr<Sampler>>>&
         Images() const;
 
+        const std::unordered_map<uint32_t, std::shared_ptr<Buffer>>& Buffers() const;
+
     private:
         std::unordered_map<uint32_t, std::pair<std::shared_ptr<Image>, std::shared_ptr<Sampler>>>
             images;
+        std::unordered_map<uint32_t, std::shared_ptr<Buffer>> buffers;
 #elif defined(GRAPHICS_API_VULKAN)
     public:
         VkDescriptorSet GetDescriptorSet() const;

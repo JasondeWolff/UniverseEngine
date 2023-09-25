@@ -47,6 +47,7 @@ namespace UniverseEngine {
 #ifdef GRAPHICS_API_GL
     public:
         unsigned GetBuffer() const;
+        unsigned GetIdentifier() const;
     private:
         unsigned buffer;
         void* bufferMemory;

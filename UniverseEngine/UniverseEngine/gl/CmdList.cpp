@@ -8,6 +8,7 @@
 #include "../Logging.h"
 #include "../GraphicsPipeline.h"
 #include "../DescriptorSet.h"
+#include "../Buffer.h"
 
 namespace UniverseEngine {
     CmdList::CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue) : device(device), cmdQueue(cmdQueue) {
@@ -49,8 +50,12 @@ namespace UniverseEngine {
     }
 
     void CmdList::BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet) {
-        // TODO: bind buffers, now it's a miracle it works
-        
+        for (auto& bufferBinding : descriptorSet->Buffers()) {
+            uint32_t binding = bufferBinding.first;
+            auto& buffer = bufferBinding.second;
+            glBindBufferRange(buffer->GetIdentifier(), 0, buffer->GetBuffer(), 0, buffer->Size());
+        }
+       
         for (auto& imageBinding : descriptorSet->Images()) {
             uint32_t binding = imageBinding.first;
             auto& image = imageBinding.second.first;
@@ -100,7 +105,7 @@ namespace UniverseEngine {
         glBufferData(GL_UNIFORM_BUFFER, size, constant, GL_DYNAMIC_DRAW);
         glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-        glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, size);
+        glBindBufferRange(GL_UNIFORM_BUFFER, 1, ubo, 0, size);
 
         // TODO: fix memory leak
         // glDeleteBuffers(1, &ubo);

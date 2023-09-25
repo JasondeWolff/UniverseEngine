@@ -42,7 +42,7 @@ namespace UniverseEngine {
                 this->device, this->descriptorPool, this->descriptorSetLayout);
 
             this->descriptorSets[i]->SetBuffer(0, DescriptorType::UNIFORM_BUFFER,
-                                               *this->uniformBuffers[i]);
+                                               this->uniformBuffers[i]);
         }
 
         this->sampler = std::make_shared<Sampler>("Sampler", this->device, *this->physicalDevice);

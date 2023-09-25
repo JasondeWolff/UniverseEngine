@@ -58,10 +58,6 @@ namespace UniverseEngine {
     void Buffer::Unmap() {
         glBufferData(this->identifier, this->size,
                      this->bufferMemory, GL_STATIC_DRAW);
-
-        if (this->identifier == GL_UNIFORM_BUFFER) {
-            glBindBufferRange(this->identifier, 0, this->buffer, 0, this->size);
-        }
     }
 
     uint64_t Buffer::Size() const {
@@ -70,6 +66,10 @@ namespace UniverseEngine {
 
     unsigned Buffer::GetBuffer() const {
         return this->buffer;
+    }
+
+    unsigned Buffer::GetIdentifier() const {
+        return this->identifier;
     }
 }  // namespace UniverseEngine
 #endif
