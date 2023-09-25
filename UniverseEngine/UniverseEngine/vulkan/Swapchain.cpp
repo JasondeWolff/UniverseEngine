@@ -12,13 +12,13 @@ namespace UniverseEngine {
     VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const GraphicsInstance& instance,
                                                const PhysicalDevice& physicalDevice) {
         uint32_t formatCount;
-        vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice.GetPhysicalDevice(),
-                                             instance.GetSurface(), &formatCount, nullptr);
+        UE_ASSERT(!vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice.GetPhysicalDevice(),
+                                             instance.GetSurface(), &formatCount, nullptr));
         UE_ASSERT_MSG(formatCount > 0, "No swapchain formats found.");
 
         std::vector<VkSurfaceFormatKHR> formats(formatCount);
-        vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice.GetPhysicalDevice(),
-                                             instance.GetSurface(), &formatCount, formats.data());
+        UE_ASSERT(!vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice.GetPhysicalDevice(),
+                                             instance.GetSurface(), &formatCount, formats.data()));
 
         for (const auto& availableFormat : formats) {
             if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB &&
@@ -33,14 +33,14 @@ namespace UniverseEngine {
     VkPresentModeKHR ChooseSwapPresentMode(const GraphicsInstance& instance,
                                            const PhysicalDevice& physicalDevice) {
         uint32_t presentModeCount;
-        vkGetPhysicalDeviceSurfacePresentModesKHR(
-            physicalDevice.GetPhysicalDevice(), instance.GetSurface(), &presentModeCount, nullptr);
+        UE_ASSERT(!vkGetPhysicalDeviceSurfacePresentModesKHR(
+            physicalDevice.GetPhysicalDevice(), instance.GetSurface(), &presentModeCount, nullptr));
         UE_ASSERT_MSG(presentModeCount > 0, "No present modes found.");
 
         std::vector<VkPresentModeKHR> presentModes(presentModeCount);
-        vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice.GetPhysicalDevice(),
+        UE_ASSERT(!vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice.GetPhysicalDevice(),
                                                   instance.GetSurface(), &presentModeCount,
-                                                  presentModes.data());
+                                                  presentModes.data()));
 
         for (const auto& availablePresentMode : presentModes) {
             if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
@@ -54,8 +54,8 @@ namespace UniverseEngine {
     VkExtent2D ChooseSwapExtent(const Window& window, const GraphicsInstance& instance,
                                 const PhysicalDevice& physicalDevice) {
         VkSurfaceCapabilitiesKHR capabilities;
-        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice.GetPhysicalDevice(),
-                                                  instance.GetSurface(), &capabilities);
+        UE_ASSERT(!vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice.GetPhysicalDevice(),
+                                                  instance.GetSurface(), &capabilities));
 
         VkExtent2D extent;
         if (capabilities.currentExtent.width != UINT_MAX) {
@@ -78,8 +78,8 @@ namespace UniverseEngine {
     uint32_t ChooseImageCount(const GraphicsInstance& instance,
                               const PhysicalDevice& physicalDevice) {
         VkSurfaceCapabilitiesKHR capabilities;
-        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice.GetPhysicalDevice(),
-                                                  instance.GetSurface(), &capabilities);
+        UE_ASSERT(!vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice.GetPhysicalDevice(),
+                                                  instance.GetSurface(), &capabilities));
 
         uint32_t imageCount = capabilities.minImageCount + 1;
         if (capabilities.maxImageCount > 0 && imageCount > capabilities.maxImageCount) {
@@ -98,8 +98,8 @@ namespace UniverseEngine {
         this->imageCount = ChooseImageCount(instance, physicalDevice);
 
         VkSurfaceCapabilitiesKHR capabilities;
-        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice.GetPhysicalDevice(),
-                                                  instance.GetSurface(), &capabilities);
+        UE_ASSERT(!vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice.GetPhysicalDevice(),
+                                                  instance.GetSurface(), &capabilities));
 
         VkSwapchainCreateInfoKHR createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;

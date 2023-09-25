@@ -68,6 +68,18 @@ namespace UniverseEngine {
         this->surface = CreateSurface(window.GlfwWindow(), this->instance);
 
         VkPFN::Load(this->instance);
+
+        if (debug) {
+            VkDebugReportCallbackCreateInfoEXT createInfo{};
+            createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT;
+            createInfo.pfnCallback = VulkanDebugCallback;
+            createInfo.flags = VK_DEBUG_REPORT_WARNING_BIT_EXT |
+                               VK_DEBUG_REPORT_ERROR_BIT_EXT;
+
+            VkDebugReportCallbackEXT debugReportCallback;
+            VkPFN::vkCreateDebugReportCallbackEXT(this->instance, &createInfo, nullptr,
+                                                  &debugReportCallback);
+        }
     }
 
     GraphicsInstance::~GraphicsInstance() {
