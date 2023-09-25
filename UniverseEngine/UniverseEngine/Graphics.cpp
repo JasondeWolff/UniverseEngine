@@ -100,25 +100,39 @@ namespace UniverseEngine {
         cmdList->SetScissor(swapchainExtent);
         cmdList->SetViewport(swapchainExtent);
 
-        auto sceneInstances = world.GetAllSceneInstances();
-        for (auto sceneInstance : sceneInstances) {
-            auto scene = sceneInstance->hScene;
+        bool one = false;
 
-            for (Mesh& mesh : scene->meshes) {
-                MVPUniformBuffer uniformBuffer{glm::mat4(1.0), viewMatrix, projectionMatrix};
+        auto& sceneInstances = world.GetAllSceneInstances();
+        for (auto& sceneInstance : sceneInstances) {
+            auto& scene = sceneInstance->hScene;
+
+            auto meshHierarchy = scene->TransformedMeshHierarchy(sceneInstance->transform);
+            bool root = true;
+            for (auto& meshInstance : meshHierarchy) {
+                if (root) {
+                    root = false;
+                    continue;
+                }
+
+                Mesh& mesh = scene->meshes[meshInstance.meshIdx];
+                const glm::mat4& modelMatrix = meshInstance.transform.GetMatrix();
+
+                MVPUniformBuffer uniformBuffer{modelMatrix, viewMatrix, projectionMatrix};
 
                 void* uniformBufferData = this->uniformBuffers[currentFrame]->Map();
                 memcpy(uniformBufferData, &uniformBuffer, sizeof(MVPUniformBuffer));
                 this->uniformBuffers[currentFrame]->Unmap();
 
-                Material& material = scene->materials[mesh.materialIdx];
-                auto& baseColorImage = material.baseColorMap->renderable->image;
-                this->descriptorSets[currentFrame]->SetImage(
-                    1, DescriptorType::COMBINED_IMAGE_SAMPLER, baseColorImage, this->sampler);
+                if (!one) {
+                    Material& material = scene->materials[mesh.materialIdx];
+                    auto& baseColorImage = material.baseColorMap->renderable->image;
+                    this->descriptorSets[currentFrame]->SetImage(
+                        1, DescriptorType::COMBINED_IMAGE_SAMPLER, baseColorImage, this->sampler);
 
-                cmdList->BindDescriptorSet(this->descriptorSets[currentFrame]);
+                    cmdList->BindDescriptorSet(this->descriptorSets[currentFrame]);
+                    one = true;
+                }
 
-                // cmdList->PushConstant("UniformBufferObject", uniformBuffer);
                 mesh.renderable->Draw(*cmdList);
             }
         }

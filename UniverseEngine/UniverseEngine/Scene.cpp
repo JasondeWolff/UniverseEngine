@@ -5,12 +5,21 @@ namespace UniverseEngine {
         tree<MeshInstance> result = this->meshHierarchy;
 
         const glm::mat4& rootMatrix = root.GetMatrix();
-
-        for (auto& instance : result) {
-            auto& transform = instance.transform;
-            transform.SetMatrix(transform.GetMatrix() * rootMatrix);
-        }
+        auto begin = result.begin();
+        TransformedMeshHierarchyRec(result, rootMatrix, begin);
 
         return result;
     }
-}
+
+    void Scene::TransformedMeshHierarchyRec(tree<MeshInstance>& instances, glm::mat4 parentMatrix,
+                                            tree<MeshInstance>::iterator_base parent) const {
+        tree<MeshInstance>::sibling_iterator sibling = instances.begin(parent);
+        while (sibling != instances.end(parent)) {
+            auto& transform = sibling->transform;
+            transform.SetMatrix(transform.GetMatrix() * parentMatrix);
+            TransformedMeshHierarchyRec(instances, transform.GetMatrix(), sibling);
+
+            sibling++;
+        }
+    }
+}  // namespace UniverseEngine
