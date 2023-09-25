@@ -1,7 +1,14 @@
 #include "Window.h"
 
+#include "Defines.h"
+
+#ifdef GRAPHICS_API_GL
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#elif defined(GRAPHICS_API_VULKAN)
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+#endif
 
 #include "Engine.h"
 #include "GraphicsAPI.h"
@@ -43,13 +50,19 @@ namespace UniverseEngine {
         UE_ASSERT_MSG(glfwInit(), "Failed to init glfw.");
         glfwSetErrorCallback(GlfwErrorCallback);
 
+#ifdef GRAPHICS_API_GL
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+#elif defined(GRAPHICS_API_VULKAN)
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+#endif
         this->glfwWindow = glfwCreateWindow(static_cast<int>(this->width),
                                             static_cast<int>(this->height), title, NULL, NULL);
         UE_ASSERT_MSG(this->glfwWindow, "Failed to create window.");
 
+#ifdef GRAPHICS_API_GL
         glfwMakeContextCurrent(this->glfwWindow);
+#endif
 
         glfwSetWindowUserPointer(this->glfwWindow, static_cast<void*>(this));
         glfwSetWindowSizeCallback(this->glfwWindow, Window::GlfwWindowSizeCallback);
@@ -88,7 +101,10 @@ namespace UniverseEngine {
     void Window::Update() {
         this->wasResized = false;
 
+#ifdef GRAPHICS_API_GL
         glfwSwapBuffers(this->glfwWindow);
+#endif
+
         glfwPollEvents();
     }
 }  // namespace UniverseEngine

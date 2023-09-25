@@ -16,6 +16,7 @@
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="CmdList.h" />
     <ClInclude Include="CmdQueue.h" />
+    <ClInclude Include="Defines.h" />
     <ClInclude Include="DescriptorLayoutBinding.h" />
     <ClInclude Include="DescriptorPool.h" />
     <ClInclude Include="DescriptorSet.h" />

@@ -244,6 +244,9 @@
     <ClInclude Include="PushConstantRange.h">
       <Filter>Src\Graphics\Common</Filter>
     </ClInclude>
+    <ClInclude Include="Defines.h">
+      <Filter>Src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
