@@ -10,6 +10,7 @@
 #include "../GraphicsPipeline.h"
 #include "../Logging.h"
 #include "../Swapchain.h"
+#include "VkConversion.h"
 
 namespace UniverseEngine {
     VkImageLayout GetVkImageLayout(ImageLayout layout) {
@@ -237,7 +238,10 @@ namespace UniverseEngine {
         vkCmdDrawIndexed(this->cmdBuffer, indexCount, instanceCount, firstIndex, 0, firstInstance);
     }
 
-    void CmdList::PushConstant(const std::string& name, void* constant, size_t size) {
+    void CmdList::PushConstant(const std::string& name, void* constant, size_t size,
+                               GraphicsStageFlags stageFlags) {
+        vkCmdPushConstants(this->cmdBuffer, this->boundGraphicsPipeline->GetLayout(),
+                           GetVkShaderStageFlags(stageFlags), 0, size, constant);
     }
 }  // namespace UniverseEngine
 #endif

@@ -1,14 +1,16 @@
 #include "../GraphicsAPI.h"
 #ifdef GRAPHICS_API_VULKAN
 
+#include "../DescriptorSetLayout.h"
 #include "../Format.h"
 #include "../GraphicsPipeline.h"
 #include "../Logging.h"
 #include "../LogicalDevice.h"
+#include "../Mesh.h"
+#include "../PushConstantRange.h"
 #include "../RenderPass.h"
 #include "../ShaderRenderable.h"
-#include "../Mesh.h"
-#include "../DescriptorSetLayout.h"
+#include "VkConversion.h"
 
 namespace UniverseEngine {
     VkVertexInputBindingDescription VertexBindingDescription() {
@@ -50,7 +52,8 @@ namespace UniverseEngine {
     GraphicsPipeline::GraphicsPipeline(std::shared_ptr<LogicalDevice> device,
                                        const std::vector<ShaderRenderable*>& shaders,
                                        std::shared_ptr<RenderPass> renderPass,
-                                       std::shared_ptr<DescriptorSetLayout> descriptorSetLayout)
+                                       std::shared_ptr<DescriptorSetLayout> descriptorSetLayout,
+                                       std::vector<PushConstantRange> pushConstants)
         : device(device), renderPass(renderPass), descriptorSetLayout(descriptorSetLayout) {
         // TODO: make more dynamic
         VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
@@ -78,7 +81,8 @@ namespace UniverseEngine {
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
         vertexInputInfo.vertexBindingDescriptionCount = 1;
         vertexInputInfo.pVertexBindingDescriptions = &vertexBindingDescription;
-        vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertexAttributeDescriptions.size());
+        vertexInputInfo.vertexAttributeDescriptionCount =
+            static_cast<uint32_t>(vertexAttributeDescriptions.size());
         vertexInputInfo.pVertexAttributeDescriptions = vertexAttributeDescriptions.data();
 
         VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
@@ -112,13 +116,22 @@ namespace UniverseEngine {
         colorBlending.attachmentCount = 1;
         colorBlending.pAttachments = &colorBlendAttachment;
 
+        std::vector<VkPushConstantRange> vkPushConstantRanges;
+        for (auto pushConstantRange : pushConstants) {
+            VkPushConstantRange vkPushConstantRange{};
+            vkPushConstantRange.size = static_cast<uint32_t>(pushConstantRange.size);
+            vkPushConstantRange.stageFlags = GetVkShaderStageFlags(pushConstantRange.stageFlags);
+            vkPushConstantRanges.push_back(vkPushConstantRange);
+        }
+
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
         pipelineLayoutInfo.setLayoutCount = 1;
         VkDescriptorSetLayout descriptorSetLayouts[] = {descriptorSetLayout->GetLayout()};
         pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts;
-        pipelineLayoutInfo.pushConstantRangeCount = 0;     // Optional
-        pipelineLayoutInfo.pPushConstantRanges = nullptr;  // Optional
+        pipelineLayoutInfo.pushConstantRangeCount =
+            static_cast<uint32_t>(vkPushConstantRanges.size());
+        pipelineLayoutInfo.pPushConstantRanges = vkPushConstantRanges.data();
 
         UE_ASSERT_MSG(!vkCreatePipelineLayout(device->GetDevice(), &pipelineLayoutInfo, nullptr,
                                               &this->pipelineLayout),

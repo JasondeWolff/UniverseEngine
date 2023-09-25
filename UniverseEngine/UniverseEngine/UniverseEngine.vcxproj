@@ -28,6 +28,8 @@
     <ClInclude Include="Format.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="gl\GlGraphicsFormat.h" />
+    <ClInclude Include="GraphicsStageFlags.h" />
+    <ClInclude Include="PushConstantRange.h" />
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="TextureRenderable.h" />
     <ClInclude Include="LogicalDevice.h" />
@@ -76,12 +78,12 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="CmdQueue.cpp" />
-    <ClCompile Include="DescriptorLayoutBinding.cpp" />
     <ClCompile Include="gl\Buffer.cpp" />
     <ClCompile Include="gl\DescriptorPool.cpp" />
     <ClCompile Include="gl\DescriptorSet.cpp" />
     <ClCompile Include="gl\TextureRenderable.cpp" />
     <ClCompile Include="gl\Sampler.cpp" />
+    <ClCompile Include="GraphicsStageFlags.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="vulkan\Sampler.cpp" />
     <ClCompile Include="vulkan\TextureRenderable.cpp" />

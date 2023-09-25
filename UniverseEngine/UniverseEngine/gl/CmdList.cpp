@@ -90,9 +90,9 @@ namespace UniverseEngine {
         glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indexCount), GL_UNSIGNED_INT, 0);
     }
 
-    void CmdList::PushConstant(const std::string& name, void* constant, size_t size) {
+    void CmdList::PushConstant(const std::string& name, void* constant, size_t size, GraphicsStageFlags stageFlags) {
         UE_ASSERT_MSG(this->boundGraphicsPipeline, "No graphics pipeline bound.");
-
+        return;
         unsigned ubo;
         glGenBuffers(1, &ubo);
 

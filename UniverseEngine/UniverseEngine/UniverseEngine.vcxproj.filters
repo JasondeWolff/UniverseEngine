@@ -238,6 +238,12 @@
     <ClInclude Include="Sampler.h">
       <Filter>Src\Graphics\Common</Filter>
     </ClInclude>
+    <ClInclude Include="GraphicsStageFlags.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="PushConstantRange.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -429,9 +435,6 @@
     <ClCompile Include="vulkan\DescriptorSetLayout.cpp">
       <Filter>Src\Graphics\Vulkan</Filter>
     </ClCompile>
-    <ClCompile Include="DescriptorLayoutBinding.cpp">
-      <Filter>Src\Graphics\Common</Filter>
-    </ClCompile>
     <ClCompile Include="gl\DescriptorSetLayout.cpp">
       <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
@@ -469,6 +472,9 @@
       <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="Image.cpp">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsStageFlags.cpp">
       <Filter>Src\Graphics\Common</Filter>
     </ClCompile>
   </ItemGroup>

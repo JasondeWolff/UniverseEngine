@@ -20,16 +20,16 @@ namespace UniverseEngine {
         return VkDescriptorType::VK_DESCRIPTOR_TYPE_SAMPLER;
     }
 
-    VkShaderStageFlags GetVkShaderStageFlags(DescriptorStageFlags stages) {
+    VkShaderStageFlags GetVkShaderStageFlags(GraphicsStageFlags stages) {
         VkShaderStageFlags flags = 0;
 
-        if (stages.test(GetDescriptorStageBitIndex(DescriptorStageFlagBits::VERTEX))) {
+        if (stages.test(GetGraphicsStageBitIndex(GraphicsStageFlagBits::VERTEX_STAGE))) {
             flags |= VkShaderStageFlagBits::VK_SHADER_STAGE_VERTEX_BIT;
         }
-        if (stages.test(GetDescriptorStageBitIndex(DescriptorStageFlagBits::FRAGMENT))) {
+        if (stages.test(GetGraphicsStageBitIndex(GraphicsStageFlagBits::FRAGMENT_STAGE))) {
             flags |= VkShaderStageFlagBits::VK_SHADER_STAGE_FRAGMENT_BIT;
         }
-        if (stages.test(GetDescriptorStageBitIndex(DescriptorStageFlagBits::COMPUTE))) {
+        if (stages.test(GetGraphicsStageBitIndex(GraphicsStageFlagBits::COMPUTE_STAGE))) {
             flags |= VkShaderStageFlagBits::VK_SHADER_STAGE_COMPUTE_BIT;
         }
 

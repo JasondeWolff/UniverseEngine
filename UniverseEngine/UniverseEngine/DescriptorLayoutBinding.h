@@ -5,6 +5,7 @@
 #include <string>
 
 #include "GraphicsAPI.h"
+#include "GraphicsStageFlags.h"
 
 namespace UniverseEngine {
     enum class DescriptorType {
@@ -16,19 +17,15 @@ namespace UniverseEngine {
         STORAGE_BUFFER
     };
 
-    typedef std::bitset<3> DescriptorStageFlags;
-    enum DescriptorStageFlagBits { VERTEX = 0x001, FRAGMENT = 0x002, COMPUTE = 0x004 };
-    size_t GetDescriptorStageBitIndex(DescriptorStageFlagBits bits);
-
     struct DescriptorLayoutBinding {
         DescriptorLayoutBinding(const std::string& name, uint32_t binding, DescriptorType type,
-                                DescriptorStageFlags stageFlags)
+                                GraphicsStageFlags stageFlags)
             : name(name), binding(binding), type(type), stageFlags(stageFlags) {
         }
 
         const std::string name;
         const uint32_t binding;
         const DescriptorType type;
-        const DescriptorStageFlags stageFlags;
+        const GraphicsStageFlags stageFlags;
     };
 }  // namespace UniverseEngine

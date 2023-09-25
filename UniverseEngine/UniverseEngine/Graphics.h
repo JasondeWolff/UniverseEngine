@@ -11,11 +11,12 @@
 #include "GraphicsPipeline.h"
 #include "LogicalDevice.h"
 #include "PhysicalDevice.h"
+#include "PushConstantRange.h"
 #include "RenderPass.h"
 #include "Resources.h"
+#include "Sampler.h"
 #include "Swapchain.h"
 #include "Window.h"
-#include "Sampler.h"
 
 namespace UniverseEngine {
     class Engine;
@@ -52,7 +53,7 @@ namespace UniverseEngine {
         std::shared_ptr<DescriptorSetLayout> descriptorSetLayout;
         std::array<std::shared_ptr<Buffer>, Swapchain::MAX_FRAMES_IN_FLIGHT> uniformBuffers;
         std::array<std::shared_ptr<DescriptorSet>, Swapchain::MAX_FRAMES_IN_FLIGHT> descriptorSets;
-    
+
         std::shared_ptr<Sampler> sampler;
     };
 }  // namespace UniverseEngine

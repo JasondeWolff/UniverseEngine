@@ -7,6 +7,6 @@
 
 namespace UniverseEngine {
     VkDescriptorType GetVkDescriptorType(DescriptorType type);
-    VkShaderStageFlags GetVkShaderStageFlags(DescriptorStageFlags stages);
+    VkShaderStageFlags GetVkShaderStageFlags(GraphicsStageFlags stages);
 }  // namespace UniverseEngine
 #endif

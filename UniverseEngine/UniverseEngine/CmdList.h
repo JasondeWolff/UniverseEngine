@@ -7,8 +7,9 @@
 #include <vector>
 
 #include "GraphicsAPI.h"
-#include "Rect2D.h"
+#include "GraphicsStageFlags.h"
 #include "Image.h"
+#include "Rect2D.h"
 
 namespace UniverseEngine {
     class GraphicsPipeline;
@@ -56,8 +57,8 @@ namespace UniverseEngine {
                           uint32_t firstInstance = 0);
 
         template <typename T>
-        void PushConstant(const std::string& name, T& constant) {
-            this->PushConstant(name, static_cast<void*>(&constant), sizeof(T));
+        void PushConstant(const std::string& name, T& constant, GraphicsStageFlags stageFlags) {
+            this->PushConstant(name, static_cast<void*>(&constant), sizeof(T), stageFlags);
         }
 
     private:
@@ -72,7 +73,7 @@ namespace UniverseEngine {
         VkCommandBuffer cmdBuffer;
 #endif
 
-        void PushConstant(const std::string& name, void* constant, size_t size);
+        void PushConstant(const std::string& name, void* constant, size_t size, GraphicsStageFlags stageFlags);
 
         std::shared_ptr<GraphicsPipeline> boundGraphicsPipeline;
         std::vector<std::shared_ptr<RenderPass>> trackedRenderPasses;

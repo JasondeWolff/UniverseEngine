@@ -3,10 +3,13 @@
 #include "Engine.h"
 #include "Format.h"
 
-struct MVPUniformBuffer {
-    glm::mat4 model;
+struct VPUniformBuffer {
     glm::mat4 view;
     glm::mat4 proj;
+};
+
+struct PushConstant {
+    glm::mat4 model;
 };
 
 namespace UniverseEngine {
@@ -25,15 +28,15 @@ namespace UniverseEngine {
             this->device,
             std::vector<DescriptorLayoutBinding>{
                 DescriptorLayoutBinding("ubo", 0, DescriptorType::UNIFORM_BUFFER,
-                                        DescriptorStageFlagBits::VERTEX),
+                                        GraphicsStageFlagBits::VERTEX_STAGE),
                 DescriptorLayoutBinding("baseColorMap", 1, DescriptorType::COMBINED_IMAGE_SAMPLER,
-                                        DescriptorStageFlagBits::FRAGMENT)});
+                                        GraphicsStageFlagBits::FRAGMENT_STAGE)});
 
         for (size_t i = 0; i < this->uniformBuffers.size(); i++) {
             this->uniformBuffers[i] =
                 std::make_shared<Buffer>(Format("MVPUniformBuffer_%i", i), this->device,
                                          *this->physicalDevice, BufferUsageBits::UNIFORM_BUFFER,
-                                         sizeof(MVPUniformBuffer), BufferLocation::GPU_ONLY);
+                                         sizeof(VPUniformBuffer), BufferLocation::GPU_ONLY);
 
             this->descriptorSets[i] = std::make_shared<DescriptorSet>(
                 this->device, this->descriptorPool, this->descriptorSetLayout);
@@ -78,17 +81,24 @@ namespace UniverseEngine {
         Camera& camera = world.camera;
         Resources& resources = Engine::GetResources();
 
+        // Resize & get camera matrices
         Rect2D swapchainExtent = this->swapchain->Extent();
         uint32_t width = GetWindow().Width();
         uint32_t height = GetWindow().Height();
         camera.SetAspect(static_cast<float>(swapchainExtent.extent.x) /
                          static_cast<float>(swapchainExtent.extent.y));
-
         const glm::mat4& viewMatrix = glm::inverse(camera.transform.GetMatrix());
         const glm::mat4& projectionMatrix = camera.GetMatrix();
 
+        // Wait for next image
         auto fence = this->swapchain->NextImage();
         size_t currentFrame = static_cast<size_t>(this->swapchain->GetCurrentFrameIdx());
+
+        // Update camera matrices
+        VPUniformBuffer uniformBuffer{viewMatrix, projectionMatrix};
+        void* uniformBufferData = this->uniformBuffers[currentFrame]->Map();
+        memcpy(uniformBufferData, &uniformBuffer, sizeof(VPUniformBuffer));
+        this->uniformBuffers[currentFrame]->Unmap();
 
         std::shared_ptr<CmdList> cmdList = this->cmdQueue->GetCmdList();
 
@@ -115,13 +125,7 @@ namespace UniverseEngine {
                 }
 
                 Mesh& mesh = scene->meshes[meshInstance.meshIdx];
-                const glm::mat4& modelMatrix = meshInstance.transform.GetMatrix();
-
-                MVPUniformBuffer uniformBuffer{modelMatrix, viewMatrix, projectionMatrix};
-
-                void* uniformBufferData = this->uniformBuffers[currentFrame]->Map();
-                memcpy(uniformBufferData, &uniformBuffer, sizeof(MVPUniformBuffer));
-                this->uniformBuffers[currentFrame]->Unmap();
+                glm::mat4 modelMatrix = meshInstance.transform.GetMatrix();
 
                 if (!one) {
                     Material& material = scene->materials[mesh.materialIdx];
@@ -132,6 +136,8 @@ namespace UniverseEngine {
                     cmdList->BindDescriptorSet(this->descriptorSets[currentFrame]);
                     one = true;
                 }
+
+                cmdList->PushConstant("pc", modelMatrix, GraphicsStageFlagBits::VERTEX_STAGE);
 
                 mesh.renderable->Draw(*cmdList);
             }
@@ -170,7 +176,8 @@ namespace UniverseEngine {
         std::vector<ShaderRenderable*> unlitShaders = {hShaderUnlitVS->renderable.get(),
                                                        hShaderUnlitFS->renderable.get()};
         this->unlitPipeline = std::make_shared<GraphicsPipeline>(
-            this->device, unlitShaders, this->renderPass, descriptorSetLayout);
+            this->device, unlitShaders, this->renderPass, descriptorSetLayout,
+            std::vector<PushConstantRange>{PushConstantRange("pc", sizeof(PushConstant), GraphicsStageFlagBits::VERTEX_STAGE)});
     }
 
     void Graphics::BuildRenderables() {
