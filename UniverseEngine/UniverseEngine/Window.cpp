@@ -62,6 +62,7 @@ namespace UniverseEngine {
 
 #ifdef GRAPHICS_API_GL
         glfwMakeContextCurrent(this->glfwWindow);
+        glfwSwapInterval(0);
 #endif
 
         glfwSetWindowUserPointer(this->glfwWindow, static_cast<void*>(this));

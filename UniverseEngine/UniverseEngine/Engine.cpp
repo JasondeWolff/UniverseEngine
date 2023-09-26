@@ -50,7 +50,17 @@ namespace UniverseEngine {
     }
 
     void Engine::Run() {
+        Timer fpsTimer{};
+        unsigned fpsCount = 0;
+
         while (!GetGraphics().GetWindow().ShouldClose()) {
+            if (fpsTimer.Elapsed() >= 1.0f) {
+                UE_INFO("FPS %i", fpsCount);
+                fpsCount = 0;
+                fpsTimer.Reset();
+            }
+            fpsCount++;
+
             float deltaTime = this->timer.Elapsed();
             this->timer.Reset();
 

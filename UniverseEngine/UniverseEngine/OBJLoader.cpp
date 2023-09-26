@@ -33,7 +33,7 @@ namespace UniverseEngine {
         parsedScene.name = filePath.filename().string();
 
         for (auto& material : materials) {
-            Material parsedMaterial;
+            Material parsedMaterial{};
             parsedMaterial.name = material.name;
 
             parsedMaterial.baseColor =
