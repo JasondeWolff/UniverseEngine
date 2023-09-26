@@ -34,7 +34,7 @@ namespace UniverseEngine{
                 v.position = glm::vec3(x, 0, -y);
                 v.normal = Up();
                 v.texCoord = glm::vec2(ix / gridX, 1 - (iy / gridY));
-                v.color = glm::vec3(1, 1, 1);
+                v.color = glm::vec4(1, 1, 1, 1);
 
                 vertices.emplace_back(v);
             }

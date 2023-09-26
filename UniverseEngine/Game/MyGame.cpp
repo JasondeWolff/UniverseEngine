@@ -15,6 +15,9 @@ void MyGame::OnStart() {
 	this->hSusan = resources.LoadScene("Assets/susanMultiple.obj");
 	this->hSusanInstance = world.AddSceneInstance(this->hSusan);
 
+	this->hBuggy = resources.LoadScene("Assets/Buggy.gltf");
+	this->hBuggyInstance = world.AddSceneInstance(this->hBuggy);
+
 	TerrianGenerator customTerrian;
 	customTerrian.GenerateRandomChunk();
 

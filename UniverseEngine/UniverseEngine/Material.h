@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/vec4.hpp>
+#include <glm/vec3.hpp>
 
 #include "Texture.h"
 
@@ -11,7 +12,7 @@ namespace UniverseEngine {
         glm::vec4 baseColor = glm::vec4(1.0, 1.0, 1.0, 1.0);
         float metallicFactor = 0.0f;
         float roughnessFactor = 1.0f;
-        glm::vec4 emissiveFactor = glm::vec4(0.0, 0.0, 0.0, 1.0);
+        glm::vec3 emissiveFactor = glm::vec3(0.0, 0.0, 0.0);
         float normalFactor = 1.0f;
         float occlusionFactor = 0.0f;
 

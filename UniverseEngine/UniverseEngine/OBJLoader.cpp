@@ -1,15 +1,15 @@
+#include "Resources.h"
+
+#include <memory>
 #include <filesystem>
 namespace fs = std::filesystem;
 
-#include <memory>
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <tiny_obj_loader.h>
 
 #include "Engine.h"
 #include "Logging.h"
 #include "MathUtil.h"
-#include "Resources.h"
-
-#define TINYOBJLOADER_IMPLEMENTATION
-#include <tiny_obj_loader.h>
 
 namespace UniverseEngine {
     std::shared_ptr<Scene> Resources::LoadOBJ(const fs::path& filePath) {

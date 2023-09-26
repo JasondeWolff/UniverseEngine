@@ -16,8 +16,10 @@ private:
 	std::shared_ptr<UniverseEngine::Scene> hSusan;
 	std::shared_ptr<UniverseEngine::Scene> hCube;
 	std::shared_ptr<UniverseEngine::Scene> hSpot;
+	std::shared_ptr<UniverseEngine::Scene> hBuggy;
 
 	std::shared_ptr<UniverseEngine::SceneInstance> hSusanInstance;
 	std::shared_ptr<UniverseEngine::SceneInstance> hCubeInstance;
 	std::shared_ptr<UniverseEngine::SceneInstance> hSpotInstance;
+	std::shared_ptr<UniverseEngine::SceneInstance> hBuggyInstance;
 };

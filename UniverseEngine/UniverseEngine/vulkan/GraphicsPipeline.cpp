@@ -43,8 +43,13 @@ namespace UniverseEngine {
 
         attributeDescriptions[3].binding = binding;
         attributeDescriptions[3].location = 3;
-        attributeDescriptions[3].format = VK_FORMAT_R32G32B32_SFLOAT;
-        attributeDescriptions[3].offset = offsetof(Vertex, color);
+        attributeDescriptions[3].format = VK_FORMAT_R32G32B32A32_SFLOAT;
+        attributeDescriptions[3].offset = offsetof(Vertex, tangent);
+
+        attributeDescriptions[4].binding = binding;
+        attributeDescriptions[4].location = 4;
+        attributeDescriptions[4].format = VK_FORMAT_R32G32B32A32_SFLOAT;
+        attributeDescriptions[4].offset = offsetof(Vertex, color);
 
         return attributeDescriptions;
     }
