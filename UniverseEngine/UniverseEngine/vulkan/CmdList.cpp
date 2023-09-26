@@ -241,7 +241,7 @@ namespace UniverseEngine {
     void CmdList::PushConstant(const std::string& name, void* constant, size_t size,
                                GraphicsStageFlags stageFlags) {
         vkCmdPushConstants(this->cmdBuffer, this->boundGraphicsPipeline->GetLayout(),
-                           GetVkShaderStageFlags(stageFlags), 0, size, constant);
+                           GetVkShaderStageFlags(stageFlags), 0, static_cast<uint32_t>(size), constant);
     }
 }  // namespace UniverseEngine
 #endif

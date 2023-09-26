@@ -34,8 +34,9 @@ namespace UniverseEngine {
             UE_FATAL("[%s] %s", pLayerPrefix, pMsg);
         else if (msgFlags & VK_DEBUG_REPORT_WARNING_BIT_EXT)
             UE_WARNING("[%s]  %s", pLayerPrefix, pMsg);
-        else if (msgFlags & VK_DEBUG_REPORT_DEBUG_BIT_EXT)
+        else if (msgFlags & VK_DEBUG_REPORT_DEBUG_BIT_EXT) {
             UE_DEBUG("[%s] %s", pLayerPrefix, pMsg);
+        }
         else if (msgFlags & VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT)
             UE_WARNING("[%s] %s", pLayerPrefix, pMsg);
         else if (msgFlags & VK_DEBUG_REPORT_INFORMATION_BIT_EXT)
