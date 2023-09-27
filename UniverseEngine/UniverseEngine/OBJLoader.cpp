@@ -45,7 +45,7 @@ namespace UniverseEngine {
                 parsedMaterial.baseColorMap = nullptr;
             }
 
-            parsedScene.materials.emplace_back(parsedMaterial);
+            parsedScene.materials.emplace_back(std::move(parsedMaterial));
         }
 
         auto instanceRoot = parsedScene.meshHierarchy.begin();

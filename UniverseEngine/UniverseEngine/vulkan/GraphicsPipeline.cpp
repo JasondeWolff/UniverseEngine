@@ -22,9 +22,9 @@ namespace UniverseEngine {
         return bindingDescription;
     }
 
-    std::array<VkVertexInputAttributeDescription, 4> VertexAttributeDescriptions(
+    std::array<VkVertexInputAttributeDescription, 5> VertexAttributeDescriptions(
         uint32_t binding = 0) {
-        std::array<VkVertexInputAttributeDescription, 4> attributeDescriptions{};
+        std::array<VkVertexInputAttributeDescription, 5> attributeDescriptions{};
 
         attributeDescriptions[0].binding = binding;
         attributeDescriptions[0].location = 0;
@@ -54,12 +54,12 @@ namespace UniverseEngine {
         return attributeDescriptions;
     }
 
-    GraphicsPipeline::GraphicsPipeline(std::shared_ptr<LogicalDevice> device,
-                                       const std::vector<ShaderRenderable*>& shaders,
-                                       std::shared_ptr<RenderPass> renderPass,
-                                       std::shared_ptr<DescriptorSetLayout> descriptorSetLayout,
-                                       std::vector<PushConstantRange> pushConstants)
-        : device(device), renderPass(renderPass), descriptorSetLayout(descriptorSetLayout) {
+    GraphicsPipeline::GraphicsPipeline(
+        std::shared_ptr<LogicalDevice> device, const std::vector<ShaderRenderable*>& shaders,
+        std::shared_ptr<RenderPass> renderPass,
+        std::vector<std::shared_ptr<DescriptorSetLayout>> descriptorSetLayouts,
+        std::vector<PushConstantRange> pushConstants)
+        : device(device), renderPass(renderPass), descriptorSetLayouts(descriptorSetLayouts) {
         // TODO: make more dynamic
         VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
         vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -100,7 +100,7 @@ namespace UniverseEngine {
         rasterizer.depthClampEnable = VK_FALSE;
         rasterizer.rasterizerDiscardEnable = VK_FALSE;
         rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
-        rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
+        rasterizer.cullMode = VK_CULL_MODE_NONE;
         rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
         rasterizer.depthBiasEnable = VK_FALSE;
         rasterizer.lineWidth = 1.0;
@@ -122,18 +122,22 @@ namespace UniverseEngine {
         colorBlending.pAttachments = &colorBlendAttachment;
 
         std::vector<VkPushConstantRange> vkPushConstantRanges;
-        for (auto pushConstantRange : pushConstants) {
+        for (auto& pushConstantRange : pushConstants) {
             VkPushConstantRange vkPushConstantRange{};
             vkPushConstantRange.size = static_cast<uint32_t>(pushConstantRange.size);
             vkPushConstantRange.stageFlags = GetVkShaderStageFlags(pushConstantRange.stageFlags);
             vkPushConstantRanges.push_back(vkPushConstantRange);
         }
 
+        std::vector<VkDescriptorSetLayout> vkDescriptorSetLayouts;
+        for (auto& descriptorSetLayout : descriptorSetLayouts) {
+            vkDescriptorSetLayouts.push_back(descriptorSetLayout->GetLayout());
+        }
+
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = 1;
-        VkDescriptorSetLayout descriptorSetLayouts[] = {descriptorSetLayout->GetLayout()};
-        pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts;
+        pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(vkDescriptorSetLayouts.size());
+        pipelineLayoutInfo.pSetLayouts = vkDescriptorSetLayouts.data();
         pipelineLayoutInfo.pushConstantRangeCount =
             static_cast<uint32_t>(vkPushConstantRanges.size());
         pipelineLayoutInfo.pPushConstantRanges = vkPushConstantRanges.data();

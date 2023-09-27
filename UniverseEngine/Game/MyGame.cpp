@@ -17,6 +17,7 @@ void MyGame::OnStart() {
 
 	this->hBuggy = resources.LoadScene("Assets/Buggy.gltf");
 	this->hBuggyInstance = world.AddSceneInstance(this->hBuggy);
+	this->hBuggyInstance->transform.SetScale(glm::vec3(0.1, 0.1, 0.1));
 
 	TerrianGenerator customTerrian;
 	customTerrian.GenerateRandomChunk();

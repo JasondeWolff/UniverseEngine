@@ -24,7 +24,8 @@ namespace UniverseEngine {
         else
             UE_FATAL("Cannot load unsupported scene type '%s'.", extension);
 
-        scenePaths.insert(std::make_pair(filePath, hScene));
+        this->scenes.push_back(hScene);
+        this->scenePaths.insert(std::make_pair(filePath, hScene));
         return hScene;
     }
 
@@ -42,6 +43,7 @@ namespace UniverseEngine {
                 std::shared_ptr<Texture> hTexture = LoadIMG(filePath);
                 this->texturePaths.insert(std::make_pair(filePath, hTexture));
                 this->newTextures.push_back(hTexture);
+                this->textures.push_back(hTexture);
                 return hTexture;
             }
         }
@@ -63,12 +65,17 @@ namespace UniverseEngine {
                 std::shared_ptr<Shader> hShader = LoadShaderSource(filePath);
                 this->shaderPaths.insert(std::make_pair(filePath, hShader));
                 this->newShaders.push_back(hShader);
+                this->shaders.push_back(hShader);
                 return hShader;
             }
         }
 
         UE_FATAL("Cannot load unsupported shader type '%s'.", extension);
         return nullptr;
+    }
+
+    const std::vector<std::shared_ptr<Scene>>& Resources::GetAllScenes() {
+        return this->scenes;
     }
 
     const std::vector<std::shared_ptr<Texture>>& Resources::GetNewTextures() {

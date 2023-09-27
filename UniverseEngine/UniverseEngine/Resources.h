@@ -16,6 +16,8 @@ namespace UniverseEngine {
         std::shared_ptr<Texture> LoadTexture(const std::filesystem::path& filePath);
         std::shared_ptr<Shader> LoadShader(const std::filesystem::path& filePath);
 
+        const std::vector<std::shared_ptr<Scene>>& GetAllScenes();
+
         const std::vector<std::shared_ptr<Texture>>& GetNewTextures();
         const std::vector<std::shared_ptr<Shader>>& GetNewShaders();
 

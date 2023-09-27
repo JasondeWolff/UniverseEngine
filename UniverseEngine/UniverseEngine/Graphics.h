@@ -37,6 +37,7 @@ namespace UniverseEngine {
         void BuildSwapchain();
         void BuildPipelines();
         void BuildRenderables();
+        void UpdateMaterials(size_t currentFrame, CmdList& cmdList);
 
         std::unique_ptr<Window> window;
         std::shared_ptr<GraphicsInstance> instance;

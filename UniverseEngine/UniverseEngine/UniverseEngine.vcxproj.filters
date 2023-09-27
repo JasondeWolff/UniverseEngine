@@ -247,6 +247,9 @@
     <ClInclude Include="Defines.h">
       <Filter>Src</Filter>
     </ClInclude>
+    <ClInclude Include="MaterialRenderable.h">
+      <Filter>Src\Graphics\Common\Assets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -479,6 +482,15 @@
     </ClCompile>
     <ClCompile Include="GraphicsStageFlags.cpp">
       <Filter>Src\Graphics\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\MaterialRenderable.cpp">
+      <Filter>Src\Graphics\Vulkan\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="gl\MaterialRenderable.cpp">
+      <Filter>Src\Graphics\GL\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureRenderable.cpp">
+      <Filter>Src\Graphics\Common\Assets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

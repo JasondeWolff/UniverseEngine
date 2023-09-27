@@ -89,7 +89,7 @@ namespace UniverseEngine {
             //  NO TEXTURE SUPPORT YET
             // custommaterial.baseColorMap = AtomicHandle<Texture>::Invalid();
 
-            materials.push_back(custommaterial);
+            materials.emplace_back(std::move(custommaterial));
         }
 
         /*At this point render_scene hold all the information loaded from the USD

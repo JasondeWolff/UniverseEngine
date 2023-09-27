@@ -15,6 +15,11 @@ namespace UniverseEngine {
     public:
         ~TextureRenderable();
 
+        std::shared_ptr<Image> GetImage();
+
+        static const std::shared_ptr<Image>& EmptyImage(std::shared_ptr<LogicalDevice> device,
+                                                        const PhysicalDevice& physicalDevice, CmdList& cmdList);
+
     private:
         friend class Graphics;
         TextureRenderable(std::shared_ptr<LogicalDevice> device,

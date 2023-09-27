@@ -53,6 +53,8 @@ namespace UniverseEngine {
 
         if (node.mesh != -1) {
             meshInstance.meshIdx = static_cast<size_t>(node.mesh);
+        } else {
+            meshInstance.meshIdx = std::nullopt;
         }
 
         meshHierarchyParent = meshHierarchy.append_child(meshHierarchyParent, meshInstance);
@@ -148,6 +150,8 @@ namespace UniverseEngine {
             UE_ASSERT_MSG(primitive.mode == TINYGLTF_MODE_TRIANGLES,
                           "Only triangles are supported.");
 
+            parsedMesh.materialIdx = static_cast<size_t>(mesh.primitives[0].material);
+
             for (const auto& attribute : primitive.attributes) {
                 const auto& accessor = model.accessors[attribute.second];
                 const auto& view = model.bufferViews[accessor.bufferView];
@@ -177,7 +181,7 @@ namespace UniverseEngine {
                     memcpy(vertexTangents.data(),
                            &buffer.data.at(view.byteOffset + accessor.byteOffset),
                            accessor.count * sizeof(float) * 4);
-                } else if (attribute.first == "COLOR_0") {
+                } else if (attribute.first == "COLOR") {
                     vertexColors.reserve(accessor.count);
                     vertexColors.resize(accessor.count);
                     memcpy(vertexColors.data(),

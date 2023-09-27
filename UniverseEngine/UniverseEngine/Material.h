@@ -1,12 +1,23 @@
 #pragma once
 
-#include <glm/vec4.hpp>
 #include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+#include <memory>
+#include <string>
 
+#include "MaterialRenderable.h"
 #include "Texture.h"
 
 namespace UniverseEngine {
+    class Graphics;
+
     struct Material {
+        Material() = default;
+        explicit Material(const Material& other) = delete;
+        Material& operator=(const Material& other) = delete;
+        explicit Material(Material&& other) noexcept = default;
+        Material& operator=(Material&& other) noexcept = default;
+
         std::string name;
 
         glm::vec4 baseColor = glm::vec4(1.0, 1.0, 1.0, 1.0);
@@ -21,5 +32,9 @@ namespace UniverseEngine {
         std::shared_ptr<Texture> emissiveMap = nullptr;
         std::shared_ptr<Texture> normalMap = nullptr;
         std::shared_ptr<Texture> occlusionMap = nullptr;
+
+    private:
+        friend class Graphics;
+        std::unique_ptr<MaterialRenderable> renderable;
     };
 }  // namespace UniverseEngine

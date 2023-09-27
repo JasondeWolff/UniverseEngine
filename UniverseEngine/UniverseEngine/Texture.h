@@ -4,6 +4,7 @@
 
 namespace UniverseEngine {
     class Graphics;
+    class MaterialRenderable;
 
     struct Texture {
         Texture();
@@ -23,6 +24,7 @@ namespace UniverseEngine {
 
     private:
         friend class Graphics;
+        friend class MaterialRenderable;
         std::unique_ptr<TextureRenderable> renderable;
 
         void ClearCPUData();

@@ -47,7 +47,7 @@ namespace UniverseEngine {
                              const glm::vec4& clearColor);
         void EndRenderPass();
 
-        void BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet);
+        void BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet, uint32_t set);
 
         void BindGraphicsPipeline(std::shared_ptr<GraphicsPipeline> graphicsPipeline);
 

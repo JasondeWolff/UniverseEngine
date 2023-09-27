@@ -141,6 +141,12 @@ namespace UniverseEngine {
             barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
             sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
             destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+        } else if (vkOldLayout == VK_IMAGE_LAYOUT_UNDEFINED &&
+                   vkNewLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
+            barrier.srcAccessMask = 0;
+            barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+            sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+            destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
         } else {
             UE_FATAL("Unsupported image layout transition.");
         }
@@ -212,10 +218,10 @@ namespace UniverseEngine {
         vkCmdEndRenderPass(this->cmdBuffer);
     }
 
-    void CmdList::BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet) {
+    void CmdList::BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet, uint32_t set) {
         VkDescriptorSet descriptorSets[] = {descriptorSet->GetDescriptorSet()};
         vkCmdBindDescriptorSets(this->cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                this->boundGraphicsPipeline->GetLayout(), 0, 1, descriptorSets, 0,
+                                this->boundGraphicsPipeline->GetLayout(), set, 1, descriptorSets, 0,
                                 nullptr);
 
         trackedDescriptorSets.push_back(descriptorSet);

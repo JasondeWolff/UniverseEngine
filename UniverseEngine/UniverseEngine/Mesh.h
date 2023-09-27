@@ -4,6 +4,7 @@
 #include <glm/vec3.hpp>
 #include <vector>
 #include <memory>
+#include <optional>
 
 #include "Transform.h"
 #include "MeshRenderable.h"
@@ -26,7 +27,7 @@ namespace UniverseEngine {
         }
 
         Transform transform;
-        size_t meshIdx;
+        std::optional<size_t> meshIdx;
     };
 
     struct Mesh {

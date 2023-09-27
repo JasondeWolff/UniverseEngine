@@ -16,7 +16,7 @@ namespace UniverseEngine {
         tree<MeshInstance>::sibling_iterator sibling = instances.begin(parent);
         while (sibling != instances.end(parent)) {
             auto& transform = sibling->transform;
-            transform.SetMatrix(transform.GetMatrix() * parentMatrix);
+            transform.SetMatrix(parentMatrix * transform.GetMatrix());
             TransformedMeshHierarchyRec(instances, transform.GetMatrix(), sibling);
 
             sibling++;

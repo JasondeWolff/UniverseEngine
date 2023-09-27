@@ -17,7 +17,7 @@ namespace UniverseEngine {
         GraphicsPipeline(std::shared_ptr<LogicalDevice> device,
                          const std::vector<ShaderRenderable*>& shaders,
                          std::shared_ptr<RenderPass> renderPass,
-                         std::shared_ptr<DescriptorSetLayout> descriptorSetLayout, std::vector<PushConstantRange> pushConstants);
+                         std::vector<std::shared_ptr<DescriptorSetLayout>> descriptorSetLayouts, std::vector<PushConstantRange> pushConstants);
         ~GraphicsPipeline();
         GraphicsPipeline(const GraphicsPipeline& other) = delete;
         GraphicsPipeline& operator=(const GraphicsPipeline& other) = delete;
@@ -25,7 +25,7 @@ namespace UniverseEngine {
     private:
         const std::shared_ptr<LogicalDevice> device;
         const std::shared_ptr<RenderPass> renderPass;
-        const std::shared_ptr<DescriptorSetLayout> descriptorSetLayout;
+        const std::vector<std::shared_ptr<DescriptorSetLayout>> descriptorSetLayouts;
 
 #ifdef GRAPHICS_API_GL
     public:
