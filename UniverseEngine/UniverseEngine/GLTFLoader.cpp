@@ -35,18 +35,20 @@ namespace UniverseEngine {
             glm::vec3 translation{};
             if (node.translation.size() == 3)
                 translation = glm::vec3(static_cast<float>(node.translation[0]),
-                                  static_cast<float>(node.translation[1]),
-                                  static_cast<float>(node.translation[2]));
+                                        static_cast<float>(node.translation[1]),
+                                        static_cast<float>(node.translation[2]));
 
             glm::quat rotation{};
             if (node.rotation.size() == 4)
-                rotation = glm::quat(static_cast<float>(node.rotation[0]), static_cast<float>(node.rotation[1]),
-                static_cast<float>(node.rotation[2]), static_cast<float>(node.rotation[3]));
-           
+                rotation = glm::quat(
+                    static_cast<float>(node.rotation[0]), static_cast<float>(node.rotation[1]),
+                    static_cast<float>(node.rotation[2]), static_cast<float>(node.rotation[3]));
+
             glm::vec3 scale{};
             if (node.scale.size() == 3)
-                scale = glm::vec3(static_cast<float>(node.scale[0]), static_cast<float>(node.scale[1]),
-                            static_cast<float>(node.scale[2]));
+                scale =
+                    glm::vec3(static_cast<float>(node.scale[0]), static_cast<float>(node.scale[1]),
+                              static_cast<float>(node.scale[2]));
 
             meshInstance.transform = Transform(translation, rotation, scale);
         }
@@ -140,59 +142,65 @@ namespace UniverseEngine {
             Mesh parsedMesh{};
             parsedMesh.name = mesh.name;
 
-            std::vector<glm::vec3> vertexPositions;
-            std::vector<glm::vec3> vertexNormals;
-            std::vector<glm::vec2> vertexTexCoords;
-            std::vector<glm::vec4> vertexTangents;
-            std::vector<glm::vec4> vertexColors;
-
-            auto& primitive = mesh.primitives[0];
-            UE_ASSERT_MSG(primitive.mode == TINYGLTF_MODE_TRIANGLES,
-                          "Only triangles are supported.");
+            std::vector<glm::vec3> vertexPositions{};
+            std::vector<glm::vec3> vertexNormals{};
+            std::vector<glm::vec2> vertexTexCoords{};
+            std::vector<glm::vec4> vertexTangents{};
+            std::vector<glm::vec4> vertexColors{};
 
             parsedMesh.materialIdx = static_cast<size_t>(mesh.primitives[0].material);
 
-            for (const auto& attribute : primitive.attributes) {
-                const auto& accessor = model.accessors[attribute.second];
-                const auto& view = model.bufferViews[accessor.bufferView];
-                const auto& buffer = model.buffers[view.buffer];
+            for (auto& primitive : mesh.primitives) {
+                UE_ASSERT_MSG(primitive.mode == TINYGLTF_MODE_TRIANGLES,
+                              "Only triangles are supported.");
 
-                if (attribute.first == "POSITION") {
-                    vertexPositions.reserve(accessor.count);
-                    vertexPositions.resize(accessor.count);
-                    memcpy(vertexPositions.data(),
-                           &buffer.data.at(view.byteOffset + accessor.byteOffset),
-                           accessor.count * sizeof(float) * 3);
-                } else if (attribute.first == "NORMAL") {
-                    vertexNormals.reserve(accessor.count);
-                    vertexNormals.resize(accessor.count);
-                    memcpy(vertexNormals.data(),
-                           &buffer.data.at(view.byteOffset + accessor.byteOffset),
-                           accessor.count * sizeof(float) * 3);
-                } else if (attribute.first == "TEXCOORD_0") {
-                    vertexTexCoords.reserve(accessor.count);
-                    vertexTexCoords.resize(accessor.count);
-                    memcpy(vertexTexCoords.data(),
-                           &buffer.data.at(view.byteOffset + accessor.byteOffset),
-                           accessor.count * sizeof(float) * 2);
-                } else if (attribute.first == "TANGENT") {
-                    vertexTangents.reserve(accessor.count);
-                    vertexTangents.resize(accessor.count);
-                    memcpy(vertexTangents.data(),
-                           &buffer.data.at(view.byteOffset + accessor.byteOffset),
-                           accessor.count * sizeof(float) * 4);
-                } else if (attribute.first == "COLOR") {
-                    vertexColors.reserve(accessor.count);
-                    vertexColors.resize(accessor.count);
-                    memcpy(vertexColors.data(),
-                           &buffer.data.at(view.byteOffset + accessor.byteOffset),
-                           accessor.count * sizeof(uint16_t) * 4);
+                for (const auto& attribute : primitive.attributes) {
+                    const auto& accessor = model.accessors[attribute.second];
+                    const auto& view = model.bufferViews[accessor.bufferView];
+                    const auto& buffer = model.buffers[view.buffer];
 
-                    for (auto& color : vertexColors) {
-                        color.r /= std::numeric_limits<uint16_t>::max();
-                        color.g /= std::numeric_limits<uint16_t>::max();
-                        color.b /= std::numeric_limits<uint16_t>::max();
-                        color.a /= std::numeric_limits<uint16_t>::max();
+                    if (attribute.first == "POSITION") {
+                        size_t offset = vertexPositions.size();
+                        vertexPositions.reserve(offset + accessor.count);
+                        vertexPositions.resize(offset + accessor.count);
+                        memcpy(vertexPositions.data() + offset,
+                               &buffer.data.at(view.byteOffset + accessor.byteOffset),
+                               accessor.count * sizeof(float) * 3);
+                    } else if (attribute.first == "NORMAL") {
+                        size_t offset = vertexNormals.size();
+                        vertexNormals.reserve(offset + accessor.count);
+                        vertexNormals.resize(offset + accessor.count);
+                        memcpy(vertexNormals.data() + offset,
+                               &buffer.data.at(view.byteOffset + accessor.byteOffset),
+                               accessor.count * sizeof(float) * 3);
+                    } else if (attribute.first == "TEXCOORD_0") {
+                        size_t offset = vertexTexCoords.size();
+                        vertexTexCoords.reserve(offset + accessor.count);
+                        vertexTexCoords.resize(offset + accessor.count);
+                        memcpy(vertexTexCoords.data() + offset,
+                               &buffer.data.at(view.byteOffset + accessor.byteOffset),
+                               accessor.count * sizeof(float) * 2);
+                    } else if (attribute.first == "TANGENT") {
+                        size_t offset = vertexTangents.size();
+                        vertexTangents.reserve(offset + accessor.count);
+                        vertexTangents.resize(offset + accessor.count);
+                        memcpy(vertexTangents.data() + offset,
+                               &buffer.data.at(view.byteOffset + accessor.byteOffset),
+                               accessor.count * sizeof(float) * 4);
+                    } else if (attribute.first == "COLOR") {
+                        size_t offset = vertexColors.size();
+                        vertexColors.reserve(offset + accessor.count);
+                        vertexColors.resize(offset + accessor.count);
+                        memcpy(vertexColors.data() + offset,
+                               &buffer.data.at(view.byteOffset + accessor.byteOffset),
+                               accessor.count * sizeof(uint16_t) * 4);
+
+                        for (auto& color : vertexColors) {
+                            color.r /= std::numeric_limits<uint16_t>::max();
+                            color.g /= std::numeric_limits<uint16_t>::max();
+                            color.b /= std::numeric_limits<uint16_t>::max();
+                            color.a /= std::numeric_limits<uint16_t>::max();
+                        }
                     }
                 }
             }
@@ -214,26 +222,37 @@ namespace UniverseEngine {
                 parsedMesh.vertices.emplace_back(vertex);
             }
 
-            const auto& accessor = model.accessors[primitive.indices];
-            const auto& view = model.bufferViews[accessor.bufferView];
-            const auto& buffer = model.buffers[view.buffer];
+            size_t vertexOffset = 0;
+            for (auto& primitive : mesh.primitives) {
+                const auto& accessor = model.accessors[primitive.indices];
+                const auto& view = model.bufferViews[accessor.bufferView];
+                const auto& buffer = model.buffers[view.buffer];
 
-            parsedMesh.indices.reserve(accessor.count);
-            parsedMesh.indices.resize(accessor.count);
-            if (accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT) {
-                std::vector<uint16_t> smallIndices;
-                smallIndices.reserve(accessor.count);
-                smallIndices.resize(accessor.count);
-                memcpy(smallIndices.data(), &buffer.data.at(view.byteOffset + accessor.byteOffset),
-                       accessor.count * sizeof(uint16_t));
+                size_t offset = parsedMesh.indices.size();
+                parsedMesh.indices.reserve(offset + accessor.count);
+                parsedMesh.indices.resize(offset + accessor.count);
+                if (accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT) {
+                    std::vector<uint16_t> smallIndices;
+                    smallIndices.reserve(accessor.count);
+                    smallIndices.resize(accessor.count);
+                    memcpy(smallIndices.data(),
+                           &buffer.data.at(view.byteOffset + accessor.byteOffset),
+                           accessor.count * sizeof(uint16_t));
 
-                for (size_t i = 0; i < smallIndices.size(); i++) {
-                    parsedMesh.indices[i] = static_cast<uint32_t>(smallIndices[i]);
+                    for (size_t i = 0; i < smallIndices.size(); i++) {
+                        parsedMesh.indices[i + offset] = static_cast<uint32_t>(smallIndices[i]);
+                    }
+                } else if (accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT) {
+                    memcpy(parsedMesh.indices.data() + offset,
+                           &buffer.data.at(view.byteOffset + accessor.byteOffset),
+                           accessor.count * sizeof(uint32_t));
                 }
-            } else if (accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT) {
-                memcpy(parsedMesh.indices.data(),
-                       &buffer.data.at(view.byteOffset + accessor.byteOffset),
-                       accessor.count * sizeof(uint32_t));
+
+                for (size_t i = offset; i < parsedMesh.indices.size(); i++) {
+                    parsedMesh.indices[i] += static_cast<uint32_t>(vertexOffset);
+                }
+                vertexOffset +=
+                    model.accessors[primitive.attributes.find("POSITION")->second].count;
             }
 
             parsedScene.meshes.emplace_back(std::move(parsedMesh));
