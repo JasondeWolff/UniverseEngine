@@ -13,13 +13,11 @@ public:
 private:
 	FreeFormCamera camera;
 
-	std::shared_ptr<UniverseEngine::Scene> hSusan;
-	std::shared_ptr<UniverseEngine::Scene> hCube;
-	std::shared_ptr<UniverseEngine::Scene> hSpot;
-	std::shared_ptr<UniverseEngine::Scene> hBuggy;
+	std::shared_ptr<UniverseEngine::Scene> susan;
+	std::shared_ptr<UniverseEngine::Scene> spot;
+	std::shared_ptr<UniverseEngine::Scene> buggy;
 
-	std::shared_ptr<UniverseEngine::SceneInstance> hSusanInstance;
-	std::shared_ptr<UniverseEngine::SceneInstance> hCubeInstance;
-	std::shared_ptr<UniverseEngine::SceneInstance> hSpotInstance;
-	std::shared_ptr<UniverseEngine::SceneInstance> hBuggyInstance;
+	std::shared_ptr<UniverseEngine::SceneInstance> susanInstance;
+	std::shared_ptr<UniverseEngine::SceneInstance> spotInstance;
+	std::shared_ptr<UniverseEngine::SceneInstance> buggyInstance;
 };

@@ -1,4 +1,0 @@
-ERR : [error]C:\Users\jason\Downloads\tinyusdz-dev\src\usdc-reader.cc:ReconstructStage():3294 Failed to reconstruct Stage(Prim hierarchy)
-[error]C:\Users\jason\Downloads\tinyusdz-dev\src\usdc-reader.cc[USDC]:ReconstructPrimNode():2218 Failed to parse Prim fields.
-[error]C:\Users\jason\Downloads\tinyusdz-dev\src\usdc-reader.cc[USDC]:ParsePrimSpec():1783 Invalid token for `kind` Prim metadata: `Material`
-

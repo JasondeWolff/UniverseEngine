@@ -6,18 +6,15 @@ void MyGame::OnStart() {
 	Resources& resources = Engine::GetResources();
 	World& world = Engine::GetWorld();
 
-	/*this->hCube = resources.LoadScene("Assets/cube.gltf");
-	this->hCubeInstance = world.AddSceneInstance(this->hCube);*/
+	this->spot = resources.LoadScene("Assets/Models/spot.obj");
+	this->spotInstance = world.AddSceneInstance(this->spot);
 
-	this->hSpot = resources.LoadScene("Assets/spot.obj");
-	this->hSpotInstance = world.AddSceneInstance(this->hSpot);
+	this->susan = resources.LoadScene("Assets/Models/susanMultiple.obj");
+	this->susanInstance = world.AddSceneInstance(this->susan);
 
-	this->hSusan = resources.LoadScene("Assets/susanMultiple.obj");
-	this->hSusanInstance = world.AddSceneInstance(this->hSusan);
-
-	this->hBuggy = resources.LoadScene("Assets/Buggy.gltf");
-	this->hBuggyInstance = world.AddSceneInstance(this->hBuggy);
-	this->hBuggyInstance->transform.SetScale(glm::vec3(0.1, 0.1, 0.1));
+	this->buggy = resources.LoadScene("Assets/Models/Buggy.gltf");
+	this->buggyInstance = world.AddSceneInstance(this->buggy);
+	this->buggyInstance->transform.SetScale(glm::vec3(0.1, 0.1, 0.1));
 
 	TerrianGenerator customTerrian;
 	customTerrian.GenerateRandomChunk();
@@ -32,7 +29,7 @@ void MyGame::Update(float deltaTime) {
 
 	this->camera.Update(deltaTime);
 
-	this->hSusanInstance->transform.Rotate(EulerToQuat(Up() * deltaTime * 15.0f));
+	this->susanInstance->transform.Rotate(EulerToQuat(Up() * deltaTime * 15.0f));
 }
 
 void MyGame::OnClose() {
