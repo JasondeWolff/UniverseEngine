@@ -17,6 +17,8 @@ namespace UniverseEngine {
     }
 
     glm::vec2 ClampMagnitude(const glm::vec2& v, float magnitude) {
+        if (glm::length(v) == 0.0f)
+            return v;
         return glm::normalize(v) * glm::min(glm::length(v), magnitude);
     }
 
