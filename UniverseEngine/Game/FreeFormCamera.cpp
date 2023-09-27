@@ -3,8 +3,6 @@
 #include <UniverseEngine.h>
 using namespace UniverseEngine;
 
-FreeFormCamera::FreeFormCamera() : movementSpeed(5.0f), lookSensitivity(0.3f) {}
-
 void FreeFormCamera::Start() {
 	Engine::GetInput().SetCursorMode(CursorMode::DISABLED);
 }
@@ -13,6 +11,11 @@ void FreeFormCamera::Update(float deltaTime) {
 	auto& input = Engine::GetInput();
 	auto& gamepad = input.GetGamepad();
 	auto& camera = Engine::GetWorld().camera;
+
+	if (input.GetKeyDown(KeyCode::F1))
+		this->active = !this->active;
+	if (!this->active)
+		return;
 
 	glm::vec3 translation{};
 	if (input.GetKey(KeyCode::W)) {
@@ -35,10 +38,10 @@ void FreeFormCamera::Update(float deltaTime) {
 	}
 
 	this->rotationEuler.x -= input.GetMouseDelta().y * this->lookSensitivity;
-	this->rotationEuler.z -= input.GetMouseDelta().x * this->lookSensitivity;
+	this->rotationEuler.y -= input.GetMouseDelta().x * this->lookSensitivity;
 
 	this->rotationEuler.x -= gamepad.GetAxis(GamepadAxis::RIGHT_Y) * this->lookSensitivity * 4.0f * deltaTime * 60.0;
-	this->rotationEuler.z -= gamepad.GetAxis(GamepadAxis::RIGHT_X) * this->lookSensitivity * 4.0f * deltaTime * 60.0;
+	this->rotationEuler.y -= gamepad.GetAxis(GamepadAxis::RIGHT_X) * this->lookSensitivity * 4.0f * deltaTime * 60.0;
 	translation += gamepad.GetAxis(GamepadAxis::LEFT_X) * camera.transform.GetRight() + gamepad.GetAxis(GamepadAxis::LEFT_Y) * -camera.transform.GetForward();
 
 	if (glm::dot(translation, translation) > 0.0) {

@@ -46,7 +46,7 @@ namespace UniverseEngine {
         Engine::GetInput().mouseButtons[static_cast<size_t>(button)] = (action != GLFW_RELEASE);
     }
 
-    Window::Window(const char* title) : width(640), height(480), wasResized(false) {
+    Window::Window(const char* title) : width(1920), height(1080), wasResized(false) {
         UE_ASSERT_MSG(glfwInit(), "Failed to init glfw.");
         glfwSetErrorCallback(GlfwErrorCallback);
 

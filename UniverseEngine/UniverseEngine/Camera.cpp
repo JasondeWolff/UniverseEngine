@@ -52,6 +52,6 @@ namespace UniverseEngine {
     }
 
     void Camera::UpdateMatrix() const {
-        this->matrix = glm::perspective(this->fov, this->aspect, this->near, this->far);
+        this->matrix = glm::perspective(glm::radians(this->fov), this->aspect, this->near, this->far);
     }
 }  // namespace UniverseEngine

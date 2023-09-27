@@ -4,14 +4,15 @@
 
 class FreeFormCamera {
 public:
-	FreeFormCamera();
+	FreeFormCamera() = default;
 
 	void Start();
 	void Update(float deltaTime);
 
-	float movementSpeed;
-	float lookSensitivity;
+	float movementSpeed = 5.0f;
+	float lookSensitivity = 0.3f;
 
 private:
-	glm::vec3 rotationEuler;
+	glm::vec3 rotationEuler = glm::vec3{};
+	bool active = false;
 };

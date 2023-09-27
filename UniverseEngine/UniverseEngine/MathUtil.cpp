@@ -5,7 +5,7 @@
 
 namespace UniverseEngine {
     glm::quat EulerToQuat(const glm::vec3& euler) {
-        return glm::toQuat(glm::orientate3(glm::radians(euler)));
+        return glm::quat(glm::radians(euler));
     }
 
     glm::vec3 QuatToEuler(const glm::quat& rotation) {

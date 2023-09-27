@@ -2,6 +2,7 @@
 
 #include <UniverseEngine.h>
 
+#include "SpaceShip.h"
 #include "FreeFormCamera.h"
 
 class MyGame : public UniverseEngine::Game {
@@ -11,11 +12,6 @@ public:
 	void OnClose() override;
 
 private:
-	FreeFormCamera camera;
-
-	std::shared_ptr<UniverseEngine::Scene> susan;
-	std::shared_ptr<UniverseEngine::Scene> spot;
-
-	std::shared_ptr<UniverseEngine::SceneInstance> susanInstance;
-	std::shared_ptr<UniverseEngine::SceneInstance> spotInstance;
+	FreeFormCamera freeFormCamera;
+	SpaceShip spaceShip;
 };
