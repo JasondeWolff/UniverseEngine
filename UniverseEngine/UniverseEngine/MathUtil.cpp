@@ -12,6 +12,14 @@ namespace UniverseEngine {
         return glm::degrees(glm::eulerAngles(rotation));
     }
 
+    glm::vec3 ClampMagnitude(const glm::vec3& v, float magnitude) {
+        return v * glm::min(glm::length(v), magnitude);
+    }
+
+    glm::vec2 ClampMagnitude(const glm::vec2& v, float magnitude) {
+        return glm::normalize(v) * glm::min(glm::length(v), magnitude);
+    }
+
     glm::vec3 ToGlm(const tinyusdz::value::float3 f3) {
         const float* data = f3.data();
         return glm::vec3(*data, *(data + 1), *(data + 2));

@@ -104,7 +104,7 @@ namespace UniverseEngine {
         this->UpdateMaterials(currentFrame, *cmdList);
 
         cmdList->BeginRenderPass(this->renderPass, this->swapchain->GetCurrentFramebuffer(),
-                                 glm::vec4(0.0, 0.05, 0.07, 1.0));
+                                 glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
         cmdList->BindGraphicsPipeline(this->unlitPipeline);
 

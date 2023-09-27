@@ -19,6 +19,9 @@ namespace UniverseEngine {
     glm::quat EulerToQuat(const glm::vec3& euler);
     glm::vec3 QuatToEuler(const glm::quat& rotation);
 
+    glm::vec3 ClampMagnitude(const glm::vec3& v, float magnitude = 1.0f);
+    glm::vec2 ClampMagnitude(const glm::vec2& v, float magnitude = 1.0f);
+
     glm::vec3 ToGlm(const tinyusdz::value::float3 f3);
     glm::vec2 ToGlm(const tinyusdz::value::float2 f2);
 }  // namespace UniverseEngine

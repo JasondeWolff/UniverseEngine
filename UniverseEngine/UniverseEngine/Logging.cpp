@@ -79,7 +79,7 @@ namespace UniverseEngine {
             fprintf(stdout, "\n");
         }
 
-        {
+        /*{
             FILE* fp = fopen(".log", "w+");
             std::string f(file);
             fprintf(fp, "[%s]", level);
@@ -90,7 +90,7 @@ namespace UniverseEngine {
             fprintf(fp, t);
             fprintf(fp, "\n");
             fflush(fp);
-        }
+        }*/
 
         if (crash) {
             __debugbreak();

@@ -3,6 +3,10 @@
 using namespace UniverseEngine;
 
 void MyGame::OnStart() {
+	this->terrainScene = Engine::GetResources().LoadScene("Assets/Models/MarsTerrain/MarsTerrain.gltf");
+	this->terrainSceneInstance = Engine::GetWorld().AddSceneInstance(this->terrainScene);
+	this->terrainSceneInstance->transform.Rotate(EulerToQuat(Right() * 90.0f));
+
 	this->freeFormCamera.Start();
 	this->spaceShip.Start();
 }
