@@ -18,5 +18,17 @@ namespace UniverseEngine {
 
     TextureRenderable::~TextureRenderable() {
     }
+
+    const std::shared_ptr<Image>& TextureRenderable::EmptyImage(
+        std::shared_ptr<LogicalDevice> device, const PhysicalDevice& physicalDevice,
+        CmdList& cmdList) {
+        static std::shared_ptr<Image> image = std::make_shared<Image>(
+            "Empty", device, physicalDevice, 1, 1,
+            ImageUsageBits::TRANSFER_DST_IMAGE | ImageUsageBits::SAMPLED_IMAGE,
+            GraphicsFormat::R8G8B8A8_SRGB);
+        cmdList.TransitionImageLayout(image, ImageLayout::UNDEFINED,
+                                      ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        return image;
+    }
 }  // namespace UniverseEngine
 #endif

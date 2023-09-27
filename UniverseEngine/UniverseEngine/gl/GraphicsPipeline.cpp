@@ -15,7 +15,7 @@ namespace UniverseEngine {
     GraphicsPipeline::GraphicsPipeline(std::shared_ptr<LogicalDevice> device,
                                        const std::vector<ShaderRenderable*>& shaders,
                                        std::shared_ptr<RenderPass> renderPass,
-                                       std::shared_ptr<DescriptorSetLayout> descriptorSetLayout,
+                                       std::vector<std::shared_ptr<DescriptorSetLayout>> descriptorSetLayout,
                                        std::vector<PushConstantRange> pushConstants)
         : device(device) {
         this->shaderProgram = glCreateProgram();

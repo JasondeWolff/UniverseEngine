@@ -37,21 +37,21 @@ namespace UniverseEngine {
             std::make_shared<DescriptorSetLayout>(
                 device,
                 std::vector<DescriptorLayoutBinding>{
-                    DescriptorLayoutBinding("baseColorMap", 1,
+                    DescriptorLayoutBinding("baseColorMap", 2,
                                             DescriptorType::COMBINED_IMAGE_SAMPLER,
                                             GraphicsStageFlagBits::FRAGMENT_STAGE),
-                    DescriptorLayoutBinding("metallicRoughnessMap", 2,
+                    DescriptorLayoutBinding("metallicRoughnessMap", 3,
                                             DescriptorType::COMBINED_IMAGE_SAMPLER,
                                             GraphicsStageFlagBits::FRAGMENT_STAGE),
-                    DescriptorLayoutBinding("emissiveMap", 3,
+                    DescriptorLayoutBinding("emissiveMap", 4,
                                             DescriptorType::COMBINED_IMAGE_SAMPLER,
                                             GraphicsStageFlagBits::FRAGMENT_STAGE),
-                    DescriptorLayoutBinding("normalMap", 4, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                    DescriptorLayoutBinding("normalMap", 5, DescriptorType::COMBINED_IMAGE_SAMPLER,
                                             GraphicsStageFlagBits::FRAGMENT_STAGE),
-                    DescriptorLayoutBinding("occlusionMap", 5,
+                    DescriptorLayoutBinding("occlusionMap", 6,
                                             DescriptorType::COMBINED_IMAGE_SAMPLER,
                                             GraphicsStageFlagBits::FRAGMENT_STAGE),
-                    DescriptorLayoutBinding("material", 6, DescriptorType::UNIFORM_BUFFER,
+                    DescriptorLayoutBinding("material", 7, DescriptorType::UNIFORM_BUFFER,
                                             GraphicsStageFlagBits::FRAGMENT_STAGE)});
 
         return descriptorLayout;
@@ -71,7 +71,7 @@ namespace UniverseEngine {
             this->descriptorSets[i] = std::make_shared<DescriptorSet>(
                 device, descriptorPool, MaterialRenderable::DescriptorLayout(device));
 
-            this->descriptorSets[i]->SetBuffer(6, DescriptorType::UNIFORM_BUFFER,
+            this->descriptorSets[i]->SetBuffer(7, DescriptorType::UNIFORM_BUFFER,
                                                this->uniformBuffers[i]);
         }
     }
@@ -100,55 +100,55 @@ namespace UniverseEngine {
 
         if (this->material.baseColorMap) {
             this->descriptorSets[currentFrame]->SetImage(
-                1, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                2, DescriptorType::COMBINED_IMAGE_SAMPLER,
                 this->material.baseColorMap->renderable->GetImage(), sampler);
         } else {
             this->descriptorSets[currentFrame]->SetImage(
-                1, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                2, DescriptorType::COMBINED_IMAGE_SAMPLER,
                 TextureRenderable::EmptyImage(this->device, this->physicalDevice, cmdList),
                 sampler);
         }
 
         if (this->material.metallicRoughnessMap) {
             this->descriptorSets[currentFrame]->SetImage(
-                2, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                3, DescriptorType::COMBINED_IMAGE_SAMPLER,
                 this->material.metallicRoughnessMap->renderable->GetImage(), sampler);
         } else {
             this->descriptorSets[currentFrame]->SetImage(
-                2, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                3, DescriptorType::COMBINED_IMAGE_SAMPLER,
                 TextureRenderable::EmptyImage(this->device, this->physicalDevice, cmdList),
                 sampler);
         }
 
         if (this->material.emissiveMap) {
             this->descriptorSets[currentFrame]->SetImage(
-                3, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                4, DescriptorType::COMBINED_IMAGE_SAMPLER,
                 this->material.emissiveMap->renderable->GetImage(), sampler);
         } else {
             this->descriptorSets[currentFrame]->SetImage(
-                3, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                4, DescriptorType::COMBINED_IMAGE_SAMPLER,
                 TextureRenderable::EmptyImage(this->device, this->physicalDevice, cmdList),
                 sampler);
         }
 
         if (this->material.normalMap) {
             this->descriptorSets[currentFrame]->SetImage(
-                4, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                5, DescriptorType::COMBINED_IMAGE_SAMPLER,
                 this->material.normalMap->renderable->GetImage(), sampler);
         } else {
             this->descriptorSets[currentFrame]->SetImage(
-                4, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                5, DescriptorType::COMBINED_IMAGE_SAMPLER,
                 TextureRenderable::EmptyImage(this->device, this->physicalDevice, cmdList),
                 sampler);
         }
 
         if (this->material.occlusionMap) {
             this->descriptorSets[currentFrame]->SetImage(
-                5, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                6, DescriptorType::COMBINED_IMAGE_SAMPLER,
                 this->material.occlusionMap->renderable->GetImage(), sampler);
         } else {
             this->descriptorSets[currentFrame]->SetImage(
-                5, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                6, DescriptorType::COMBINED_IMAGE_SAMPLER,
                 TextureRenderable::EmptyImage(this->device, this->physicalDevice, cmdList),
                 sampler);
         }

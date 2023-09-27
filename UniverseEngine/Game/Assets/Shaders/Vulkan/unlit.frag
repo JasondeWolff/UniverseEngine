@@ -7,12 +7,12 @@ layout(location = 2) in vec2 fragTexCoord;
 
 layout(location = 0) out vec4 outColor;
 
-layout(set = 1, binding = 1) uniform sampler2D baseColorMap;
-layout(set = 1, binding = 2) uniform sampler2D metallicRoughnessMap;
-layout(set = 1, binding = 3) uniform sampler2D emissiveMap;
-layout(set = 1, binding = 4) uniform sampler2D normalMap;
-layout(set = 1, binding = 5) uniform sampler2D occlusionMap;
-layout(set = 1, binding = 6) uniform Material {
+layout(set = 1, binding = 2) uniform sampler2D baseColorMap;
+layout(set = 1, binding = 3) uniform sampler2D metallicRoughnessMap;
+layout(set = 1, binding = 4) uniform sampler2D emissiveMap;
+layout(set = 1, binding = 5) uniform sampler2D normalMap;
+layout(set = 1, binding = 6) uniform sampler2D occlusionMap;
+layout(set = 1, binding = 7) uniform Material {
     vec4 baseColor;
     vec4 emissiveFactor;
     float metallicFactor;

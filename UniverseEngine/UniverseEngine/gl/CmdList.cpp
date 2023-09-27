@@ -30,6 +30,10 @@ namespace UniverseEngine {
         this->trackedDescriptorSets.clear();
     }
 
+    void CmdList::TransitionImageLayout(std::shared_ptr<Image> image, ImageLayout oldLayout,
+                                        ImageLayout newLayout) {
+    }
+
     void CmdList::SetScissor(const Rect2D& rect2D) {
         glScissor(static_cast<GLint>(rect2D.offset.x), static_cast<GLint>(rect2D.offset.y),
                   static_cast<GLsizei>(rect2D.extent.x), static_cast<GLsizei>(rect2D.extent.y));
@@ -49,7 +53,7 @@ namespace UniverseEngine {
     void CmdList::EndRenderPass() {
     }
 
-    void CmdList::BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet) {
+    void CmdList::BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet, uint32_t set) {
         for (auto& bufferBinding : descriptorSet->Buffers()) {
             uint32_t binding = bufferBinding.first;
             auto& buffer = bufferBinding.second;
