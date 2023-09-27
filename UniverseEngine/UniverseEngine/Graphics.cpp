@@ -111,8 +111,6 @@ namespace UniverseEngine {
         cmdList->SetScissor(swapchainExtent);
         cmdList->SetViewport(swapchainExtent);
 
-        bool one = false;
-
         auto& sceneInstances = world.GetAllSceneInstances();
         for (auto& sceneInstance : sceneInstances) {
             auto& scene = sceneInstance->hScene;
@@ -131,15 +129,6 @@ namespace UniverseEngine {
                 Mesh& mesh = scene->meshes[meshInstance.meshIdx.value()];
                 glm::mat4 modelMatrix = meshInstance.transform.GetMatrix();
 
-                /*if (!one) {
-                    Material& material = scene->materials[mesh.materialIdx];
-                    auto& baseColorImage = material.baseColorMap->renderable->image;
-                    this->descriptorSets[currentFrame]->SetImage(
-                        1, DescriptorType::COMBINED_IMAGE_SAMPLER, baseColorImage, this->sampler);
-
-                    cmdList->BindDescriptorSet(this->descriptorSets[currentFrame]);
-                    one = true;
-                }*/
                 cmdList->BindDescriptorSet(this->descriptorSets[currentFrame], 0);
 
                 Material& material = scene->materials[mesh.materialIdx];

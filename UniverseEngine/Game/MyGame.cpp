@@ -12,10 +12,6 @@ void MyGame::OnStart() {
 	this->susan = resources.LoadScene("Assets/Models/susanMultiple.obj");
 	this->susanInstance = world.AddSceneInstance(this->susan);
 
-	this->buggy = resources.LoadScene("Assets/Models/Buggy.gltf");
-	this->buggyInstance = world.AddSceneInstance(this->buggy);
-	this->buggyInstance->transform.SetScale(glm::vec3(0.1, 0.1, 0.1));
-
 	TerrianGenerator customTerrian;
 	customTerrian.GenerateRandomChunk();
 

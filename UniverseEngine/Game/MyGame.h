@@ -15,9 +15,7 @@ private:
 
 	std::shared_ptr<UniverseEngine::Scene> susan;
 	std::shared_ptr<UniverseEngine::Scene> spot;
-	std::shared_ptr<UniverseEngine::Scene> buggy;
 
 	std::shared_ptr<UniverseEngine::SceneInstance> susanInstance;
 	std::shared_ptr<UniverseEngine::SceneInstance> spotInstance;
-	std::shared_ptr<UniverseEngine::SceneInstance> buggyInstance;
 };

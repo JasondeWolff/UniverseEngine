@@ -90,20 +90,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AssetDemo.cpp" />
     <ClCompile Include="FreeFormCamera.cpp" />
     <ClCompile Include="MyGame.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\UniverseEngine\.clang-format" />
-    <None Include="Assets\cube.bin" />
-    <None Include="Assets\cube.gltf" />
-    <None Include="Assets\cube.usd">
-      <FileType>Document</FileType>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
-    </None>
-    <None Include="Assets\home_flower.usd" />
     <None Include="Assets\Shaders\GL\unlit.frag">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
@@ -114,21 +107,9 @@
     </None>
     <None Include="Assets\Shaders\Vulkan\unlit.frag" />
     <None Include="Assets\Shaders\Vulkan\unlit.vert" />
-    <None Include="Assets\susan.mtl">
-      <FileType>Document</FileType>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
-    </None>
-    <None Include="Assets\susanMultiple.bin" />
-    <None Include="Assets\susanMultiple.gltf" />
-    <None Include="Assets\susanMultiple.mtl" />
-    <None Include="Assets\templates\ad_3dsmax_maps.mdl" />
-    <None Include="Assets\templates\ad_3dsmax_materials.mdl" />
-    <None Include="Assets\templates\vray_maps.mdl" />
-    <None Include="Assets\templates\vray_materials.mdl" />
-    <None Include="Assets\Torii_Gate.usdz" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssetDemo.h" />
     <ClInclude Include="FreeFormCamera.h" />
     <ClInclude Include="MyGame.h" />
   </ItemGroup>

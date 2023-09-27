@@ -38,13 +38,13 @@ namespace UniverseEngine {
                                         static_cast<float>(node.translation[1]),
                                         static_cast<float>(node.translation[2]));
 
-            glm::quat rotation{};
+            glm::quat rotation = glm::identity<glm::quat>();
             if (node.rotation.size() == 4)
                 rotation = glm::quat(
                     static_cast<float>(node.rotation[0]), static_cast<float>(node.rotation[1]),
                     static_cast<float>(node.rotation[2]), static_cast<float>(node.rotation[3]));
 
-            glm::vec3 scale{};
+            glm::vec3 scale = glm::vec3(1.0, 1.0, 1.0);
             if (node.scale.size() == 3)
                 scale =
                     glm::vec3(static_cast<float>(node.scale[0]), static_cast<float>(node.scale[1]),

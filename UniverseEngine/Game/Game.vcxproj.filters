@@ -13,22 +13,25 @@
     <Filter Include="Assets\Shaders\GL">
       <UniqueIdentifier>{db98b50d-ddea-4a8c-af93-0fadcc2eea45}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Assets\Models">
-      <UniqueIdentifier>{004a1f60-8978-4974-98a5-f119bb2ef635}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Assets\Shaders\Vulkan">
       <UniqueIdentifier>{ab3785a9-6ddd-4fb0-8376-e3fe270c66c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Games">
+      <UniqueIdentifier>{46a9db49-2987-4b1b-ade6-0f472da0b02a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Src</Filter>
     </ClCompile>
-    <ClCompile Include="MyGame.cpp">
-      <Filter>Src</Filter>
-    </ClCompile>
     <ClCompile Include="FreeFormCamera.cpp">
       <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGame.cpp">
+      <Filter>Src\Games</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetDemo.cpp">
+      <Filter>Src\Games</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -39,45 +42,6 @@
     <None Include="Assets\Shaders\GL\unlit.vert">
       <Filter>Assets\Shaders\GL</Filter>
     </None>
-    <None Include="Assets\templates\ad_3dsmax_maps.mdl">
-      <Filter>Assets\Models</Filter>
-    </None>
-    <None Include="Assets\templates\ad_3dsmax_materials.mdl">
-      <Filter>Assets\Models</Filter>
-    </None>
-    <None Include="Assets\cube.usd">
-      <Filter>Assets\Models</Filter>
-    </None>
-    <None Include="Assets\home_flower.usd">
-      <Filter>Assets\Models</Filter>
-    </None>
-    <None Include="Assets\susan.mtl">
-      <Filter>Assets\Models</Filter>
-    </None>
-    <None Include="Assets\susanMultiple.mtl">
-      <Filter>Assets\Models</Filter>
-    </None>
-    <None Include="Assets\Torii_Gate.usdz">
-      <Filter>Assets\Models</Filter>
-    </None>
-    <None Include="Assets\templates\vray_maps.mdl">
-      <Filter>Assets\Models</Filter>
-    </None>
-    <None Include="Assets\templates\vray_materials.mdl">
-      <Filter>Assets\Models</Filter>
-    </None>
-    <None Include="Assets\cube.gltf">
-      <Filter>Assets\Models</Filter>
-    </None>
-    <None Include="Assets\cube.bin">
-      <Filter>Assets\Models</Filter>
-    </None>
-    <None Include="Assets\susanMultiple.bin">
-      <Filter>Assets\Models</Filter>
-    </None>
-    <None Include="Assets\susanMultiple.gltf">
-      <Filter>Assets\Models</Filter>
-    </None>
     <None Include="Assets\Shaders\Vulkan\unlit.frag">
       <Filter>Assets\Shaders\Vulkan</Filter>
     </None>
@@ -86,11 +50,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MyGame.h">
-      <Filter>Src</Filter>
-    </ClInclude>
     <ClInclude Include="FreeFormCamera.h">
       <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="MyGame.h">
+      <Filter>Src\Games</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetDemo.h">
+      <Filter>Src\Games</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
