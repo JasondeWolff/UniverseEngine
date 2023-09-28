@@ -7,6 +7,7 @@ namespace fs = std::filesystem;
 #pragma warning(disable : 4018)
 #pragma warning(disable : 4267)
 #define TINYGLTF_IMPLEMENTATION
+#define TINYGLTF_NO_EXTERNAL_IMAGE
 #include <tiny_gltf.h>
 
 #include <glm/gtc/type_ptr.hpp>
