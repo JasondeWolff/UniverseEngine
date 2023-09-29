@@ -29,11 +29,11 @@ namespace UniverseEngine {
             this->vertexBuffer = std::make_shared<Buffer>(
                 Format("%s_VERTEX_BUFFER", mesh.name.c_str()), device, physicalDevice,
                 BufferUsageBits::VERTEX_BUFFER,
-                static_cast<uint64_t>(vertexSize), BufferLocation::GPU_ONLY);
+                static_cast<uint64_t>(vertexSize), BufferLocation::CPU_TO_GPU);
             this->indexBuffer = std::make_shared<Buffer>(
                 Format("%s_INDEX_BUFFER", mesh.name.c_str()), device, physicalDevice,
-                BufferUsageBits::INDEX_BUFFER,
-                static_cast<uint64_t>(indexSize), BufferLocation::GPU_ONLY);
+                BufferUsageBits::INDEX_BUFFER, static_cast<uint64_t>(indexSize),
+                BufferLocation::CPU_TO_GPU);
 
             void* data = this->vertexBuffer->Map();
             memcpy(data, mesh.vertices.data(), vertexSize);
