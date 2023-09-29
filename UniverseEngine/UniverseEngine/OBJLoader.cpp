@@ -40,7 +40,7 @@ namespace UniverseEngine {
                 glm::vec4(material.diffuse[0], material.diffuse[1], material.diffuse[2], 1.0);
             if (!material.diffuse_texname.empty()) {
                 parsedMaterial.baseColorMap = Engine::GetResources().LoadTexture(
-                    filePath.parent_path() / material.diffuse_texname);
+                    filePath.parent_path() / material.diffuse_texname, TextureType::SRGB);
             } else {
                 parsedMaterial.baseColorMap = nullptr;
             }

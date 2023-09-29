@@ -5,6 +5,7 @@ layout(location = 0) in vec3 fragColor;
 layout(location = 1) in vec3 fragNormal;
 layout(location = 2) in vec2 fragTexCoord;
 layout(location = 3) in vec4 fragPosition;
+layout(location = 4) in vec4 fragTangent;
 
 layout(location = 0) out vec4 outColor;
 
@@ -155,7 +156,17 @@ void main() {
     vec3 P = fragPosition.xyz;
     vec3 V = normalize(lighting.eyePosition.xyz - P);
     vec3 N = normalize(fragNormal);
-    // TODO: Normal mapping
+    if (material.hasNormalMap) {
+        vec3 normalSample = texture(normalMap, fragTexCoord).rgb;
+        normalSample = normalize(normalSample * 2.0 - 1.0);
+
+        vec3 tangent = normalize(fragTangent.xyz);
+        tangent = normalize(tangent - N * dot(N, tangent));
+        vec3 B = normalize(cross(tangent, N) + 0.0001) * fragTangent.w;
+
+        mat3 TBN = mat3(tangent, B, N);
+        N = normalize(TBN * normalSample);
+    }
 
     vec3 emission = material.emissiveFactor.rgb;
     if (material.hasEmissiveMap) {

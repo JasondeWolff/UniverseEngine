@@ -23,11 +23,15 @@ namespace UniverseEngine {
         memcpy(data, texture.data, imageSize);
         stagingBuffer->Unmap();
 
+        GraphicsFormat format = (texture.type == TextureType::SRGB)
+                                    ? GraphicsFormat::R8G8B8A8_SRGB
+                                    : GraphicsFormat::R8G8B8A8_UNORM;
+
         this->image = std::make_shared<Image>(
             texture.name, device, physicalDevice, texture.width, texture.height, texture.mips,
             ImageUsageBits::TRANSFER_SRC_IMAGE | ImageUsageBits::TRANSFER_DST_IMAGE |
                 ImageUsageBits::SAMPLED_IMAGE,
-            GraphicsFormat::R8G8B8A8_SRGB);
+            format);
 
         uploadCmdList.TransitionImageLayout(this->image, ImageLayout::UNDEFINED,
                                             ImageLayout::TRANSFER_DST_OPTIMAL);

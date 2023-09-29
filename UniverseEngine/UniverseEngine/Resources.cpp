@@ -27,7 +27,7 @@ namespace UniverseEngine {
         return hScene;
     }
 
-    std::shared_ptr<Texture> Resources::LoadTexture(const fs::path& filePath) {
+    std::shared_ptr<Texture> Resources::LoadTexture(const fs::path& filePath, TextureType type) {
         auto texture = texturePaths.find(filePath);
         if (texture != texturePaths.end())
             return texture->second;
@@ -38,7 +38,7 @@ namespace UniverseEngine {
         fs::path extension = filePath.extension();
         for (size_t i = 0; i < 8; i++) {
             if (supportedExtensions[i] == extension) {
-                std::shared_ptr<Texture> hTexture = LoadIMG(filePath);
+                std::shared_ptr<Texture> hTexture = LoadIMG(filePath, type);
                 this->texturePaths.insert(std::make_pair(filePath, hTexture));
                 this->newTextures.push_back(hTexture);
                 this->textures.push_back(hTexture);

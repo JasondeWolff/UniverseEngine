@@ -12,8 +12,12 @@ namespace UniverseEngine {
     TextureRenderable::TextureRenderable(std::shared_ptr<LogicalDevice> device,
                                          const PhysicalDevice& physicalDevice,
                                          CmdList& uploadCmdList, const Texture& texture) {
-        this->image = std::make_shared<Image>(texture.data, texture.width, texture.height, texture.mips,
-                                              GraphicsFormat::R8G8B8A8_SRGB);
+        GraphicsFormat format = (texture.type == TextureType::SRGB)
+                                    ? GraphicsFormat::R8G8B8A8_SRGB
+                                    : GraphicsFormat::R8G8B8A8_UNORM;
+
+        this->image = std::make_shared<Image>(texture.data, texture.width, texture.height,
+                                              texture.mips, format);
     }
 
     TextureRenderable::~TextureRenderable() {

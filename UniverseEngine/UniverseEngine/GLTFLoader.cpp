@@ -99,7 +99,7 @@ namespace UniverseEngine {
             if (textureIdx != -1) {
                 size_t source = model.textures[static_cast<size_t>(textureIdx)].source;
                 parsedMaterial.baseColorMap = Engine::GetResources().LoadTexture(
-                    filePath.parent_path() / model.images[source].uri);
+                    filePath.parent_path() / model.images[source].uri, TextureType::SRGB);
             }
 
             textureIdx = material.pbrMetallicRoughness.metallicRoughnessTexture.index;
@@ -110,7 +110,7 @@ namespace UniverseEngine {
             if (textureIdx != -1) {
                 size_t source = model.textures[static_cast<size_t>(textureIdx)].source;
                 parsedMaterial.metallicRoughnessMap = Engine::GetResources().LoadTexture(
-                    filePath.parent_path() / model.images[source].uri);
+                    filePath.parent_path() / model.images[source].uri, TextureType::UNORM);
             }
 
             textureIdx = material.normalTexture.index;
@@ -118,7 +118,7 @@ namespace UniverseEngine {
             if (textureIdx != -1) {
                 size_t source = model.textures[static_cast<size_t>(textureIdx)].source;
                 parsedMaterial.normalMap = Engine::GetResources().LoadTexture(
-                    filePath.parent_path() / model.images[source].uri);
+                    filePath.parent_path() / model.images[source].uri, TextureType::UNORM);
             }
 
             textureIdx = material.emissiveTexture.index;
@@ -127,7 +127,7 @@ namespace UniverseEngine {
             if (textureIdx != -1) {
                 size_t source = model.textures[static_cast<size_t>(textureIdx)].source;
                 parsedMaterial.emissiveMap = Engine::GetResources().LoadTexture(
-                    filePath.parent_path() / model.images[source].uri);
+                    filePath.parent_path() / model.images[source].uri, TextureType::SRGB);
             }
 
             textureIdx = material.occlusionTexture.index;
@@ -135,7 +135,7 @@ namespace UniverseEngine {
             if (textureIdx != -1) {
                 size_t source = model.textures[static_cast<size_t>(textureIdx)].source;
                 parsedMaterial.occlusionMap = Engine::GetResources().LoadTexture(
-                    filePath.parent_path() / model.images[source].uri);
+                    filePath.parent_path() / model.images[source].uri, TextureType::UNORM);
             }
 
             parsedScene.materials.emplace_back(std::move(parsedMaterial));

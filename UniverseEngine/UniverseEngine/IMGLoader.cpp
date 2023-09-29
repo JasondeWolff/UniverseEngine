@@ -6,7 +6,8 @@
 #include "Logging.h"
 
 namespace UniverseEngine {
-    std::shared_ptr<Texture> Resources::LoadIMG(const std::filesystem::path& filePath) {
+    std::shared_ptr<Texture> Resources::LoadIMG(const std::filesystem::path& filePath,
+                                                TextureType type) {
         //stbi_set_flip_vertically_on_load(true);
 
         int width, height, nrChannels;
@@ -17,7 +18,7 @@ namespace UniverseEngine {
 
         unsigned mips = static_cast<unsigned>(std::floor(std::log2(std::max(width, height)))) + 1;
         Texture parsedTexture(name, data, static_cast<unsigned>(width),
-                              static_cast<unsigned>(height), mips);
+                              static_cast<unsigned>(height), type, mips);
 
         return std::make_shared<Texture>(std::move(parsedTexture));
     }

@@ -4,8 +4,9 @@ namespace UniverseEngine {
     Texture::Texture() : name("default"), data(nullptr), width(0), height(0), mips(0) {
     }
 
-    Texture::Texture(const std::string& name, unsigned char* data, unsigned width, unsigned height, unsigned mips)
-        : name(name), data(data), width(width), height(height), mips(mips) {
+    Texture::Texture(const std::string& name, unsigned char* data, unsigned width,
+                     unsigned height, TextureType type, unsigned mips)
+        : name(name), data(data), width(width), height(height), mips(mips), type(type) {
     }
 
     Texture::Texture(Texture&& other) noexcept
@@ -14,6 +15,7 @@ namespace UniverseEngine {
           width(other.width),
           height(other.height),
           mips(other.mips),
+          type(other.type),
           renderable(std::move(other.renderable)) {
         other.data = nullptr;
     }
@@ -24,6 +26,7 @@ namespace UniverseEngine {
         this->width = other.width;
         this->height = other.height;
         this->mips = other.mips;
+        this->type = other.type;
         this->renderable = std::move(other.renderable);
 
         other.data = nullptr;

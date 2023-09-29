@@ -274,6 +274,9 @@ namespace UniverseEngine {
 
             for (Mesh& mesh : scene->meshes) {
                 if (!mesh.renderable) {
+                    if (!mesh.HasTangents())
+                        mesh.GenerateTangents();
+
                     mesh.renderable = std::move(std::unique_ptr<MeshRenderable>(new MeshRenderable(
                         this->device, *this->physicalDevice, *uploadCmdList, mesh)));
                     mesh.ClearCPUData();

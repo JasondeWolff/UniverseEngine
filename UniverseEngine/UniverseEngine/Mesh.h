@@ -34,6 +34,9 @@ namespace UniverseEngine {
         glm::vec3 worldPosition;
         size_t materialIdx;
 
+        bool HasTangents() const;
+        void GenerateTangents();
+
     private:
         friend class Graphics;
         std::unique_ptr<MeshRenderable> renderable;
