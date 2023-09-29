@@ -29,7 +29,10 @@ namespace UniverseEngine {
         glBindBuffer(this->identifier, this->buffer);
         GlDebugNames::Set(GL_BUFFER, this->buffer, name);
 
-        this->bufferMemory = malloc(static_cast<size_t>(size));
+        if (location == BufferLocation::CPU_TO_GPU)
+            this->bufferMemory = malloc(static_cast<size_t>(size));
+        else
+            this->bufferMemory = nullptr;
     }
 
     Buffer::Buffer(Buffer&& other) noexcept
@@ -53,10 +56,14 @@ namespace UniverseEngine {
     }
 
     void* Buffer::Map() {
+        UE_ASSERT_MSG(this->bufferMemory, "Buffer location is GPU_ONLY.");
+
         return this->bufferMemory;
     }
 
     void Buffer::Unmap() {
+        UE_ASSERT_MSG(this->bufferMemory, "Buffer location is GPU_ONLY.");
+
         glBindBuffer(this->identifier, this->buffer);
         glBufferData(this->identifier, this->size,
                      this->bufferMemory, GL_STATIC_DRAW);

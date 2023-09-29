@@ -28,6 +28,9 @@ void AssetDemo::OnStart() {
 		this->sceneInstances.push_back(sceneInstance);
 	}
 
+	this->sponza = resources.LoadScene("Assets/Models/Showcase/Sponza/Sponza.gltf");
+	world.AddSceneInstance(this->sponza)->transform.SetScale(glm::vec3(2.0));
+
 	this->camera.Start();
 }
 

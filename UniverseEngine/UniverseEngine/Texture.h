@@ -6,9 +6,15 @@ namespace UniverseEngine {
     class Graphics;
     class MaterialRenderable;
 
+    enum class TextureType {
+        SRGB,
+        UNORM
+    };
+
     struct Texture {
         Texture();
-        Texture(const std::string& name, unsigned char* data, unsigned width, unsigned height);
+        Texture(const std::string& name, unsigned char* data, unsigned width, unsigned height,
+                TextureType type, unsigned mips = 1);
 
         Texture(const Texture& other) = delete;
         Texture& operator=(const Texture& other) = delete;
@@ -21,6 +27,9 @@ namespace UniverseEngine {
         unsigned char* data;
         unsigned width;
         unsigned height;
+        unsigned mips;
+
+        TextureType type;
 
     private:
         friend class Graphics;

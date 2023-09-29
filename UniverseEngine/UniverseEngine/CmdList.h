@@ -33,6 +33,7 @@ namespace UniverseEngine {
 
         void CopyBuffers(std::shared_ptr<Buffer> src, std::shared_ptr<Buffer> dst);
         void CopyBuffers(std::shared_ptr<Buffer> src, std::shared_ptr<Image> dst);
+        void GenerateMips(std::shared_ptr<Image> image);
 
         void TransitionImageLayout(std::shared_ptr<Image> image, ImageLayout oldLayout,
                                    ImageLayout newLayout);
@@ -69,6 +70,7 @@ namespace UniverseEngine {
         const CmdQueue& cmdQueue;
 
 #ifdef GRAPHICS_API_GL
+        std::vector<unsigned> trackedPushConstants;
 #elif defined(GRAPHICS_API_VULKAN)
         VkCommandBuffer cmdBuffer;
 #endif

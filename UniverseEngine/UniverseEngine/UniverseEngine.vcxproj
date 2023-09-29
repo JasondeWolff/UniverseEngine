@@ -29,6 +29,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="gl\GlGraphicsFormat.h" />
     <ClInclude Include="GraphicsStageFlags.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="MaterialRenderable.h" />
     <ClInclude Include="PushConstantRange.h" />
     <ClInclude Include="Sampler.h" />
@@ -86,6 +87,7 @@
     <ClCompile Include="GraphicsStageFlags.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="TextureRenderable.cpp" />
+    <ClCompile Include="vulkan\VkVma.cpp" />
     <ClCompile Include="vulkan\MaterialRenderable.cpp" />
     <ClCompile Include="vulkan\Sampler.cpp" />
     <ClCompile Include="vulkan\TextureRenderable.cpp" />
@@ -145,7 +147,6 @@
     <ClCompile Include="gl\ShaderRenderable.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp" />
-    <ClCompile Include="USDLoader.cpp" />
     <ClCompile Include="gl\Swapchain.cpp" />
     <ClCompile Include="vulkan\Swapchain.cpp" />
     <ClCompile Include="vulkan\VkExtensions.cpp" />
@@ -270,6 +271,10 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <SupportJustMyCode>false</SupportJustMyCode>
+      <Optimization>MaxSpeed</Optimization>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -1,8 +1,8 @@
 #pragma once
 
+#include <bitset>
 #include <memory>
 #include <string>
-#include <bitset>
 
 #include "GraphicsAPI.h"
 #include "GraphicsFormat.h"
@@ -35,7 +35,7 @@ namespace UniverseEngine {
     class Image {
     public:
         Image(const std::string& name, std::shared_ptr<LogicalDevice> device,
-              const PhysicalDevice& physicalDevice, uint32_t width, uint32_t height,
+              const PhysicalDevice& physicalDevice, uint32_t width, uint32_t height, uint32_t mips,
               ImageUsage usage, GraphicsFormat format);
         ~Image();
         Image(const Image& other) = delete;
@@ -43,16 +43,18 @@ namespace UniverseEngine {
 
         uint32_t Width() const;
         uint32_t Height() const;
+        uint32_t Mips() const;
         GraphicsFormat Format() const;
 
     private:
         uint32_t width;
         uint32_t height;
+        uint32_t mips;
         GraphicsFormat format;
 
 #ifdef GRAPHICS_API_GL
     public:
-        Image(void* data, uint32_t width, uint32_t height, GraphicsFormat format);
+        Image(void* data, uint32_t width, uint32_t height, uint32_t mips, GraphicsFormat format);
 
         unsigned GetTexture() const;
 
@@ -71,7 +73,7 @@ namespace UniverseEngine {
 
         VkImage image;
         VkImageView imageView;
-        VkDeviceMemory imageMemory;
+        VmaAllocation allocation;
 #endif
     };
 }  // namespace UniverseEngine

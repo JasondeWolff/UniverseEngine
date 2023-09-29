@@ -23,16 +23,20 @@ namespace UniverseEngine {
         memcpy(data, texture.data, imageSize);
         stagingBuffer->Unmap();
 
+        GraphicsFormat format = (texture.type == TextureType::SRGB)
+                                    ? GraphicsFormat::R8G8B8A8_SRGB
+                                    : GraphicsFormat::R8G8B8A8_UNORM;
+
         this->image = std::make_shared<Image>(
-            texture.name, device, physicalDevice, texture.width, texture.height,
-            ImageUsageBits::TRANSFER_DST_IMAGE | ImageUsageBits::SAMPLED_IMAGE,
-            GraphicsFormat::R8G8B8A8_SRGB);
+            texture.name, device, physicalDevice, texture.width, texture.height, texture.mips,
+            ImageUsageBits::TRANSFER_SRC_IMAGE | ImageUsageBits::TRANSFER_DST_IMAGE |
+                ImageUsageBits::SAMPLED_IMAGE,
+            format);
 
         uploadCmdList.TransitionImageLayout(this->image, ImageLayout::UNDEFINED,
                                             ImageLayout::TRANSFER_DST_OPTIMAL);
         uploadCmdList.CopyBuffers(stagingBuffer, this->image);
-        uploadCmdList.TransitionImageLayout(this->image, ImageLayout::TRANSFER_DST_OPTIMAL,
-                                            ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        uploadCmdList.GenerateMips(this->image);
     }
 
     TextureRenderable::~TextureRenderable() {
@@ -42,7 +46,7 @@ namespace UniverseEngine {
         std::shared_ptr<LogicalDevice> device, const PhysicalDevice& physicalDevice,
         CmdList& cmdList) {
         static std::shared_ptr<Image> image = std::make_shared<Image>(
-            "Empty", device, physicalDevice, 1, 1,
+            "Empty", device, physicalDevice, 1, 1, 1,
             ImageUsageBits::TRANSFER_DST_IMAGE | ImageUsageBits::SAMPLED_IMAGE,
             GraphicsFormat::R8G8B8A8_SRGB);
         cmdList.TransitionImageLayout(image, ImageLayout::UNDEFINED,

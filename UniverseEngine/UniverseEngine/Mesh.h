@@ -20,16 +20,6 @@ namespace UniverseEngine {
         glm::vec4 color = glm::vec4(1.0, 1.0, 1.0, 1.0);
     };
 
-    struct MeshInstance {
-        MeshInstance() : transform{}, meshIdx(0) {
-        }
-        MeshInstance(size_t idx) : transform{}, meshIdx(idx) {
-        }
-
-        Transform transform;
-        std::optional<size_t> meshIdx;
-    };
-
     struct Mesh {
         Mesh() = default;
         explicit Mesh(const Mesh& other) = delete;
@@ -43,6 +33,9 @@ namespace UniverseEngine {
         std::vector<uint32_t> indices;
         glm::vec3 worldPosition;
         size_t materialIdx;
+
+        bool HasTangents() const;
+        void GenerateTangents();
 
     private:
         friend class Graphics;

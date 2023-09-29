@@ -5,6 +5,7 @@
 
 #include "Material.h"
 #include "Mesh.h"
+#include "Light.h"
 
 namespace UniverseEngine {
     struct Scene;
@@ -19,6 +20,14 @@ namespace UniverseEngine {
         std::shared_ptr<Scene> hScene;
     };
 
+    struct SceneNode {
+        SceneNode() = default;
+
+        Transform transform{};
+        std::optional<size_t> meshIdx = std::nullopt;
+        std::optional<size_t> pointLightIdx = std::nullopt;
+    };
+
     struct Scene {
         Scene() = default;
         explicit Scene(const Scene& other) = delete;
@@ -27,15 +36,16 @@ namespace UniverseEngine {
         Scene& operator=(Scene&& other) noexcept = default;
 
         std::string name;
+        tree<SceneNode> hierarchy;
 
-        tree<MeshInstance> meshHierarchy;
         std::vector<Mesh> meshes;
         std::vector<Material> materials;
+        std::vector<PointLight> pointLights;
 
-        tree<MeshInstance> TransformedMeshHierarchy(const Transform& root) const;
+        tree<SceneNode> TransformedHierarchy(const Transform& root) const;
 
     private:
-        void TransformedMeshHierarchyRec(tree<MeshInstance>& instances, glm::mat4 parentMatrix,
-                                         tree<MeshInstance>::iterator_base parent) const;
+        void TransformedHierarchyRec(tree<SceneNode>& instances, glm::mat4 parentMatrix,
+                                         tree<SceneNode>::iterator_base parent) const;
     };
 }  // namespace UniverseEngine

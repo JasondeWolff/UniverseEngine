@@ -241,6 +241,9 @@
     <ClInclude Include="MaterialRenderable.h">
       <Filter>Src\Graphics\Common\Assets</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Src\Resources\Assets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -257,9 +260,6 @@
     </ClCompile>
     <ClCompile Include="MathUtil.cpp">
       <Filter>Src\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="USDLoader.cpp">
-      <Filter>Src\Resources\Loaders</Filter>
     </ClCompile>
     <ClCompile Include="OBJLoader.cpp">
       <Filter>Src\Resources\Loaders</Filter>
@@ -476,6 +476,9 @@
     </ClCompile>
     <ClCompile Include="TextureRenderable.cpp">
       <Filter>Src\Graphics\Common\Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\VkVma.cpp">
+      <Filter>Src\Graphics\Vulkan\Specific</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

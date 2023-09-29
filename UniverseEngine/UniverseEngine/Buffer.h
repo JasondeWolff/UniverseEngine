@@ -58,7 +58,7 @@ namespace UniverseEngine {
 
     private:
         VkBuffer buffer;
-        VkDeviceMemory bufferMemory;
+        VmaAllocation allocation;
 #endif
     };
 }  // namespace UniverseEngine

@@ -63,7 +63,7 @@ namespace UniverseEngine {
                 case GraphicsFormat::R8G8B8_SINT:
                     return GL_RGB8I;
                 case GraphicsFormat::R8G8B8_SRGB:
-                    return GL_RGB16F;
+                    return GL_SRGB8;
                 case GraphicsFormat::B8G8R8_UNORM:
                     return GL_RGB16F;
                 case GraphicsFormat::B8G8R8_SNORM:
@@ -77,9 +77,9 @@ namespace UniverseEngine {
                 case GraphicsFormat::B8G8R8_SINT:
                     return GL_RGB8I;
                 case GraphicsFormat::B8G8R8_SRGB:
-                    return GL_RGB;
+                    return GL_SRGB8;
                 case GraphicsFormat::R8G8B8A8_UNORM:
-                    return GL_RGBA16F;
+                    return GL_RGBA;
                 case GraphicsFormat::R8G8B8A8_SNORM:
                     return GL_RGBA16F;
                 case GraphicsFormat::R8G8B8A8_USCALED:
@@ -91,7 +91,7 @@ namespace UniverseEngine {
                 case GraphicsFormat::R8G8B8A8_SINT:
                     return GL_RGBA8I;
                 case GraphicsFormat::R8G8B8A8_SRGB:
-                    return GL_RGBA;
+                    return GL_SRGB8_ALPHA8;
                 case GraphicsFormat::B8G8R8A8_UNORM:
                     return GL_RGBA16F;
                 case GraphicsFormat::B8G8R8A8_SNORM:
@@ -287,7 +287,7 @@ namespace UniverseEngine {
                 case GraphicsFormat::B8G8R8_SRGB:
                     return GL_UNSIGNED_BYTE;
                 case GraphicsFormat::R8G8B8A8_UNORM:
-                    return GL_HALF_FLOAT;
+                    return GL_UNSIGNED_BYTE;
                 case GraphicsFormat::R8G8B8A8_SNORM:
                     return GL_HALF_FLOAT;
                 case GraphicsFormat::R8G8B8A8_USCALED:

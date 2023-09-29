@@ -13,7 +13,7 @@ namespace UniverseEngine {
         this->height = window.Height();
 
         this->image = std::make_shared<Image>(
-            "SwapchainFramebuffer", this->device, physicalDevice, this->width, this->height,
+            "SwapchainFramebuffer", this->device, physicalDevice, this->width, this->height, 1,
             ImageUsageBits::STORAGE_IMAGE, GraphicsFormat::R8G8B8A8_SRGB);
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
@@ -23,6 +23,8 @@ namespace UniverseEngine {
                 std::move(Semaphore(UniverseEngine::Format("Render Finished %i", i), device)));
             inflightFences.emplace_back(std::move(std::make_shared<Fence>(device, true)));
         }
+
+        glEnable(GL_FRAMEBUFFER_SRGB);
     }
 
     Swapchain::~Swapchain() {

@@ -40,7 +40,7 @@ namespace UniverseEngine {
                 glm::vec4(material.diffuse[0], material.diffuse[1], material.diffuse[2], 1.0);
             if (!material.diffuse_texname.empty()) {
                 parsedMaterial.baseColorMap = Engine::GetResources().LoadTexture(
-                    filePath.parent_path() / material.diffuse_texname);
+                    filePath.parent_path() / material.diffuse_texname, TextureType::SRGB);
             } else {
                 parsedMaterial.baseColorMap = nullptr;
             }
@@ -48,8 +48,8 @@ namespace UniverseEngine {
             parsedScene.materials.emplace_back(std::move(parsedMaterial));
         }
 
-        auto instanceRoot = parsedScene.meshHierarchy.begin();
-        instanceRoot = parsedScene.meshHierarchy.insert(instanceRoot, MeshInstance{});
+        auto instanceRoot = parsedScene.hierarchy.begin();
+        instanceRoot = parsedScene.hierarchy.insert(instanceRoot, SceneNode{});
 
         for (auto& shape : shapes) {
             auto& mesh = shape.mesh;
@@ -98,9 +98,11 @@ namespace UniverseEngine {
                 index_offset += fv;
             }
 
+            SceneNode node{};
+            node.meshIdx = parsedScene.meshes.size() - 1;
+
             parsedScene.meshes.emplace_back(std::move(parsedMesh));
-            parsedScene.meshHierarchy.append_child(instanceRoot,
-                                                   MeshInstance(parsedScene.meshes.size() - 1));
+            parsedScene.hierarchy.append_child(instanceRoot, node);
         }
 
         return std::make_shared<Scene>(std::move(parsedScene));

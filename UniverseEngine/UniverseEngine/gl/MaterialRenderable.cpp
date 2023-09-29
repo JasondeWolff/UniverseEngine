@@ -66,7 +66,7 @@ namespace UniverseEngine {
             this->uniformBuffers[i] =
                 std::make_shared<Buffer>(Format("MaterialUniformBuffer_%i", i), device,
                                          physicalDevice, BufferUsageBits::UNIFORM_BUFFER,
-                                         sizeof(MaterialUniformBuffer), BufferLocation::GPU_ONLY);
+                                         sizeof(MaterialUniformBuffer), BufferLocation::CPU_TO_GPU);
 
             this->descriptorSets[i] = std::make_shared<DescriptorSet>(
                 device, descriptorPool, MaterialRenderable::DescriptorLayout(device));

@@ -35,10 +35,6 @@ void SpaceShip::Update(float deltaTime) {
 	this->speed += this->throttle * deltaTime;
 	this->speed = glm::clamp(this->speed, -this->config.maxReverseSpeed, this->config.maxSpeed);
 
-	UE_INFO("----SHIP----");
-	UE_INFO("Speed:     %f", this->speed);
-	UE_INFO("Throttle:  %f", this->throttle);
-
 	shipTransform.Translate(-shipTransform.GetForward() * this->speed * deltaTime);
 
 	auto& window = Engine::GetGraphics().GetWindow();
@@ -48,8 +44,6 @@ void SpaceShip::Update(float deltaTime) {
 	float maxDragDistance = static_cast<float>(window.Height()) * 0.25f;
 	glm::vec2 inputVector(-horizontalInput / maxDragDistance, verticalInput / maxDragDistance);
 	inputVector = ClampMagnitude(inputVector, 1.0f);
-
-	UE_INFO("Steering: %f %f", inputVector.x, inputVector.y);
 
 	this->desiredEulerRotation.y += inputVector.x * this->config.maneuverability * deltaTime;
 	this->desiredEulerRotation.x += inputVector.y * this->config.maneuverability * deltaTime;

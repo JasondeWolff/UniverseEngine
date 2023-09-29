@@ -45,10 +45,21 @@ namespace UniverseEngine {
         UE_ASSERT_MSG(!vkCreateDevice(physicalDevice.GetPhysicalDevice(), &createInfo, nullptr,
                                       &this->device),
                       "Failed to create logical device.");
+
+        VmaAllocatorCreateInfo vmaCreateInfo{};
+        vmaCreateInfo.vulkanApiVersion = VK_API_VERSION_1_3;
+        vmaCreateInfo.instance = instance->GetInstance();
+        vmaCreateInfo.physicalDevice = physicalDevice.GetPhysicalDevice();
+        vmaCreateInfo.device = this->device;
+        vmaCreateInfo.flags = VMA_ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT;
+
+        UE_ASSERT_MSG(!vmaCreateAllocator(&vmaCreateInfo, &this->allocator),
+                      "Failed to create allocator.");
     }
 
     LogicalDevice::~LogicalDevice() {
         this->WaitIdle();
+        vmaDestroyAllocator(this->allocator);
         vkDestroyDevice(this->device, nullptr);
     }
 
@@ -58,6 +69,10 @@ namespace UniverseEngine {
 
     VkDevice LogicalDevice::GetDevice() const {
         return this->device;
+    }
+
+    VmaAllocator LogicalDevice::GetAllocator() const {
+        return this->allocator;
     }
 }  // namespace UniverseEngine
 #endif

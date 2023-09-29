@@ -16,6 +16,7 @@ namespace UniverseEngine {
     void CmdQueue::SubmitCmdList(std::shared_ptr<CmdList> cmdList, std::shared_ptr<Fence> fence,
                                  const std::vector<Semaphore*>& waitSemaphores,
                                  const std::vector<Semaphore*>& signalSemaphores) {
+        this->busyCmdLists.push(InFlightCmdList{fence, cmdList});
     }
 }  // namespace UniverseEngine
 #endif
