@@ -37,4 +37,8 @@ namespace UniverseEngine {
 
         return std::make_shared<Shader>(std::move(parsedShader));
     }
+
+    Mesh Resources::CreatePlane(int width, int height, int widthSegments, int heightSegments) {
+        return Mesh();
+    }
 }  // namespace UniverseEngine

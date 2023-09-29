@@ -13,7 +13,6 @@
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Chunk.h" />
     <ClInclude Include="CmdList.h" />
     <ClInclude Include="CmdQueue.h" />
     <ClInclude Include="Defines.h" />
@@ -49,7 +48,6 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Option.h" />
     <ClInclude Include="PhysicalDevice.h" />
-    <ClInclude Include="Plane.h" />
     <ClInclude Include="Rect2D.h" />
     <ClInclude Include="RenderPass.h" />
     <ClInclude Include="Resources.h" />
@@ -79,7 +77,6 @@
   <ItemGroup>
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Chunk.cpp" />
     <ClCompile Include="CmdQueue.cpp" />
     <ClCompile Include="gl\Buffer.cpp" />
     <ClCompile Include="gl\DescriptorPool.cpp" />
@@ -143,7 +140,6 @@
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="MathUtil.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
-    <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />

@@ -27,6 +27,15 @@ namespace UniverseEngine {
         return hScene;
     }
 
+    std::shared_ptr<Scene> Resources::CreateScene(Mesh&& mesh) {
+        std::shared_ptr<Scene> hScene;
+
+        hScene.get()->meshes.push_back(std::move(mesh));
+        //Add materials
+
+        return hScene;
+    }
+    
     std::shared_ptr<Texture> Resources::LoadTexture(const fs::path& filePath, TextureType type) {
         auto texture = texturePaths.find(filePath);
         if (texture != texturePaths.end())

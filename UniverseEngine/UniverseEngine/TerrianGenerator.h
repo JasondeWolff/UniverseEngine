@@ -1,20 +1,21 @@
 #pragma once
-
-#include "Chunk.h"
+#include <vector>
+#include <memory>
 
 namespace UniverseEngine {
     class Resources;
+    struct Scene;
 
     class TerrianGenerator {
     public:
         TerrianGenerator();
-        void GenerateRandomChunk();
-        //Scene ConvertChunkToScene();
+        void CreatePlane(int width = 1, int height = 1, int widthSegments = 1,
+                         int heightSegments = 1);
 
     private:
         friend class Resources;
 
-        Chunk randomChunk;
+        std::vector<std::shared_ptr<Scene>> generatedWorld;
 
         void Update();
     };
