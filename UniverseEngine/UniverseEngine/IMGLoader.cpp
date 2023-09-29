@@ -15,8 +15,9 @@ namespace UniverseEngine {
 
         std::string name = filePath.filename().string();
 
+        unsigned mips = static_cast<unsigned>(std::floor(std::log2(std::max(width, height)))) + 1;
         Texture parsedTexture(name, data, static_cast<unsigned>(width),
-                              static_cast<unsigned>(height));
+                              static_cast<unsigned>(height), mips);
 
         return std::make_shared<Texture>(std::move(parsedTexture));
     }

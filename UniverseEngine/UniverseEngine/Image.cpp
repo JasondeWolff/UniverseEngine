@@ -15,6 +15,10 @@ namespace UniverseEngine {
         return this->height;
     }
 
+    uint32_t Image::Mips() const {
+        return this->mips;
+    }
+
     GraphicsFormat Image::Format() const {
         return this->format;
     }

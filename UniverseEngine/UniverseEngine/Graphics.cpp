@@ -157,7 +157,7 @@ namespace UniverseEngine {
         uint32_t width = this->swapchain->Extent().extent.x;
         uint32_t height = this->swapchain->Extent().extent.y;
         this->depthImage = std::make_shared<Image>(
-            "Depth Image", this->device, *this->physicalDevice, width, height,
+            "Depth Image", this->device, *this->physicalDevice, width, height, 1,
             ImageUsageBits::DEPTH_STENCIL_ATTACHMENT, GraphicsFormat::D32_SFLOAT);
 
         this->renderPass = std::make_shared<RenderPass>(

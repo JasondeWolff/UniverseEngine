@@ -1,12 +1,12 @@
 #include "../GraphicsAPI.h"
 #ifdef GRAPHICS_API_VULKAN
 
+#include "../Format.h"
 #include "../Image.h"
 #include "../Logging.h"
-#include "../Format.h"
 #include "../LogicalDevice.h"
-#include "VkGraphicsFormat.h"
 #include "VkDebugNames.h"
+#include "VkGraphicsFormat.h"
 
 namespace UniverseEngine {
     VkImageUsageFlags GetVkImageUsageFlags(ImageUsage usage) {
@@ -32,16 +32,21 @@ namespace UniverseEngine {
     }
 
     Image::Image(const std::string& name, std::shared_ptr<LogicalDevice> device,
-                 const PhysicalDevice& physicalDevice,
-                 uint32_t width, uint32_t height, ImageUsage usage, GraphicsFormat format)
-        : device(device), width(width), height(height), format(format), imageView(VK_NULL_HANDLE) {
+                 const PhysicalDevice& physicalDevice, uint32_t width, uint32_t height,
+                 uint32_t mips, ImageUsage usage, GraphicsFormat format)
+        : device(device),
+          width(width),
+          height(height),
+          mips(mips),
+          format(format),
+          imageView(VK_NULL_HANDLE) {
         VkImageCreateInfo createInfo{};
         createInfo.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
         createInfo.imageType = VkImageType::VK_IMAGE_TYPE_2D;
         createInfo.extent.width = width;
         createInfo.extent.height = height;
         createInfo.extent.depth = 1;
-        createInfo.mipLevels = 1;
+        createInfo.mipLevels = mips;
         createInfo.format = VkGraphicsFormat::To(format);
         createInfo.tiling = VkImageTiling::VK_IMAGE_TILING_OPTIMAL;
         createInfo.arrayLayers = 1;
@@ -52,27 +57,12 @@ namespace UniverseEngine {
         VmaAllocationCreateInfo allocCreateInfo{};
         allocCreateInfo.usage = VMA_MEMORY_USAGE_AUTO;
 
-        UE_ASSERT_MSG(!vmaCreateImage(device->GetAllocator(), &createInfo, &allocCreateInfo, &this->image, &this->allocation, nullptr),
+        UE_ASSERT_MSG(!vmaCreateImage(device->GetAllocator(), &createInfo, &allocCreateInfo,
+                                      &this->image, &this->allocation, nullptr),
                       "Failed to create image.");
-        VkDebugNames::Set(*device, VK_OBJECT_TYPE_IMAGE,
-                          reinterpret_cast<uint64_t>(this->image), name);
+        VkDebugNames::Set(*device, VK_OBJECT_TYPE_IMAGE, reinterpret_cast<uint64_t>(this->image),
+                          name);
 
-        /*VkMemoryRequirements memRequirements;
-        vkGetImageMemoryRequirements(device->GetDevice(), this->image, &memRequirements);
-
-        VkMemoryAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = physicalDevice.FindMemoryType(
-            memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-    
-        UE_ASSERT_MSG(
-            !vkAllocateMemory(device->GetDevice(), &allocInfo, nullptr, &this->imageMemory),
-            "Failed to allocate image memory.");
-        VkDebugNames::Set(*device, VK_OBJECT_TYPE_DEVICE_MEMORY,
-                          reinterpret_cast<uint64_t>(this->imageMemory), UniverseEngine::Format("%s_MEMORY", name.c_str()));
-        vkBindImageMemory(device->GetDevice(), this->image, this->imageMemory, 0);*/
-    
         VkImageViewCreateInfo viewInfo{};
         viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         viewInfo.image = this->image;
@@ -81,7 +71,7 @@ namespace UniverseEngine {
         viewInfo.subresourceRange.aspectMask =
             IsDepthFormat(format) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
         viewInfo.subresourceRange.baseMipLevel = 0;
-        viewInfo.subresourceRange.levelCount = 1;
+        viewInfo.subresourceRange.levelCount = mips;
         viewInfo.subresourceRange.baseArrayLayer = 0;
         viewInfo.subresourceRange.layerCount = 1;
 
@@ -96,7 +86,8 @@ namespace UniverseEngine {
           imageView(imageView),
           allocation(VK_NULL_HANDLE),
           width(width),
-          height(height) {
+          height(height),
+          mips(1) {
     }
 
     Image::~Image() {

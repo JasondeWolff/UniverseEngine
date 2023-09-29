@@ -8,7 +8,7 @@ namespace UniverseEngine {
 
     struct Texture {
         Texture();
-        Texture(const std::string& name, unsigned char* data, unsigned width, unsigned height);
+        Texture(const std::string& name, unsigned char* data, unsigned width, unsigned height, unsigned mips = 1);
 
         Texture(const Texture& other) = delete;
         Texture& operator=(const Texture& other) = delete;
@@ -21,6 +21,7 @@ namespace UniverseEngine {
         unsigned char* data;
         unsigned width;
         unsigned height;
+        unsigned mips;
 
     private:
         friend class Graphics;
