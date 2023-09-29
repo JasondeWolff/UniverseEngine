@@ -54,7 +54,7 @@ namespace UniverseEngine {
 
 #ifdef GRAPHICS_API_GL
     public:
-        Image(void* data, uint32_t width, uint32_t height, GraphicsFormat format);
+        Image(void* data, uint32_t width, uint32_t height, uint32_t mips, GraphicsFormat format);
 
         unsigned GetTexture() const;
 

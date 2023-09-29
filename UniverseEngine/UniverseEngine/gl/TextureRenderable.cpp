@@ -12,7 +12,7 @@ namespace UniverseEngine {
     TextureRenderable::TextureRenderable(std::shared_ptr<LogicalDevice> device,
                                          const PhysicalDevice& physicalDevice,
                                          CmdList& uploadCmdList, const Texture& texture) {
-        this->image = std::make_shared<Image>(texture.data, texture.width, texture.height,
+        this->image = std::make_shared<Image>(texture.data, texture.width, texture.height, texture.mips,
                                               GraphicsFormat::R8G8B8A8_SRGB);
     }
 
@@ -23,7 +23,7 @@ namespace UniverseEngine {
         std::shared_ptr<LogicalDevice> device, const PhysicalDevice& physicalDevice,
         CmdList& cmdList) {
         static std::shared_ptr<Image> image = std::make_shared<Image>(
-            "Empty", device, physicalDevice, 1, 1,
+            "Empty", device, physicalDevice, 1, 1, 1,
             ImageUsageBits::TRANSFER_DST_IMAGE | ImageUsageBits::SAMPLED_IMAGE,
             GraphicsFormat::R8G8B8A8_SRGB);
         cmdList.TransitionImageLayout(image, ImageLayout::UNDEFINED,

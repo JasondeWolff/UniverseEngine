@@ -24,6 +24,11 @@ namespace UniverseEngine {
     }
 
     void CmdList::Reset() {
+        for (auto pc : this->trackedPushConstants) {
+            glDeleteBuffers(1, &pc);
+        }
+        this->trackedPushConstants.clear();
+
         this->boundGraphicsPipeline.reset();
         this->trackedRenderPasses.clear();
         this->trackedBuffers.clear();
@@ -111,8 +116,7 @@ namespace UniverseEngine {
 
         glBindBufferRange(GL_UNIFORM_BUFFER, 1, ubo, 0, size);
 
-        // TODO: fix memory leak
-        // glDeleteBuffers(1, &ubo);
+        this->trackedPushConstants.push_back(ubo);
     }
 }  // namespace UniverseEngine
 #endif

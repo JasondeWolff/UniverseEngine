@@ -70,6 +70,7 @@ namespace UniverseEngine {
         const CmdQueue& cmdQueue;
 
 #ifdef GRAPHICS_API_GL
+        std::vector<unsigned> trackedPushConstants;
 #elif defined(GRAPHICS_API_VULKAN)
         VkCommandBuffer cmdBuffer;
 #endif

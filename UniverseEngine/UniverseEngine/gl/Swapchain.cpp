@@ -13,7 +13,7 @@ namespace UniverseEngine {
         this->height = window.Height();
 
         this->image = std::make_shared<Image>(
-            "SwapchainFramebuffer", this->device, physicalDevice, this->width, this->height,
+            "SwapchainFramebuffer", this->device, physicalDevice, this->width, this->height, 1,
             ImageUsageBits::STORAGE_IMAGE, GraphicsFormat::R8G8B8A8_SRGB);
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {

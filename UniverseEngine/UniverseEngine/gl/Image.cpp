@@ -6,13 +6,13 @@
 
 namespace UniverseEngine {
     Image::Image(const std::string& name, std::shared_ptr<LogicalDevice> device,
-                 const PhysicalDevice& physicalDevice, uint32_t width, uint32_t height,
-                 ImageUsage usage, GraphicsFormat format) : width(width), height(height) {
+                 const PhysicalDevice& physicalDevice, uint32_t width, uint32_t height, uint32_t mips,
+                 ImageUsage usage, GraphicsFormat format) : width(width), height(height), mips(mips) {
     
     }
 
-    Image::Image(void* data, uint32_t width, uint32_t height, GraphicsFormat format)
-        : width(width), height(height) {
+    Image::Image(void* data, uint32_t width, uint32_t height, uint32_t mips, GraphicsFormat format)
+        : width(width), height(height), mips(mips) {
         glGenTextures(1, &this->texture);
         glBindTexture(GL_TEXTURE_2D, texture);
 
