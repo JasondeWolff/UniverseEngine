@@ -22,9 +22,11 @@ namespace UniverseEngine {
 #ifdef GRAPHICS_API_VULKAN
     public:
         VkDevice GetDevice() const;
+        VmaAllocator GetAllocator() const;
 
     private:
         VkDevice device;
+        VmaAllocator allocator;
 #endif
     };
 }  // namespace UniverseEngine
