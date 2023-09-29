@@ -5,7 +5,7 @@
 
 int main() {
 	UniverseEngine::Engine engine{};
-	engine.Start<MyGame>();
+	engine.Start<AssetDemo>();
 
 	return 0;
 }

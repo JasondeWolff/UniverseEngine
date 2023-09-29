@@ -15,9 +15,7 @@ namespace UniverseEngine {
         std::shared_ptr<Scene> hScene;
 
         std::string extension = filePath.extension().string();
-        if (extension == ".usd")  // TODO: Look into usdz
-            hScene = LoadUSD(filePath);
-        else if (extension == ".obj")
+        if (extension == ".obj")
             hScene = LoadOBJ(filePath);
         else if (extension == ".gltf")
             hScene = LoadGLTF(filePath);

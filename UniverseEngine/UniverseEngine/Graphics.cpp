@@ -10,6 +10,22 @@ struct VPUniformBuffer {
 
 struct PushConstant {
     glm::mat4 model;
+    glm::mat4 invTransModel;
+};
+
+struct ShaderPointLight {
+    glm::vec4 position;
+    glm::vec4 color;
+    float intensity;
+
+    float PADDING[3];
+};
+
+struct LightingUniformBuffer {
+    ShaderPointLight pointLights[16];
+    int pointLightCount;
+
+    float PADDING[3];
 };
 
 namespace UniverseEngine {
@@ -27,25 +43,9 @@ namespace UniverseEngine {
             std::make_unique<CmdQueue>(this->device, *this->physicalDevice, QueueType::PRESENT);
         this->descriptorPool = std::make_shared<DescriptorPool>(this->device);
 
-        this->descriptorSetLayout = std::make_shared<DescriptorSetLayout>(
-            this->device,
-            std::vector<DescriptorLayoutBinding>{DescriptorLayoutBinding(
-                "ubo", 0, DescriptorType::UNIFORM_BUFFER, GraphicsStageFlagBits::VERTEX_STAGE)});
-
-        for (size_t i = 0; i < this->uniformBuffers.size(); i++) {
-            this->uniformBuffers[i] = std::make_shared<Buffer>(
-                Format("MVPUniformBuffer_%i", i), this->device, *this->physicalDevice,
-                BufferUsageBits::UNIFORM_BUFFER, sizeof(VPUniformBuffer), BufferLocation::CPU_TO_GPU);
-
-            this->descriptorSets[i] = std::make_shared<DescriptorSet>(
-                this->device, this->descriptorPool, this->descriptorSetLayout);
-
-            this->descriptorSets[i]->SetBuffer(0, DescriptorType::UNIFORM_BUFFER,
-                                               this->uniformBuffers[i]);
-        }
-
         this->sampler = std::make_shared<Sampler>("Sampler", this->device, *this->physicalDevice);
 
+        this->BuildDescriptors();
         this->BuildSwapchain();
         this->BuildPipelines();
     }
@@ -95,9 +95,9 @@ namespace UniverseEngine {
 
         // Update camera matrices
         VPUniformBuffer uniformBuffer{viewMatrix, projectionMatrix};
-        void* uniformBufferData = this->uniformBuffers[currentFrame]->Map();
+        void* uniformBufferData = this->vpUniformBuffers[currentFrame]->Map();
         memcpy(uniformBufferData, &uniformBuffer, sizeof(VPUniformBuffer));
-        this->uniformBuffers[currentFrame]->Unmap();
+        this->vpUniformBuffers[currentFrame]->Unmap();
 
         std::shared_ptr<CmdList> cmdList = this->cmdQueue->GetCmdList();
 
@@ -111,30 +111,50 @@ namespace UniverseEngine {
         cmdList->SetScissor(swapchainExtent);
         cmdList->SetViewport(swapchainExtent);
 
+        // Update lights
+        LightingUniformBuffer lightingUniformBufferData{};
         auto& sceneInstances = world.GetAllSceneInstances();
         for (auto& sceneInstance : sceneInstances) {
             auto& scene = sceneInstance->hScene;
 
-            auto meshHierarchy = scene->TransformedMeshHierarchy(sceneInstance->transform);
-            bool root = true;
-            for (auto& meshInstance : meshHierarchy) {
-                if (root) {
-                    root = false;
+            auto sceneHierarchy = scene->TransformedHierarchy(sceneInstance->transform);
+            for (auto& sceneNode : sceneHierarchy) {
+                if (!sceneNode.pointLightIdx.has_value())
                     continue;
-                }
+                PointLight& pointLight = scene->pointLights[sceneNode.pointLightIdx.value()];
 
+                ShaderPointLight shaderPointLight;
+                shaderPointLight.position = glm::vec4(sceneNode.transform.GetTranslation(), 1.0f);
+                shaderPointLight.color = glm::vec4(pointLight.color, 1.0f);
+                shaderPointLight.intensity = pointLight.intensity;
+
+                lightingUniformBufferData.pointLights[lightingUniformBufferData.pointLightCount++] =
+                    shaderPointLight;
+            }
+        }
+        uniformBufferData = this->lightingUniformBuffers[currentFrame]->Map();
+        memcpy(uniformBufferData, &lightingUniformBufferData, sizeof(LightingUniformBuffer));
+        this->lightingUniformBuffers[currentFrame]->Unmap();
+
+        for (auto& sceneInstance : sceneInstances) {
+            auto& scene = sceneInstance->hScene;
+
+            auto meshHierarchy = scene->TransformedHierarchy(sceneInstance->transform);
+            for (auto& meshInstance : meshHierarchy) {
                 if (!meshInstance.meshIdx.has_value())
                     continue;
 
                 Mesh& mesh = scene->meshes[meshInstance.meshIdx.value()];
-                glm::mat4 modelMatrix = meshInstance.transform.GetMatrix();
+                PushConstant pushConstant;
+                pushConstant.model = meshInstance.transform.GetMatrix();
+                pushConstant.invTransModel = glm::transpose(glm::inverse(pushConstant.model));
 
-                cmdList->BindDescriptorSet(this->descriptorSets[currentFrame], 0);
+                cmdList->BindDescriptorSet(this->vpDescriptorSets[currentFrame], 0);
 
                 Material& material = scene->materials[mesh.materialIdx];
                 material.renderable->Bind(*cmdList, currentFrame, 1);
 
-                cmdList->PushConstant("pc", modelMatrix, GraphicsStageFlagBits::VERTEX_STAGE);
+                cmdList->PushConstant("pc", pushConstant, GraphicsStageFlagBits::VERTEX_STAGE);
 
                 mesh.renderable->Draw(*cmdList);
             }
@@ -147,6 +167,42 @@ namespace UniverseEngine {
         this->cmdQueue->SubmitCmdList(cmdList, fence, waitSemaphores, signalSemaphores);
 
         this->swapchain->Present(*this->presentQueue, *fence, signalSemaphores);
+    }
+
+    void Graphics::BuildDescriptors() {
+        this->vpDescriptorSetLayout = std::make_shared<DescriptorSetLayout>(
+            this->device,
+            std::vector<DescriptorLayoutBinding>{DescriptorLayoutBinding(
+                "ubo", 0, DescriptorType::UNIFORM_BUFFER, GraphicsStageFlagBits::VERTEX_STAGE)});
+        this->lightingDescriptorSetLayout = std::make_shared<DescriptorSetLayout>(
+            this->device, std::vector<DescriptorLayoutBinding>{
+                              DescriptorLayoutBinding("lighting", 8, DescriptorType::UNIFORM_BUFFER,
+                                                      GraphicsStageFlagBits::FRAGMENT_STAGE)});
+
+        for (size_t i = 0; i < this->vpUniformBuffers.size(); i++) {
+            this->vpUniformBuffers[i] =
+                std::make_shared<Buffer>(Format("vpUniformBuffer_%i", i), this->device,
+                                         *this->physicalDevice, BufferUsageBits::UNIFORM_BUFFER,
+                                         sizeof(VPUniformBuffer), BufferLocation::CPU_TO_GPU);
+
+            this->vpDescriptorSets[i] = std::make_shared<DescriptorSet>(
+                this->device, this->descriptorPool, this->vpDescriptorSetLayout);
+
+            this->vpDescriptorSets[i]->SetBuffer(0, DescriptorType::UNIFORM_BUFFER,
+                                                 this->vpUniformBuffers[i]);
+        }
+        for (size_t i = 0; i < this->lightingUniformBuffers.size(); i++) {
+            this->lightingUniformBuffers[i] =
+                std::make_shared<Buffer>(Format("lightingUniformBuffer_%i", i), this->device,
+                                         *this->physicalDevice, BufferUsageBits::UNIFORM_BUFFER,
+                                         sizeof(LightingUniformBuffer), BufferLocation::CPU_TO_GPU);
+
+            this->lightingDescriptorSets[i] = std::make_shared<DescriptorSet>(
+                this->device, this->descriptorPool, this->lightingDescriptorSetLayout);
+
+            this->lightingDescriptorSets[i]->SetBuffer(8, DescriptorType::UNIFORM_BUFFER,
+                                                       this->lightingUniformBuffers[i]);
+        }
     }
 
     void Graphics::BuildSwapchain() {
@@ -177,7 +233,8 @@ namespace UniverseEngine {
         this->unlitPipeline = std::make_shared<GraphicsPipeline>(
             this->device, unlitShaders, this->renderPass,
             std::vector<std::shared_ptr<DescriptorSetLayout>>{
-                descriptorSetLayout, MaterialRenderable::DescriptorLayout(this->device)},
+                vpDescriptorSetLayout, MaterialRenderable::DescriptorLayout(this->device),
+                lightingDescriptorSetLayout},
             std::vector<PushConstantRange>{PushConstantRange("pc", sizeof(PushConstant),
                                                              GraphicsStageFlagBits::VERTEX_STAGE)});
     }

@@ -18,11 +18,13 @@ layout(binding = 0) uniform UniformBufferObject {
 
 layout(push_constant) uniform PushConstant {
     mat4 model;
+    mat4 invTransModel;
 } pc;
 
 void main() {
     gl_Position = ubo.proj * ubo.view * pc.model * vec4(inPosition, 1.0);
+    fragNormal = (pc.invTransModel * vec4(inNormal, 1.0)).xyz;
+
     fragColor = inColor.rgb;
-    fragNormal = inNormal;
     fragTexCoord = inTexCoord;
 }

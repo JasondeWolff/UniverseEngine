@@ -40,7 +40,6 @@ namespace UniverseEngine {
 
         std::shared_ptr<Scene> LoadGLTF(const std::filesystem::path& filePath);
         std::shared_ptr<Scene> LoadOBJ(const std::filesystem::path& filePath);
-        std::shared_ptr<Scene> LoadUSD(const std::filesystem::path& filePath);
         std::shared_ptr<Texture> LoadIMG(const std::filesystem::path& filePath);
         std::shared_ptr<Shader> LoadShaderSource(const std::filesystem::path& filePath);
     };

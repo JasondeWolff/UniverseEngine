@@ -34,6 +34,7 @@ namespace UniverseEngine {
         void Update();
         void Render();
 
+        void BuildDescriptors();
         void BuildSwapchain();
         void BuildPipelines();
         void BuildRenderables();
@@ -52,9 +53,14 @@ namespace UniverseEngine {
         std::shared_ptr<RenderPass> renderPass;
         std::shared_ptr<GraphicsPipeline> unlitPipeline;
 
-        std::shared_ptr<DescriptorSetLayout> descriptorSetLayout;
-        std::array<std::shared_ptr<Buffer>, Swapchain::MAX_FRAMES_IN_FLIGHT> uniformBuffers;
-        std::array<std::shared_ptr<DescriptorSet>, Swapchain::MAX_FRAMES_IN_FLIGHT> descriptorSets;
+        std::shared_ptr<DescriptorSetLayout> vpDescriptorSetLayout;
+        std::array<std::shared_ptr<Buffer>, Swapchain::MAX_FRAMES_IN_FLIGHT> vpUniformBuffers;
+        std::array<std::shared_ptr<DescriptorSet>, Swapchain::MAX_FRAMES_IN_FLIGHT>
+            vpDescriptorSets;
+        std::shared_ptr<DescriptorSetLayout> lightingDescriptorSetLayout;
+        std::array<std::shared_ptr<Buffer>, Swapchain::MAX_FRAMES_IN_FLIGHT> lightingUniformBuffers;
+        std::array<std::shared_ptr<DescriptorSet>, Swapchain::MAX_FRAMES_IN_FLIGHT>
+            lightingDescriptorSets;
 
         std::shared_ptr<Sampler> sampler;
     };

@@ -48,8 +48,8 @@ namespace UniverseEngine {
             parsedScene.materials.emplace_back(std::move(parsedMaterial));
         }
 
-        auto instanceRoot = parsedScene.meshHierarchy.begin();
-        instanceRoot = parsedScene.meshHierarchy.insert(instanceRoot, MeshInstance{});
+        auto instanceRoot = parsedScene.hierarchy.begin();
+        instanceRoot = parsedScene.hierarchy.insert(instanceRoot, SceneNode{});
 
         for (auto& shape : shapes) {
             auto& mesh = shape.mesh;
@@ -98,9 +98,11 @@ namespace UniverseEngine {
                 index_offset += fv;
             }
 
+            SceneNode node{};
+            node.meshIdx = parsedScene.meshes.size() - 1;
+
             parsedScene.meshes.emplace_back(std::move(parsedMesh));
-            parsedScene.meshHierarchy.append_child(instanceRoot,
-                                                   MeshInstance(parsedScene.meshes.size() - 1));
+            parsedScene.hierarchy.append_child(instanceRoot, node);
         }
 
         return std::make_shared<Scene>(std::move(parsedScene));

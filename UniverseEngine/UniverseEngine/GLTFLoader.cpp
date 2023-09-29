@@ -18,20 +18,20 @@ namespace fs = std::filesystem;
 
 namespace UniverseEngine {
     void ParseNode(const tinygltf::Model& model, size_t nodeIdx, std::set<size_t>& processedNodes,
-                   tree<MeshInstance>& meshHierarchy,
-                   tree<MeshInstance>::iterator_base meshHierarchyParent) {
+                   tree<SceneNode>& meshHierarchy,
+                   tree<SceneNode>::iterator_base meshHierarchyParent) {
         if (processedNodes.find(nodeIdx) != processedNodes.end())
             return;
         auto& node = model.nodes[nodeIdx];
 
-        MeshInstance meshInstance;
+        SceneNode sceneNode{};
 
         if (!node.matrix.empty()) {
             std::array<float, 16> elems;
             for (size_t i = 0; i < 16; i++) {
                 elems[i] = static_cast<float>(node.matrix[i]);
             }
-            meshInstance.transform = Transform(glm::make_mat4(elems.data()));
+            sceneNode.transform = Transform(glm::make_mat4(elems.data()));
         } else {
             glm::vec3 translation{};
             if (node.translation.size() == 3)
@@ -51,16 +51,18 @@ namespace UniverseEngine {
                     glm::vec3(static_cast<float>(node.scale[0]), static_cast<float>(node.scale[1]),
                               static_cast<float>(node.scale[2]));
 
-            meshInstance.transform = Transform(translation, rotation, scale);
+            sceneNode.transform = Transform(translation, rotation, scale);
         }
 
         if (node.mesh != -1) {
-            meshInstance.meshIdx = static_cast<size_t>(node.mesh);
-        } else {
-            meshInstance.meshIdx = std::nullopt;
+            sceneNode.meshIdx = static_cast<size_t>(node.mesh);
         }
 
-        meshHierarchyParent = meshHierarchy.append_child(meshHierarchyParent, meshInstance);
+        if (node.light != -1) {
+            sceneNode.pointLightIdx = static_cast<size_t>(node.light);
+        }
+
+        meshHierarchyParent = meshHierarchy.append_child(meshHierarchyParent, sceneNode);
 
         for (auto child : node.children) {
             ParseNode(model, static_cast<size_t>(child), processedNodes, meshHierarchy,
@@ -259,12 +261,21 @@ namespace UniverseEngine {
             parsedScene.meshes.emplace_back(std::move(parsedMesh));
         }
 
-        auto meshHierarchyRoot = parsedScene.meshHierarchy.begin();
-        meshHierarchyRoot = parsedScene.meshHierarchy.insert(meshHierarchyRoot, MeshInstance{});
+        for (auto& light : model.lights) {
+            if (light.type == "point") {
+                PointLight parsedLight{};
+                parsedLight.color = glm::vec3(light.color[0], light.color[1], light.color[2]);
+                parsedLight.intensity = light.intensity;
+                parsedScene.pointLights.push_back(parsedLight);
+            }
+        }
+
+        auto meshHierarchyRoot = parsedScene.hierarchy.begin();
+        meshHierarchyRoot = parsedScene.hierarchy.insert(meshHierarchyRoot, SceneNode{});
 
         std::set<size_t> processedNodes{};
         for (auto& node : model.scenes[0].nodes) {
-            ParseNode(model, static_cast<size_t>(node), processedNodes, parsedScene.meshHierarchy,
+            ParseNode(model, static_cast<size_t>(node), processedNodes, parsedScene.hierarchy,
                       meshHierarchyRoot);
         }
 

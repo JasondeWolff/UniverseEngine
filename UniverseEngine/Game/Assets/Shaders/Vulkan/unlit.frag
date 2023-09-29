@@ -30,9 +30,24 @@ layout(set = 1, binding = 7) uniform Material {
     float PADDING[3];
 } material;
 
+struct PointLight {
+    vec4 position;
+    vec4 color;
+    float intensity;
+
+    float PADDING[3];
+};
+
+layout(set = 2, binding = 8) uniform Lighting {
+    PointLight pointLights[16];
+    int pointLightCount;
+
+    float PADDING[3];
+} lighting;
+
 void main() {
     vec3 lightDir = vec3(1.1, -1.0, 1.0);
-    float attenuation = clamp(dot(fragNormal, -normalize(lightDir)), 0.2, 1.0);
+    float attenuation = clamp(dot(normalize(fragNormal), -normalize(lightDir)), 0.2, 1.0);
     
     vec3 baseColor = material.baseColor.rgb;
     if (material.hasBaseColorMap) {

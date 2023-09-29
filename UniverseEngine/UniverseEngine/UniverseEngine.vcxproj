@@ -30,6 +30,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="gl\GlGraphicsFormat.h" />
     <ClInclude Include="GraphicsStageFlags.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="MaterialRenderable.h" />
     <ClInclude Include="PushConstantRange.h" />
     <ClInclude Include="Sampler.h" />
@@ -150,7 +151,6 @@
     <ClCompile Include="gl\ShaderRenderable.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp" />
-    <ClCompile Include="USDLoader.cpp" />
     <ClCompile Include="gl\Swapchain.cpp" />
     <ClCompile Include="vulkan\Swapchain.cpp" />
     <ClCompile Include="vulkan\VkExtensions.cpp" />
