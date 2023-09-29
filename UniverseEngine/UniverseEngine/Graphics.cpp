@@ -21,8 +21,17 @@ struct ShaderPointLight {
     float PADDING[3];
 };
 
+struct ShaderDirectionalLight {
+    glm::vec4 direction;
+    glm::vec4 color;
+    float intensity;
+
+    float PADDING[3];
+};
+
 struct LightingUniformBuffer {
     ShaderPointLight pointLights[16];
+    ShaderDirectionalLight directionalLight;
 
     glm::vec4 eyePosition;
 
@@ -136,6 +145,13 @@ namespace UniverseEngine {
                     shaderPointLight;
             }
         }
+
+        ShaderDirectionalLight shaderDirectionalLight{};
+        shaderDirectionalLight.direction = glm::vec4(world.sun.direction, 1.0f);
+        shaderDirectionalLight.color = glm::vec4(world.sun.lightSource.color, 1.0f);
+        shaderDirectionalLight.intensity = world.sun.lightSource.intensity;
+        lightingUniformBufferData.directionalLight = shaderDirectionalLight;
+
         uniformBufferData = this->lightingUniformBuffers[currentFrame]->Map();
         memcpy(uniformBufferData, &lightingUniformBufferData, sizeof(LightingUniformBuffer));
         this->lightingUniformBuffers[currentFrame]->Unmap();

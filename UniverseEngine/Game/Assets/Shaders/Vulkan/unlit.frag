@@ -44,8 +44,19 @@ struct PointLight {
     float PADDING2;
 };
 
+struct DirectionalLight {
+    vec4 direction;
+    vec4 color;
+    float intensity;
+
+    float PADDING0;
+    float PADDING1;
+    float PADDING2;
+};
+
 layout(set = 2, binding = 8) uniform Lighting {
     PointLight pointLights[16];
+    DirectionalLight directionalLight;
     vec4 eyePosition;
 
     int pointLightCount;
@@ -142,6 +153,18 @@ vec3 Shade(vec3 P, vec3 V, vec3 N, vec3 f0, vec3 diffuseColor, float metallic, f
         vec3 radiance = lighting.pointLights[i].color.rgb;
 
         Lo += ShadePBR(P, V, N, L, H, f0, NoL, diffuseColor, metallic, roughness) * radiance * attenuation;
+    }
+
+    {
+        vec3 L = normalize(-lighting.directionalLight.direction.xyz);
+        float NoL = dot(N, L);
+        if (NoL > 0.0) {
+            vec3 H = normalize(V + L);
+            float attenuation = lighting.directionalLight.intensity;
+            vec3 radiance = lighting.directionalLight.color.rgb;
+
+            Lo += ShadePBR(P, V, N, L, H, f0, NoL, diffuseColor, metallic, roughness) * radiance * attenuation;
+        }
     }
 
     return Lo;

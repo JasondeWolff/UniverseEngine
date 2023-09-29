@@ -3,7 +3,7 @@
 #include "TerrianGenerator.h"
 
 namespace UniverseEngine {
-    World::World() : camera{}, sceneInstances{} {
+    World::World() : camera{}, sun{}, sceneInstances{} {
     }
 
     std::shared_ptr<SceneInstance> World::AddSceneInstance(std::shared_ptr<Scene> hScene) {
