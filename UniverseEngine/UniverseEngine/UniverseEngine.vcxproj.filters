@@ -53,9 +53,6 @@
     <Filter Include="Src\Graphics\Vulkan\Specific">
       <UniqueIdentifier>{87f5b487-77f0-4bcc-894b-e38252c33612}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Resources\Assets\Primitives">
-      <UniqueIdentifier>{f1364e37-3949-4072-a679-7a8b3b2fe0c5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Math\NoiseGenerators">
       <UniqueIdentifier>{51b61802-7ce8-4480-8168-4ed99d334f4a}</UniqueIdentifier>
     </Filter>
@@ -202,17 +199,11 @@
     <ClInclude Include="Semaphore.h">
       <Filter>Src\Graphics\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Plane.h">
-      <Filter>Src\Resources\Assets\Primitives</Filter>
-    </ClInclude>
     <ClInclude Include="Voxel.h">
       <Filter>Src\Resources\Assets</Filter>
     </ClInclude>
     <ClInclude Include="Buffer.h">
       <Filter>Src\Graphics\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Chunk.h">
-      <Filter>Src\Resources\Assets</Filter>
     </ClInclude>
     <ClInclude Include="TerrianGenerator.h">
       <Filter>Src\Core</Filter>
@@ -417,9 +408,6 @@
     <ClCompile Include="CmdQueue.cpp">
       <Filter>Src\Graphics\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Plane.cpp">
-      <Filter>Src\Resources\Assets\Primitives</Filter>
-    </ClCompile>
     <ClCompile Include="Voxel.cpp">
       <Filter>Src\Resources\Assets</Filter>
     </ClCompile>
@@ -431,9 +419,6 @@
     </ClCompile>
     <ClCompile Include="Buffer.cpp">
       <Filter>Src\Graphics\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Chunk.cpp">
-      <Filter>Src\Resources\Assets</Filter>
     </ClCompile>
     <ClCompile Include="TerrianGenerator.cpp">
       <Filter>Src\Core</Filter>
