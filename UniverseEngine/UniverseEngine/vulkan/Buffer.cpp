@@ -41,58 +41,47 @@ namespace UniverseEngine {
         createInfo.sharingMode = VkSharingMode::VK_SHARING_MODE_EXCLUSIVE;
         createInfo.usage = GetVkUsageFlags(usage);
 
-        UE_ASSERT_MSG(!vkCreateBuffer(device->GetDevice(), &createInfo, nullptr, &this->buffer),
+        VmaAllocationCreateInfo allocCreateInfo{};
+        if (location == BufferLocation::CPU_TO_GPU)
+            allocCreateInfo.flags = VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT;
+        allocCreateInfo.usage = VMA_MEMORY_USAGE_AUTO;
+
+        UE_ASSERT_MSG(!vmaCreateBuffer(device->GetAllocator(), &createInfo, &allocCreateInfo,
+                                       &this->buffer, &this->allocation, nullptr),
                       "Failed to create buffer.");
         VkDebugNames::Set(*device, VK_OBJECT_TYPE_BUFFER, reinterpret_cast<uint64_t>(this->buffer),
                           name);
-
-        VkMemoryRequirements memRequirements;
-        vkGetBufferMemoryRequirements(device->GetDevice(), this->buffer, &memRequirements);
-
-        VkMemoryAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = physicalDevice.FindMemoryType(memRequirements.memoryTypeBits,
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-
-        UE_ASSERT_MSG(
-            !vkAllocateMemory(device->GetDevice(), &allocInfo, nullptr, &this->bufferMemory),
-            "Failed to allocate buffer memory.");
-        VkDebugNames::Set(*device, VK_OBJECT_TYPE_DEVICE_MEMORY,
-                          reinterpret_cast<uint64_t>(this->bufferMemory), name);
-        vkBindBufferMemory(device->GetDevice(), this->buffer, this->bufferMemory, 0);
     }
 
     Buffer::Buffer(Buffer&& other) noexcept
-        : device(other.device), size(other.size), buffer(other.buffer), bufferMemory(other.bufferMemory) {
+        : device(other.device), size(other.size), buffer(other.buffer), allocation(other.allocation) {
         other.buffer = VK_NULL_HANDLE;
-        other.bufferMemory = VK_NULL_HANDLE;
+        other.allocation = VK_NULL_HANDLE;
     }
 
     Buffer& Buffer::operator=(Buffer&& other) noexcept {
         this->size = other.size;
         this->buffer = other.buffer;
-        this->bufferMemory = other.bufferMemory;
+        this->allocation = other.allocation;
         other.buffer = VK_NULL_HANDLE;
-        other.bufferMemory = VK_NULL_HANDLE;
+        other.allocation = VK_NULL_HANDLE;
         return *this;
     }
 
     Buffer::~Buffer() {
         if (this->buffer) {
-            vkDestroyBuffer(this->device->GetDevice(), this->buffer, nullptr);
-            vkFreeMemory(this->device->GetDevice(), this->bufferMemory, nullptr);
+            vmaDestroyBuffer(this->device->GetAllocator(), this->buffer, this->allocation);
         }
     }
 
     void* Buffer::Map() {
         void* data;
-        vkMapMemory(this->device->GetDevice(), this->bufferMemory, 0, this->size, 0, &data);
+        vmaMapMemory(this->device->GetAllocator(), this->allocation, &data);
         return data;
     }
 
     void Buffer::Unmap() {
-        vkUnmapMemory(this->device->GetDevice(), this->bufferMemory);
+        vmaUnmapMemory(this->device->GetAllocator(), this->allocation);
     }
 
     uint64_t Buffer::Size() const {

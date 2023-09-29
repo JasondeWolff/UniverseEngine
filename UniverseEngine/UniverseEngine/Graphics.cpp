@@ -35,7 +35,7 @@ namespace UniverseEngine {
         for (size_t i = 0; i < this->uniformBuffers.size(); i++) {
             this->uniformBuffers[i] = std::make_shared<Buffer>(
                 Format("MVPUniformBuffer_%i", i), this->device, *this->physicalDevice,
-                BufferUsageBits::UNIFORM_BUFFER, sizeof(VPUniformBuffer), BufferLocation::GPU_ONLY);
+                BufferUsageBits::UNIFORM_BUFFER, sizeof(VPUniformBuffer), BufferLocation::CPU_TO_GPU);
 
             this->descriptorSets[i] = std::make_shared<DescriptorSet>(
                 this->device, this->descriptorPool, this->descriptorSetLayout);

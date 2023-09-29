@@ -59,6 +59,7 @@ namespace UniverseEngine {
 
     LogicalDevice::~LogicalDevice() {
         this->WaitIdle();
+        vmaDestroyAllocator(this->allocator);
         vkDestroyDevice(this->device, nullptr);
     }
 

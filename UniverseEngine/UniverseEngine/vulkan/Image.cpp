@@ -49,12 +49,15 @@ namespace UniverseEngine {
         createInfo.initialLayout = VkImageLayout::VK_IMAGE_LAYOUT_UNDEFINED;
         createInfo.samples = VkSampleCountFlagBits::VK_SAMPLE_COUNT_1_BIT;
 
-        UE_ASSERT_MSG(!vkCreateImage(device->GetDevice(), &createInfo, nullptr, &this->image),
+        VmaAllocationCreateInfo allocCreateInfo{};
+        allocCreateInfo.usage = VMA_MEMORY_USAGE_AUTO;
+
+        UE_ASSERT_MSG(!vmaCreateImage(device->GetAllocator(), &createInfo, &allocCreateInfo, &this->image, &this->allocation, nullptr),
                       "Failed to create image.");
         VkDebugNames::Set(*device, VK_OBJECT_TYPE_IMAGE,
                           reinterpret_cast<uint64_t>(this->image), name);
 
-        VkMemoryRequirements memRequirements;
+        /*VkMemoryRequirements memRequirements;
         vkGetImageMemoryRequirements(device->GetDevice(), this->image, &memRequirements);
 
         VkMemoryAllocateInfo allocInfo{};
@@ -68,7 +71,7 @@ namespace UniverseEngine {
             "Failed to allocate image memory.");
         VkDebugNames::Set(*device, VK_OBJECT_TYPE_DEVICE_MEMORY,
                           reinterpret_cast<uint64_t>(this->imageMemory), UniverseEngine::Format("%s_MEMORY", name.c_str()));
-        vkBindImageMemory(device->GetDevice(), this->image, this->imageMemory, 0);
+        vkBindImageMemory(device->GetDevice(), this->image, this->imageMemory, 0);*/
     
         VkImageViewCreateInfo viewInfo{};
         viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -91,7 +94,7 @@ namespace UniverseEngine {
         : device(device),
           image(image),
           imageView(imageView),
-          imageMemory(VK_NULL_HANDLE),
+          allocation(VK_NULL_HANDLE),
           width(width),
           height(height) {
     }
@@ -99,9 +102,8 @@ namespace UniverseEngine {
     Image::~Image() {
         vkDestroyImageView(this->device->GetDevice(), this->imageView, nullptr);
 
-        if (this->imageMemory) {
-            vkDestroyImage(this->device->GetDevice(), this->image, nullptr);
-            vkFreeMemory(this->device->GetDevice(), this->imageMemory, nullptr);
+        if (this->allocation) {
+            vmaDestroyImage(this->device->GetAllocator(), this->image, this->allocation);
         }
     }
 

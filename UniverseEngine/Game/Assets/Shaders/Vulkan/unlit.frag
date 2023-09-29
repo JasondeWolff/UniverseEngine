@@ -35,9 +35,9 @@ void main() {
     float attenuation = clamp(dot(fragNormal, -normalize(lightDir)), 0.2, 1.0);
     
     vec3 baseColor = material.baseColor.rgb;
-//    if (material.hasBaseColorMap) {
-//        baseColor *= texture(baseColorMap, fragTexCoord).rgb;
-//    }
+    if (material.hasBaseColorMap) {
+        baseColor *= texture(baseColorMap, fragTexCoord).rgb;
+    }
 
     outColor = vec4(baseColor * attenuation, 1.0);
 }

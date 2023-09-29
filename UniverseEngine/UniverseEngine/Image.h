@@ -71,7 +71,7 @@ namespace UniverseEngine {
 
         VkImage image;
         VkImageView imageView;
-        VkDeviceMemory imageMemory;
+        VmaAllocation allocation;
 #endif
     };
 }  // namespace UniverseEngine
