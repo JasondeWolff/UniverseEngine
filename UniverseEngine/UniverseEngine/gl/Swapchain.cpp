@@ -23,6 +23,8 @@ namespace UniverseEngine {
                 std::move(Semaphore(UniverseEngine::Format("Render Finished %i", i), device)));
             inflightFences.emplace_back(std::move(std::make_shared<Fence>(device, true)));
         }
+
+        glEnable(GL_FRAMEBUFFER_SRGB);
     }
 
     Swapchain::~Swapchain() {

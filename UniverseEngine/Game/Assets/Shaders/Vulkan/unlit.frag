@@ -138,7 +138,7 @@ vec3 Shade(vec3 P, vec3 V, vec3 N, vec3 f0, vec3 diffuseColor, float metallic, f
 
         vec3 H = normalize(V + L);
         float D = distance(lighting.pointLights[i].position.xyz, P);
-        float attenuation = lighting.pointLights[i].intensity / (D * D * 100.0);
+        float attenuation = lighting.pointLights[i].intensity / (D * D * 50.0);
         vec3 radiance = lighting.pointLights[i].color.rgb;
 
         Lo += ShadePBR(P, V, N, L, H, f0, NoL, diffuseColor, metallic, roughness) * radiance * attenuation;
