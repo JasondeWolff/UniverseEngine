@@ -265,7 +265,7 @@ namespace UniverseEngine {
             if (light.type == "point") {
                 PointLight parsedLight{};
                 parsedLight.color = glm::vec3(light.color[0], light.color[1], light.color[2]);
-                parsedLight.intensity = light.intensity;
+                parsedLight.intensity = static_cast<float>(light.intensity);
                 parsedScene.pointLights.push_back(parsedLight);
             }
         }

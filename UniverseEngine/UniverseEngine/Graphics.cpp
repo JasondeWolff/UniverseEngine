@@ -23,6 +23,9 @@ struct ShaderPointLight {
 
 struct LightingUniformBuffer {
     ShaderPointLight pointLights[16];
+
+    glm::vec4 eyePosition;
+
     int pointLightCount;
 
     float PADDING[3];
@@ -113,6 +116,7 @@ namespace UniverseEngine {
 
         // Update lights
         LightingUniformBuffer lightingUniformBufferData{};
+        lightingUniformBufferData.eyePosition = glm::vec4(camera.transform.GetTranslation(), 1.0f);
         auto& sceneInstances = world.GetAllSceneInstances();
         for (auto& sceneInstance : sceneInstances) {
             auto& scene = sceneInstance->hScene;
@@ -150,6 +154,7 @@ namespace UniverseEngine {
                 pushConstant.invTransModel = glm::transpose(glm::inverse(pushConstant.model));
 
                 cmdList->BindDescriptorSet(this->vpDescriptorSets[currentFrame], 0);
+                cmdList->BindDescriptorSet(this->lightingDescriptorSets[currentFrame], 2);
 
                 Material& material = scene->materials[mesh.materialIdx];
                 material.renderable->Bind(*cmdList, currentFrame, 1);
