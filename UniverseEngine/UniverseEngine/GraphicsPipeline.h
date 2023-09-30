@@ -12,12 +12,17 @@ namespace UniverseEngine {
     class DescriptorSetLayout;
     struct PushConstantRange;
 
+    struct GraphicsPipelineInfo {
+        bool ignoreDepth = false;
+    };
+
     class GraphicsPipeline {
     public:
         GraphicsPipeline(std::shared_ptr<LogicalDevice> device,
                          const std::vector<ShaderRenderable*>& shaders,
                          std::shared_ptr<RenderPass> renderPass,
-                         std::vector<std::shared_ptr<DescriptorSetLayout>> descriptorSetLayouts, std::vector<PushConstantRange> pushConstants);
+                         std::vector<std::shared_ptr<DescriptorSetLayout>> descriptorSetLayouts,
+                         std::vector<PushConstantRange> pushConstants, GraphicsPipelineInfo info);
         ~GraphicsPipeline();
         GraphicsPipeline(const GraphicsPipeline& other) = delete;
         GraphicsPipeline& operator=(const GraphicsPipeline& other) = delete;
@@ -26,6 +31,8 @@ namespace UniverseEngine {
         const std::shared_ptr<LogicalDevice> device;
         const std::shared_ptr<RenderPass> renderPass;
         const std::vector<std::shared_ptr<DescriptorSetLayout>> descriptorSetLayouts;
+
+        GraphicsPipelineInfo info;
 
 #ifdef GRAPHICS_API_GL
     public:

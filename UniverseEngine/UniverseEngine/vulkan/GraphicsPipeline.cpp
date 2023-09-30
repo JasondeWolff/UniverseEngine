@@ -58,8 +58,11 @@ namespace UniverseEngine {
         std::shared_ptr<LogicalDevice> device, const std::vector<ShaderRenderable*>& shaders,
         std::shared_ptr<RenderPass> renderPass,
         std::vector<std::shared_ptr<DescriptorSetLayout>> descriptorSetLayouts,
-        std::vector<PushConstantRange> pushConstants)
-        : device(device), renderPass(renderPass), descriptorSetLayouts(descriptorSetLayouts) {
+        std::vector<PushConstantRange> pushConstants, GraphicsPipelineInfo info)
+        : device(device),
+          renderPass(renderPass),
+          descriptorSetLayouts(descriptorSetLayouts),
+          info(info) {
         // TODO: make more dynamic
         VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
         vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -167,8 +170,8 @@ namespace UniverseEngine {
 
         VkPipelineDepthStencilStateCreateInfo depthStencil{};
         depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-        depthStencil.depthTestEnable = VK_TRUE;
-        depthStencil.depthWriteEnable = VK_TRUE;
+        depthStencil.depthTestEnable = !info.ignoreDepth;
+        depthStencil.depthWriteEnable = !info.ignoreDepth;
         depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
         depthStencil.depthBoundsTestEnable = VK_FALSE;
         depthStencil.stencilTestEnable = VK_FALSE;

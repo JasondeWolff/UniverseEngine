@@ -119,25 +119,12 @@ namespace UniverseEngine {
         imageCopy.srcSubresource.layerCount = 1;
         imageCopy.srcOffset = {0, 0, 0};
         imageCopy.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        imageCopy.dstSubresource.layerCount = 1;  //?????
+        imageCopy.dstSubresource.layerCount = 1;
         imageCopy.dstOffset = {0, 0, 0};
         
 
         uint32_t mipWidth = cubemap->Width();
         uint32_t mipHeight = cubemap->Height();
-
-        // VkImageBlit imageBlit{};
-        // imageBlit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        // imageBlit.srcSubresource.baseArrayLayer = 0;
-        // imageBlit.srcSubresource.layerCount = 1;
-        // imageBlit.srcOffsets[0] = {0, 0, 0};
-        // imageBlit.srcOffsets[1] = {static_cast<int32_t>(cubemap->Width()),
-        //                            static_cast<int32_t>(cubemap->Height()), 1};
-        // imageBlit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        // imageBlit.dstSubresource.layerCount = 1; //????????
-        // imageBlit.dstOffsets[0] = {0, 0, 0};
-        // imageBlit.dstOffsets[1] = {static_cast<int32_t>(cubemap->Width()),
-        //                            static_cast<int32_t>(cubemap->Height()), 1};
 
         for (size_t i = 0; i < images.size(); i++) {
             this->TransitionImageLayout(images[i], ImageLayout::SHADER_READ_ONLY_OPTIMAL,
@@ -164,10 +151,8 @@ namespace UniverseEngine {
                 mipHeight /= 2;
         }
 
-        /*vkCmdBlitImage(this->cmdBuffer, images[i]->GetImage(),
-                       VkImageLayout::VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                       cubemap->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1,
-                       &imageBlit, VK_FILTER_LINEAR);*/
+        this->TransitionImageLayout(cubemap, ImageLayout::TRANSFER_DST_OPTIMAL,
+                                    ImageLayout::SHADER_READ_ONLY_OPTIMAL);
     }
 
     void CmdList::GenerateMips(std::shared_ptr<Image> image) {

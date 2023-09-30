@@ -12,13 +12,15 @@ namespace UniverseEngine {
 
     class Resources {
     public:
-        std::shared_ptr<Scene> LoadScene(const std::filesystem::path& filePath);
         std::shared_ptr<Scene> CreateScene(Mesh&& mesh);
+
+        std::shared_ptr<Scene> LoadScene(const std::filesystem::path& filePath);
         std::shared_ptr<Texture> LoadTexture(const std::filesystem::path& filePath, TextureType type);
         std::shared_ptr<Shader> LoadShader(const std::filesystem::path& filePath);
 
         const std::vector<std::shared_ptr<Scene>>& GetAllScenes();
 
+        const std::vector<std::shared_ptr<Scene>>& GetNewScenes();
         const std::vector<std::shared_ptr<Texture>>& GetNewTextures();
         const std::vector<std::shared_ptr<Shader>>& GetNewShaders();
 
@@ -36,6 +38,7 @@ namespace UniverseEngine {
         std::unordered_map<std::filesystem::path, std::shared_ptr<Texture>> texturePaths;
         std::unordered_map<std::filesystem::path, std::shared_ptr<Shader>> shaderPaths;
 
+        std::vector<std::shared_ptr<Scene>> newScenes;
         std::vector<std::shared_ptr<Texture>> newTextures;
         std::vector<std::shared_ptr<Shader>> newShaders;
 

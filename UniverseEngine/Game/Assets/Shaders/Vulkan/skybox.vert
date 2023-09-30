@@ -7,7 +7,7 @@ layout (location = 2) in vec2 inTexCoord;
 layout (location = 3) in vec4 inTangent;
 layout (location = 4) in vec4 inColor;
 
-layout(location = 0) out vec2 fragTexCoord;
+layout(location = 0) out vec3 fragTexCoord;
 
 layout(binding = 0) uniform UniformBufferObject {
     mat4 view;
@@ -15,6 +15,6 @@ layout(binding = 0) uniform UniformBufferObject {
 } ubo;
 
 void main() {
-    gl_Position = ubo.proj * ubo.view * vec4(inPosition, 1.0);
-    fragTexCoord = inTexCoord;
+    gl_Position = ubo.proj * mat4(mat3(ubo.view)) * vec4(inPosition, 1.0);
+    fragTexCoord = inPosition;
 }
