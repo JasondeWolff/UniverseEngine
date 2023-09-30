@@ -36,7 +36,7 @@ namespace UniverseEngine {
     public:
         Image(const std::string& name, std::shared_ptr<LogicalDevice> device,
               const PhysicalDevice& physicalDevice, uint32_t width, uint32_t height, uint32_t mips,
-              ImageUsage usage, GraphicsFormat format);
+              ImageUsage usage, GraphicsFormat format, uint32_t arrayLayers = 1);
         ~Image();
         Image(const Image& other) = delete;
         Image& operator=(const Image& other) = delete;
@@ -44,12 +44,14 @@ namespace UniverseEngine {
         uint32_t Width() const;
         uint32_t Height() const;
         uint32_t Mips() const;
+        uint32_t ArrayLayers() const;
         GraphicsFormat Format() const;
 
     private:
         uint32_t width;
         uint32_t height;
         uint32_t mips;
+        uint32_t arrayLayers;
         GraphicsFormat format;
 
 #ifdef GRAPHICS_API_GL

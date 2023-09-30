@@ -110,6 +110,8 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </None>
+    <None Include="Assets\Shaders\Vulkan\skybox.frag" />
+    <None Include="Assets\Shaders\Vulkan\skybox.vert" />
     <None Include="Assets\Shaders\Vulkan\unlit.frag" />
     <None Include="Assets\Shaders\Vulkan\unlit.vert" />
   </ItemGroup>

@@ -19,6 +19,10 @@ namespace UniverseEngine {
         return this->mips;
     }
 
+    uint32_t Image::ArrayLayers() const {
+        return this->arrayLayers;
+    }
+
     GraphicsFormat Image::Format() const {
         return this->format;
     }

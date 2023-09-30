@@ -1,10 +1,27 @@
 #include "AssetDemo.h"
 
+#include <array>
+
 using namespace UniverseEngine;
 
 void AssetDemo::OnStart() {
 	Resources& resources = Engine::GetResources();
 	World& world = Engine::GetWorld();
+	Graphics& graphics = Engine::GetGraphics();
+
+	std::array<std::string, 6> skyboxTexturePaths = {
+		"Assets/Skyboxes/BlueSkye/right.jpg",
+		"Assets/Skyboxes/BlueSkye/left.jpg",
+		"Assets/Skyboxes/BlueSkye/top.jpg",
+		"Assets/Skyboxes/BlueSkye/bottom.jpg",
+		"Assets/Skyboxes/BlueSkye/front.jpg",
+		"Assets/Skyboxes/BlueSkye/back.jpg",
+	};
+	std::array<std::shared_ptr<Texture>, 6> skyboxTextures;
+	for (size_t i = 0; i < skyboxTexturePaths.size(); i++) {
+		skyboxTextures[i] = resources.LoadTexture(skyboxTexturePaths[i], TextureType::SRGB);
+	}
+	graphics.SetSkybox(skyboxTextures);
 
 	std::vector<std::pair<std::string, Transform>> scenePaths = {
 		{"Assets/Models/Showcase/AntiqueCamera/AntiqueCamera.gltf", Transform(glm::vec3{}, EulerToQuat(Right() * 180.0f), glm::vec3(0.3f))},

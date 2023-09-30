@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <array>
 
 #include "CmdList.h"
 #include "CmdQueue.h"
@@ -27,6 +28,8 @@ namespace UniverseEngine {
 
         const Window& GetWindow() const;
 
+        void SetSkybox(std::array<std::shared_ptr<Texture>, 6> textures);
+
     private:
         friend class Engine;
         Graphics();
@@ -51,7 +54,8 @@ namespace UniverseEngine {
         std::shared_ptr<DescriptorPool> descriptorPool;
 
         std::shared_ptr<RenderPass> renderPass;
-        std::shared_ptr<GraphicsPipeline> unlitPipeline;
+        std::shared_ptr<GraphicsPipeline> pbrPipeline;
+        std::shared_ptr<GraphicsPipeline> skyboxPipeline;
 
         std::shared_ptr<DescriptorSetLayout> vpDescriptorSetLayout;
         std::array<std::shared_ptr<Buffer>, Swapchain::MAX_FRAMES_IN_FLIGHT> vpUniformBuffers;
@@ -61,7 +65,15 @@ namespace UniverseEngine {
         std::array<std::shared_ptr<Buffer>, Swapchain::MAX_FRAMES_IN_FLIGHT> lightingUniformBuffers;
         std::array<std::shared_ptr<DescriptorSet>, Swapchain::MAX_FRAMES_IN_FLIGHT>
             lightingDescriptorSets;
+        std::shared_ptr<DescriptorSetLayout> skyboxDescriptorSetLayout;
+        std::array<std::shared_ptr<DescriptorSet>, Swapchain::MAX_FRAMES_IN_FLIGHT>
+            skyboxDescriptorSets;
 
         std::shared_ptr<Sampler> sampler;
+        std::shared_ptr<Sampler> skyboxSampler;
+
+        std::shared_ptr<Scene> skyboxCube;
+        std::array<std::shared_ptr<Texture>, 6> skyboxTextures;
+        std::shared_ptr<Image> skyboxImage;
     };
 }  // namespace UniverseEngine

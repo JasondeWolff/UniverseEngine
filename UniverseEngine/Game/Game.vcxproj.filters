@@ -51,6 +51,8 @@
     <None Include="Assets\Shaders\Vulkan\unlit.vert">
       <Filter>Assets\Shaders\Vulkan</Filter>
     </None>
+    <None Include="Assets\Shaders\Vulkan\skybox.frag" />
+    <None Include="Assets\Shaders\Vulkan\skybox.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeFormCamera.h">

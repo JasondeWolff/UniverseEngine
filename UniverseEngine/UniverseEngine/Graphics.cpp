@@ -56,6 +56,10 @@ namespace UniverseEngine {
         this->descriptorPool = std::make_shared<DescriptorPool>(this->device);
 
         this->sampler = std::make_shared<Sampler>("Sampler", this->device, *this->physicalDevice);
+        this->skyboxSampler = std::make_shared<Sampler>("Skybox Sampler", this->device, *this->physicalDevice);
+
+        this->skyboxCube =
+            Engine::GetResources().LoadScene("Assets/Models/SkyboxCube/SkyboxCube.gltf");
 
         this->BuildDescriptors();
         this->BuildSwapchain();
@@ -68,6 +72,10 @@ namespace UniverseEngine {
 
     const Window& Graphics::GetWindow() const {
         return *this->window.get();
+    }
+
+    void Graphics::SetSkybox(std::array<std::shared_ptr<Texture>, 6> textures) {
+        this->skyboxTextures = textures;
     }
 
     void Graphics::Update() {
@@ -118,7 +126,7 @@ namespace UniverseEngine {
         cmdList->BeginRenderPass(this->renderPass, this->swapchain->GetCurrentFramebuffer(),
                                  glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
-        cmdList->BindGraphicsPipeline(this->unlitPipeline);
+        cmdList->BindGraphicsPipeline(this->pbrPipeline);
 
         cmdList->SetScissor(swapchainExtent);
         cmdList->SetViewport(swapchainExtent);
@@ -181,6 +189,9 @@ namespace UniverseEngine {
             }
         }
 
+        /*this->skyboxDescriptorSets[i]->SetImage(0, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                                                this->skyboxImage, this->skyboxSampler);*/
+
         cmdList->EndRenderPass();
 
         std::vector<Semaphore*> waitSemaphores{&this->swapchain->GetImageAvailableSemaphore()};
@@ -198,6 +209,10 @@ namespace UniverseEngine {
         this->lightingDescriptorSetLayout = std::make_shared<DescriptorSetLayout>(
             this->device, std::vector<DescriptorLayoutBinding>{
                               DescriptorLayoutBinding("lighting", 8, DescriptorType::UNIFORM_BUFFER,
+                                                      GraphicsStageFlagBits::FRAGMENT_STAGE)});
+        this->skyboxDescriptorSetLayout = std::make_shared<DescriptorSetLayout>(
+            this->device, std::vector<DescriptorLayoutBinding>{
+                              DescriptorLayoutBinding("skyboxMap", 0, DescriptorType::COMBINED_IMAGE_SAMPLER,
                                                       GraphicsStageFlagBits::FRAGMENT_STAGE)});
 
         for (size_t i = 0; i < this->vpUniformBuffers.size(); i++) {
@@ -224,6 +239,10 @@ namespace UniverseEngine {
             this->lightingDescriptorSets[i]->SetBuffer(8, DescriptorType::UNIFORM_BUFFER,
                                                        this->lightingUniformBuffers[i]);
         }
+        for (size_t i = 0; i < this->skyboxDescriptorSets.size(); i++) {
+            this->skyboxDescriptorSets[i] = std::make_shared<DescriptorSet>(
+                this->device, this->descriptorPool, this->skyboxDescriptorSetLayout);
+        }
     }
 
     void Graphics::BuildSwapchain() {
@@ -245,19 +264,23 @@ namespace UniverseEngine {
 
     void Graphics::BuildPipelines() {
         auto& resources = Engine::GetResources();
-        std::shared_ptr<Shader> hShaderUnlitVS = resources.LoadShader("Assets/Shaders/unlit.vert");
-        std::shared_ptr<Shader> hShaderUnlitFS = resources.LoadShader("Assets/Shaders/unlit.frag");
+        std::shared_ptr<Shader> shaderPbrVS = resources.LoadShader("Assets/Shaders/unlit.vert");
+        std::shared_ptr<Shader> shaderPbrFS = resources.LoadShader("Assets/Shaders/unlit.frag");
+        std::shared_ptr<Shader> shaderSkyboxVS = resources.LoadShader("Assets/Shaders/skybox.vert");
+        std::shared_ptr<Shader> shaderSkyboxFS = resources.LoadShader("Assets/Shaders/skybox.frag");
         this->BuildRenderables();
 
-        std::vector<ShaderRenderable*> unlitShaders = {hShaderUnlitVS->renderable.get(),
-                                                       hShaderUnlitFS->renderable.get()};
-        this->unlitPipeline = std::make_shared<GraphicsPipeline>(
-            this->device, unlitShaders, this->renderPass,
+        std::vector<ShaderRenderable*> pbrShaders = {shaderPbrVS->renderable.get(),
+                                                       shaderPbrFS->renderable.get()};
+        this->pbrPipeline = std::make_shared<GraphicsPipeline>(
+            this->device, pbrShaders, this->renderPass,
             std::vector<std::shared_ptr<DescriptorSetLayout>>{
                 vpDescriptorSetLayout, MaterialRenderable::DescriptorLayout(this->device),
                 lightingDescriptorSetLayout},
             std::vector<PushConstantRange>{PushConstantRange("pc", sizeof(PushConstant),
                                                              GraphicsStageFlagBits::VERTEX_STAGE)});
+
+        
     }
 
     void Graphics::BuildRenderables() {
@@ -281,6 +304,28 @@ namespace UniverseEngine {
                     std::move(std::unique_ptr<TextureRenderable>(new TextureRenderable(
                         this->device, *this->physicalDevice, *uploadCmdList, *texture)));
                 texture->ClearCPUData();
+            }
+        }
+
+        if (this->skyboxTextures[0]) {
+            this->skyboxImage.reset();
+            this->skyboxImage = std::make_shared<Image>(
+                "Skybox", this->device, *this->physicalDevice, this->skyboxTextures[0]->width,
+                this->skyboxTextures[0]->height, this->skyboxTextures[0]->mips,
+                ImageUsageBits::TRANSFER_DST_IMAGE | ImageUsageBits::SAMPLED_IMAGE,
+                GraphicsFormat::R8G8B8A8_SRGB, 6);
+
+            std::array<std::shared_ptr<Image>, 6> skyboxImages{
+                this->skyboxTextures[0]->renderable->GetImage(),
+                this->skyboxTextures[1]->renderable->GetImage(),
+                this->skyboxTextures[2]->renderable->GetImage(),
+                this->skyboxTextures[3]->renderable->GetImage(),
+                this->skyboxTextures[4]->renderable->GetImage(),
+                this->skyboxTextures[5]->renderable->GetImage()};
+            uploadCmdList->CopyImagesIntoCubemap(skyboxImages, skyboxImage);
+
+            for (auto& skyboxTexture : this->skyboxTextures) {
+                skyboxTexture.reset();
             }
         }
 
