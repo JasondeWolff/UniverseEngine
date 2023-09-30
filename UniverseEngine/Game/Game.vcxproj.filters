@@ -65,6 +65,8 @@
     </None>
     <None Include="Assets\Shaders\Vulkan\imgui.vert" />
     <None Include="Assets\Shaders\Vulkan\imgui.frag" />
+    <None Include="Assets\Shaders\GL\imgui.frag" />
+    <None Include="Assets\Shaders\GL\imgui.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeFormCamera.h">

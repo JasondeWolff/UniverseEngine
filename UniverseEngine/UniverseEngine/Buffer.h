@@ -47,9 +47,11 @@ namespace UniverseEngine {
 #ifdef GRAPHICS_API_GL
     public:
         unsigned GetBuffer() const;
+        unsigned GetVao() const;
         unsigned GetIdentifier() const;
     private:
         unsigned buffer;
+        unsigned vao;
         void* bufferMemory;
         unsigned identifier;
 #elif defined(GRAPHICS_API_VULKAN)

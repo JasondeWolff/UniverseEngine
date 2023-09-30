@@ -73,7 +73,7 @@ namespace UniverseEngine {
     void ImGuiRenderer::Render(CmdList& cmdList, size_t currentFrame) {
         ImGui::Render();
         ImDrawData* drawData = ImGui::GetDrawData();
-
+        
         cmdList.BindGraphicsPipeline(this->pipeline);
 
         this->descriptorSets[currentFrame]->SetImage(0, DescriptorType::COMBINED_IMAGE_SAMPLER,

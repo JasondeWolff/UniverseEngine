@@ -69,6 +69,16 @@ namespace UniverseEngine {
                    static_cast<GLsizei>(rect2D.extent.x), static_cast<GLsizei>(rect2D.extent.y));
     }
 
+    void CmdList::BindVertexBuffer(std::shared_ptr<Buffer> vertexBuffer) {
+        glBindVertexArray(vertexBuffer->GetVao());
+
+        this->trackedBuffers.push_back(vertexBuffer);
+    }
+
+    void CmdList::BindIndexBuffer(std::shared_ptr<Buffer> indexBuffer) {
+        this->trackedBuffers.push_back(indexBuffer);
+    }
+
     void CmdList::BeginRenderPass(std::shared_ptr<RenderPass> renderPass,
                                   const Framebuffer& framebuffer, const glm::vec4& clearColor) {
         glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
@@ -104,10 +114,8 @@ namespace UniverseEngine {
         auto& info = graphicsPipeline->Info();
         if (info.ignoreDepth) {
             glDisable(GL_DEPTH_TEST);
-            glDepthMask(GL_FALSE);
         } else {
             glEnable(GL_DEPTH_TEST);
-            glDepthMask(GL_TRUE);
         }
 
         this->boundGraphicsPipeline = graphicsPipeline;
@@ -125,10 +133,10 @@ namespace UniverseEngine {
     void CmdList::DrawElements(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex,
                                uint32_t firstInstance) {
         UE_ASSERT_MSG(instanceCount == 1, "GL doesn't support instancing.");
-        UE_ASSERT_MSG(firstIndex == 0, "GL doesn't support index offsets.");
         UE_ASSERT_MSG(firstInstance == 0, "GL doesn't support instancing.");
 
-        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indexCount), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indexCount), GL_UNSIGNED_INT,
+                       (void*)(firstIndex * sizeof(GLuint)));
     }
 
     void CmdList::PushConstant(const std::string& name, void* constant, size_t size,
