@@ -28,9 +28,9 @@ namespace UniverseEngine {
     }
 
     std::shared_ptr<Scene> Resources::CreateScene(Mesh&& mesh) {
-        std::shared_ptr<Scene> hScene;
+        std::shared_ptr<Scene> hScene = std::make_shared<Scene>();
 
-        hScene.get()->meshes.push_back(std::move(mesh));
+        hScene.get()->meshes.emplace_back(std::move(mesh));
         //Add materials
 
         return hScene;
@@ -83,6 +83,10 @@ namespace UniverseEngine {
 
     const std::vector<std::shared_ptr<Scene>>& Resources::GetAllScenes() {
         return this->scenes;
+    }
+
+    void Resources::AddScene(std::shared_ptr<Scene> scene) {
+        scenes.emplace_back(scene);
     }
 
     const std::vector<std::shared_ptr<Texture>>& Resources::GetNewTextures() {

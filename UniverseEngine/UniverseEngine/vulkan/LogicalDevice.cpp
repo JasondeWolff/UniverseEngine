@@ -18,6 +18,7 @@ namespace UniverseEngine {
         queueCreateInfo.pQueuePriorities = &queuePriority;
 
         VkPhysicalDeviceFeatures deviceFeatures{};
+        deviceFeatures.fillModeNonSolid = VK_TRUE;
         deviceFeatures.samplerAnisotropy = VK_TRUE;
 
         VkPhysicalDeviceBufferDeviceAddressFeaturesKHR bufferDeviceAddressFeatures{};
