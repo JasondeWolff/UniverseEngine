@@ -59,9 +59,11 @@ namespace UniverseEngine {
         Image(void* data, uint32_t width, uint32_t height, uint32_t mips, GraphicsFormat format);
 
         unsigned GetTexture() const;
+        GLenum Identifier() const;
 
     private:
         unsigned texture;
+        GLenum identifier;
 #elif defined(GRAPHICS_API_VULKAN)
     public:
         Image(std::shared_ptr<LogicalDevice> device, VkImage image, VkImageView imageView,

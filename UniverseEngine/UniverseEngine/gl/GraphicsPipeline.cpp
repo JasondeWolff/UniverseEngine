@@ -15,9 +15,9 @@ namespace UniverseEngine {
     GraphicsPipeline::GraphicsPipeline(std::shared_ptr<LogicalDevice> device,
                                        const std::vector<ShaderRenderable*>& shaders,
                                        std::shared_ptr<RenderPass> renderPass,
-                                       std::vector<std::shared_ptr<DescriptorSetLayout>> descriptorSetLayout,
-                                       std::vector<PushConstantRange> pushConstants)
-        : device(device) {
+                                       std::vector<std::shared_ptr<DescriptorSetLayout>> descriptorSetLayouts,
+                                       std::vector<PushConstantRange> pushConstants, GraphicsPipelineInfo info)
+        : device(device), renderPass(renderPass), descriptorSetLayouts(descriptorSetLayouts), info(info) {
         this->shaderProgram = glCreateProgram();
 
         std::string debugName = "";
@@ -45,6 +45,10 @@ namespace UniverseEngine {
 
     GraphicsPipeline::~GraphicsPipeline() {
         glDeleteProgram(this->shaderProgram);
+    }
+
+    const GraphicsPipelineInfo& GraphicsPipeline::Info() const {
+        return this->info;
     }
 
     unsigned GraphicsPipeline::ShaderProgram() const {

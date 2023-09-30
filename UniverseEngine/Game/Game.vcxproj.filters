@@ -53,6 +53,8 @@
     </None>
     <None Include="Assets\Shaders\Vulkan\skybox.frag" />
     <None Include="Assets\Shaders\Vulkan\skybox.vert" />
+    <None Include="Assets\Shaders\GL\skybox.vert" />
+    <None Include="Assets\Shaders\GL\skybox.frag" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeFormCamera.h">

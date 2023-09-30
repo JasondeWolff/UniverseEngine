@@ -27,6 +27,8 @@ namespace UniverseEngine {
         GraphicsPipeline(const GraphicsPipeline& other) = delete;
         GraphicsPipeline& operator=(const GraphicsPipeline& other) = delete;
 
+        const GraphicsPipelineInfo& Info() const;
+
     private:
         const std::shared_ptr<LogicalDevice> device;
         const std::shared_ptr<RenderPass> renderPass;

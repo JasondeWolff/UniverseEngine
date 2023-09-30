@@ -102,6 +102,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\UniverseEngine\.clang-format" />
+    <None Include="Assets\Shaders\GL\skybox.frag" />
+    <None Include="Assets\Shaders\GL\skybox.vert" />
     <None Include="Assets\Shaders\GL\unlit.frag">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
