@@ -16,7 +16,7 @@ namespace UniverseEngine {
                                     ? GraphicsFormat::R8G8B8A8_SRGB
                                     : GraphicsFormat::R8G8B8A8_UNORM;
 
-        this->image = std::make_shared<Image>(texture.data, texture.width, texture.height,
+        this->image = std::make_shared<Image>(texture.name, texture.data, texture.width, texture.height,
                                               texture.mips, format);
     }
 
