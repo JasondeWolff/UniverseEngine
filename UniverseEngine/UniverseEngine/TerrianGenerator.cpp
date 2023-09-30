@@ -75,8 +75,9 @@ namespace UniverseEngine {
         meshHierarchyRoot = hScene.get()->hierarchy.insert(meshHierarchyRoot, node);
 
         Engine::GetResources().AddScene(hScene);
+        this->generatedWorld.at(0).at(0) = hScene;
 
-        this->generatedWorld.at(0).at(0) = std::move(hScene);
+        int debeug = 0;
     }
 
     void TerrianGenerator::Update() {

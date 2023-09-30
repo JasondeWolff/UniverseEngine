@@ -7,15 +7,6 @@ namespace UniverseEngine {
     Resources::Resources() : scenes{}, textures{}, shaders{}, scenePaths{}, texturePaths{} {
     }
 
-    std::shared_ptr<Scene> Resources::CreateScene(Mesh&& mesh) {
-        std::shared_ptr<Scene> hScene;
-
-        hScene.get()->meshes.push_back(std::move(mesh));
-        // Add materials
-
-        return hScene;
-    }
-
     std::shared_ptr<Texture> Resources::CreateTexture(const std::string& name, unsigned char* data,
                                                       unsigned width, unsigned height,
                                                       TextureType type) {

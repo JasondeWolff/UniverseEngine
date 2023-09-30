@@ -3,7 +3,6 @@
 using namespace UniverseEngine;
 
 void MyGame::OnStart() {
-	/*this->terrainScene = Engine::GetResources().LoadScene("Assets/Models/MarsTerrain/MarsTerrain.gltf");
 	std::array<std::string, 6> skyboxTexturePaths = {
 		"Assets/Skyboxes/BlueSkye/right.jpg",
 		"Assets/Skyboxes/BlueSkye/left.jpg",
@@ -17,10 +16,6 @@ void MyGame::OnStart() {
 		skyboxTextures[i] = Engine::GetResources().LoadTexture(skyboxTexturePaths[i], TextureType::SRGB);
 	}
 	Engine::GetGraphics().SetSkybox(skyboxTextures);
-
-	this->terrainScene = Engine::GetResources().LoadScene("Assets/Models/MarsTerrain/MarsTerrain.gltf");
-	this->terrainSceneInstance = Engine::GetWorld().AddSceneInstance(this->terrainScene);
-	this->terrainSceneInstance->transform.Rotate(EulerToQuat(Right() * 90.0f));*/
 
 	auto GeneratedTerrianInstance = Engine::GetWorld().GenerateWorld();
 

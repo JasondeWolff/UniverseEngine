@@ -14,10 +14,9 @@ namespace UniverseEngine {
         //Generate a 1x1 grid
         tg.Init();
 
-        auto sceneInstance = std::make_shared<SceneInstance>(tg.generatedWorld[0][0]);
+        auto sceneInstance = std::make_shared<SceneInstance>(tg.generatedWorld.at(0).at(0));
         this->sceneInstances.push_back(sceneInstance);
         this->newInstances.push_back(sceneInstance);
-
         return sceneInstance;
     }
 
