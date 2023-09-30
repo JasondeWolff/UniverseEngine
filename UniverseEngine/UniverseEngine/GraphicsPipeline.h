@@ -19,7 +19,7 @@ namespace UniverseEngine {
     class GraphicsPipeline {
     public:
         GraphicsPipeline(std::shared_ptr<LogicalDevice> device,
-                         const std::vector<ShaderRenderable*>& shaders,
+                         const std::vector<const ShaderRenderable*>& shaders,
                          std::shared_ptr<RenderPass> renderPass,
                          std::vector<std::shared_ptr<DescriptorSetLayout>> descriptorSetLayouts,
                          std::vector<PushConstantRange> pushConstants, GraphicsPipelineInfo info);

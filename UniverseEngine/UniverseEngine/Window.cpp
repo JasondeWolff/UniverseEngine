@@ -10,6 +10,8 @@
 #include <GLFW/glfw3.h>
 #endif
 
+#include <imgui.h>
+
 #include "Engine.h"
 #include "GraphicsAPI.h"
 #include "Logging.h"
@@ -24,6 +26,8 @@ namespace UniverseEngine {
         window->width = static_cast<unsigned>(width);
         window->height = static_cast<unsigned>(height);
         window->wasResized = true;
+
+        ImGui::GetIO().DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
     }
 
     void Window::GlfwKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -69,6 +73,9 @@ namespace UniverseEngine {
         glfwSetWindowSizeCallback(this->glfwWindow, Window::GlfwWindowSizeCallback);
         glfwSetKeyCallback(this->glfwWindow, Window::GlfwKeyCallback);
         glfwSetCursorPosCallback(this->glfwWindow, Window::GlfwCursorPositionCallback);
+
+        ImGui::SetCurrentContext(ImGui::CreateContext());
+        ImGui::GetIO().DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));
     }
 
     GLFWwindow* Window::GlfwWindow() const {

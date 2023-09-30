@@ -16,6 +16,19 @@ namespace UniverseEngine {
         return hScene;
     }
 
+    std::shared_ptr<Texture> Resources::CreateTexture(const std::string& name, unsigned char* data,
+                                                      unsigned width, unsigned height,
+                                                      TextureType type) {
+        unsigned mips = static_cast<unsigned>(std::floor(std::log2(std::max(width, height)))) + 1;
+        Texture parsedTexture(name, data, static_cast<unsigned>(width),
+                              static_cast<unsigned>(height), type, mips);
+
+        std::shared_ptr<Texture> texture = std::make_shared<Texture>(std::move(parsedTexture));
+        this->newTextures.push_back(texture);
+        this->textures.push_back(texture);
+        return texture;
+    }
+
     std::shared_ptr<Scene> Resources::LoadScene(const std::filesystem::path& filePath) {
         auto scene = scenePaths.find(filePath);
         if (scene != scenePaths.end())

@@ -54,7 +54,7 @@ namespace UniverseEngine {
         this->presentQueue =
             std::make_unique<CmdQueue>(this->device, *this->physicalDevice, QueueType::PRESENT);
         this->descriptorPool = std::make_shared<DescriptorPool>(this->device);
-
+        
         this->sampler = std::make_shared<Sampler>("Sampler", this->device, *this->physicalDevice);
         this->skyboxSampler =
             std::make_shared<Sampler>("Skybox Sampler", this->device, *this->physicalDevice);
@@ -65,6 +65,9 @@ namespace UniverseEngine {
         this->BuildDescriptors();
         this->BuildSwapchain();
         this->BuildPipelines();
+
+        this->imguiRenderer = std::make_unique<ImGuiRenderer>(
+            this->device, *this->physicalDevice, this->descriptorPool, this->renderPass, *this);
     }
 
     Graphics::~Graphics() {
@@ -80,6 +83,7 @@ namespace UniverseEngine {
     }
 
     void Graphics::Update() {
+        this->RebuildShaders();
         this->BuildRenderables();
         this->cmdQueue->ProcessCmdLists();
 
@@ -198,6 +202,8 @@ namespace UniverseEngine {
             }
         }
 
+        this->imguiRenderer->Render(*cmdList, currentFrame);
+
         cmdList->EndRenderPass();
 
         std::vector<Semaphore*> waitSemaphores{&this->swapchain->GetImageAvailableSemaphore()};
@@ -274,10 +280,10 @@ namespace UniverseEngine {
         std::shared_ptr<Shader> shaderPbrFS = resources.LoadShader("Assets/Shaders/unlit.frag");
         std::shared_ptr<Shader> shaderSkyboxVS = resources.LoadShader("Assets/Shaders/skybox.vert");
         std::shared_ptr<Shader> shaderSkyboxFS = resources.LoadShader("Assets/Shaders/skybox.frag");
-        this->BuildRenderables();
+        this->RebuildShaders();
 
         GraphicsPipelineInfo pbrInfo{};
-        std::vector<ShaderRenderable*> pbrShaders = {shaderPbrVS->renderable.get(),
+        std::vector<const ShaderRenderable*> pbrShaders = {shaderPbrVS->renderable.get(),
                                                      shaderPbrFS->renderable.get()};
         this->pbrPipeline = std::make_shared<GraphicsPipeline>(
             this->device, pbrShaders, this->renderPass,
@@ -290,7 +296,7 @@ namespace UniverseEngine {
 
         GraphicsPipelineInfo skyboxInfo{};
         skyboxInfo.ignoreDepth = true;
-        std::vector<ShaderRenderable*> skyboxShaders = {shaderSkyboxVS->renderable.get(),
+        std::vector<const ShaderRenderable*> skyboxShaders = {shaderSkyboxVS->renderable.get(),
                                                         shaderSkyboxFS->renderable.get()};
         this->skyboxPipeline = std::make_shared<GraphicsPipeline>(
             this->device, skyboxShaders, this->renderPass,
@@ -299,11 +305,8 @@ namespace UniverseEngine {
             std::vector<PushConstantRange>{}, skyboxInfo);
     }
 
-    void Graphics::BuildRenderables() {
-        World& world = Engine::GetWorld();
+    void Graphics::RebuildShaders() const {
         Resources& resources = Engine::GetResources();
-        std::shared_ptr<CmdList> uploadCmdList = this->cmdQueue->GetCmdList();
-
         auto& shaders = resources.GetNewShaders();
         for (auto& shader : shaders) {
             if (!shader->renderable) {
@@ -312,6 +315,12 @@ namespace UniverseEngine {
                 shader->ClearCPUData();
             }
         }
+    }
+
+    void Graphics::BuildRenderables() {
+        World& world = Engine::GetWorld();
+        Resources& resources = Engine::GetResources();
+        std::shared_ptr<CmdList> uploadCmdList = this->cmdQueue->GetCmdList();
 
         auto& textures = resources.GetNewTextures();
         for (auto& texture : textures) {

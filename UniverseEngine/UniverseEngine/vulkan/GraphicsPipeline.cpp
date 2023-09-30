@@ -55,7 +55,7 @@ namespace UniverseEngine {
     }
 
     GraphicsPipeline::GraphicsPipeline(
-        std::shared_ptr<LogicalDevice> device, const std::vector<ShaderRenderable*>& shaders,
+        std::shared_ptr<LogicalDevice> device, const std::vector<const ShaderRenderable*>& shaders,
         std::shared_ptr<RenderPass> renderPass,
         std::vector<std::shared_ptr<DescriptorSetLayout>> descriptorSetLayouts,
         std::vector<PushConstantRange> pushConstants, GraphicsPipelineInfo info)
@@ -124,7 +124,7 @@ namespace UniverseEngine {
         colorBlending.attachmentCount = 1;
         colorBlending.pAttachments = &colorBlendAttachment;
 
-        std::vector<VkPushConstantRange> vkPushConstantRanges;
+        std::vector<VkPushConstantRange> vkPushConstantRanges{};
         for (auto& pushConstantRange : pushConstants) {
             VkPushConstantRange vkPushConstantRange{};
             vkPushConstantRange.size = static_cast<uint32_t>(pushConstantRange.size);
@@ -132,7 +132,7 @@ namespace UniverseEngine {
             vkPushConstantRanges.push_back(vkPushConstantRange);
         }
 
-        std::vector<VkDescriptorSetLayout> vkDescriptorSetLayouts;
+        std::vector<VkDescriptorSetLayout> vkDescriptorSetLayouts{};
         for (auto& descriptorSetLayout : descriptorSetLayouts) {
             vkDescriptorSetLayouts.push_back(descriptorSetLayout->GetLayout());
         }
@@ -185,7 +185,7 @@ namespace UniverseEngine {
         pipelineInfo.pViewportState = &viewportState;
         pipelineInfo.pRasterizationState = &rasterizer;
         pipelineInfo.pMultisampleState = &multisampling;
-        pipelineInfo.pDepthStencilState = &depthStencil;  // Optional
+        pipelineInfo.pDepthStencilState = &depthStencil;
         pipelineInfo.pColorBlendState = &colorBlending;
         pipelineInfo.pDynamicState = &dynamicState;
         pipelineInfo.layout = this->pipelineLayout;

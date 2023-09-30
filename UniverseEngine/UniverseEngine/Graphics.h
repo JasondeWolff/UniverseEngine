@@ -19,6 +19,8 @@
 #include "Swapchain.h"
 #include "Window.h"
 
+#include "ImGuiRenderer.h"
+
 namespace UniverseEngine {
     class Engine;
 
@@ -29,6 +31,8 @@ namespace UniverseEngine {
         const Window& GetWindow() const;
 
         void SetSkybox(std::array<std::shared_ptr<Texture>, 6> textures);
+
+        void RebuildShaders() const;
 
     private:
         friend class Engine;
@@ -52,6 +56,7 @@ namespace UniverseEngine {
         std::unique_ptr<CmdQueue> cmdQueue;
         std::unique_ptr<CmdQueue> presentQueue;
         std::shared_ptr<DescriptorPool> descriptorPool;
+        std::unique_ptr<ImGuiRenderer> imguiRenderer;
 
         std::shared_ptr<RenderPass> renderPass;
         std::shared_ptr<GraphicsPipeline> pbrPipeline;
