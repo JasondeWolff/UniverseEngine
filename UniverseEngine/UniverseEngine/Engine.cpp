@@ -64,6 +64,7 @@ namespace UniverseEngine {
             float deltaTime = this->timer.Elapsed();
             this->timer.Reset();
 
+            ImGui::NewFrame();
             this->game->Update(deltaTime);
             GetWorld().Update();
             GetInput().Update();

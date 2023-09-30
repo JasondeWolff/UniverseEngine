@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <array>
 
 #include "GraphicsAPI.h"
 #include "GraphicsStageFlags.h"
@@ -33,6 +34,7 @@ namespace UniverseEngine {
 
         void CopyBuffers(std::shared_ptr<Buffer> src, std::shared_ptr<Buffer> dst);
         void CopyBuffers(std::shared_ptr<Buffer> src, std::shared_ptr<Image> dst);
+        void CopyImagesIntoCubemap(const std::array<std::shared_ptr<Image>, 6>& images, std::shared_ptr<Image> cubemap);
         void GenerateMips(std::shared_ptr<Image> image);
 
         void TransitionImageLayout(std::shared_ptr<Image> image, ImageLayout oldLayout,

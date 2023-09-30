@@ -46,13 +46,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)UniverseEngine\;$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\TinyUSD\include\;C:\VulkanSDK\1.3.261.1\Include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\glew\include\</IncludePath>
+    <IncludePath>$(SolutionDir)UniverseEngine\;$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\TinyUSD\include\;C:\VulkanSDK\1.3.261.1\Include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\imgui\include\;$(SolutionDir)Dependencies\glew\include\</IncludePath>
     <LibraryPath>$(SolutionDir)bin\UniverseEngine\$(Configuration)\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)UniverseEngine\;$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\TinyUSD\include\;C:\VulkanSDK\1.3.261.1\Include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\glew\include\</IncludePath>
+    <IncludePath>$(SolutionDir)UniverseEngine\;$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\TinyUSD\include\;C:\VulkanSDK\1.3.261.1\Include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\imgui\include\;$(SolutionDir)Dependencies\glew\include\</IncludePath>
     <LibraryPath>$(SolutionDir)bin\UniverseEngine\$(Configuration)\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -102,6 +102,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\UniverseEngine\.clang-format" />
+    <None Include="Assets\Shaders\GL\imgui.frag" />
+    <None Include="Assets\Shaders\GL\imgui.vert" />
+    <None Include="Assets\Shaders\GL\skybox.frag" />
+    <None Include="Assets\Shaders\GL\skybox.vert" />
     <None Include="Assets\Shaders\GL\unlit.frag">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
@@ -110,6 +114,10 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </None>
+    <None Include="Assets\Shaders\Vulkan\imgui.frag" />
+    <None Include="Assets\Shaders\Vulkan\imgui.vert" />
+    <None Include="Assets\Shaders\Vulkan\skybox.frag" />
+    <None Include="Assets\Shaders\Vulkan\skybox.vert" />
     <None Include="Assets\Shaders\Vulkan\unlit.frag" />
     <None Include="Assets\Shaders\Vulkan\unlit.vert" />
   </ItemGroup>

@@ -17,6 +17,8 @@ namespace UniverseEngine {
         std::string sourceCode;
         std::vector<char> source;
 
+        const ShaderRenderable& Renderable() const;
+
     private:
         friend class Graphics;
         std::unique_ptr<ShaderRenderable> renderable;

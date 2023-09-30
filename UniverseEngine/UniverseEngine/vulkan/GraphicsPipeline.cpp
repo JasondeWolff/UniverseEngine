@@ -55,11 +55,14 @@ namespace UniverseEngine {
     }
 
     GraphicsPipeline::GraphicsPipeline(
-        std::shared_ptr<LogicalDevice> device, const std::vector<ShaderRenderable*>& shaders,
+        std::shared_ptr<LogicalDevice> device, const std::vector<const ShaderRenderable*>& shaders,
         std::shared_ptr<RenderPass> renderPass,
         std::vector<std::shared_ptr<DescriptorSetLayout>> descriptorSetLayouts,
-        std::vector<PushConstantRange> pushConstants)
-        : device(device), renderPass(renderPass), descriptorSetLayouts(descriptorSetLayouts) {
+        std::vector<PushConstantRange> pushConstants, GraphicsPipelineInfo info)
+        : device(device),
+          renderPass(renderPass),
+          descriptorSetLayouts(descriptorSetLayouts),
+          info(info) {
         // TODO: make more dynamic
         VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
         vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -121,7 +124,7 @@ namespace UniverseEngine {
         colorBlending.attachmentCount = 1;
         colorBlending.pAttachments = &colorBlendAttachment;
 
-        std::vector<VkPushConstantRange> vkPushConstantRanges;
+        std::vector<VkPushConstantRange> vkPushConstantRanges{};
         for (auto& pushConstantRange : pushConstants) {
             VkPushConstantRange vkPushConstantRange{};
             vkPushConstantRange.size = static_cast<uint32_t>(pushConstantRange.size);
@@ -129,7 +132,7 @@ namespace UniverseEngine {
             vkPushConstantRanges.push_back(vkPushConstantRange);
         }
 
-        std::vector<VkDescriptorSetLayout> vkDescriptorSetLayouts;
+        std::vector<VkDescriptorSetLayout> vkDescriptorSetLayouts{};
         for (auto& descriptorSetLayout : descriptorSetLayouts) {
             vkDescriptorSetLayouts.push_back(descriptorSetLayout->GetLayout());
         }
@@ -167,8 +170,8 @@ namespace UniverseEngine {
 
         VkPipelineDepthStencilStateCreateInfo depthStencil{};
         depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-        depthStencil.depthTestEnable = VK_TRUE;
-        depthStencil.depthWriteEnable = VK_TRUE;
+        depthStencil.depthTestEnable = !info.ignoreDepth;
+        depthStencil.depthWriteEnable = !info.ignoreDepth;
         depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
         depthStencil.depthBoundsTestEnable = VK_FALSE;
         depthStencil.stencilTestEnable = VK_FALSE;
@@ -182,7 +185,7 @@ namespace UniverseEngine {
         pipelineInfo.pViewportState = &viewportState;
         pipelineInfo.pRasterizationState = &rasterizer;
         pipelineInfo.pMultisampleState = &multisampling;
-        pipelineInfo.pDepthStencilState = &depthStencil;  // Optional
+        pipelineInfo.pDepthStencilState = &depthStencil;
         pipelineInfo.pColorBlendState = &colorBlending;
         pipelineInfo.pDynamicState = &dynamicState;
         pipelineInfo.layout = this->pipelineLayout;

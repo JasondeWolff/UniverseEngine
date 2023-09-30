@@ -54,12 +54,20 @@ namespace UniverseEngine {
         this->presentQueue =
             std::make_unique<CmdQueue>(this->device, *this->physicalDevice, QueueType::PRESENT);
         this->descriptorPool = std::make_shared<DescriptorPool>(this->device);
-
+        
         this->sampler = std::make_shared<Sampler>("Sampler", this->device, *this->physicalDevice);
+        this->skyboxSampler =
+            std::make_shared<Sampler>("Skybox Sampler", this->device, *this->physicalDevice);
+
+        this->skyboxCube =
+            Engine::GetResources().LoadScene("Assets/Models/SkyboxCube/SkyboxCube.gltf");
 
         this->BuildDescriptors();
         this->BuildSwapchain();
         this->BuildPipelines();
+
+        this->imguiRenderer = std::make_unique<ImGuiRenderer>(
+            this->device, *this->physicalDevice, this->descriptorPool, this->renderPass, *this);
     }
 
     Graphics::~Graphics() {
@@ -70,7 +78,12 @@ namespace UniverseEngine {
         return *this->window.get();
     }
 
+    void Graphics::SetSkybox(std::array<std::shared_ptr<Texture>, 6> textures) {
+        this->skyboxTextures = textures;
+    }
+
     void Graphics::Update() {
+        this->RebuildShaders();
         this->BuildRenderables();
         this->cmdQueue->ProcessCmdLists();
 
@@ -118,8 +131,6 @@ namespace UniverseEngine {
         cmdList->BeginRenderPass(this->renderPass, this->swapchain->GetCurrentFramebuffer(),
                                  glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
-        cmdList->BindGraphicsPipeline(this->unlitPipeline);
-
         cmdList->SetScissor(swapchainExtent);
         cmdList->SetViewport(swapchainExtent);
 
@@ -156,6 +167,19 @@ namespace UniverseEngine {
         memcpy(uniformBufferData, &lightingUniformBufferData, sizeof(LightingUniformBuffer));
         this->lightingUniformBuffers[currentFrame]->Unmap();
 
+        cmdList->BindGraphicsPipeline(this->skyboxPipeline);
+
+        cmdList->BindDescriptorSet(this->vpDescriptorSets[currentFrame], 0);
+        this->skyboxDescriptorSets[currentFrame]->SetImage(
+            1, DescriptorType::COMBINED_IMAGE_SAMPLER, this->skyboxImage, this->skyboxSampler);
+        cmdList->BindDescriptorSet(this->skyboxDescriptorSets[currentFrame], 1);
+        this->skyboxCube->meshes[0].renderable->Draw(*cmdList);
+
+        cmdList->BindGraphicsPipeline(this->pbrPipeline);
+
+        cmdList->BindDescriptorSet(this->vpDescriptorSets[currentFrame], 0);
+        cmdList->BindDescriptorSet(this->lightingDescriptorSets[currentFrame], 2);
+
         for (auto& sceneInstance : sceneInstances) {
             auto& scene = sceneInstance->hScene;
 
@@ -169,9 +193,6 @@ namespace UniverseEngine {
                 pushConstant.model = meshInstance.transform.GetMatrix();
                 pushConstant.invTransModel = glm::transpose(glm::inverse(pushConstant.model));
 
-                cmdList->BindDescriptorSet(this->vpDescriptorSets[currentFrame], 0);
-                cmdList->BindDescriptorSet(this->lightingDescriptorSets[currentFrame], 2);
-
                 Material& material = scene->materials[mesh.materialIdx];
                 material.renderable->Bind(*cmdList, currentFrame, 1);
 
@@ -180,6 +201,8 @@ namespace UniverseEngine {
                 mesh.renderable->Draw(*cmdList);
             }
         }
+
+        this->imguiRenderer->Render(*cmdList, currentFrame);
 
         cmdList->EndRenderPass();
 
@@ -199,6 +222,10 @@ namespace UniverseEngine {
             this->device, std::vector<DescriptorLayoutBinding>{
                               DescriptorLayoutBinding("lighting", 8, DescriptorType::UNIFORM_BUFFER,
                                                       GraphicsStageFlagBits::FRAGMENT_STAGE)});
+        this->skyboxDescriptorSetLayout = std::make_shared<DescriptorSetLayout>(
+            this->device, std::vector<DescriptorLayoutBinding>{DescriptorLayoutBinding(
+                              "skyboxMap", 1, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                              GraphicsStageFlagBits::FRAGMENT_STAGE)});
 
         for (size_t i = 0; i < this->vpUniformBuffers.size(); i++) {
             this->vpUniformBuffers[i] =
@@ -224,6 +251,10 @@ namespace UniverseEngine {
             this->lightingDescriptorSets[i]->SetBuffer(8, DescriptorType::UNIFORM_BUFFER,
                                                        this->lightingUniformBuffers[i]);
         }
+        for (size_t i = 0; i < this->skyboxDescriptorSets.size(); i++) {
+            this->skyboxDescriptorSets[i] = std::make_shared<DescriptorSet>(
+                this->device, this->descriptorPool, this->skyboxDescriptorSetLayout);
+        }
     }
 
     void Graphics::BuildSwapchain() {
@@ -245,19 +276,45 @@ namespace UniverseEngine {
 
     void Graphics::BuildPipelines() {
         auto& resources = Engine::GetResources();
-        std::shared_ptr<Shader> hShaderUnlitVS = resources.LoadShader("Assets/Shaders/unlit.vert");
-        std::shared_ptr<Shader> hShaderUnlitFS = resources.LoadShader("Assets/Shaders/unlit.frag");
-        this->BuildRenderables();
+        std::shared_ptr<Shader> shaderPbrVS = resources.LoadShader("Assets/Shaders/unlit.vert");
+        std::shared_ptr<Shader> shaderPbrFS = resources.LoadShader("Assets/Shaders/unlit.frag");
+        std::shared_ptr<Shader> shaderSkyboxVS = resources.LoadShader("Assets/Shaders/skybox.vert");
+        std::shared_ptr<Shader> shaderSkyboxFS = resources.LoadShader("Assets/Shaders/skybox.frag");
+        this->RebuildShaders();
 
-        std::vector<ShaderRenderable*> unlitShaders = {hShaderUnlitVS->renderable.get(),
-                                                       hShaderUnlitFS->renderable.get()};
-        this->unlitPipeline = std::make_shared<GraphicsPipeline>(
-            this->device, unlitShaders, this->renderPass,
+        GraphicsPipelineInfo pbrInfo{};
+        std::vector<const ShaderRenderable*> pbrShaders = {shaderPbrVS->renderable.get(),
+                                                     shaderPbrFS->renderable.get()};
+        this->pbrPipeline = std::make_shared<GraphicsPipeline>(
+            this->device, pbrShaders, this->renderPass,
             std::vector<std::shared_ptr<DescriptorSetLayout>>{
                 vpDescriptorSetLayout, MaterialRenderable::DescriptorLayout(this->device),
                 lightingDescriptorSetLayout},
-            std::vector<PushConstantRange>{PushConstantRange("pc", sizeof(PushConstant),
-                                                             GraphicsStageFlagBits::VERTEX_STAGE)});
+            std::vector<PushConstantRange>{
+                PushConstantRange("pc", sizeof(PushConstant), GraphicsStageFlagBits::VERTEX_STAGE)},
+            pbrInfo);
+
+        GraphicsPipelineInfo skyboxInfo{};
+        skyboxInfo.ignoreDepth = true;
+        std::vector<const ShaderRenderable*> skyboxShaders = {shaderSkyboxVS->renderable.get(),
+                                                        shaderSkyboxFS->renderable.get()};
+        this->skyboxPipeline = std::make_shared<GraphicsPipeline>(
+            this->device, skyboxShaders, this->renderPass,
+            std::vector<std::shared_ptr<DescriptorSetLayout>>{vpDescriptorSetLayout,
+                                                              skyboxDescriptorSetLayout},
+            std::vector<PushConstantRange>{}, skyboxInfo);
+    }
+
+    void Graphics::RebuildShaders() const {
+        Resources& resources = Engine::GetResources();
+        auto& shaders = resources.GetNewShaders();
+        for (auto& shader : shaders) {
+            if (!shader->renderable) {
+                shader->renderable = std::move(
+                    std::unique_ptr<ShaderRenderable>(new ShaderRenderable(this->device, *shader)));
+                shader->ClearCPUData();
+            }
+        }
     }
 
     void Graphics::BuildRenderables() {
@@ -265,17 +322,8 @@ namespace UniverseEngine {
         Resources& resources = Engine::GetResources();
         std::shared_ptr<CmdList> uploadCmdList = this->cmdQueue->GetCmdList();
 
-        auto shaders = resources.GetNewShaders();
-        for (auto shader : shaders) {
-            if (!shader->renderable) {
-                shader->renderable = std::move(
-                    std::unique_ptr<ShaderRenderable>(new ShaderRenderable(this->device, *shader)));
-                shader->ClearCPUData();
-            }
-        }
-
-        auto textures = resources.GetNewTextures();
-        for (auto texture : textures) {
+        auto& textures = resources.GetNewTextures();
+        for (auto& texture : textures) {
             if (!texture->renderable) {
                 texture->renderable =
                     std::move(std::unique_ptr<TextureRenderable>(new TextureRenderable(
@@ -284,10 +332,30 @@ namespace UniverseEngine {
             }
         }
 
-        auto& sceneInstances = world.newInstances;
-        for (auto sceneInstance : sceneInstances) {
-            auto scene = sceneInstance->hScene;
+        if (this->skyboxTextures[0]) {
+            this->skyboxImage.reset();
+            this->skyboxImage = std::make_shared<Image>(
+                "Skybox", this->device, *this->physicalDevice, this->skyboxTextures[0]->width,
+                this->skyboxTextures[0]->height, this->skyboxTextures[0]->mips,
+                ImageUsageBits::TRANSFER_DST_IMAGE | ImageUsageBits::SAMPLED_IMAGE,
+                GraphicsFormat::R8G8B8A8_SRGB, 6);
 
+            std::array<std::shared_ptr<Image>, 6> skyboxImages{
+                this->skyboxTextures[0]->renderable->GetImage(),
+                this->skyboxTextures[1]->renderable->GetImage(),
+                this->skyboxTextures[2]->renderable->GetImage(),
+                this->skyboxTextures[3]->renderable->GetImage(),
+                this->skyboxTextures[4]->renderable->GetImage(),
+                this->skyboxTextures[5]->renderable->GetImage()};
+            uploadCmdList->CopyImagesIntoCubemap(skyboxImages, skyboxImage);
+
+            for (auto& skyboxTexture : this->skyboxTextures) {
+                skyboxTexture.reset();
+            }
+        }
+
+        auto& scenes = resources.GetNewScenes();
+        for (auto& scene : scenes) {
             for (Mesh& mesh : scene->meshes) {
                 if (!mesh.renderable) {
                     if (!mesh.HasTangents())

@@ -108,6 +108,53 @@ namespace UniverseEngine {
         this->trackedImages.push_back(dst);
     }
 
+    void CmdList::CopyImagesIntoCubemap(const std::array<std::shared_ptr<Image>, 6>& images,
+                                        std::shared_ptr<Image> cubemap) {
+        this->TransitionImageLayout(cubemap, ImageLayout::UNDEFINED,
+                                    ImageLayout::TRANSFER_DST_OPTIMAL);
+
+        VkImageCopy imageCopy{};
+        imageCopy.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        imageCopy.srcSubresource.baseArrayLayer = 0;
+        imageCopy.srcSubresource.layerCount = 1;
+        imageCopy.srcOffset = {0, 0, 0};
+        imageCopy.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        imageCopy.dstSubresource.layerCount = 1;
+        imageCopy.dstOffset = {0, 0, 0};
+        
+
+        uint32_t mipWidth = cubemap->Width();
+        uint32_t mipHeight = cubemap->Height();
+
+        for (size_t i = 0; i < images.size(); i++) {
+            this->TransitionImageLayout(images[i], ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+                                        ImageLayout::TRANSFER_SRC_OPTIMAL);
+        }
+
+        for (uint32_t mip = 0; mip < images[0]->Mips(); mip++) {
+            imageCopy.srcSubresource.mipLevel = mip;
+            imageCopy.dstSubresource.mipLevel = mip;
+
+            imageCopy.extent = {mipWidth, mipHeight, 1};
+
+            for (size_t i = 0; i < images.size(); i++) {
+                imageCopy.dstSubresource.baseArrayLayer = static_cast<uint32_t>(i);
+
+                vkCmdCopyImage(this->cmdBuffer, images[i]->GetImage(),
+                               VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, cubemap->GetImage(),
+                               VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &imageCopy);
+            }
+
+            if (mipWidth > 1)
+                mipWidth /= 2;
+            if (mipHeight > 1)
+                mipHeight /= 2;
+        }
+
+        this->TransitionImageLayout(cubemap, ImageLayout::TRANSFER_DST_OPTIMAL,
+                                    ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+    }
+
     void CmdList::GenerateMips(std::shared_ptr<Image> image) {
         VkImageMemoryBarrier barrier{};
         barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -196,7 +243,7 @@ namespace UniverseEngine {
         barrier.subresourceRange.baseMipLevel = 0;
         barrier.subresourceRange.levelCount = image->Mips();
         barrier.subresourceRange.baseArrayLayer = 0;
-        barrier.subresourceRange.layerCount = 1;
+        barrier.subresourceRange.layerCount = image->ArrayLayers();
 
         VkPipelineStageFlags sourceStage;
         VkPipelineStageFlags destinationStage;
@@ -205,6 +252,12 @@ namespace UniverseEngine {
             vkNewLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
             barrier.srcAccessMask = 0;
             barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+            sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+            destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+        } else if (vkOldLayout == VK_IMAGE_LAYOUT_UNDEFINED &&
+                   vkNewLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL) {
+            barrier.srcAccessMask = 0;
+            barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
             sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
             destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
         } else if (vkOldLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL &&
@@ -219,6 +272,12 @@ namespace UniverseEngine {
             barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
             sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
             destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+        } else if (vkOldLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL &&
+                   vkNewLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL) {
+            barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+            barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+            sourceStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+            destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
         } else {
             UE_FATAL("Unsupported image layout transition.");
         }

@@ -37,6 +37,10 @@ namespace UniverseEngine {
         free(this->data);
     }
 
+    const TextureRenderable& Texture::Renderable() const {
+        return *this->renderable;
+    }
+
     void Texture::ClearCPUData() {
         free(this->data);
         this->data = nullptr;

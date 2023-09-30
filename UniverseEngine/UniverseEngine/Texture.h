@@ -31,6 +31,8 @@ namespace UniverseEngine {
 
         TextureType type;
 
+        const TextureRenderable& Renderable() const;
+
     private:
         friend class Graphics;
         friend class MaterialRenderable;

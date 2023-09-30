@@ -3,11 +3,14 @@
 namespace fs = std::filesystem;
 
 #include "GraphicsAPI.h"
+#include "Logging.h"
 #include "Resources.h"
 
 namespace UniverseEngine {
     std::shared_ptr<Shader> Resources::LoadShaderSource(const fs::path& filePath) {
-        const fs::path shaderFile = filePath.parent_path() / GraphicsAPI::ShaderDir() / fs::path(filePath.filename().string() + GraphicsAPI::ShaderAppendix());
+        const fs::path shaderFile =
+            filePath.parent_path() / GraphicsAPI::ShaderDir() /
+            fs::path(filePath.filename().string() + GraphicsAPI::ShaderAppendix());
 
         Shader parsedShader;
 
@@ -20,6 +23,8 @@ namespace UniverseEngine {
 
         {
             std::ifstream t(shaderFile);
+            UE_ASSERT_MSG(t.good(), "Failed to load shader '%s'.", filePath.string().c_str());
+
             std::stringstream buffer;
             buffer << t.rdbuf();
             parsedShader.sourceCode = buffer.str();

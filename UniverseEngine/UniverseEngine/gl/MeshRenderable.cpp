@@ -17,12 +17,7 @@ namespace UniverseEngine {
         UE_ASSERT(mesh.vertices.size() > 0);
         UE_ASSERT(mesh.indices.size() > 0);
 
-        glGenVertexArrays(1, &this->vao);
-
-        glBindVertexArray(this->vao);
         {
-            GlDebugNames::Set(GL_VERTEX_ARRAY, this->vao, Format("%s_VAO", mesh.name.c_str()));
-
             size_t vertexSize = sizeof(Vertex) * mesh.vertices.size();
             size_t indexSize = sizeof(uint32_t) * mesh.indices.size();
 
@@ -42,31 +37,15 @@ namespace UniverseEngine {
             data = this->indexBuffer->Map();
             memcpy(data, mesh.indices.data(), indexSize);
             this->indexBuffer->Unmap();
-
-            glEnableVertexAttribArray(0);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-            glEnableVertexAttribArray(1);
-            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                                  (void*)offsetof(Vertex, normal));
-            glEnableVertexAttribArray(2);
-            glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                                  (void*)offsetof(Vertex, texCoord));
-            glEnableVertexAttribArray(3);
-            glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                                  (void*)offsetof(Vertex, tangent));
-            glEnableVertexAttribArray(4);
-            glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                                  (void*)offsetof(Vertex, color));
         }
-        glBindVertexArray(0);
     }
 
     MeshRenderable::~MeshRenderable() {
-        glDeleteVertexArrays(1, &this->vao);
     }
 
     void MeshRenderable::Draw(CmdList& cmdList) {
-        glBindVertexArray(this->vao);
+        cmdList.BindVertexBuffer(this->vertexBuffer);
+        cmdList.BindIndexBuffer(this->indexBuffer);
         cmdList.DrawElements(this->indexCount);
         glBindVertexArray(0);
     }
