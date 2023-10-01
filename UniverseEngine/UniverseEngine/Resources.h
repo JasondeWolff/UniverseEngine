@@ -14,7 +14,7 @@ namespace UniverseEngine {
     public:
         std::shared_ptr<Scene> CreateScene(Mesh&& mesh);
         std::shared_ptr<Texture> CreateTexture(const std::string& name, unsigned char* data,
-                                               unsigned width, unsigned height, TextureType type);
+                                               unsigned width, unsigned height, TextureType type, bool allowMips = true);
 
         std::shared_ptr<Scene> LoadScene(const std::filesystem::path& filePath);
         std::shared_ptr<Texture> LoadTexture(const std::filesystem::path& filePath,

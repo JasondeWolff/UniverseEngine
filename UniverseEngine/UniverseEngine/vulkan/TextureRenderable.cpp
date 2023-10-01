@@ -36,7 +36,12 @@ namespace UniverseEngine {
         uploadCmdList.TransitionImageLayout(this->image, ImageLayout::UNDEFINED,
                                             ImageLayout::TRANSFER_DST_OPTIMAL);
         uploadCmdList.CopyBuffers(stagingBuffer, this->image);
-        uploadCmdList.GenerateMips(this->image);
+        if (texture.mips > 1) {
+            uploadCmdList.GenerateMips(this->image);
+        } else {
+            uploadCmdList.TransitionImageLayout(this->image, ImageLayout::TRANSFER_DST_OPTIMAL,
+                                                ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        }
     }
 
     TextureRenderable::~TextureRenderable() {

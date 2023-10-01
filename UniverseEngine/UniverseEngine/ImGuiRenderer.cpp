@@ -5,7 +5,8 @@
 #include "Engine.h"
 
 struct ImGuiPushConstant {
-    glm::mat4 proj;
+    glm::vec2 scale;
+    glm::vec2 translate;
 };
 
 namespace UniverseEngine {
@@ -29,9 +30,9 @@ namespace UniverseEngine {
         int width, height;
         unsigned char* data;
         io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
-        this->fontTexture =
-            Engine::GetResources().CreateTexture("ImGui Font", data, static_cast<unsigned>(width),
-                                                 static_cast<unsigned>(height), TextureType::SRGB);
+        this->fontTexture = Engine::GetResources().CreateTexture(
+            "ImGui Font", data, static_cast<unsigned>(width), static_cast<unsigned>(height),
+            TextureType::UNORM, false);
         this->sampler = std::make_shared<Sampler>("Sampler", device, physicalDevice);
 
         this->descriptorSetLayout = std::make_shared<DescriptorSetLayout>(
@@ -92,20 +93,27 @@ namespace UniverseEngine {
                                                      this->sampler);
         cmdList.BindDescriptorSet(this->descriptorSets[currentFrame], 0);
 
+        int fb_width = (int)(drawData->DisplaySize.x * drawData->FramebufferScale.x);
+        int fb_height = (int)(drawData->DisplaySize.y * drawData->FramebufferScale.y);
+        if (fb_width <= 0 || fb_height <= 0)
+            return;
+
         Rect2D rect2D{};
-        rect2D.extent.x =
-            static_cast<unsigned>(drawData->DisplaySize.x * drawData->FramebufferScale.x);
-        rect2D.extent.y =
-            static_cast<unsigned>(drawData->DisplaySize.y * drawData->FramebufferScale.y);
+        rect2D.extent.x = static_cast<unsigned>(fb_width);
+        rect2D.extent.y = static_cast<unsigned>(fb_height);
         cmdList.SetViewport(rect2D);
 
         ImGuiPushConstant pushConstant{};
-        pushConstant.proj = /*glm::ortho(
+        /*pushConstant.proj = glm::ortho(
             static_cast<double>(drawData->DisplayPos.x),
             static_cast<double>(drawData->DisplayPos.x + drawData->DisplaySize.x),
             static_cast<double>(drawData->DisplayPos.y),
             static_cast<double>(drawData->DisplayPos.y + drawData->DisplaySize.y), -1.0, 1.0);*/
-            OrthoMat(0.0, drawData->DisplaySize.x, 0.0, -drawData->DisplaySize.y, -1.0, 1.0);
+        //    OrthoMat(0.0, drawData->DisplaySize.x, 0.0, -drawData->DisplaySize.y, -1.0, 1.0);
+        pushConstant.scale.x = 2.0f / drawData->DisplaySize.x;
+        pushConstant.scale.y = 2.0f / drawData->DisplaySize.y;
+        pushConstant.translate.x = -1.0f - drawData->DisplayPos.x * pushConstant.scale.x;
+        pushConstant.translate.y = -1.0f - drawData->DisplayPos.y * pushConstant.scale.y;
         cmdList.PushConstant("pc", pushConstant, GraphicsStageFlagBits::VERTEX_STAGE);
 
         size_t vertexOffset = 0;
@@ -126,8 +134,7 @@ namespace UniverseEngine {
             std::vector<uint32_t> indices;
             indices.reserve(static_cast<size_t>(drawList->IdxBuffer.Size));
             for (auto& imIdx : drawList->IdxBuffer) {
-                indices.push_back(static_cast<uint32_t>(imIdx) +
-                                  static_cast<uint32_t>(vertexOffset));
+                indices.push_back(static_cast<uint32_t>(imIdx)); // + static_cast<uint32_t>(vertexOffset)
             }
 
             void* data = this->vertexBuffer->Map();
@@ -148,30 +155,50 @@ namespace UniverseEngine {
         cmdList.BindVertexBuffer(this->vertexBuffer);
         cmdList.BindIndexBuffer(this->indexBuffer);
 
-        ImVec2& clipOffset = drawData->DisplayPos;
-        ImVec2& clipScale = drawData->FramebufferScale;
+        ImVec2 clip_off = drawData->DisplayPos;  // (0,0) unless using multi-viewports
+        ImVec2 clip_scale =
+            drawData->FramebufferScale;  // (1,1) unless using retina display which are often (2,2)
 
+        vertexOffset = 0;
+        indexOffset = 0;
         for (size_t i = 0; i < static_cast<size_t>(drawData->CmdListsCount); i++) {
             ImDrawList* drawList = drawData->CmdLists[static_cast<int>(i)];
 
             for (auto& imCmd : drawList->CmdBuffer) {
-                ImVec4& clipRect = imCmd.ClipRect;
+                ImVec2 clip_min((imCmd.ClipRect.x - clip_off.x) * clip_scale.x,
+                                (imCmd.ClipRect.y - clip_off.y) * clip_scale.y);
+                ImVec2 clip_max((imCmd.ClipRect.z - clip_off.x) * clip_scale.x,
+                                (imCmd.ClipRect.w - clip_off.y) * clip_scale.y);
 
-                float clipX = (clipRect.x - clipOffset.x) * clipScale.x;
-                float clipY = (clipRect.y - clipOffset.y) * clipScale.y;
-                float clipW = (clipRect.z - clipOffset.x) * clipScale.x - clipX;
-                float clipH = (clipRect.w - clipOffset.y) * clipScale.y - clipY;
+                if (clip_min.x < 0.0f) {
+                    clip_min.x = 0.0f;
+                }
+                if (clip_min.y < 0.0f) {
+                    clip_min.y = 0.0f;
+                }
+                if (clip_max.x > fb_width) {
+                    clip_max.x = (float)fb_width;
+                }
+                if (clip_max.y > fb_height) {
+                    clip_max.y = (float)fb_height;
+                }
+                if (clip_max.x <= clip_min.x || clip_max.y <= clip_min.y)
+                    continue;
 
                 Rect2D rect2D{};
-                rect2D.offset.y = static_cast<unsigned>(glm::max(clipY, 0.0f));
-                rect2D.offset.x = static_cast<unsigned>(glm::max(clipX, 0.0f));
-                rect2D.extent.x = static_cast<unsigned>(clipW);
-                rect2D.extent.y = static_cast<unsigned>(clipH);
+                rect2D.offset.y = static_cast<unsigned>(clip_min.x);
+                rect2D.offset.x = static_cast<unsigned>(clip_min.y);
+                rect2D.extent.x = static_cast<unsigned>(clip_max.x - clip_min.y);
+                rect2D.extent.y = static_cast<unsigned>(clip_max.y - clip_min.y);
                 cmdList.SetScissor(rect2D);
 
                 cmdList.DrawElements(static_cast<uint32_t>(imCmd.ElemCount), 1,
-                                     static_cast<uint32_t>(indexOffsets[i]) + imCmd.IdxOffset);
+                                     static_cast<uint32_t>(indexOffset) + imCmd.IdxOffset, 0,
+                                     static_cast<uint32_t>(vertexOffset) + imCmd.VtxOffset);
             }
+
+            vertexOffset += drawList->VtxBuffer.Size;
+            indexOffset += drawList->IdxBuffer.Size;
         }
     }
 }  // namespace UniverseEngine

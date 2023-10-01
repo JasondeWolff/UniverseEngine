@@ -82,6 +82,7 @@ namespace UniverseEngine {
 
     void Buffer::Unmap() {
         vmaUnmapMemory(this->device->GetAllocator(), this->allocation);
+        vmaFlushAllocation(this->device->GetAllocator(), this->allocation, 0, this->size);
     }
 
     uint64_t Buffer::Size() const {

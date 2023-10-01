@@ -299,11 +299,17 @@ namespace UniverseEngine {
     }
 
     void CmdList::SetViewport(const Rect2D& rect2D) {
-        VkViewport viewport{};
+        /*VkViewport viewport{};
         viewport.width = static_cast<float>(rect2D.extent.x);
         viewport.height = -static_cast<float>(rect2D.extent.y);
         viewport.x = static_cast<float>(rect2D.offset.x);
         viewport.y = static_cast<float>(rect2D.offset.y) - viewport.height;
+        viewport.maxDepth = 1.0;*/
+        VkViewport viewport{};
+        viewport.width = static_cast<float>(rect2D.extent.x);
+        viewport.height = static_cast<float>(rect2D.extent.y);
+        viewport.x = static_cast<float>(rect2D.offset.x);
+        viewport.y = static_cast<float>(rect2D.offset.y);
         viewport.maxDepth = 1.0;
 
         vkCmdSetViewport(this->cmdBuffer, 0, 1, &viewport);
@@ -371,8 +377,9 @@ namespace UniverseEngine {
     }
 
     void CmdList::DrawElements(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex,
-                               uint32_t firstInstance) {
-        vkCmdDrawIndexed(this->cmdBuffer, indexCount, instanceCount, firstIndex, 0, firstInstance);
+                               uint32_t firstInstance, uint32_t vertexOffset) {
+        vkCmdDrawIndexed(this->cmdBuffer, indexCount, instanceCount, firstIndex, vertexOffset,
+                         firstInstance);
     }
 
     void CmdList::PushConstant(const std::string& name, void* constant, size_t size,

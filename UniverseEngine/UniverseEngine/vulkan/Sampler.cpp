@@ -15,7 +15,7 @@ namespace UniverseEngine {
 
         VkSamplerCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-        createInfo.magFilter = VK_FILTER_LINEAR;
+       /* createInfo.magFilter = VK_FILTER_LINEAR;
         createInfo.minFilter = VK_FILTER_LINEAR;
         createInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
         createInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
@@ -29,7 +29,17 @@ namespace UniverseEngine {
         createInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
         createInfo.mipLodBias = 0.0f;
         createInfo.minLod = 0.0f;
-        createInfo.maxLod = 16.0f;
+        createInfo.maxLod = 16.0f;*/
+
+        createInfo.magFilter = VK_FILTER_LINEAR;
+        createInfo.minFilter = VK_FILTER_LINEAR;
+        createInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+        createInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        createInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        createInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        createInfo.minLod = -1000.0f;
+        createInfo.maxLod = 1000.0f;
+        createInfo.maxAnisotropy = 1.0f;
 
         UE_ASSERT_MSG(!vkCreateSampler(device->GetDevice(), &createInfo, nullptr, &this->sampler),
                       "Failed to create sampler.");

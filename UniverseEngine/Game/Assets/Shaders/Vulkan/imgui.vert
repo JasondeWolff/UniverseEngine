@@ -7,15 +7,22 @@ layout (location = 2) in vec2 inTexCoord;
 layout (location = 3) in vec4 inTangent;
 layout (location = 4) in vec4 inColor;
 
-layout(location = 0) out vec4 fragColor;
-layout(location = 1) out vec2 fragTexCoord;
+layout(location = 0) out struct {
+    vec4 Color;
+    vec2 UV;
+} Out;
 
 layout(push_constant) uniform PushConstant {
-    mat4 proj;
+    vec2 uScale;
+    vec2 uTranslate;
 } pc;
 
+out gl_PerVertex {
+    vec4 gl_Position;
+};
+
 void main() {
-    gl_Position = pc.proj * vec4(inPosition.xy, 0.0, 1.0);
-    fragColor = inColor;
-    fragTexCoord = inTexCoord;
+    Out.Color = inColor;
+    Out.UV = inTexCoord;
+    gl_Position = vec4(inPosition.xy * pc.uScale + pc.uTranslate, 0.0, 1.0);
 }

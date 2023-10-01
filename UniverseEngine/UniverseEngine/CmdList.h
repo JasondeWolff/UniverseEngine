@@ -57,7 +57,7 @@ namespace UniverseEngine {
         void Draw(uint32_t vertexCount, uint32_t instanceCount = 1, uint32_t firstVertex = 0,
                   uint32_t firstInstance = 0);
         void DrawElements(uint32_t indexCount, uint32_t instanceCount = 1, uint32_t firstIndex = 0,
-                          uint32_t firstInstance = 0);
+                          uint32_t firstInstance = 0, uint32_t vertexOffset = 0);
 
         template <typename T>
         void PushConstant(const std::string& name, T& constant, GraphicsStageFlags stageFlags) {

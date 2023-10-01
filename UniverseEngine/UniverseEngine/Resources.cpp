@@ -18,8 +18,10 @@ namespace UniverseEngine {
 
     std::shared_ptr<Texture> Resources::CreateTexture(const std::string& name, unsigned char* data,
                                                       unsigned width, unsigned height,
-                                                      TextureType type) {
+                                                      TextureType type, bool allowMips) {
         unsigned mips = static_cast<unsigned>(std::floor(std::log2(std::max(width, height)))) + 1;
+        if (!allowMips)
+            mips = 1;
         Texture parsedTexture(name, data, static_cast<unsigned>(width),
                               static_cast<unsigned>(height), type, mips);
 
