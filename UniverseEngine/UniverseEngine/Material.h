@@ -10,6 +10,7 @@
 
 namespace UniverseEngine {
     class Graphics;
+    class TerrianGenerator;
 
     struct Material {
         Material() = default;

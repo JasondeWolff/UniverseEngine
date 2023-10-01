@@ -14,7 +14,4 @@ public:
 private:
 	FreeFormCamera freeFormCamera;
 	SpaceShip spaceShip;
-
-	std::shared_ptr<UniverseEngine::Scene> terrainScene;
-	std::shared_ptr<UniverseEngine::SceneInstance> terrainSceneInstance;
 };

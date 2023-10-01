@@ -356,6 +356,9 @@ namespace UniverseEngine {
 
         auto& scenes = resources.GetNewScenes();
         for (auto& scene : scenes) {
+
+            int debug = 0;
+
             for (Mesh& mesh : scene->meshes) {
                 if (!mesh.renderable) {
                     if (!mesh.HasTangents())
