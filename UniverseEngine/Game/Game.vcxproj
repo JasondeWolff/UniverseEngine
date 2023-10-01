@@ -96,6 +96,7 @@
   <ItemGroup>
     <ClCompile Include="AssetDemo.cpp" />
     <ClCompile Include="FreeFormCamera.cpp" />
+    <ClCompile Include="LODDemo.cpp" />
     <ClCompile Include="MyGame.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="SpaceShip.cpp" />
@@ -124,6 +125,7 @@
   <ItemGroup>
     <ClInclude Include="AssetDemo.h" />
     <ClInclude Include="FreeFormCamera.h" />
+    <ClInclude Include="LODDemo.h" />
     <ClInclude Include="MyGame.h" />
     <ClInclude Include="SpaceShip.h" />
   </ItemGroup>

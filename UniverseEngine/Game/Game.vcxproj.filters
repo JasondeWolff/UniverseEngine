@@ -36,6 +36,9 @@
     <ClCompile Include="SpaceShip.cpp">
       <Filter>Src</Filter>
     </ClCompile>
+    <ClCompile Include="LODDemo.cpp">
+      <Filter>Src\Games</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\UniverseEngine\.clang-format" />
@@ -88,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="SpaceShip.h">
       <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="LODDemo.h">
+      <Filter>Src\Games</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
