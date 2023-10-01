@@ -27,7 +27,7 @@ namespace UniverseEngine {
         std::vector<int> deleted0, deleted1;
         int triangleCount = static_cast<int>(this->triangles.size());
 
-        for (size_t iteration = 0; iteration < 100; iteration++) {
+        for (size_t iteration = 0; iteration < 300; iteration++) {
             if (targetTriangleCount >= triangleCount - deletedTriangleCount)
                 break;
 

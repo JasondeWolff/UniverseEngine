@@ -23,22 +23,23 @@ void LODDemo::OnStart() {
 	}
 	graphics.SetSkybox(skyboxTextures);
 
-#if 0
-	this->dragon = resources.LoadScene("Assets/Models/Showcase/Dragon/Dragon.gltf");
-	this->dragonInstance = world.AddSceneInstance(this->dragon);
-	this->dragonInstance->transform.SetMatrix(Transform(glm::vec3{}, EulerToQuat(Right() * 90.0f), glm::vec3(0.05f)).GetMatrix());
+	std::vector<float> LODs = { 0.8f, 0.6f, 0.4f, 0.2f };
 
-	this->simplifiedDragon = resources.CreateScene(this->dragon->meshes[0].BuildSimplified(0.7f));
-	this->simplifiedDragonInstance = world.AddSceneInstance(this->simplifiedDragon);
-	this->simplifiedDragonInstance->transform.SetMatrix(Transform(glm::vec3(15.0, 0.0, 0.0), EulerToQuat(Right() * 90.0f), glm::vec3(0.05f)).GetMatrix());
-#else
-	this->dragon = resources.LoadScene("Assets/Models/Showcase/Bunny/Bunny.gltf");
-	this->dragonInstance = world.AddSceneInstance(this->dragon);
+	this->bunny = resources.LoadScene("Assets/Models/Showcase/Bunny/Bunny.gltf");
+	this->bunnyInstance = world.AddSceneInstance(this->bunny);
 
-	this->simplifiedDragon = resources.CreateScene(this->dragon->meshes[0].BuildSimplified(0.4f));
-	this->simplifiedDragonInstance = world.AddSceneInstance(this->simplifiedDragon);
-	this->simplifiedDragonInstance->transform.SetMatrix(Transform(glm::vec3(15.0, 0.0, 0.0)).GetMatrix());
-#endif
+	UE_INFO("Bunny Tris LOD0: %i", this->bunny->meshes[0].indices.size() / 3);
+
+	for (size_t i = 0; i < LODs.size(); i++) {
+		auto simplifiedBunny = resources.CreateScene(this->bunny->meshes[0].BuildSimplified(LODs[i]));
+		auto simplifiedBunnyInstance = world.AddSceneInstance(simplifiedBunny);
+		simplifiedBunnyInstance->transform.SetMatrix(Transform(glm::vec3(i * 5.0f + 5.0f, 0.0, 0.0)).GetMatrix());
+
+		this->simplifiedBunnies.push_back(simplifiedBunny);
+		this->simplifiedBunnyInstances.push_back(simplifiedBunnyInstance);
+
+		UE_INFO("Bunny Tris LOD%i: %i", (i + 1), simplifiedBunny->meshes[0].indices.size() / 3);
+	}
 
 	this->camera.Start();
 }

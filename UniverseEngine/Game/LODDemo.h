@@ -13,9 +13,9 @@ public:
 private:
 	FreeFormCamera camera;
 
-	std::shared_ptr<UniverseEngine::Scene> dragon;
-	std::shared_ptr<UniverseEngine::SceneInstance> dragonInstance;
+	std::shared_ptr<UniverseEngine::Scene> bunny;
+	std::shared_ptr<UniverseEngine::SceneInstance> bunnyInstance;
 
-	std::shared_ptr<UniverseEngine::Scene> simplifiedDragon;
-	std::shared_ptr<UniverseEngine::SceneInstance> simplifiedDragonInstance;
+	std::vector<std::shared_ptr<UniverseEngine::Scene>> simplifiedBunnies;
+	std::vector<std::shared_ptr<UniverseEngine::SceneInstance>> simplifiedBunnyInstances;
 };
