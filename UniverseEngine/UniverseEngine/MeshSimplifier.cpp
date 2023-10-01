@@ -262,8 +262,7 @@ namespace UniverseEngine {
                 for (size_t j = 0; j < 3; j++) {
                     p[j] = this->vertices[triangle.v[j]].p;
                 }
-                n = glm::cross(p[1] - p[0], p[2] - p[0]);
-                n = glm::normalize(n);
+                n = glm::normalize(glm::cross(p[1] - p[0], p[2] - p[0]));
                 triangle.n = n;
                 for (size_t j = 0; j < 3; j++) {
                     this->vertices[triangle.v[j]].q =
@@ -278,9 +277,9 @@ namespace UniverseEngine {
                 for (size_t j = 0; j < 3; j++) {
                     triangle.err[j] =
                         this->CalculateError(triangle.v[j], triangle.v[(j + 1) % 3], p);
-                    triangle.err[3] =
-                        glm::min(triangle.err[0], glm::min(triangle.err[1], triangle.err[2]));
                 }
+                triangle.err[3] =
+                    glm::min(triangle.err[0], glm::min(triangle.err[1], triangle.err[2]));
             }
         }
     }
@@ -323,7 +322,7 @@ namespace UniverseEngine {
     }
 
     double MeshSimplifier::CalculateError(int idV1, int idV2, glm::vec3& pResult) {
-        SymetricMatrix q = this->vertices[idV1].q = this->vertices[idV2].q;
+        SymetricMatrix q = this->vertices[idV1].q + this->vertices[idV2].q;
         bool border = this->vertices[idV1].border & this->vertices[idV2].border;
         double error = 0.0;
         double det = q.det(0, 1, 2, 1, 4, 5, 2, 5, 7);
