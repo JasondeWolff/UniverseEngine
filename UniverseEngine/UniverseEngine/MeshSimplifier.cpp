@@ -8,6 +8,10 @@ namespace UniverseEngine {
             MeshSimplifier::Vertex simplifiedVertex{};
             simplifiedVertex.p = vertex.position;
             this->vertices.emplace_back(simplifiedVertex);
+            this->normals.push_back(vertex.normal);
+            this->texCoords.push_back(vertex.texCoord);
+            this->tangents.push_back(vertex.tangent);
+            this->colors.push_back(vertex.color);
         }
         this->triangles.reserve(indices.size() / 3);
         for (size_t i = 0; i < indices.size(); i += 3) {
@@ -15,13 +19,16 @@ namespace UniverseEngine {
             triangle.v[0] = indices[i + 0];
             triangle.v[1] = indices[i + 1];
             triangle.v[2] = indices[i + 2];
+            triangle.va[0] = triangle.v[0];
+            triangle.va[1] = triangle.v[1];
+            triangle.va[2] = triangle.v[2];
             this->triangles.emplace_back(triangle);
         }
     }
 
     Mesh MeshSimplifier::BuildSimplified(float percentage) {
-        int targetTriangleCount =
-            static_cast<int>(static_cast<float>(this->triangles.size()) * glm::clamp(percentage, 0.0f, 1.0f));
+        int targetTriangleCount = static_cast<int>(static_cast<float>(this->triangles.size()) *
+                                                   glm::clamp(percentage, 0.0f, 1.0f));
 
         int deletedTriangleCount = 0;
         std::vector<int> deleted0, deleted1;
@@ -66,12 +73,35 @@ namespace UniverseEngine {
                             this->IsFlipped(p, i1, i0, v1, v0, deleted1))
                             continue;
 
+                        int i2 = triangle.v[(j + 2) % 3];
+                        Vertex& v2 = this->vertices[i2];
+
+                        glm::vec3 bary = this->BarycentricCoords(p, v0.p, v1.p, v2.p);
+
+                        int ia0 = triangle.va[j];
+                        int ia1 = triangle.va[(j + 1) % 3];
+                        int ia2 = triangle.va[(j + 2) % 3];
+
+                        this->normals[ia0] = glm::normalize(this->normals[ia0] * bary.x +
+                                                            this->normals[ia1] * bary.y +
+                                                            this->normals[ia2] * bary.z);
+                        this->texCoords[ia0] = this->texCoords[ia0] * bary.x +
+                                               this->texCoords[ia1] * bary.y +
+                                               this->texCoords[ia2] * bary.z;
+                        this->tangents[ia0] = this->tangents[ia0] * bary.x +
+                                              this->tangents[ia1] * bary.y +
+                                              this->tangents[ia2] * bary.z;
+                        this->tangents[ia0] = glm::vec4(
+                            glm::normalize(glm::vec3(this->tangents[ia0])), this->tangents[ia0].w);
+                        this->colors[ia0] = this->colors[ia0] * bary.x +
+                                            this->colors[ia1] * bary.y + this->colors[ia2] * bary.z;
+
                         v0.p = p;
                         v0.q = v1.q + v0.q;
                         int tstart = static_cast<int>(this->refs.size());
 
-                        this->UpdateTriangles(i0, v0, deleted0, deletedTriangleCount);
-                        this->UpdateTriangles(i0, v1, deleted1, deletedTriangleCount);
+                        this->UpdateTriangles(i0, ia0, v0, deleted0, deletedTriangleCount);
+                        this->UpdateTriangles(i0, ia0, v1, deleted1, deletedTriangleCount);
 
                         int tcount = static_cast<int>(this->refs.size()) - tstart;
 
@@ -105,16 +135,22 @@ namespace UniverseEngine {
         }
         simplifiedMesh.indices.reserve(this->triangles.size() * 3);
         for (size_t i = 0; i < this->triangles.size(); i++) {
-            if (!this->triangles[i].deleted) {
-                simplifiedMesh.indices.push_back(this->triangles[i].v[0]);
-                simplifiedMesh.indices.push_back(this->triangles[i].v[1]);
-                simplifiedMesh.indices.push_back(this->triangles[i].v[2]);
+            Triangle& triangle = this->triangles[i];
+            if (!triangle.deleted) {
+                for (size_t j = 0; j < 3; j++) {
+                    simplifiedMesh.indices.push_back(triangle.v[j]);
+                    simplifiedMesh.vertices[triangle.v[j]].normal = this->normals[triangle.va[j]];
+                    simplifiedMesh.vertices[triangle.v[j]].texCoord =
+                        this->texCoords[triangle.va[j]];
+                    simplifiedMesh.vertices[triangle.v[j]].tangent = this->tangents[triangle.va[j]];
+                    simplifiedMesh.vertices[triangle.v[j]].color = this->colors[triangle.va[j]];
+                }
             }
         }
         return Mesh(std::move(simplifiedMesh));
     }
 
-    void MeshSimplifier::UpdateTriangles(int i0, Vertex& v, std::vector<int>& deleted,
+    void MeshSimplifier::UpdateTriangles(int i0, int ia0, Vertex& v, std::vector<int>& deleted,
                                          int& deleted_triangles) {
         glm::vec3 p;
         for (size_t k = 0; k < v.tcount; k++) {
@@ -130,6 +166,10 @@ namespace UniverseEngine {
             }
 
             triangle.v[ref.tvertex] = i0;
+            if (ia0 != -1) {
+                triangle.va[ref.tvertex] = ia0;
+            }
+
             triangle.dirty = true;
             triangle.err[0] = this->CalculateError(triangle.v[0], triangle.v[1], p);
             triangle.err[1] = this->CalculateError(triangle.v[1], triangle.v[2], p);
@@ -328,7 +368,7 @@ namespace UniverseEngine {
         double det = q.det(0, 1, 2, 1, 4, 5, 2, 5, 7);
 
         if (det != 0.0 && !border) {
-            pResult.x = static_cast<float>(- 1.0 / det * q.det(1, 2, 3, 4, 5, 6, 5, 7, 8));
+            pResult.x = static_cast<float>(-1.0 / det * q.det(1, 2, 3, 4, 5, 6, 5, 7, 8));
             pResult.y = static_cast<float>(1.0 / det * q.det(0, 2, 3, 1, 5, 6, 2, 7, 8));
             pResult.z = static_cast<float>(-1.0 / det * q.det(0, 1, 3, 1, 4, 6, 2, 5, 8));
             error = VertexError(q, pResult.x, pResult.y, pResult.z);
@@ -348,6 +388,28 @@ namespace UniverseEngine {
                 pResult = p3;
         }
         return error;
+    }
+
+    glm::vec3 MeshSimplifier::BarycentricCoords(const glm::vec3& p, const glm::vec3& a,
+                                                const glm::vec3& b, const glm::vec3& c) {
+        glm::vec3 v0 = (b - a);
+        glm::vec3 v1 = (c - a);
+        glm::vec3 v2 = (p - a);
+        float d00 = glm::dot(v0, v0);
+        float d01 = glm::dot(v0, v1);
+        float d11 = glm::dot(v1, v1);
+        float d20 = glm::dot(v2, v0);
+        float d21 = glm::dot(v2, v1);
+        float denom = d00 * d11 - d01 * d01;
+
+        if (abs(denom) < 0.00001f) {
+            denom = 0.00001f;
+        }
+
+        float v = (d11 * d20 - d01 * d21) / denom;
+        float w = (d00 * d21 - d01 * d20) / denom;
+        float u = 1.0f - v - w;
+        return glm::vec3(u, v, w);
     }
 
     MeshSimplifier::SymetricMatrix::SymetricMatrix(double c) {

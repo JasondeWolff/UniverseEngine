@@ -28,6 +28,7 @@ namespace UniverseEngine {
         };
         struct Triangle {
             int v[3];
+            int va[3];
             double err[4];
             bool deleted, dirty;
             glm::vec3 n;
@@ -46,11 +47,18 @@ namespace UniverseEngine {
         std::vector<Vertex> vertices;
         std::vector<Ref> refs;
 
+        std::vector<glm::vec3> normals;
+        std::vector<glm::vec2> texCoords;
+        std::vector<glm::vec4> tangents;
+        std::vector<glm::vec4> colors;
+
         void CompactMesh(int iteration);
-        void UpdateTriangles(int i0, Vertex& v, std::vector<int>& deleted, int& deleted_triangles);
+        void UpdateTriangles(int i0, int ia0, Vertex& v, std::vector<int>& deleted, int& deleted_triangles);
         bool IsFlipped(glm::vec3 p, int i0, int i1, Vertex& v0, Vertex& v1, std::vector<int>& deleted);
         static double VertexError(const MeshSimplifier::SymetricMatrix& q, double x, double y, double z);
         double CalculateError(int idV1, int idV2, glm::vec3& pResult);
+        glm::vec3 BarycentricCoords(const glm::vec3& p, const glm::vec3& a, const glm::vec3& b,
+                                    const glm::vec3& c);
         void CleanupMesh();
     };
 }  // namespace UniverseEngine
