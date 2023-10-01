@@ -31,6 +31,7 @@ namespace UniverseEngine {
         const Window& GetWindow() const;
 
         void SetSkybox(std::array<std::shared_ptr<Texture>, 6> textures);
+        void SetPolygonMode(GraphicsPolygonMode polygonMode);
 
         void RebuildShaders() const;
 
@@ -57,6 +58,8 @@ namespace UniverseEngine {
         std::unique_ptr<CmdQueue> presentQueue;
         std::shared_ptr<DescriptorPool> descriptorPool;
         std::unique_ptr<ImGuiRenderer> imguiRenderer;
+
+        GraphicsPolygonMode polygonMode = GraphicsPolygonMode::FILL;
 
         std::shared_ptr<RenderPass> renderPass;
         std::shared_ptr<GraphicsPipeline> pbrPipeline;

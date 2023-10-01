@@ -125,6 +125,11 @@ namespace UniverseEngine {
         } else {
             glDisable(GL_BLEND);
         }
+        if (info.polygonMode == GraphicsPolygonMode::FILL) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        } else if (info.polygonMode == GraphicsPolygonMode::LINE) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
 
         this->boundGraphicsPipeline = graphicsPipeline;
     }

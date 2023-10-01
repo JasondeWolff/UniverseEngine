@@ -17,7 +17,8 @@ void MyGame::OnStart() {
 	}
 	Engine::GetGraphics().SetSkybox(skyboxTextures);
 
-	auto GeneratedTerrianInstance = Engine::GetWorld().GenerateWorld();
+	Engine::GetGraphics().SetPolygonMode(GraphicsPolygonMode::LINE);
+	//auto GeneratedTerrianInstance = Engine::GetWorld().GenerateWorld();
 
 	this->freeFormCamera.Start();
 	this->spaceShip.Start();

@@ -82,6 +82,15 @@ namespace UniverseEngine {
         this->skyboxTextures = textures;
     }
 
+    void Graphics::SetPolygonMode(GraphicsPolygonMode polygonMode) {
+        if (this->polygonMode != polygonMode) {
+            this->polygonMode = polygonMode;
+
+            this->device->WaitIdle();
+            this->BuildPipelines();
+        }
+    }
+
     void Graphics::Update() {
         this->RebuildShaders();
         this->BuildRenderables();
@@ -283,6 +292,7 @@ namespace UniverseEngine {
         this->RebuildShaders();
 
         GraphicsPipelineInfo pbrInfo{};
+        pbrInfo.polygonMode = this->polygonMode;
         std::vector<const ShaderRenderable*> pbrShaders = {shaderPbrVS->renderable.get(),
                                                      shaderPbrFS->renderable.get()};
         this->pbrPipeline = std::make_shared<GraphicsPipeline>(
