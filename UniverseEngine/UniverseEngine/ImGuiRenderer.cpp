@@ -171,8 +171,8 @@ namespace UniverseEngine {
                     continue;
 
                 Rect2D rect2D{};
-                rect2D.offset.y = clip_min.x;
-                rect2D.offset.x = clip_min.y;
+                rect2D.offset.x = clip_min.x;
+                rect2D.offset.y = clip_min.y;
                 rect2D.extent.x = clip_max.x - clip_min.x;
                 rect2D.extent.y = clip_max.y - clip_min.y;
                 cmdList.SetScissor(rect2D);
