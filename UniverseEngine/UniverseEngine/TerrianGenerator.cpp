@@ -1,11 +1,11 @@
 #include "TerrianGenerator.h"
+
 #include "Engine.h"
 #include "Resources.h"
 #include "Scene.h"
 
 namespace UniverseEngine {
     TerrianGenerator::TerrianGenerator() {
-        
     }
 
     void TerrianGenerator::Init() {
@@ -19,12 +19,11 @@ namespace UniverseEngine {
         float widthSegments = 100;
         float heightSegments = 100;
 
-        CreatePlane(100,100,25,25);
+        CreatePlane(100, 100, 25, 25);
     }
 
     void TerrianGenerator::CreatePlane(int width, int height, int widthSegments,
                                        int heightSegments) {
-
         // Calculate step sizes
         float dx = width / static_cast<float>(widthSegments);
         float dy = height / static_cast<float>(heightSegments);
@@ -40,7 +39,8 @@ namespace UniverseEngine {
                 Vertex vertex;
 
                 float randOffset = (float)(rand() % 5);
-                vertex.position = glm::vec3(x * dx - width / 2.0f, randOffset, y * dy - height / 2.0f);
+                vertex.position =
+                    glm::vec3(x * dx - width / 2.0f, randOffset, y * dy - height / 2.0f);
                 vertex.texCoord =
                     glm::vec2(static_cast<float>(x) / static_cast<float>(widthSegments),
                               static_cast<float>(y) / static_cast<float>(heightSegments));
@@ -65,18 +65,9 @@ namespace UniverseEngine {
 
         auto hScene = Engine::GetResources().CreateScene(std::move(chunk));
 
-        Material material;
-        hScene.get()->materials.emplace_back(std::move(material));
-
-        auto meshHierarchyRoot = hScene.get()->hierarchy.begin();
-        SceneNode node{};
-        node.meshIdx = std::make_optional(0);
-        node.transform = Transform(glm::vec3(0, -10, 0), glm::identity<glm::quat>(), glm::vec3(1, 1, 1));
-        meshHierarchyRoot = hScene.get()->hierarchy.insert(meshHierarchyRoot, node);
-
-        this->generatedWorld.at(0).at(0) = hScene;    }
+        this->generatedWorld.at(0).at(0) = hScene;
+    }
 
     void TerrianGenerator::Update() {
-        
     }
 }  // namespace UniverseEngine
