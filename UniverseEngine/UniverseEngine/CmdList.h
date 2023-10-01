@@ -41,7 +41,7 @@ namespace UniverseEngine {
                                    ImageLayout newLayout);
 
         void SetScissor(const Rect2D& rect2D);
-        void SetViewport(const Rect2D& rect2D);
+        void SetViewport(const Rect2D& rect2D, bool normalize = true);
 
         void BindVertexBuffer(std::shared_ptr<Buffer> vertexBuffer);
         void BindIndexBuffer(std::shared_ptr<Buffer> indexBuffer);

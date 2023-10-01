@@ -249,7 +249,7 @@ namespace UniverseEngine {
     }
 
     Rect2D Swapchain::Extent() const {
-        return Rect2D(this->extent.width, this->extent.height);
+        return Rect2D(static_cast<float>(this->extent.width), static_cast<float>(this->extent.height));
     }
 }  // namespace UniverseEngine
 #endif

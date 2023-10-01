@@ -262,8 +262,8 @@ namespace UniverseEngine {
         this->swapchain = std::make_unique<Swapchain>(*this->window, *this->instance, this->device,
                                                       *this->physicalDevice);
 
-        uint32_t width = this->swapchain->Extent().extent.x;
-        uint32_t height = this->swapchain->Extent().extent.y;
+        uint32_t width = static_cast<uint32_t>(this->swapchain->Extent().extent.x);
+        uint32_t height = static_cast<uint32_t>(this->swapchain->Extent().extent.y);
         this->depthImage = std::make_shared<Image>(
             "Depth Image", this->device, *this->physicalDevice, width, height, 1,
             ImageUsageBits::DEPTH_STENCIL_ATTACHMENT, GraphicsFormat::D32_SFLOAT);

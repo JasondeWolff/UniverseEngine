@@ -70,7 +70,7 @@ namespace UniverseEngine {
     }
 
     Rect2D Swapchain::Extent() const {
-        return Rect2D(this->width, this->height);
+        return Rect2D(static_cast<float>(this->width), static_cast<float>(this->height));
     }
 }  // namespace UniverseEngine
 #endif

@@ -37,17 +37,23 @@ namespace UniverseEngine {
     }
 
     void Window::GlfwCursorPositionCallback(GLFWwindow* window, double xpos, double ypos) {
-        static bool firstCall = true;
         Engine::GetInput().mousePosition =
             glm::vec2(static_cast<float>(xpos), static_cast<float>(ypos));
+
+        static bool firstCall = true;
         if (firstCall) {
             firstCall = false;
+
             Engine::GetInput().oldMousePosition = Engine::GetInput().mousePosition;
         }
+
+        ImGui::GetIO().AddMousePosEvent(static_cast<float>(xpos), static_cast<float>(ypos));
     }
 
     void Window::GlfwMouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
         Engine::GetInput().mouseButtons[static_cast<size_t>(button)] = (action != GLFW_RELEASE);
+    
+        ImGui::GetIO().AddMouseButtonEvent(button, action != GLFW_RELEASE);
     }
 
     Window::Window(const char* title) : width(1920), height(1080), wasResized(false) {
@@ -73,6 +79,7 @@ namespace UniverseEngine {
         glfwSetWindowSizeCallback(this->glfwWindow, Window::GlfwWindowSizeCallback);
         glfwSetKeyCallback(this->glfwWindow, Window::GlfwKeyCallback);
         glfwSetCursorPosCallback(this->glfwWindow, Window::GlfwCursorPositionCallback);
+        glfwSetMouseButtonCallback(this->glfwWindow, Window::GlfwMouseButtonCallback);
 
         ImGui::SetCurrentContext(ImGui::CreateContext());
         ImGui::GetIO().DisplaySize = ImVec2(static_cast<float>(width), static_cast<float>(height));

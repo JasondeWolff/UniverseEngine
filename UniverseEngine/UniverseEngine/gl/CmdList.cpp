@@ -64,7 +64,7 @@ namespace UniverseEngine {
                   static_cast<GLsizei>(rect2D.extent.x), static_cast<GLsizei>(rect2D.extent.y));
     }
 
-    void CmdList::SetViewport(const Rect2D& rect2D) {
+    void CmdList::SetViewport(const Rect2D& rect2D, bool normalize) {
         glViewport(static_cast<GLint>(rect2D.offset.x), static_cast<GLint>(rect2D.offset.y),
                    static_cast<GLsizei>(rect2D.extent.x), static_cast<GLsizei>(rect2D.extent.y));
     }
@@ -131,7 +131,7 @@ namespace UniverseEngine {
     }
 
     void CmdList::DrawElements(uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex,
-                               uint32_t firstInstance) {
+                               uint32_t firstInstance, uint32_t firstVertex) {
         UE_ASSERT_MSG(instanceCount == 1, "GL doesn't support instancing.");
         UE_ASSERT_MSG(firstInstance == 0, "GL doesn't support instancing.");
 

@@ -290,26 +290,27 @@ namespace UniverseEngine {
 
     void CmdList::SetScissor(const Rect2D& rect2D) {
         VkRect2D vkRect{};
-        vkRect.offset.x = static_cast<uint32_t>(rect2D.offset.x);
-        vkRect.offset.y = static_cast<uint32_t>(rect2D.offset.y);
+        vkRect.offset.x = static_cast<int32_t>(rect2D.offset.x);
+        vkRect.offset.y = static_cast<int32_t>(rect2D.offset.y);
         vkRect.extent.width = static_cast<uint32_t>(rect2D.extent.x);
         vkRect.extent.height = static_cast<uint32_t>(rect2D.extent.y);
 
         vkCmdSetScissor(this->cmdBuffer, 0, 1, &vkRect);
     }
 
-    void CmdList::SetViewport(const Rect2D& rect2D) {
-        /*VkViewport viewport{};
-        viewport.width = static_cast<float>(rect2D.extent.x);
-        viewport.height = -static_cast<float>(rect2D.extent.y);
-        viewport.x = static_cast<float>(rect2D.offset.x);
-        viewport.y = static_cast<float>(rect2D.offset.y) - viewport.height;
-        viewport.maxDepth = 1.0;*/
+    void CmdList::SetViewport(const Rect2D& rect2D, bool normalize) {
         VkViewport viewport{};
-        viewport.width = static_cast<float>(rect2D.extent.x);
-        viewport.height = static_cast<float>(rect2D.extent.y);
-        viewport.x = static_cast<float>(rect2D.offset.x);
-        viewport.y = static_cast<float>(rect2D.offset.y);
+        if (normalize) {
+            viewport.width = rect2D.extent.x;
+            viewport.height = -rect2D.extent.y;
+            viewport.x = rect2D.offset.x;
+            viewport.y = rect2D.offset.y - viewport.height;
+        } else {
+            viewport.width = rect2D.extent.x;
+            viewport.height = rect2D.extent.y;
+            viewport.x = rect2D.offset.x;
+            viewport.y = rect2D.offset.y;
+        }
         viewport.maxDepth = 1.0;
 
         vkCmdSetViewport(this->cmdBuffer, 0, 1, &viewport);

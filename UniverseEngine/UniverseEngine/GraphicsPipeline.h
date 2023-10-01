@@ -14,6 +14,7 @@ namespace UniverseEngine {
 
     struct GraphicsPipelineInfo {
         bool ignoreDepth = false;
+        bool blending = false;
     };
 
     class GraphicsPipeline {
