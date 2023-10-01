@@ -63,10 +63,18 @@
     <None Include="Assets\Shaders\Vulkan\skybox.frag">
       <Filter>Assets\Shaders\Vulkan</Filter>
     </None>
-    <None Include="Assets\Shaders\Vulkan\imgui.vert" />
-    <None Include="Assets\Shaders\Vulkan\imgui.frag" />
-    <None Include="Assets\Shaders\GL\imgui.frag" />
-    <None Include="Assets\Shaders\GL\imgui.vert" />
+    <None Include="Assets\Shaders\Vulkan\imgui.vert">
+      <Filter>Assets\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="Assets\Shaders\GL\imgui.vert">
+      <Filter>Assets\Shaders\GL</Filter>
+    </None>
+    <None Include="Assets\Shaders\Vulkan\imgui.frag">
+      <Filter>Assets\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="Assets\Shaders\GL\imgui.frag">
+      <Filter>Assets\Shaders\GL</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeFormCamera.h">
