@@ -21,7 +21,7 @@ namespace UniverseEngine {
 
     Mesh MeshSimplifier::BuildSimplified(float percentage) {
         int targetTriangleCount =
-            static_cast<int>(static_cast<float>(this->triangles.size()) * percentage);
+            static_cast<int>(static_cast<float>(this->triangles.size()) * glm::clamp(percentage, 0.0f, 1.0f));
 
         int deletedTriangleCount = 0;
         std::vector<int> deleted0, deleted1;
@@ -33,6 +33,10 @@ namespace UniverseEngine {
 
             if (iteration % 5 == 0) {
                 this->CompactMesh(static_cast<int>(iteration));
+            }
+
+            for (size_t i = 0; i < this->triangles.size(); i++) {
+                this->triangles[i].dirty = false;
             }
 
             double threshold = 0.000000001 * pow(double(iteration + 3), 7.0);
@@ -101,9 +105,11 @@ namespace UniverseEngine {
         }
         simplifiedMesh.indices.reserve(this->triangles.size() * 3);
         for (size_t i = 0; i < this->triangles.size(); i++) {
-            simplifiedMesh.indices.push_back(this->triangles[i].v[0]);
-            simplifiedMesh.indices.push_back(this->triangles[i].v[1]);
-            simplifiedMesh.indices.push_back(this->triangles[i].v[2]);
+            if (!this->triangles[i].deleted) {
+                simplifiedMesh.indices.push_back(this->triangles[i].v[0]);
+                simplifiedMesh.indices.push_back(this->triangles[i].v[1]);
+                simplifiedMesh.indices.push_back(this->triangles[i].v[2]);
+            }
         }
         return Mesh(std::move(simplifiedMesh));
     }
@@ -112,7 +118,7 @@ namespace UniverseEngine {
                                          int& deleted_triangles) {
         glm::vec3 p;
         for (size_t k = 0; k < v.tcount; k++) {
-            Ref& ref = this->refs[v.tcount + k];
+            Ref& ref = this->refs[v.tstart + k];
             Triangle& triangle = this->triangles[ref.tid];
             if (triangle.deleted)
                 continue;
@@ -137,11 +143,11 @@ namespace UniverseEngine {
                                    std::vector<int>& deleted) {
         int borderCount = 0;
         for (size_t k = 0; k < v0.tcount; k++) {
-            Triangle& triangle = this->triangles[this->refs[v0.tcount + k].tid];
+            Triangle& triangle = this->triangles[this->refs[v0.tstart + k].tid];
             if (triangle.deleted)
                 continue;
 
-            int s = this->refs[v0.tcount + k].tvertex;
+            int s = this->refs[v0.tstart + k].tvertex;
             int id1 = triangle.v[(s + 1) % 3];
             int id2 = triangle.v[(s + 2) % 3];
 
@@ -173,7 +179,7 @@ namespace UniverseEngine {
                     this->triangles[dst++] = triangles[i];
                 }
             }
-            this->triangles.reserve(dst);
+            this->triangles.resize(dst);
         }
 
         for (size_t i = 0; i < this->vertices.size(); i++) {
@@ -308,7 +314,7 @@ namespace UniverseEngine {
             triangle.v[1] = this->vertices[triangle.v[1]].tstart;
             triangle.v[2] = this->vertices[triangle.v[2]].tstart;
         }
-        this->vertices.reserve(dst);
+        this->vertices.resize(dst);
     }
 
     double MeshSimplifier::VertexError(const SymetricMatrix& q, double x, double y, double z) {

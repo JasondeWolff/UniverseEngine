@@ -6,7 +6,7 @@
 
 int main() {
 	UniverseEngine::Engine engine{};
-	engine.Start<MyGame>();
+	engine.Start<LODDemo>();
 
 	return 0;
 }
