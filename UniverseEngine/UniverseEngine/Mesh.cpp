@@ -1,5 +1,7 @@
 #include "Mesh.h"
 
+#include "MeshSimplifier.h"
+
 namespace UniverseEngine {
     bool Mesh::HasTangents() const {
         return glm::length(glm::vec3(this->vertices[0].tangent)) > 0.0f;
@@ -68,5 +70,10 @@ namespace UniverseEngine {
         this->vertices.shrink_to_fit();
         this->indices.clear();
         this->indices.shrink_to_fit();
+    }
+
+    Mesh Mesh::BuildSimplified(float percentage) const {
+        MeshSimplifier simplifier(this->vertices, this->indices);
+        return simplifier.BuildSimplified(percentage);
     }
 }

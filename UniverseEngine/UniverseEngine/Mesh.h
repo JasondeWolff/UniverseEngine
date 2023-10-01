@@ -37,6 +37,8 @@ namespace UniverseEngine {
         bool HasTangents() const;
         void GenerateTangents();
 
+        Mesh BuildSimplified(float percentage) const;
+
     private:
         friend class Graphics;
         std::unique_ptr<MeshRenderable> renderable;

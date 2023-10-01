@@ -23,22 +23,22 @@ void LODDemo::OnStart() {
 	}
 	graphics.SetSkybox(skyboxTextures);
 
-	std::vector<std::pair<std::string, Transform>> scenePaths = {
-		{"Assets/Models/Showcase/Dragon/Dragon.gltf", Transform(glm::vec3{}, EulerToQuat(Right() * 90.0f), glm::vec3(0.2f))},
-	};
+#if 1
+	this->dragon = resources.LoadScene("Assets/Models/Showcase/Dragon/Dragon.gltf");
+	this->dragonInstance = world.AddSceneInstance(this->dragon);
+	this->dragonInstance->transform.SetMatrix(Transform(glm::vec3{}, EulerToQuat(Right() * 90.0f), glm::vec3(0.05f)).GetMatrix());
 
-	glm::vec3 translation{};
-	for (auto scenePath : scenePaths) {
-		auto scene = resources.LoadScene(scenePath.first);
-		auto sceneInstance = world.AddSceneInstance(scene);
+	this->simplifiedDragon = resources.CreateScene(this->dragon->meshes[0].BuildSimplified(0.7f));
+	this->simplifiedDragonInstance = world.AddSceneInstance(this->simplifiedDragon);
+	this->simplifiedDragonInstance->transform.SetMatrix(Transform(glm::vec3(15.0, 0.0, 0.0), EulerToQuat(Right() * 90.0f), glm::vec3(0.05f)).GetMatrix());
+#else
+	this->dragon = resources.LoadScene("Assets/Models/Showcase/Bunny/Bunny.gltf");
+	this->dragonInstance = world.AddSceneInstance(this->dragon);
 
-		sceneInstance->transform.SetMatrix(scenePath.second.GetMatrix());
-		sceneInstance->transform.Translate(translation);
-		translation += Right() * 3.0f;
-
-		this->scenes.push_back(scene);
-		this->sceneInstances.push_back(sceneInstance);
-	}
+	this->simplifiedDragon = resources.CreateScene(this->dragon->meshes[0].BuildSimplified(0.7f));
+	this->simplifiedDragonInstance = world.AddSceneInstance(this->simplifiedDragon);
+	this->simplifiedDragonInstance->transform.SetMatrix(Transform(glm::vec3(15.0, 0.0, 0.0)).GetMatrix());
+#endif
 
 	this->camera.Start();
 }
