@@ -22,6 +22,16 @@ namespace UniverseEngine {
         return texture;
     }
 
+    std::shared_ptr<Scene> Resources::CreateScene(Mesh&& mesh) {
+        std::shared_ptr<Scene> hScene = std::make_shared<Scene>();
+
+        hScene.get()->meshes.emplace_back(std::move(mesh));
+
+        this->scenes.push_back(hScene);
+        this->newScenes.push_back(hScene);
+        return hScene;
+    }
+
     std::shared_ptr<Scene> Resources::LoadScene(const std::filesystem::path& filePath) {
         auto scene = scenePaths.find(filePath);
         if (scene != scenePaths.end())
@@ -43,15 +53,6 @@ namespace UniverseEngine {
         return hScene;
     }
 
-    std::shared_ptr<Scene> Resources::CreateScene(Mesh&& mesh) {
-        std::shared_ptr<Scene> hScene = std::make_shared<Scene>();
-
-        hScene.get()->meshes.emplace_back(std::move(mesh));
-        //Add materials
-
-        return hScene;
-    }
-    
     std::shared_ptr<Texture> Resources::LoadTexture(const fs::path& filePath, TextureType type) {
         auto texture = texturePaths.find(filePath);
         if (texture != texturePaths.end())
@@ -99,10 +100,6 @@ namespace UniverseEngine {
 
     const std::vector<std::shared_ptr<Scene>>& Resources::GetAllScenes() {
         return this->scenes;
-    }
-
-    void Resources::AddScene(std::shared_ptr<Scene> scene) {
-        scenes.emplace_back(scene);
     }
     
     const std::vector<std::shared_ptr<Scene>>& Resources::GetNewScenes() {

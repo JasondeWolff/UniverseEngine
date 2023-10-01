@@ -74,11 +74,7 @@ namespace UniverseEngine {
         node.transform = Transform(glm::vec3(0, -10, 0), glm::identity<glm::quat>(), glm::vec3(1, 1, 1));
         meshHierarchyRoot = hScene.get()->hierarchy.insert(meshHierarchyRoot, node);
 
-        Engine::GetResources().AddScene(hScene);
-        this->generatedWorld.at(0).at(0) = hScene;
-
-        int debeug = 0;
-    }
+        this->generatedWorld.at(0).at(0) = hScene;    }
 
     void TerrianGenerator::Update() {
         
