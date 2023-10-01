@@ -117,6 +117,14 @@ namespace UniverseEngine {
         } else {
             glEnable(GL_DEPTH_TEST);
         }
+        if (info.blending) {
+            glEnable(GL_BLEND);
+            glBlendEquation(GL_FUNC_ADD);
+            glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE,
+                                GL_ONE_MINUS_SRC_ALPHA);
+        } else {
+            glDisable(GL_BLEND);
+        }
 
         this->boundGraphicsPipeline = graphicsPipeline;
     }
