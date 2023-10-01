@@ -220,8 +220,8 @@
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
     <PublicIncludeDirectories>$(PublicIncludeDirectories)</PublicIncludeDirectories>
-    <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\TinyUSD\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\imgui\include\;$(SolutionDir)Dependencies\tinygltf\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\vulkan\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\TinyUSD\bin\;$(SolutionDir)Dependencies\GLFW\bin\;$(SolutionDir)Dependencies\glew\bin\;$(SolutionDir)Dependencies\vulkan\bin\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\imgui\include\;$(SolutionDir)Dependencies\tinygltf\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\vulkan\include\;$(SolutionDir)Dependencies\FastNoiseLite\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLFW\bin\;$(SolutionDir)Dependencies\glew\bin\;$(SolutionDir)Dependencies\vulkan\bin\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugVulkan|x64'">
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
@@ -234,8 +234,8 @@
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
     <PublicIncludeDirectories>$(PublicIncludeDirectories)</PublicIncludeDirectories>
-    <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\TinyUSD\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\imgui\include\;$(SolutionDir)Dependencies\tinygltf\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\vulkan\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\TinyUSD\bin\;$(SolutionDir)Dependencies\GLFW\bin\;$(SolutionDir)Dependencies\glew\bin\;$(SolutionDir)Dependencies\vulkan\bin\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\imgui\include\;$(SolutionDir)Dependencies\tinygltf\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\vulkan\include\;$(SolutionDir)Dependencies\FastNoiseLite\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLFW\bin\;$(SolutionDir)Dependencies\glew\bin\;$(SolutionDir)Dependencies\vulkan\bin\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseVulkan|x64'">
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
@@ -260,7 +260,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>dtinyusdz_static.lib;glfw3.lib;glew32.lib;opengl32.lib;vulkan-1.lib</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glew32.lib;opengl32.lib;vulkan-1.lib</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>$(SolutionDir)compile_shaders.bat</Command>
@@ -290,7 +290,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>tinyusdz_static.lib;glfw3.lib;glew32.lib;opengl32.lib;vulkan-1.lib</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glew32.lib;opengl32.lib;vulkan-1.lib</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>$(SolutionDir)compile_shaders.bat</Command>
