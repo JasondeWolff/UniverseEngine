@@ -53,6 +53,7 @@ namespace UniverseEngine {
         void BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet, uint32_t set);
 
         void BindGraphicsPipeline(std::shared_ptr<GraphicsPipeline> graphicsPipeline);
+        //void BindComputePipeline(std::shared_ptr<GraphicsPipeline> graphicsPipeline);
 
         void Draw(uint32_t vertexCount, uint32_t instanceCount = 1, uint32_t firstVertex = 0,
                   uint32_t firstInstance = 0);
@@ -80,6 +81,7 @@ namespace UniverseEngine {
         void PushConstant(const std::string& name, void* constant, size_t size, GraphicsStageFlags stageFlags);
 
         std::shared_ptr<GraphicsPipeline> boundGraphicsPipeline;
+        std::shared_ptr<GraphicsPipeline> boundComputePipeline;
         std::vector<std::shared_ptr<RenderPass>> trackedRenderPasses;
         std::vector<std::shared_ptr<Buffer>> trackedBuffers;
         std::vector<std::shared_ptr<Image>> trackedImages;

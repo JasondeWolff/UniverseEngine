@@ -250,6 +250,9 @@
     <ClInclude Include="MeshSimplifier.h">
       <Filter>Src\Math</Filter>
     </ClInclude>
+    <ClInclude Include="ComputePipeline.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -506,6 +509,9 @@
     </ClCompile>
     <ClCompile Include="MeshSimplifier.cpp">
       <Filter>Src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\ComputePipeline.cpp">
+      <Filter>Src\Graphics\Vulkan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

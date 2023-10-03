@@ -80,9 +80,6 @@ namespace UniverseEngine {
     LODMesh::LODMesh(Mesh&& mesh) : lods{} {
         this->lods.emplace_back(std::move(mesh));
         this->configs.emplace_back(Config{1.0f, 4.0f});
-        this->configs.emplace_back(Config{0.7f, 8.0f});
-        this->configs.emplace_back(Config{0.5f, 14.0f});
-        this->configs.emplace_back(Config{0.2f, 20.0f});
     }
 
     std::optional<size_t> LODMesh::BestLOD(const glm::vec3& observer, const glm::vec3& mesh) const {

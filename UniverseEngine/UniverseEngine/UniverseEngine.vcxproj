@@ -15,6 +15,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CmdList.h" />
     <ClInclude Include="CmdQueue.h" />
+    <ClInclude Include="ComputePipeline.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="DescriptorLayoutBinding.h" />
     <ClInclude Include="DescriptorPool.h" />
@@ -80,6 +81,7 @@
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CmdQueue.cpp" />
+    <ClCompile Include="vulkan\ComputePipeline.cpp" />
     <ClCompile Include="gl\Buffer.cpp" />
     <ClCompile Include="gl\DescriptorPool.cpp" />
     <ClCompile Include="gl\DescriptorSet.cpp" />

@@ -51,6 +51,8 @@ namespace UniverseEngine {
             std::make_shared<LogicalDevice>(this->instance, *this->physicalDevice, enableDebug);
         this->cmdQueue =
             std::make_unique<CmdQueue>(this->device, *this->physicalDevice, QueueType::GRAPHICS);
+        this->computeQueue =
+            std::make_unique<CmdQueue>(this->device, *this->physicalDevice, QueueType::COMPUTE);
         this->presentQueue =
             std::make_unique<CmdQueue>(this->device, *this->physicalDevice, QueueType::PRESENT);
         this->descriptorPool = std::make_shared<DescriptorPool>(this->device);
@@ -89,6 +91,10 @@ namespace UniverseEngine {
             this->device->WaitIdle();
             this->BuildPipelines();
         }
+    }
+
+    void Graphics::UseLODs(bool useLODs) {
+        this->useLODs = useLODs;
     }
 
     void Graphics::Update() {
@@ -198,12 +204,16 @@ namespace UniverseEngine {
                     continue;
 
                 LODMesh& lodMesh = scene->meshes[meshInstance.meshIdx.value()];
-                auto lodIdx = lodMesh.BestLOD(camera.transform.GetTranslation(),
-                                                meshInstance.transform.GetTranslation());
-                if (!lodIdx.has_value())
-                    continue;
+                size_t lodIdx = 0;
+                if (this->useLODs) {
+                    auto lodIdxOpt = lodMesh.BestLOD(camera.transform.GetTranslation(),
+                                                     meshInstance.transform.GetTranslation());
+                    if (!lodIdxOpt.has_value())
+                        continue;
+                    lodIdx = lodIdxOpt.value();
+                }
 
-                Mesh& mesh = lodMesh.lods[lodIdx.value()];
+                Mesh& mesh = lodMesh.lods[lodIdx];
                 PushConstant pushConstant;
                 pushConstant.model = meshInstance.transform.GetMatrix();
                 pushConstant.invTransModel = glm::transpose(glm::inverse(pushConstant.model));

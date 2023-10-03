@@ -45,6 +45,8 @@ namespace UniverseEngine {
             int tid, tvertex;
         };
 
+        static const bool smartLink = true;
+
         std::vector<Triangle> triangles;
         std::vector<Vertex> vertices;
         std::vector<Ref> refs;
