@@ -56,7 +56,7 @@ namespace UniverseEngine {
         this->presentQueue =
             std::make_unique<CmdQueue>(this->device, *this->physicalDevice, QueueType::PRESENT);
         this->descriptorPool = std::make_shared<DescriptorPool>(this->device);
-        
+
         this->sampler = std::make_shared<Sampler>("Sampler", this->device, *this->physicalDevice);
         this->skyboxSampler =
             std::make_shared<Sampler>("Skybox Sampler", this->device, *this->physicalDevice);
@@ -64,8 +64,8 @@ namespace UniverseEngine {
         this->skyboxCube =
             Engine::GetResources().LoadScene("Assets/Models/SkyboxCube/SkyboxCube.gltf");
 
-        this->BuildDescriptors();
         this->BuildSwapchain();
+        this->BuildDescriptors();
         this->BuildPipelines();
 
         this->imguiRenderer = std::make_unique<ImGuiRenderer>(
@@ -143,7 +143,7 @@ namespace UniverseEngine {
 
         this->UpdateMaterials(currentFrame, *cmdList);
 
-        cmdList->BeginRenderPass(this->renderPass, this->swapchain->GetCurrentFramebuffer(),
+        cmdList->BeginRenderPass(this->renderPass, *this->framebuffer,
                                  glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
         cmdList->SetScissor(swapchainExtent);
@@ -231,6 +231,20 @@ namespace UniverseEngine {
 
         cmdList->EndRenderPass();
 
+        cmdList->BeginRenderPass(this->swapchain->GetRenderPass(),
+                                 this->swapchain->GetCurrentFramebuffer(),
+                                 glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+        cmdList->TransitionImageLayout(this->colorImage, ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
+                                       ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        cmdList->SetScissor(swapchainExtent);
+        cmdList->SetViewport(swapchainExtent);
+        cmdList->BindGraphicsPipeline(this->presentPipeline);
+        cmdList->BindDescriptorSet(this->presentDescriptorSets[currentFrame], 0);
+        cmdList->Draw(3);
+        cmdList->TransitionImageLayout(this->colorImage, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+                                       ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
+        cmdList->EndRenderPass();
+
         std::vector<Semaphore*> waitSemaphores{&this->swapchain->GetImageAvailableSemaphore()};
         std::vector<Semaphore*> signalSemaphores{&this->swapchain->GetRenderFinishedSemaphore()};
         this->cmdQueue->SubmitCmdList(cmdList, fence, waitSemaphores, signalSemaphores);
@@ -239,6 +253,10 @@ namespace UniverseEngine {
     }
 
     void Graphics::BuildDescriptors() {
+        this->presentDescriptorSetLayout = std::make_shared<DescriptorSetLayout>(
+            this->device, std::vector<DescriptorLayoutBinding>{DescriptorLayoutBinding(
+                              "presentImage", 0, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                              GraphicsStageFlagBits::FRAGMENT_STAGE)});
         this->vpDescriptorSetLayout = std::make_shared<DescriptorSetLayout>(
             this->device,
             std::vector<DescriptorLayoutBinding>{DescriptorLayoutBinding(
@@ -252,6 +270,12 @@ namespace UniverseEngine {
                               "skyboxMap", 1, DescriptorType::COMBINED_IMAGE_SAMPLER,
                               GraphicsStageFlagBits::FRAGMENT_STAGE)});
 
+        for (size_t i = 0; i < this->presentDescriptorSets.size(); i++) {
+            this->presentDescriptorSets[i] = std::make_shared<DescriptorSet>(
+                this->device, this->descriptorPool, this->presentDescriptorSetLayout);
+            this->presentDescriptorSets[i]->SetImage(0, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                                                     this->colorImage, this->sampler);
+        }
         for (size_t i = 0; i < this->vpUniformBuffers.size(); i++) {
             this->vpUniformBuffers[i] =
                 std::make_shared<Buffer>(Format("vpUniformBuffer_%i", i), this->device,
@@ -289,28 +313,47 @@ namespace UniverseEngine {
 
         uint32_t width = static_cast<uint32_t>(this->swapchain->Extent().extent.x);
         uint32_t height = static_cast<uint32_t>(this->swapchain->Extent().extent.y);
+        this->colorImage = std::make_shared<Image>(
+            "Color Image", this->device, *this->physicalDevice, width, height, 1,
+            ImageUsageBits::COLOR_ATTACHMENT | ImageUsageBits::SAMPLED_IMAGE,
+            GraphicsFormat::R8G8B8A8_UNORM);
         this->depthImage = std::make_shared<Image>(
             "Depth Image", this->device, *this->physicalDevice, width, height, 1,
             ImageUsageBits::DEPTH_STENCIL_ATTACHMENT, GraphicsFormat::D32_SFLOAT);
 
         this->renderPass = std::make_shared<RenderPass>(
-            this->device, std::vector<GraphicsFormat>{this->swapchain->Format()},
+            this->device, std::vector<GraphicsFormat>{this->colorImage->Format()},
             std::make_optional<GraphicsFormat>(this->depthImage->Format()));
-        this->swapchain->RebuildFramebuffers(this->renderPass, this->depthImage);
+        std::vector<std::shared_ptr<Image>> images{this->colorImage, this->depthImage};
+        this->framebuffer = std::make_unique<Framebuffer>(this->device, images, this->renderPass);
     }
 
     void Graphics::BuildPipelines() {
         auto& resources = Engine::GetResources();
+        std::shared_ptr<Shader> shaderPresentVS =
+            resources.LoadShader("Assets/Shaders/present.vert");
+        std::shared_ptr<Shader> shaderPresentFS =
+            resources.LoadShader("Assets/Shaders/present.frag");
         std::shared_ptr<Shader> shaderPbrVS = resources.LoadShader("Assets/Shaders/unlit.vert");
         std::shared_ptr<Shader> shaderPbrFS = resources.LoadShader("Assets/Shaders/unlit.frag");
         std::shared_ptr<Shader> shaderSkyboxVS = resources.LoadShader("Assets/Shaders/skybox.vert");
         std::shared_ptr<Shader> shaderSkyboxFS = resources.LoadShader("Assets/Shaders/skybox.frag");
         this->RebuildShaders();
 
+        GraphicsPipelineInfo presentInfo{};
+        presentInfo.ignoreDepth = true;
+        presentInfo.inputVertices = false;
+        std::vector<const ShaderRenderable*> presentShaders = {shaderPresentVS->renderable.get(),
+                                                               shaderPresentFS->renderable.get()};
+        this->presentPipeline = std::make_shared<GraphicsPipeline>(
+            this->device, presentShaders, this->swapchain->GetRenderPass(),
+            std::vector<std::shared_ptr<DescriptorSetLayout>>{presentDescriptorSetLayout},
+            std::vector<PushConstantRange>{}, presentInfo);
+
         GraphicsPipelineInfo pbrInfo{};
         pbrInfo.polygonMode = this->polygonMode;
         std::vector<const ShaderRenderable*> pbrShaders = {shaderPbrVS->renderable.get(),
-                                                     shaderPbrFS->renderable.get()};
+                                                           shaderPbrFS->renderable.get()};
         this->pbrPipeline = std::make_shared<GraphicsPipeline>(
             this->device, pbrShaders, this->renderPass,
             std::vector<std::shared_ptr<DescriptorSetLayout>>{
@@ -323,7 +366,7 @@ namespace UniverseEngine {
         GraphicsPipelineInfo skyboxInfo{};
         skyboxInfo.ignoreDepth = true;
         std::vector<const ShaderRenderable*> skyboxShaders = {shaderSkyboxVS->renderable.get(),
-                                                        shaderSkyboxFS->renderable.get()};
+                                                              shaderSkyboxFS->renderable.get()};
         this->skyboxPipeline = std::make_shared<GraphicsPipeline>(
             this->device, skyboxShaders, this->renderPass,
             std::vector<std::shared_ptr<DescriptorSetLayout>>{vpDescriptorSetLayout,

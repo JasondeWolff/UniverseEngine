@@ -87,11 +87,13 @@ namespace UniverseEngine {
         auto vertexBindingDescription = VertexBindingDescription();
         auto vertexAttributeDescriptions = VertexAttributeDescriptions();
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-        vertexInputInfo.vertexBindingDescriptionCount = 1;
-        vertexInputInfo.pVertexBindingDescriptions = &vertexBindingDescription;
-        vertexInputInfo.vertexAttributeDescriptionCount =
-            static_cast<uint32_t>(vertexAttributeDescriptions.size());
-        vertexInputInfo.pVertexAttributeDescriptions = vertexAttributeDescriptions.data();
+        if (info.inputVertices) {
+            vertexInputInfo.vertexBindingDescriptionCount = 1;
+            vertexInputInfo.pVertexBindingDescriptions = &vertexBindingDescription;
+            vertexInputInfo.vertexAttributeDescriptionCount =
+                static_cast<uint32_t>(vertexAttributeDescriptions.size());
+            vertexInputInfo.pVertexAttributeDescriptions = vertexAttributeDescriptions.data();
+        }
 
         VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
         inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;

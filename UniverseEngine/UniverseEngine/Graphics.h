@@ -53,18 +53,28 @@ namespace UniverseEngine {
         std::shared_ptr<GraphicsInstance> instance;
         std::unique_ptr<PhysicalDevice> physicalDevice;
         std::shared_ptr<LogicalDevice> device;
-        std::unique_ptr<Swapchain> swapchain;
-        std::shared_ptr<Image> depthImage;
         std::unique_ptr<CmdQueue> cmdQueue;
         std::unique_ptr<CmdQueue> computeQueue;
         std::unique_ptr<CmdQueue> presentQueue;
         std::shared_ptr<DescriptorPool> descriptorPool;
+
+        std::unique_ptr<Swapchain> swapchain;
+        std::shared_ptr<Image> colorImage;
+        std::shared_ptr<Image> depthImage;
+
         std::unique_ptr<ImGuiRenderer> imguiRenderer;
 
         GraphicsPolygonMode polygonMode = GraphicsPolygonMode::FILL;
         bool useLODs = true;
 
+        std::unique_ptr<Framebuffer> framebuffer;
         std::shared_ptr<RenderPass> renderPass;
+
+        std::shared_ptr<GraphicsPipeline> presentPipeline;
+        std::shared_ptr<DescriptorSetLayout> presentDescriptorSetLayout;
+        std::array<std::shared_ptr<DescriptorSet>, Swapchain::MAX_FRAMES_IN_FLIGHT>
+            presentDescriptorSets;
+
         std::shared_ptr<GraphicsPipeline> pbrPipeline;
         std::shared_ptr<GraphicsPipeline> skyboxPipeline;
 

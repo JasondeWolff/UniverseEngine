@@ -78,6 +78,15 @@
     <None Include="Assets\Shaders\GL\imgui.frag">
       <Filter>Assets\Shaders\GL</Filter>
     </None>
+    <None Include="Assets\Shaders\Vulkan\clouds.comp">
+      <Filter>Assets\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="Assets\Shaders\Vulkan\present.vert">
+      <Filter>Assets\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="Assets\Shaders\Vulkan\present.frag">
+      <Filter>Assets\Shaders\Vulkan</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeFormCamera.h">

@@ -253,6 +253,9 @@
     <ClInclude Include="ComputePipeline.h">
       <Filter>Src\Graphics\Common</Filter>
     </ClInclude>
+    <ClInclude Include="CloudRenderer.h">
+      <Filter>Src\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">

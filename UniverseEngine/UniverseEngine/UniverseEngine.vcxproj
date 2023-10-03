@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CloudRenderer.h" />
     <ClInclude Include="CmdList.h" />
     <ClInclude Include="CmdQueue.h" />
     <ClInclude Include="ComputePipeline.h" />

@@ -121,7 +121,6 @@ namespace UniverseEngine {
         imageCopy.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         imageCopy.dstSubresource.layerCount = 1;
         imageCopy.dstOffset = {0, 0, 0};
-        
 
         uint32_t mipWidth = cubemap->Width();
         uint32_t mipHeight = cubemap->Height();
@@ -278,6 +277,18 @@ namespace UniverseEngine {
             barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
             sourceStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
             destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+        } else if (vkOldLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL &&
+                   vkNewLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL) {
+            barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+            barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+            sourceStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+            destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        } else if (vkOldLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL &&
+                   vkNewLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
+            barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+            barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+            sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
         } else {
             UE_FATAL("Unsupported image layout transition.");
         }
