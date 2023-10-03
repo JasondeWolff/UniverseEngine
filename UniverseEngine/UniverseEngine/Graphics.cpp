@@ -182,7 +182,7 @@ namespace UniverseEngine {
         this->skyboxDescriptorSets[currentFrame]->SetImage(
             1, DescriptorType::COMBINED_IMAGE_SAMPLER, this->skyboxImage, this->skyboxSampler);
         cmdList->BindDescriptorSet(this->skyboxDescriptorSets[currentFrame], 1);
-        this->skyboxCube->meshes[0].renderable->Draw(*cmdList);
+        this->skyboxCube->meshes[0].lods[0].renderable->Draw(*cmdList);
 
         cmdList->BindGraphicsPipeline(this->pbrPipeline);
 
@@ -197,7 +197,13 @@ namespace UniverseEngine {
                 if (!meshInstance.meshIdx.has_value())
                     continue;
 
-                Mesh& mesh = scene->meshes[meshInstance.meshIdx.value()];
+                LODMesh& lodMesh = scene->meshes[meshInstance.meshIdx.value()];
+                auto lodIdx = lodMesh.BestLOD(camera.transform.GetTranslation(),
+                                                meshInstance.transform.GetTranslation());
+                if (!lodIdx.has_value())
+                    continue;
+
+                Mesh& mesh = lodMesh.lods[lodIdx.value()];
                 PushConstant pushConstant;
                 pushConstant.model = meshInstance.transform.GetMatrix();
                 pushConstant.invTransModel = glm::transpose(glm::inverse(pushConstant.model));
@@ -366,17 +372,19 @@ namespace UniverseEngine {
 
         auto& scenes = resources.GetNewScenes();
         for (auto& scene : scenes) {
+            for (LODMesh& lodMesh : scene->meshes) {
+                for (size_t i = 0; i < lodMesh.lods.size(); i++) {
+                    Mesh& mesh = lodMesh.lods[i];
 
-            int debug = 0;
+                    if (!mesh.renderable) {
+                        if (!mesh.HasTangents())
+                            mesh.GenerateTangents();
 
-            for (Mesh& mesh : scene->meshes) {
-                if (!mesh.renderable) {
-                    if (!mesh.HasTangents())
-                        mesh.GenerateTangents();
-
-                    mesh.renderable = std::move(std::unique_ptr<MeshRenderable>(new MeshRenderable(
-                        this->device, *this->physicalDevice, *uploadCmdList, mesh)));
-                    mesh.ClearCPUData();
+                        mesh.renderable =
+                            std::move(std::unique_ptr<MeshRenderable>(new MeshRenderable(
+                                this->device, *this->physicalDevice, *uploadCmdList, mesh)));
+                        mesh.ClearCPUData();
+                    }
                 }
             }
         }

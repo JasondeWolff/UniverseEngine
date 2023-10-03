@@ -1,8 +1,12 @@
 #include "MeshSimplifier.h"
 
 namespace UniverseEngine {
-    MeshSimplifier::MeshSimplifier(const std::vector<UniverseEngine::Vertex>& vertices,
+    MeshSimplifier::MeshSimplifier(const std::string& name, size_t materialIdx,
+                                   const std::vector<UniverseEngine::Vertex>& vertices,
                                    const std::vector<uint32_t>& indices) {
+        this->name = name;
+        this->materialIdx = materialIdx;
+
         this->vertices.reserve(vertices.size());
         for (auto& vertex : vertices) {
             MeshSimplifier::Vertex simplifiedVertex{};
@@ -46,7 +50,7 @@ namespace UniverseEngine {
                 this->triangles[i].dirty = false;
             }
 
-            double threshold = 0.000000001 * pow(double(iteration + 3), 7.0);
+            double threshold = 0.000000001 * pow(double(iteration + 3), 20.0);
 
             for (size_t i = 0; i < this->triangles.size(); i++) {
                 Triangle& triangle = this->triangles[i];
@@ -126,7 +130,8 @@ namespace UniverseEngine {
         this->CleanupMesh();
 
         Mesh simplifiedMesh{};
-        simplifiedMesh.name = "SIMPLIFIED";
+        simplifiedMesh.name = this->name;
+        simplifiedMesh.materialIdx = this->materialIdx;
         simplifiedMesh.vertices.reserve(this->vertices.size());
         for (size_t i = 0; i < this->vertices.size(); i++) {
             UniverseEngine::Vertex vertex{};

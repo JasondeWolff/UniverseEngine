@@ -5,7 +5,9 @@
 namespace UniverseEngine {
     class MeshSimplifier {
     public:
-        MeshSimplifier(const std::vector<UniverseEngine::Vertex>& vertices, const std::vector<uint32_t>& indices);
+        MeshSimplifier(const std::string& name, size_t materialIdx,
+                       const std::vector<UniverseEngine::Vertex>& vertices,
+                       const std::vector<uint32_t>& indices);
 
         Mesh BuildSimplified(float percentage);
 
@@ -46,6 +48,9 @@ namespace UniverseEngine {
         std::vector<Triangle> triangles;
         std::vector<Vertex> vertices;
         std::vector<Ref> refs;
+
+        std::string name;
+        size_t materialIdx;
 
         std::vector<glm::vec3> normals;
         std::vector<glm::vec2> texCoords;

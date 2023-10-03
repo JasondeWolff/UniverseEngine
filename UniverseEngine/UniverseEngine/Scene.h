@@ -38,10 +38,11 @@ namespace UniverseEngine {
         std::string name;
         tree<SceneNode> hierarchy;
 
-        std::vector<Mesh> meshes;
+        std::vector<LODMesh> meshes;
         std::vector<Material> materials;
         std::vector<PointLight> pointLights;
 
+        void BuildLODS();
         tree<SceneNode> TransformedHierarchy(const Transform& root) const;
 
     private:

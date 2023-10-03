@@ -53,6 +53,8 @@ namespace UniverseEngine {
         else
             UE_FATAL("Cannot load unsupported scene type '%s'.", extension);
 
+        hScene->BuildLODS();
+
         this->scenes.push_back(hScene);
         this->newScenes.push_back(hScene);
         this->scenePaths.insert(std::make_pair(filePath, hScene));

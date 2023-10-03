@@ -260,7 +260,8 @@ namespace UniverseEngine {
                     model.accessors[primitive.attributes.find("POSITION")->second].count;
             }
 
-            parsedScene.meshes.emplace_back(std::move(parsedMesh));
+            LODMesh lodMesh(std::move(parsedMesh));
+            parsedScene.meshes.emplace_back(std::move(lodMesh));
         }
 
         for (auto& light : model.lights) {

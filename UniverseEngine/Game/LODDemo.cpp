@@ -23,22 +23,13 @@ void LODDemo::OnStart() {
 	}
 	graphics.SetSkybox(skyboxTextures);
 
-	std::vector<float> LODs = { 0.8f, 0.6f, 0.4f, 0.2f };
-
-	this->bunny = resources.LoadScene("Assets/Models/Showcase/Bunny/Bunny.gltf");
+	this->bunny = resources.LoadScene("Assets/Models/Showcase/DamagedHelmet/DamagedHelmet.gltf");
 	this->bunnyInstance = world.AddSceneInstance(this->bunny);
+	this->bunnyInstance->transform.SetScale(glm::vec3(2.0f));
 
-	UE_INFO("Bunny Tris LOD0: %i", this->bunny->meshes[0].indices.size() / 3);
-
-	for (size_t i = 0; i < LODs.size(); i++) {
-		auto simplifiedBunny = resources.CreateScene(this->bunny->meshes[0].BuildSimplified(LODs[i]));
-		auto simplifiedBunnyInstance = world.AddSceneInstance(simplifiedBunny);
-		simplifiedBunnyInstance->transform.SetMatrix(Transform(glm::vec3(i * 5.0f + 5.0f, 0.0, 0.0)).GetMatrix());
-
-		this->simplifiedBunnies.push_back(simplifiedBunny);
-		this->simplifiedBunnyInstances.push_back(simplifiedBunnyInstance);
-
-		UE_INFO("Bunny Tris LOD%i: %i", (i + 1), simplifiedBunny->meshes[0].indices.size() / 3);
+	for (size_t i = 0; i < this->bunny->meshes[0].lods.size(); i++)
+	{
+		UE_INFO("Bunny Tris LOD0: %i", this->bunny->meshes[0].lods[i].indices.size() / 3);
 	}
 
 	this->camera.Start();
