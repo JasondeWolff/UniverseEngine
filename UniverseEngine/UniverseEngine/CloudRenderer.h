@@ -28,11 +28,15 @@ namespace UniverseEngine {
         CloudRenderer(std::shared_ptr<LogicalDevice> device, const PhysicalDevice& physicalDevice,
                       std::shared_ptr<DescriptorPool> descriptorPool, const Graphics& graphics);
 
+        Semaphore& CurrentSemaphore(size_t currentFrame);
+
         void Render(CmdList& cmdList, std::shared_ptr<Image> colorImage, size_t currentFrame);
 
     private:
         std::shared_ptr<ComputePipeline> pipeline;
         std::shared_ptr<DescriptorSetLayout> descriptorSetLayout;
         std::array<std::shared_ptr<DescriptorSet>, Swapchain::MAX_FRAMES_IN_FLIGHT> descriptorSets;
+
+        std::vector<Semaphore> semaphores;
     };
 }  // namespace UniverseEngine

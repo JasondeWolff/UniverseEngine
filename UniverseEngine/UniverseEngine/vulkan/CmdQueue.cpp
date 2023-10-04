@@ -63,6 +63,8 @@ namespace UniverseEngine {
         submitInfo.pCommandBuffers = &cmdList->cmdBuffer;
         submitInfo.pWaitDstStageMask = waitStages;
 
+        if (!fence)
+            fence = std::make_shared<Fence>(this->device);
         vkQueueSubmit(this->queue, 1, &submitInfo, fence->GetFence());
 
         this->busyCmdLists.push(InFlightCmdList{fence, cmdList});

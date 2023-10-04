@@ -293,6 +293,18 @@ namespace UniverseEngine {
             barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
             sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
             destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+        } else if (vkOldLayout == VK_IMAGE_LAYOUT_GENERAL &&
+                   vkNewLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR) {
+            barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+            barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+            sourceStage = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
+            destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        } else if (vkOldLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR &&
+                   vkNewLayout == VK_IMAGE_LAYOUT_GENERAL) {
+            barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+            barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+            sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            destinationStage = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
         } else {
             UE_FATAL("Unsupported image layout transition.");
         }
@@ -378,8 +390,10 @@ namespace UniverseEngine {
         VkPipelineBindPoint bindPoint = (pipelineType == PipelineType::GRAPHICS)
                                             ? VK_PIPELINE_BIND_POINT_GRAPHICS
                                             : VK_PIPELINE_BIND_POINT_COMPUTE;
-        vkCmdBindDescriptorSets(this->cmdBuffer, bindPoint,
-                                this->boundGraphicsPipeline->GetLayout(), set, 1, descriptorSets, 0,
+        VkPipelineLayout layout = (pipelineType == PipelineType::GRAPHICS)
+                                      ? this->boundGraphicsPipeline->GetLayout()
+                                      : this->boundComputePipeline->GetLayout();
+        vkCmdBindDescriptorSets(this->cmdBuffer, bindPoint, layout, set, 1, descriptorSets, 0,
                                 nullptr);
 
         trackedDescriptorSets.push_back(descriptorSet);
