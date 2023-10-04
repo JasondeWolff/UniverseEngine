@@ -83,6 +83,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CloudRenderer.cpp" />
     <ClCompile Include="CmdQueue.cpp" />
+    <ClCompile Include="gl\ComputePipeline.cpp" />
     <ClCompile Include="vulkan\ComputePipeline.cpp" />
     <ClCompile Include="gl\Buffer.cpp" />
     <ClCompile Include="gl\DescriptorPool.cpp" />

@@ -237,17 +237,17 @@ namespace UniverseEngine {
 
         std::vector<Semaphore*> waitSemaphores{&this->swapchain->GetImageAvailableSemaphore()};
         std::vector<Semaphore*> signalSemaphores{&this->cloudRenderer->CurrentSemaphore(
-            currentFrame)};  //&this->cloudRenderer->CurrentSemaphore(currentFrame)
+            currentFrame)};
         this->cmdQueue->SubmitCmdList(pbrCmdList, nullptr, waitSemaphores, signalSemaphores);
 
-        std::shared_ptr<CmdList> computeCmdList = this->computeQueue->GetCmdList();
+       /* std::shared_ptr<CmdList> computeCmdList = this->computeQueue->GetCmdList();
         this->cloudRenderer->Render(*computeCmdList, this->colorImage, currentFrame);
         std::vector<Semaphore*> cloudWaitSemaphores{
             &this->cloudRenderer->CurrentSemaphore(currentFrame)};
         std::vector<Semaphore*>
-            cloudSignalSemaphores{};  //&this->cloudRenderer->CurrentSemaphore(currentFrame)
+            cloudSignalSemaphores{};
         this->computeQueue->SubmitCmdList(computeCmdList, nullptr, cloudWaitSemaphores,
-                                          cloudSignalSemaphores);
+                                          cloudSignalSemaphores);*/
 
         std::shared_ptr<CmdList> presentCmdList = this->cmdQueue->GetCmdList();
 

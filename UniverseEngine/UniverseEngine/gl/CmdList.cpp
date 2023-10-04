@@ -5,6 +5,7 @@
 
 #include "../Buffer.h"
 #include "../CmdList.h"
+#include "../ComputePipeline.h"
 #include "../DescriptorSet.h"
 #include "../GraphicsPipeline.h"
 #include "../Logging.h"
@@ -30,6 +31,7 @@ namespace UniverseEngine {
         this->trackedPushConstants.clear();
 
         this->boundGraphicsPipeline.reset();
+        this->boundComputePipeline.reset();
         this->trackedRenderPasses.clear();
         this->trackedBuffers.clear();
         this->trackedDescriptorSets.clear();
@@ -88,7 +90,8 @@ namespace UniverseEngine {
     void CmdList::EndRenderPass() {
     }
 
-    void CmdList::BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet, uint32_t set) {
+    void CmdList::BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet, uint32_t set,
+                                    PipelineType pipelineType) {
         for (auto& bufferBinding : descriptorSet->Buffers()) {
             uint32_t binding = bufferBinding.first;
             auto& buffer = bufferBinding.second;
@@ -134,6 +137,12 @@ namespace UniverseEngine {
         this->boundGraphicsPipeline = graphicsPipeline;
     }
 
+    void CmdList::BindComputePipeline(std::shared_ptr<ComputePipeline> computePipeline) {
+        glUseProgram(computePipeline->ShaderProgram());
+
+        this->boundComputePipeline = computePipeline;
+    }
+
     void CmdList::Draw(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex,
                        uint32_t firstInstance) {
         UE_ASSERT_MSG(instanceCount == 1, "GL doesn't support instancing.");
@@ -150,6 +159,10 @@ namespace UniverseEngine {
 
         glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indexCount), GL_UNSIGNED_INT,
                        (void*)(firstIndex * sizeof(GLuint)));
+    }
+
+    void CmdList::Dispatch(uint32_t x, uint32_t y, uint32_t z) {
+        glDispatchCompute(x, y, z);
     }
 
     void CmdList::PushConstant(const std::string& name, void* constant, size_t size,

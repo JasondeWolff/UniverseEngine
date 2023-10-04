@@ -519,6 +519,9 @@
     <ClCompile Include="CloudRenderer.cpp">
       <Filter>Src\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="gl\ComputePipeline.cpp">
+      <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />

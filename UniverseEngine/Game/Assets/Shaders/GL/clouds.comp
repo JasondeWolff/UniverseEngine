@@ -1,0 +1,17 @@
+#version 450
+#extension GL_KHR_vulkan_glsl: enable
+
+layout (binding = 0, rgba8) uniform image2D outputImage;
+
+layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
+void main() 
+{
+    ivec2 id = ivec2(gl_GlobalInvocationID.xy);
+    ivec2 dispatchSize = ivec2(gl_WorkGroupSize.xy * gl_NumWorkGroups.xy);
+
+    if (id.x >= dispatchSize.x || id.y >= dispatchSize.y) return;
+
+    vec3 color = imageLoad(outputImage, id).rgb;
+    color *= vec3(float(id.x) / float(dispatchSize.x), float(id.y) / float(dispatchSize.y), 1.0);
+    imageStore(outputImage, id, vec4(color, 1.0));
+}
