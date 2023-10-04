@@ -9,6 +9,7 @@
 #include "../DescriptorSet.h"
 #include "../GraphicsPipeline.h"
 #include "../Logging.h"
+#include "../Framebuffer.h"
 
 namespace UniverseEngine {
     CmdList::CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue)
@@ -83,6 +84,8 @@ namespace UniverseEngine {
 
     void CmdList::BeginRenderPass(std::shared_ptr<RenderPass> renderPass,
                                   const Framebuffer& framebuffer, const glm::vec4& clearColor) {
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.GetFramebuffer());
+
         glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }

@@ -26,6 +26,8 @@ namespace UniverseEngine {
 
         this->renderPass = std::make_shared<RenderPass>(
             this->device, std::vector<GraphicsFormat>{this->Format()}, std::nullopt);
+        this->framebuffer = std::unique_ptr<Framebuffer>(new Framebuffer(
+            device, std::vector<std::shared_ptr<Image>>{this->image}, this->renderPass, 0));
 
         glEnable(GL_FRAMEBUFFER_SRGB);
     }
