@@ -19,6 +19,8 @@ namespace UniverseEngine {
                 return VkImageLayout::VK_IMAGE_LAYOUT_UNDEFINED;
             case ImageLayout::GENERAL:
                 return VkImageLayout::VK_IMAGE_LAYOUT_GENERAL;
+            case ImageLayout::PRESENT_SRC:
+                return VkImageLayout::VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
             case ImageLayout::COLOR_ATTACHMENT_OPTIMAL:
                 return VkImageLayout::VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
             case ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
@@ -278,12 +280,12 @@ namespace UniverseEngine {
             sourceStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
             destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
         } else if (vkOldLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL &&
-                   vkNewLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL) {
+                   vkNewLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR) {
             barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
             barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
             sourceStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
             destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        } else if (vkOldLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL &&
+        } else if (vkOldLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR &&
                    vkNewLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
             barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
             barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;

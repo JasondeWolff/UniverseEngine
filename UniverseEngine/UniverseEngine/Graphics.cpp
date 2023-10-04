@@ -231,19 +231,21 @@ namespace UniverseEngine {
 
         cmdList->EndRenderPass();
 
+        cmdList->TransitionImageLayout(this->colorImage, ImageLayout::PRESENT_SRC,
+                                       ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+
         cmdList->BeginRenderPass(this->swapchain->GetRenderPass(),
                                  this->swapchain->GetCurrentFramebuffer(),
                                  glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-        cmdList->TransitionImageLayout(this->colorImage, ImageLayout::COLOR_ATTACHMENT_OPTIMAL,
-                                       ImageLayout::SHADER_READ_ONLY_OPTIMAL);
         cmdList->SetScissor(swapchainExtent);
         cmdList->SetViewport(swapchainExtent);
         cmdList->BindGraphicsPipeline(this->presentPipeline);
         cmdList->BindDescriptorSet(this->presentDescriptorSets[currentFrame], 0);
         cmdList->Draw(3);
-        cmdList->TransitionImageLayout(this->colorImage, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-                                       ImageLayout::COLOR_ATTACHMENT_OPTIMAL);
         cmdList->EndRenderPass();
+
+        cmdList->TransitionImageLayout(this->colorImage, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+                                       ImageLayout::PRESENT_SRC);
 
         std::vector<Semaphore*> waitSemaphores{&this->swapchain->GetImageAvailableSemaphore()};
         std::vector<Semaphore*> signalSemaphores{&this->swapchain->GetRenderFinishedSemaphore()};

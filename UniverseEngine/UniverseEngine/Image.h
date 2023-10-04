@@ -25,6 +25,7 @@ namespace UniverseEngine {
     enum class ImageLayout {
         UNDEFINED,
         GENERAL,
+        PRESENT_SRC,
         COLOR_ATTACHMENT_OPTIMAL,
         DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
         DEPTH_STENCIL_READ_ONLY_OPTIMAL,
