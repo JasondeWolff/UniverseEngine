@@ -28,7 +28,7 @@ namespace UniverseEngine {
         CloudRenderer(std::shared_ptr<LogicalDevice> device, const PhysicalDevice& physicalDevice,
                       std::shared_ptr<DescriptorPool> descriptorPool, const Graphics& graphics);
 
-        void Render(CmdList& cmdList, size_t currentFrame);
+        void Render(CmdList& cmdList, std::shared_ptr<Image> colorImage, size_t currentFrame);
 
     private:
         std::shared_ptr<ComputePipeline> pipeline;

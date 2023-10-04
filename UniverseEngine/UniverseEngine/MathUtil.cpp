@@ -1,5 +1,6 @@
 #include "MathUtil.h"
 
+#include <algorithm>
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/quaternion.hpp>
 
@@ -20,5 +21,9 @@ namespace UniverseEngine {
         if (glm::length(v) == 0.0f)
             return v;
         return glm::normalize(v) * glm::min(glm::length(v), magnitude);
+    }
+
+    uint32_t DivideUp(uint32_t n, uint32_t d) {
+        return (std::max(2u, n) - 1) / d + 1;
     }
 }  // namespace UniverseEngine

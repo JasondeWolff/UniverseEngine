@@ -20,6 +20,8 @@ namespace UniverseEngine {
             parsedShader.type = ShaderType::SHADER_VERTEX;
         if (extension == ".frag")
             parsedShader.type = ShaderType::SHADER_FRAGMENT;
+        if (extension == ".comp")
+            parsedShader.type = ShaderType::SHADER_COMPUTE;
 
         {
             std::ifstream t(shaderFile);

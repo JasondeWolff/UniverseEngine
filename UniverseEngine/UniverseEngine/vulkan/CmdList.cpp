@@ -6,6 +6,7 @@
 #include "../Buffer.h"
 #include "../CmdList.h"
 #include "../CmdQueue.h"
+#include "../ComputePipeline.h"
 #include "../DescriptorSet.h"
 #include "../GraphicsPipeline.h"
 #include "../Logging.h"
@@ -72,6 +73,7 @@ namespace UniverseEngine {
         vkResetCommandBuffer(this->cmdBuffer, 0);
 
         this->boundGraphicsPipeline.reset();
+        this->boundComputePipeline.reset();
         this->trackedRenderPasses.clear();
         this->trackedBuffers.clear();
         this->trackedImages.clear();
@@ -369,9 +371,14 @@ namespace UniverseEngine {
         vkCmdEndRenderPass(this->cmdBuffer);
     }
 
-    void CmdList::BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet, uint32_t set) {
+    void CmdList::BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet, uint32_t set,
+                                    PipelineType pipelineType) {
         VkDescriptorSet descriptorSets[] = {descriptorSet->GetDescriptorSet()};
-        vkCmdBindDescriptorSets(this->cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+
+        VkPipelineBindPoint bindPoint = (pipelineType == PipelineType::GRAPHICS)
+                                            ? VK_PIPELINE_BIND_POINT_GRAPHICS
+                                            : VK_PIPELINE_BIND_POINT_COMPUTE;
+        vkCmdBindDescriptorSets(this->cmdBuffer, bindPoint,
                                 this->boundGraphicsPipeline->GetLayout(), set, 1, descriptorSets, 0,
                                 nullptr);
 
@@ -385,6 +392,13 @@ namespace UniverseEngine {
         this->boundGraphicsPipeline = graphicsPipeline;
     }
 
+    void CmdList::BindComputePipeline(std::shared_ptr<ComputePipeline> computePipeline) {
+        vkCmdBindPipeline(this->cmdBuffer, VK_PIPELINE_BIND_POINT_COMPUTE,
+                          computePipeline->GetPipeline());
+
+        this->boundComputePipeline = computePipeline;
+    }
+
     void CmdList::Draw(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex,
                        uint32_t firstInstance) {
         vkCmdDraw(this->cmdBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
@@ -394,6 +408,10 @@ namespace UniverseEngine {
                                uint32_t firstInstance, uint32_t vertexOffset) {
         vkCmdDrawIndexed(this->cmdBuffer, indexCount, instanceCount, firstIndex, vertexOffset,
                          firstInstance);
+    }
+
+    void CmdList::Dispatch(uint32_t x, uint32_t y, uint32_t z) {
+        vkCmdDispatch(this->cmdBuffer, x, y, z);
     }
 
     void CmdList::PushConstant(const std::string& name, void* constant, size_t size,

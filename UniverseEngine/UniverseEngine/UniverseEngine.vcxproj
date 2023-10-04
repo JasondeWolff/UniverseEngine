@@ -81,6 +81,7 @@
   <ItemGroup>
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CloudRenderer.cpp" />
     <ClCompile Include="CmdQueue.cpp" />
     <ClCompile Include="vulkan\ComputePipeline.cpp" />
     <ClCompile Include="gl\Buffer.cpp" />

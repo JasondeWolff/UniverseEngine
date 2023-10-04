@@ -516,6 +516,9 @@
     <ClCompile Include="vulkan\ComputePipeline.cpp">
       <Filter>Src\Graphics\Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="CloudRenderer.cpp">
+      <Filter>Src\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />

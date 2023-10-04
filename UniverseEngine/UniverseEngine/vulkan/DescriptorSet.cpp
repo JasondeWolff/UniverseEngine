@@ -4,9 +4,9 @@
 #include "../Buffer.h"
 #include "../DescriptorPool.h"
 #include "../DescriptorSetLayout.h"
+#include "../Image.h"
 #include "../Logging.h"
 #include "../LogicalDevice.h"
-#include "../Image.h"
 #include "../Sampler.h"
 #include "VkConversion.h"
 
@@ -51,11 +51,17 @@ namespace UniverseEngine {
         vkUpdateDescriptorSets(this->device->GetDevice(), 1, &writeInfo, 0, nullptr);
     }
 
-    void DescriptorSet::SetImage(uint32_t binding, DescriptorType type, std::shared_ptr<Image> image, std::shared_ptr<Sampler> sampler) {
+    void DescriptorSet::SetImage(uint32_t binding, DescriptorType type,
+                                 std::shared_ptr<Image> image, std::shared_ptr<Sampler> sampler) {
         VkDescriptorImageInfo imageInfo{};
-        imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        if (type == DescriptorType::STORAGE_IMAGE) {
+            imageInfo.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
+        } else {
+            imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+        }
         imageInfo.imageView = image->GetImageView();
-        imageInfo.sampler = sampler->GetSampler();
+        if (sampler)
+            imageInfo.sampler = sampler->GetSampler();
 
         VkWriteDescriptorSet writeInfo{};
         writeInfo.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

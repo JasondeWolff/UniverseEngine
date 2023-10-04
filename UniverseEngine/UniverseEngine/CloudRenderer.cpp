@@ -1,0 +1,39 @@
+#include "CloudRenderer.h"
+
+#include "Engine.h"
+
+namespace UniverseEngine {
+    CloudRenderer::CloudRenderer(std::shared_ptr<LogicalDevice> device,
+                                 const PhysicalDevice& physicalDevice,
+                                 std::shared_ptr<DescriptorPool> descriptorPool,
+                                 const Graphics& graphics) {
+        this->descriptorSetLayout = std::make_shared<DescriptorSetLayout>(
+            device, std::vector<DescriptorLayoutBinding>{
+                        DescriptorLayoutBinding("outputImage", 0, DescriptorType::STORAGE_IMAGE,
+                                                GraphicsStageFlagBits::COMPUTE_STAGE)});
+
+        for (size_t i = 0; i < this->descriptorSets.size(); i++) {
+            this->descriptorSets[i] =
+                std::make_shared<DescriptorSet>(device, descriptorPool, this->descriptorSetLayout);
+        }
+
+        auto& resources = Engine::GetResources();
+        std::shared_ptr<Shader> shader = resources.LoadShader("Assets/Shaders/clouds.comp");
+        graphics.RebuildShaders();
+
+        this->pipeline = std::make_shared<ComputePipeline>(
+            device, shader->Renderable(),
+            std::vector<std::shared_ptr<DescriptorSetLayout>>{this->descriptorSetLayout});
+    }
+
+    void CloudRenderer::Render(CmdList& cmdList, std::shared_ptr<Image> colorImage,
+                               size_t currentFrame) {
+        cmdList.BindComputePipeline(this->pipeline);
+
+        this->descriptorSets[currentFrame]->SetImage(0, DescriptorType::STORAGE_IMAGE, colorImage,
+                                                     nullptr);
+        cmdList.BindDescriptorSet(this->descriptorSets[currentFrame], 0, PipelineType::COMPUTE);
+
+        cmdList.Dispatch(DivideUp(colorImage->Width(), 16), DivideUp(colorImage->Height(), 16));
+    }
+}  // namespace UniverseEngine

@@ -13,6 +13,11 @@ namespace UniverseEngine {
     class DescriptorSetLayout;
     struct PushConstantRange;
 
+    enum class PipelineType {
+        GRAPHICS,
+        COMPUTE
+    };
+
     enum class GraphicsPolygonMode {
         FILL,
         LINE

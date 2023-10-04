@@ -68,6 +68,8 @@ namespace UniverseEngine {
         this->BuildDescriptors();
         this->BuildPipelines();
 
+        this->cloudRenderer = std::make_unique<CloudRenderer>(this->device, *this->physicalDevice,
+                                                              this->descriptorPool, *this);
         this->imguiRenderer = std::make_unique<ImGuiRenderer>(
             this->device, *this->physicalDevice, this->descriptorPool, this->renderPass, *this);
     }
@@ -227,6 +229,9 @@ namespace UniverseEngine {
             }
         }
 
+
+        //this->cloudRenderer->Render(*cmdList, this->colorImage, currentFrame);
+
         this->imguiRenderer->Render(*cmdList, currentFrame);
 
         cmdList->EndRenderPass();
@@ -317,7 +322,7 @@ namespace UniverseEngine {
         uint32_t height = static_cast<uint32_t>(this->swapchain->Extent().extent.y);
         this->colorImage = std::make_shared<Image>(
             "Color Image", this->device, *this->physicalDevice, width, height, 1,
-            ImageUsageBits::COLOR_ATTACHMENT | ImageUsageBits::SAMPLED_IMAGE,
+            ImageUsageBits::COLOR_ATTACHMENT | ImageUsageBits::SAMPLED_IMAGE | ImageUsageBits::STORAGE_IMAGE,
             GraphicsFormat::R8G8B8A8_UNORM);
         this->depthImage = std::make_shared<Image>(
             "Depth Image", this->device, *this->physicalDevice, width, height, 1,

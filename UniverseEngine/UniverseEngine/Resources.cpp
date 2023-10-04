@@ -89,10 +89,10 @@ namespace UniverseEngine {
         if (shader != this->shaderPaths.end())
             return shader->second;
 
-        static const std::string supportedExtensions[2] = {".vert", ".frag"};
+        static const std::string supportedExtensions[3] = {".vert", ".frag", ".comp"};
 
         fs::path extension = filePath.extension();
-        for (size_t i = 0; i < 2; i++) {
+        for (size_t i = 0; i < 3; i++) {
             if (supportedExtensions[i] == extension) {
                 std::shared_ptr<Shader> hShader = LoadShaderSource(filePath);
                 this->shaderPaths.insert(std::make_pair(filePath, hShader));

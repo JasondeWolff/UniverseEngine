@@ -19,6 +19,7 @@
 #include "Swapchain.h"
 #include "Window.h"
 
+#include "CloudRenderer.h"
 #include "ImGuiRenderer.h"
 
 namespace UniverseEngine {
@@ -62,6 +63,7 @@ namespace UniverseEngine {
         std::shared_ptr<Image> colorImage;
         std::shared_ptr<Image> depthImage;
 
+        std::unique_ptr<CloudRenderer> cloudRenderer;
         std::unique_ptr<ImGuiRenderer> imguiRenderer;
 
         GraphicsPolygonMode polygonMode = GraphicsPolygonMode::FILL;
