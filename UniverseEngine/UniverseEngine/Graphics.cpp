@@ -150,7 +150,7 @@ namespace UniverseEngine {
         this->UpdateMaterials(currentFrame, *pbrCmdList);
 
         pbrCmdList->BeginRenderPass(this->renderPass, *this->framebuffer,
-                                 glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+                                    glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
         pbrCmdList->SetScissor(swapchainExtent);
         pbrCmdList->SetViewport(swapchainExtent);
@@ -236,27 +236,26 @@ namespace UniverseEngine {
         pbrCmdList->EndRenderPass();
 
         std::vector<Semaphore*> waitSemaphores{&this->swapchain->GetImageAvailableSemaphore()};
-        std::vector<Semaphore*> signalSemaphores{&this->cloudRenderer->CurrentSemaphore(
-            currentFrame)};
+        std::vector<Semaphore*> signalSemaphores{
+            &this->cloudRenderer->CurrentSemaphore(currentFrame)};
         this->cmdQueue->SubmitCmdList(pbrCmdList, nullptr, waitSemaphores, signalSemaphores);
 
-       /* std::shared_ptr<CmdList> computeCmdList = this->computeQueue->GetCmdList();
+        std::shared_ptr<CmdList> computeCmdList = this->computeQueue->GetCmdList();
         this->cloudRenderer->Render(*computeCmdList, this->colorImage, currentFrame);
         std::vector<Semaphore*> cloudWaitSemaphores{
             &this->cloudRenderer->CurrentSemaphore(currentFrame)};
-        std::vector<Semaphore*>
-            cloudSignalSemaphores{};
+        std::vector<Semaphore*> cloudSignalSemaphores{};
         this->computeQueue->SubmitCmdList(computeCmdList, nullptr, cloudWaitSemaphores,
-                                          cloudSignalSemaphores);*/
+                                          cloudSignalSemaphores);
 
         std::shared_ptr<CmdList> presentCmdList = this->cmdQueue->GetCmdList();
 
         presentCmdList->TransitionImageLayout(this->colorImage, ImageLayout::PRESENT_SRC,
-                                       ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+                                              ImageLayout::SHADER_READ_ONLY_OPTIMAL);
 
         presentCmdList->BeginRenderPass(this->swapchain->GetRenderPass(),
-                                 this->swapchain->GetCurrentFramebuffer(),
-                                 glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+                                        this->swapchain->GetCurrentFramebuffer(),
+                                        glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
         presentCmdList->SetScissor(swapchainExtent);
         presentCmdList->SetViewport(swapchainExtent);
         presentCmdList->BindGraphicsPipeline(this->presentPipeline);
@@ -265,11 +264,12 @@ namespace UniverseEngine {
         this->imguiRenderer->Render(*presentCmdList, currentFrame);
         presentCmdList->EndRenderPass();
 
-        presentCmdList->TransitionImageLayout(this->colorImage, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-                                       ImageLayout::PRESENT_SRC);
+        presentCmdList->TransitionImageLayout(
+            this->colorImage, ImageLayout::SHADER_READ_ONLY_OPTIMAL, ImageLayout::PRESENT_SRC);
 
         std::vector<Semaphore*> presentWaitSemaphores{};
-        std::vector<Semaphore*> presentSignalSemaphores{&this->swapchain->GetRenderFinishedSemaphore()};
+        std::vector<Semaphore*> presentSignalSemaphores{
+            &this->swapchain->GetRenderFinishedSemaphore()};
         this->cmdQueue->SubmitCmdList(presentCmdList, fence, presentWaitSemaphores,
                                       presentSignalSemaphores);
 
@@ -339,7 +339,8 @@ namespace UniverseEngine {
         uint32_t height = static_cast<uint32_t>(this->swapchain->Extent().extent.y);
         this->colorImage = std::make_shared<Image>(
             "Color Image", this->device, *this->physicalDevice, width, height, 1,
-            ImageUsageBits::COLOR_ATTACHMENT | ImageUsageBits::SAMPLED_IMAGE | ImageUsageBits::STORAGE_IMAGE,
+            ImageUsageBits::COLOR_ATTACHMENT | ImageUsageBits::SAMPLED_IMAGE |
+                ImageUsageBits::STORAGE_IMAGE,
             GraphicsFormat::R8G8B8A8_UNORM);
         this->depthImage = std::make_shared<Image>(
             "Depth Image", this->device, *this->physicalDevice, width, height, 1,

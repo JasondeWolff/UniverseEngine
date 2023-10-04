@@ -107,8 +107,12 @@ namespace UniverseEngine {
             auto& image = imageBinding.second.first;
             auto& sampler = imageBinding.second.second;
 
-            glActiveTexture(GL_TEXTURE0 + binding);
-            glBindTexture(image->Identifier(), image->GetTexture());
+            if (pipelineType == PipelineType::GRAPHICS) {
+                glActiveTexture(GL_TEXTURE0 + binding);
+                glBindTexture(image->Identifier(), image->GetTexture());
+            } else {
+                glBindImageTexture(0, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8); // TODO: get proper format
+            }
         }
 
         trackedDescriptorSets.push_back(descriptorSet);
