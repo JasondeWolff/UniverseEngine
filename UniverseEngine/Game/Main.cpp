@@ -4,10 +4,11 @@
 #include "AssetDemo.h"
 #include "LODDemo.h"
 #include "CloudDemo.h"
+#include "TerrianDemo.h"
 
 int main() {
 	UniverseEngine::Engine engine{};
-	engine.Start<CloudDemo>();
+	engine.Start<TerrianDemo>();
 
 	return 0;
 }

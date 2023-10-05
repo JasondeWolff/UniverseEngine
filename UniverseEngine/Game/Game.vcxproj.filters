@@ -42,6 +42,7 @@
     <ClCompile Include="CloudDemo.cpp">
       <Filter>Src\Games</Filter>
     </ClCompile>
+    <ClCompile Include="TerrianDemo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\UniverseEngine\.clang-format" />
@@ -119,5 +120,6 @@
     <ClInclude Include="CloudDemo.h">
       <Filter>Src\Games</Filter>
     </ClInclude>
+    <ClInclude Include="TerrianDemo.h" />
   </ItemGroup>
 </Project>

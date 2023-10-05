@@ -65,20 +65,6 @@ namespace UniverseEngine {
         chunk.materialIdx = 0;
 
         auto hScene = Engine::GetResources().CreateScene(std::move(chunk));
-
-        Material material;
-        hScene.get()->materials.emplace_back(std::move(material));
-
-        auto meshHierarchyRoot = hScene.get()->hierarchy.begin();
-        SceneNode node{};
-        node.meshIdx = std::make_optional(0);
-        node.transform = Transform(glm::vec3(gridPos.x * chunk_width, -50,
-                                gridPos.y * chunk_width), 
-            glm::identity<glm::quat>(), 
-            glm::vec3(1, 1, 1)
-        );
-        meshHierarchyRoot = hScene.get()->hierarchy.insert(meshHierarchyRoot, node);
-
         
         //this->generatedWorld[(unsigned int)gridPos.x][(unsigned int)gridPos.y] = hScene;
         /*this->generatedWorld.insert(std::pair < std::map<unsigned int, std::shared_ptr<Scene>>(
