@@ -188,13 +188,15 @@ namespace UniverseEngine {
         memcpy(uniformBufferData, &lightingUniformBufferData, sizeof(LightingUniformBuffer));
         this->lightingUniformBuffers[currentFrame]->Unmap();
 
-        pbrCmdList->BindGraphicsPipeline(this->skyboxPipeline);
+        if (this->skyboxImage) {
+            pbrCmdList->BindGraphicsPipeline(this->skyboxPipeline);
 
-        pbrCmdList->BindDescriptorSet(this->vpDescriptorSets[currentFrame], 0);
-        this->skyboxDescriptorSets[currentFrame]->SetImage(
-            1, DescriptorType::COMBINED_IMAGE_SAMPLER, this->skyboxImage, this->skyboxSampler);
-        pbrCmdList->BindDescriptorSet(this->skyboxDescriptorSets[currentFrame], 1);
-        this->skyboxCube->meshes[0].lods[0].renderable->Draw(*pbrCmdList);
+            pbrCmdList->BindDescriptorSet(this->vpDescriptorSets[currentFrame], 0);
+            this->skyboxDescriptorSets[currentFrame]->SetImage(
+                1, DescriptorType::COMBINED_IMAGE_SAMPLER, this->skyboxImage, this->skyboxSampler);
+            pbrCmdList->BindDescriptorSet(this->skyboxDescriptorSets[currentFrame], 1);
+            this->skyboxCube->meshes[0].lods[0].renderable->Draw(*pbrCmdList);
+        }
 
         pbrCmdList->BindGraphicsPipeline(this->pbrPipeline);
 

@@ -1,10 +1,10 @@
-#include "LODDemo.h"
+#include "CloudDemo.h"
 
 #include <array>
 
 using namespace UniverseEngine;
 
-void LODDemo::OnStart() {
+void CloudDemo::OnStart() {
 	Resources& resources = Engine::GetResources();
 	World& world = Engine::GetWorld();
 	Graphics& graphics = Engine::GetGraphics();
@@ -23,19 +23,10 @@ void LODDemo::OnStart() {
 	}
 	graphics.SetSkybox(skyboxTextures);
 
-	this->bunny = resources.LoadScene("Assets/Models/Showcase/Bunny/Bunny.gltf");
-	this->bunnyInstance = world.AddSceneInstance(this->bunny);
-	this->bunnyInstance->transform.SetScale(glm::vec3(2.0f));
-
-	for (size_t i = 0; i < this->bunny->meshes[0].lods.size(); i++)
-	{
-		UE_INFO("Bunny Tris LOD%i: %i", i, this->bunny->meshes[0].lods[i].indices.size() / 3);
-	}
-
 	this->camera.Start();
 }
 
-void LODDemo::Update(float deltaTime) {
+void CloudDemo::Update(float deltaTime) {
 	if (Engine::GetInput().GetKey(KeyCode::ESCAPE)) {
 		Engine::Quit();
 	}
@@ -44,15 +35,10 @@ void LODDemo::Update(float deltaTime) {
 
 	bool uiActive = true;
 	ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiCond_Always);
-	ImGui::Begin("LODDemo", &uiActive);
-	static bool wireFrame = false;
-	ImGui::Checkbox("Wireframe", &wireFrame);
+	ImGui::Begin("CloudDemo", &uiActive);
 	ImGui::End();
-
-	Engine::GetGraphics().SetPolygonMode(!wireFrame ? GraphicsPolygonMode::FILL : GraphicsPolygonMode::LINE);
-	Engine::GetGraphics().UseLODs(true);
 }
 
-void LODDemo::OnClose() {
+void CloudDemo::OnClose() {
 
 }

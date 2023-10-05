@@ -35,6 +35,7 @@ namespace UniverseEngine {
     private:
         std::shared_ptr<ComputePipeline> pipeline;
         std::shared_ptr<DescriptorSetLayout> descriptorSetLayout;
+        std::array<std::shared_ptr<Buffer>, Swapchain::MAX_FRAMES_IN_FLIGHT> uniformBuffers;
         std::array<std::shared_ptr<DescriptorSet>, Swapchain::MAX_FRAMES_IN_FLIGHT> descriptorSets;
 
         std::vector<Semaphore> semaphores;

@@ -12,6 +12,6 @@ void main()
     if (id.x >= dispatchSize.x || id.y >= dispatchSize.y) return;
 
     vec3 color = imageLoad(outputImage, id).rgb;
-    color *= vec3(float(id.x) / float(dispatchSize.x), float(id.y) / float(dispatchSize.y), 1.0);
+    //color *= vec3(float(id.x) / float(dispatchSize.x), float(id.y) / float(dispatchSize.y), 1.0);
     imageStore(outputImage, id, vec4(color, 1.0));
 }

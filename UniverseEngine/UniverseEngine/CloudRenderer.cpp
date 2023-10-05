@@ -3,6 +3,11 @@
 #include "Engine.h"
 #include "Format.h"
 
+struct UniformBuffer {
+    glm::mat4 invView;
+    glm::mat4 invProj;
+};
+
 namespace UniverseEngine {
     CloudRenderer::CloudRenderer(std::shared_ptr<LogicalDevice> device,
                                  const PhysicalDevice& physicalDevice,
@@ -11,11 +16,19 @@ namespace UniverseEngine {
         this->descriptorSetLayout = std::make_shared<DescriptorSetLayout>(
             device, std::vector<DescriptorLayoutBinding>{
                         DescriptorLayoutBinding("outputImage", 0, DescriptorType::STORAGE_IMAGE,
+                                                GraphicsStageFlagBits::COMPUTE_STAGE),
+                        DescriptorLayoutBinding("ubo", 1, DescriptorType::UNIFORM_BUFFER,
                                                 GraphicsStageFlagBits::COMPUTE_STAGE)});
 
         for (size_t i = 0; i < this->descriptorSets.size(); i++) {
+            this->uniformBuffers[i] = std::make_shared<Buffer>(
+                Format("Cloud UniformBuffer_%i", i), device, physicalDevice,
+                BufferUsageBits::UNIFORM_BUFFER, sizeof(UniformBuffer), BufferLocation::CPU_TO_GPU);
             this->descriptorSets[i] =
                 std::make_shared<DescriptorSet>(device, descriptorPool, this->descriptorSetLayout);
+
+            this->descriptorSets[i]->SetBuffer(1, DescriptorType::UNIFORM_BUFFER,
+                                               this->uniformBuffers[i]);
         }
 
         auto& resources = Engine::GetResources();
@@ -38,6 +51,16 @@ namespace UniverseEngine {
 
     void CloudRenderer::Render(CmdList& cmdList, std::shared_ptr<Image> colorImage,
                                size_t currentFrame) {
+        World& world = Engine::GetWorld();
+        Camera& camera = world.camera;
+        const glm::mat4& invViewMatrix = camera.transform.GetMatrix();
+        const glm::mat4& invProjectionMatrix = glm::inverse(camera.GetMatrix());
+
+        UniformBuffer uniformBuffer{invViewMatrix, invProjectionMatrix};
+        void* uniformBufferData = this->uniformBuffers[currentFrame]->Map();
+        memcpy(uniformBufferData, &uniformBuffer, sizeof(UniformBuffer));
+        this->uniformBuffers[currentFrame]->Unmap();
+
         cmdList.BindComputePipeline(this->pipeline);
 
         cmdList.TransitionImageLayout(colorImage, ImageLayout::PRESENT_SRC, ImageLayout::GENERAL);

@@ -39,6 +39,9 @@
     <ClCompile Include="LODDemo.cpp">
       <Filter>Src\Games</Filter>
     </ClCompile>
+    <ClCompile Include="CloudDemo.cpp">
+      <Filter>Src\Games</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\UniverseEngine\.clang-format" />
@@ -81,11 +84,21 @@
     <None Include="Assets\Shaders\Vulkan\present.frag">
       <Filter>Assets\Shaders\Vulkan</Filter>
     </None>
-    <None Include="Assets\Shaders\GL\clouds.comp" />
-    <None Include="Assets\Shaders\GL\imgui.frag" />
-    <None Include="Assets\Shaders\GL\imgui.vert" />
-    <None Include="Assets\Shaders\GL\present.frag" />
-    <None Include="Assets\Shaders\GL\present.vert" />
+    <None Include="Assets\Shaders\GL\clouds.comp">
+      <Filter>Assets\Shaders\GL</Filter>
+    </None>
+    <None Include="Assets\Shaders\GL\imgui.frag">
+      <Filter>Assets\Shaders\GL</Filter>
+    </None>
+    <None Include="Assets\Shaders\GL\imgui.vert">
+      <Filter>Assets\Shaders\GL</Filter>
+    </None>
+    <None Include="Assets\Shaders\GL\present.frag">
+      <Filter>Assets\Shaders\GL</Filter>
+    </None>
+    <None Include="Assets\Shaders\GL\present.vert">
+      <Filter>Assets\Shaders\GL</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeFormCamera.h">
@@ -101,6 +114,9 @@
       <Filter>Src</Filter>
     </ClInclude>
     <ClInclude Include="LODDemo.h">
+      <Filter>Src\Games</Filter>
+    </ClInclude>
+    <ClInclude Include="CloudDemo.h">
       <Filter>Src\Games</Filter>
     </ClInclude>
   </ItemGroup>
