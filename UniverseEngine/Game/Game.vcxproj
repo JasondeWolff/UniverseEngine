@@ -101,6 +101,7 @@
     <ClCompile Include="MyGame.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="SpaceShip.cpp" />
+    <ClCompile Include="TerrianDemo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\UniverseEngine\.clang-format" />
@@ -136,6 +137,7 @@
     <ClInclude Include="LODDemo.h" />
     <ClInclude Include="MyGame.h" />
     <ClInclude Include="SpaceShip.h" />
+    <ClInclude Include="TerrianDemo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

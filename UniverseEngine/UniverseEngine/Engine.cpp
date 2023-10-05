@@ -66,8 +66,8 @@ namespace UniverseEngine {
 
             ImGui::NewFrame();
             this->game->Update(deltaTime);
-            GetWorld().Update();
             GetInput().Update();
+            GetWorld().Update();
             GetGraphics().Update();
             GetResources().Update();
             
