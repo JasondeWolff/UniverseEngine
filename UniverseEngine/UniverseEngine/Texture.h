@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TextureRenderable.h"
+#include "Image.h"
 
 namespace UniverseEngine {
     class Graphics;
@@ -14,7 +15,7 @@ namespace UniverseEngine {
     struct Texture {
         Texture();
         Texture(const std::string& name, unsigned char* data, unsigned width, unsigned height,
-                TextureType type, unsigned mips = 1);
+                TextureType type, ImageDimensions dimensions, unsigned depth, unsigned mips = 1);
 
         Texture(const Texture& other) = delete;
         Texture& operator=(const Texture& other) = delete;
@@ -27,8 +28,10 @@ namespace UniverseEngine {
         unsigned char* data;
         unsigned width;
         unsigned height;
+        unsigned depth;
         unsigned mips;
 
+        ImageDimensions dimensions;
         TextureType type;
 
         const TextureRenderable& Renderable() const;

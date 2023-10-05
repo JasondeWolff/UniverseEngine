@@ -10,6 +10,8 @@ layout(binding = 1) uniform UniformBufferObject {
     mat4 invProj;
 } ubo;
 
+layout (binding = 2, rgba8) uniform image3D noise;
+
 struct Ray {
     vec3 origin;
     vec3 direction;

@@ -267,7 +267,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>glfw3.lib;glew32.lib;opengl32.lib;vulkan-1.lib;FastNoise.lib</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glew32.lib;opengl32.lib;vulkan-1.lib;FastNoiseD.lib</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>$(SolutionDir)compile_shaders.bat</Command>

@@ -34,17 +34,21 @@ namespace UniverseEngine {
         TRANSFER_DST_OPTIMAL,
     };
 
+    enum class ImageDimensions { IMAGE_2D, IMAGE_3D };
+
     class Image {
     public:
         Image(const std::string& name, std::shared_ptr<LogicalDevice> device,
               const PhysicalDevice& physicalDevice, uint32_t width, uint32_t height, uint32_t mips,
-              ImageUsage usage, GraphicsFormat format, uint32_t arrayLayers = 1);
+              ImageUsage usage, GraphicsFormat format, uint32_t arrayLayers = 1,
+              ImageDimensions type = ImageDimensions::IMAGE_2D, uint32_t depth = 1);
         ~Image();
         Image(const Image& other) = delete;
         Image& operator=(const Image& other) = delete;
 
         uint32_t Width() const;
         uint32_t Height() const;
+        uint32_t Depth() const;
         uint32_t Mips() const;
         uint32_t ArrayLayers() const;
         GraphicsFormat Format() const;
@@ -52,6 +56,7 @@ namespace UniverseEngine {
     private:
         uint32_t width;
         uint32_t height;
+        uint32_t depth;
         uint32_t mips;
         uint32_t arrayLayers;
         GraphicsFormat format;

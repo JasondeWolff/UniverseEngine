@@ -31,7 +31,7 @@ namespace UniverseEngine {
         io.Fonts->GetTexDataAsRGBA32(&data, &width, &height);
         this->fontTexture = Engine::GetResources().CreateTexture(
             "ImGui Font", data, static_cast<unsigned>(width), static_cast<unsigned>(height),
-            TextureType::UNORM, false);
+            TextureType::UNORM, ImageDimensions::IMAGE_2D, 1, false);
         this->sampler = std::make_shared<Sampler>("Sampler", device, physicalDevice);
 
         this->descriptorSetLayout = std::make_shared<DescriptorSetLayout>(

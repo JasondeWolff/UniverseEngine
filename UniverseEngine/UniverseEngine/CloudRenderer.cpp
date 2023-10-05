@@ -1,5 +1,7 @@
 #include "CloudRenderer.h"
 
+#include <FastNoise/FastNoise.h>
+
 #include "Engine.h"
 #include "Format.h"
 
@@ -43,6 +45,8 @@ namespace UniverseEngine {
             this->semaphores.emplace_back(
                 std::move(Semaphore(Format("Cloud Renderer %i", i), device)));
         }
+
+        this->GenerateNoise();
     }
 
     Semaphore& CloudRenderer::CurrentSemaphore(size_t currentFrame) {
@@ -71,5 +75,30 @@ namespace UniverseEngine {
         cmdList.Dispatch(DivideUp(colorImage->Width(), 16), DivideUp(colorImage->Height(), 16));
 
         cmdList.TransitionImageLayout(colorImage, ImageLayout::GENERAL, ImageLayout::PRESENT_SRC);
+    }
+
+    void CloudRenderer::GenerateNoise() {
+        size_t resolution = 32;
+
+        auto fnCellular = FastNoise::New<FastNoise::CellularDistance>();
+        auto fnFractal = FastNoise::New<FastNoise::FractalFBm>();
+        fnFractal->SetSource(fnCellular);
+        fnFractal->SetOctaveCount(5);
+
+        std::vector<float> noiseData(resolution * resolution * resolution);
+        fnFractal->GenUniformGrid3D(noiseData.data(), 0, 0, 0, static_cast<int>(resolution),
+                                    static_cast<int>(resolution), static_cast<int>(resolution),
+                                    0.2f, 1337);
+
+        std::vector<unsigned char> noiseData8(noiseData.size());
+        for (size_t i = 0; i < noiseData.size(); i++) {
+            noiseData8[i] = static_cast<unsigned char>(noiseData[i] * 255.99f);
+        }
+        return;
+        this->noise = Engine::GetResources().CreateTexture(
+            "Cloud Noise", noiseData8.data(),
+            static_cast<unsigned>(resolution), static_cast<unsigned>(resolution),
+            TextureType::UNORM, ImageDimensions::IMAGE_3D, static_cast<unsigned>(resolution),
+            false);
     }
 }  // namespace UniverseEngine

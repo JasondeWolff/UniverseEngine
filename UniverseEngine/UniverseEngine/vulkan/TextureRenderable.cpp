@@ -12,7 +12,7 @@ namespace UniverseEngine {
     TextureRenderable::TextureRenderable(std::shared_ptr<LogicalDevice> device,
                                          const PhysicalDevice& physicalDevice,
                                          CmdList& uploadCmdList, const Texture& texture) {
-        size_t imageSize = texture.width * texture.height * 4;
+        size_t imageSize = texture.width * texture.height * texture.depth * 4;
 
         std::shared_ptr<Buffer> stagingBuffer =
             std::make_shared<Buffer>(Format("%s_STAGING_IMAGE_BUFFER", texture.name.c_str()),
@@ -31,7 +31,7 @@ namespace UniverseEngine {
             texture.name, device, physicalDevice, texture.width, texture.height, texture.mips,
             ImageUsageBits::TRANSFER_SRC_IMAGE | ImageUsageBits::TRANSFER_DST_IMAGE |
                 ImageUsageBits::SAMPLED_IMAGE,
-            format);
+            format, 1, texture.dimensions, texture.depth);
 
         uploadCmdList.TransitionImageLayout(this->image, ImageLayout::UNDEFINED,
                                             ImageLayout::TRANSFER_DST_OPTIMAL);

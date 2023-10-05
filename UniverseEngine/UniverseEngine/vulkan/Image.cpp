@@ -36,20 +36,23 @@ namespace UniverseEngine {
 
     Image::Image(const std::string& name, std::shared_ptr<LogicalDevice> device,
                  const PhysicalDevice& physicalDevice, uint32_t width, uint32_t height,
-                 uint32_t mips, ImageUsage usage, GraphicsFormat format, uint32_t arrayLayers)
+                 uint32_t mips, ImageUsage usage, GraphicsFormat format, uint32_t arrayLayers,
+                 ImageDimensions dims, unsigned depth)
         : device(device),
           width(width),
           height(height),
+          depth(depth),
           mips(mips),
           arrayLayers(arrayLayers),
           format(format),
           imageView(VK_NULL_HANDLE) {
         VkImageCreateInfo createInfo{};
         createInfo.sType = VkStructureType::VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-        createInfo.imageType = VK_IMAGE_TYPE_2D;
+        createInfo.imageType =
+            (dims == ImageDimensions::IMAGE_2D) ? VK_IMAGE_TYPE_2D : VK_IMAGE_TYPE_3D;
         createInfo.extent.width = width;
         createInfo.extent.height = height;
-        createInfo.extent.depth = 1;
+        createInfo.extent.depth = depth;
         createInfo.mipLevels = mips;
         createInfo.format = VkGraphicsFormat::To(format);
         createInfo.tiling = VkImageTiling::VK_IMAGE_TILING_OPTIMAL;
@@ -72,7 +75,11 @@ namespace UniverseEngine {
         VkImageViewCreateInfo viewInfo{};
         viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         viewInfo.image = this->image;
-        viewInfo.viewType = (arrayLayers == 1) ? VK_IMAGE_VIEW_TYPE_2D : VK_IMAGE_VIEW_TYPE_CUBE;
+        viewInfo.viewType =
+            (arrayLayers == 1)
+                                ? ((dims == ImageDimensions::IMAGE_2D) ? VK_IMAGE_VIEW_TYPE_2D
+                                                                       : VK_IMAGE_VIEW_TYPE_3D)
+                : VK_IMAGE_VIEW_TYPE_CUBE;
         viewInfo.format = VkGraphicsFormat::To(format);
         viewInfo.subresourceRange.aspectMask =
             IsDepthFormat(format) ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
@@ -93,6 +100,7 @@ namespace UniverseEngine {
           allocation(VK_NULL_HANDLE),
           width(width),
           height(height),
+          depth(1),
           mips(1),
           arrayLayers(1) {
     }

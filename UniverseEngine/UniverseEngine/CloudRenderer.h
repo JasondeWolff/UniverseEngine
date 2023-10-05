@@ -38,6 +38,10 @@ namespace UniverseEngine {
         std::array<std::shared_ptr<Buffer>, Swapchain::MAX_FRAMES_IN_FLIGHT> uniformBuffers;
         std::array<std::shared_ptr<DescriptorSet>, Swapchain::MAX_FRAMES_IN_FLIGHT> descriptorSets;
 
+        std::shared_ptr<Texture> noise;
+
         std::vector<Semaphore> semaphores;
+
+        void GenerateNoise();
     };
 }  // namespace UniverseEngine
