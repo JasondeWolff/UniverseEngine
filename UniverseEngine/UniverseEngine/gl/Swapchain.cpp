@@ -24,6 +24,11 @@ namespace UniverseEngine {
             inflightFences.emplace_back(std::move(std::make_shared<Fence>(device, true)));
         }
 
+        this->renderPass = std::make_shared<RenderPass>(
+            this->device, std::vector<GraphicsFormat>{this->Format()}, std::nullopt);
+        this->framebuffer = std::unique_ptr<Framebuffer>(new Framebuffer(
+            device, std::vector<std::shared_ptr<Image>>{this->image}, this->renderPass, 0));
+
         glEnable(GL_FRAMEBUFFER_SRGB);
     }
 
@@ -50,11 +55,8 @@ namespace UniverseEngine {
         return this->renderFinishedSemaphores[static_cast<size_t>(this->currentFrame)];
     }
 
-    void Swapchain::RebuildFramebuffers(std::shared_ptr<RenderPass> renderPass,
-                                        std::shared_ptr<Image> depthImage) {
-        this->framebuffer.reset();
-        this->framebuffer = std::move(std::make_unique<Framebuffer>(
-            this->device, std::vector<std::shared_ptr<Image>>{this->image}, renderPass));
+    std::shared_ptr<RenderPass> Swapchain::GetRenderPass() {
+        return this->renderPass;
     }
 
     std::shared_ptr<Fence> Swapchain::NextImage() {

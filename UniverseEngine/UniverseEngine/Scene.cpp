@@ -1,6 +1,15 @@
 #include "Scene.h"
 
 namespace UniverseEngine {
+    void Scene::BuildLODS() {
+        for (auto& lodMesh : this->meshes) {
+            for (size_t i = 1; i < lodMesh.configs.size(); i++) {
+                lodMesh.lods.emplace_back(
+                    lodMesh.lods[0].BuildSimplified(lodMesh.configs[i].detail));
+            }
+        }
+    }
+
     tree<SceneNode> Scene::TransformedHierarchy(const Transform& root) const {
         tree<SceneNode> result = this->hierarchy;
 

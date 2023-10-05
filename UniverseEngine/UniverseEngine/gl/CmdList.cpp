@@ -5,9 +5,11 @@
 
 #include "../Buffer.h"
 #include "../CmdList.h"
+#include "../ComputePipeline.h"
 #include "../DescriptorSet.h"
 #include "../GraphicsPipeline.h"
 #include "../Logging.h"
+#include "../Framebuffer.h"
 
 namespace UniverseEngine {
     CmdList::CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue)
@@ -30,6 +32,7 @@ namespace UniverseEngine {
         this->trackedPushConstants.clear();
 
         this->boundGraphicsPipeline.reset();
+        this->boundComputePipeline.reset();
         this->trackedRenderPasses.clear();
         this->trackedBuffers.clear();
         this->trackedDescriptorSets.clear();
@@ -81,6 +84,8 @@ namespace UniverseEngine {
 
     void CmdList::BeginRenderPass(std::shared_ptr<RenderPass> renderPass,
                                   const Framebuffer& framebuffer, const glm::vec4& clearColor) {
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.GetFramebuffer());
+
         glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
@@ -88,7 +93,8 @@ namespace UniverseEngine {
     void CmdList::EndRenderPass() {
     }
 
-    void CmdList::BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet, uint32_t set) {
+    void CmdList::BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet, uint32_t set,
+                                    PipelineType pipelineType) {
         for (auto& bufferBinding : descriptorSet->Buffers()) {
             uint32_t binding = bufferBinding.first;
             auto& buffer = bufferBinding.second;
@@ -101,8 +107,12 @@ namespace UniverseEngine {
             auto& image = imageBinding.second.first;
             auto& sampler = imageBinding.second.second;
 
-            glActiveTexture(GL_TEXTURE0 + binding);
-            glBindTexture(image->Identifier(), image->GetTexture());
+            if (pipelineType == PipelineType::GRAPHICS) {
+                glActiveTexture(GL_TEXTURE0 + binding);
+                glBindTexture(image->Identifier(), image->GetTexture());
+            } else {
+                glBindImageTexture(0, image->GetTexture(), 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA8); // TODO: get proper format
+            }
         }
 
         trackedDescriptorSets.push_back(descriptorSet);
@@ -134,6 +144,12 @@ namespace UniverseEngine {
         this->boundGraphicsPipeline = graphicsPipeline;
     }
 
+    void CmdList::BindComputePipeline(std::shared_ptr<ComputePipeline> computePipeline) {
+        glUseProgram(computePipeline->ShaderProgram());
+
+        this->boundComputePipeline = computePipeline;
+    }
+
     void CmdList::Draw(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex,
                        uint32_t firstInstance) {
         UE_ASSERT_MSG(instanceCount == 1, "GL doesn't support instancing.");
@@ -150,6 +166,10 @@ namespace UniverseEngine {
 
         glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indexCount), GL_UNSIGNED_INT,
                        (void*)(firstIndex * sizeof(GLuint)));
+    }
+
+    void CmdList::Dispatch(uint32_t x, uint32_t y, uint32_t z) {
+        glDispatchCompute(x, y, z);
     }
 
     void CmdList::PushConstant(const std::string& name, void* constant, size_t size,

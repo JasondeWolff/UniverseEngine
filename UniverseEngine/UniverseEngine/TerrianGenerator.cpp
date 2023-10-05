@@ -1,4 +1,5 @@
 #include "TerrianGenerator.h"
+
 #include "Engine.h"
 #include "Resources.h"
 #include "Scene.h"
@@ -10,7 +11,6 @@
 
 namespace UniverseEngine {
     TerrianGenerator::TerrianGenerator() {
-        
     }
 
     void TerrianGenerator::Init(int width, int height, int widthSegments, int heightSegments)

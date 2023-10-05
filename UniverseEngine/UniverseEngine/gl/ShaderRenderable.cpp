@@ -16,6 +16,8 @@ namespace UniverseEngine {
                 return GL_VERTEX_SHADER;
             case ShaderType::SHADER_FRAGMENT:
                 return GL_FRAGMENT_SHADER;
+            case ShaderType::SHADER_COMPUTE:
+                return GL_COMPUTE_SHADER;
             default: {
                 UE_FATAL("Unsupported shader type.");
                 return NULL;

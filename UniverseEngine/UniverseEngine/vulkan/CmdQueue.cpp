@@ -5,9 +5,9 @@
 
 #include "../CmdList.h"
 #include "../CmdQueue.h"
+#include "../Fence.h"
 #include "../Logging.h"
 #include "../Semaphore.h"
-#include "../Fence.h"
 
 namespace UniverseEngine {
     CmdQueue::CmdQueue(const std::shared_ptr<LogicalDevice> device,
@@ -21,6 +21,8 @@ namespace UniverseEngine {
             VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT | VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
         if (type == QueueType::GRAPHICS)
             poolInfo.queueFamilyIndex = physicalDevice.GraphicsFamily();
+        else if (type == QueueType::COMPUTE)
+            poolInfo.queueFamilyIndex = physicalDevice.ComputeFamily();
         else
             poolInfo.queueFamilyIndex = physicalDevice.PresentFamily();
 
@@ -36,8 +38,8 @@ namespace UniverseEngine {
     }
 
     void CmdQueue::SubmitCmdList(std::shared_ptr<CmdList> cmdList, std::shared_ptr<Fence> fence,
-                       const std::vector<Semaphore*>& waitSemaphores,
-                       const std::vector<Semaphore*>& signalSemaphores) {
+                                 const std::vector<Semaphore*>& waitSemaphores,
+                                 const std::vector<Semaphore*>& signalSemaphores) {
         cmdList->End();
 
         std::vector<VkSemaphore> vkWaitSemaphores;
@@ -61,6 +63,8 @@ namespace UniverseEngine {
         submitInfo.pCommandBuffers = &cmdList->cmdBuffer;
         submitInfo.pWaitDstStageMask = waitStages;
 
+        if (!fence)
+            fence = std::make_shared<Fence>(this->device);
         vkQueueSubmit(this->queue, 1, &submitInfo, fence->GetFence());
 
         this->busyCmdLists.push(InFlightCmdList{fence, cmdList});

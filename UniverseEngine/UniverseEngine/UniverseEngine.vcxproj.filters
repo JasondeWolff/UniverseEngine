@@ -53,9 +53,6 @@
     <Filter Include="Src\Graphics\Vulkan\Specific">
       <UniqueIdentifier>{87f5b487-77f0-4bcc-894b-e38252c33612}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Math\NoiseGenerators">
-      <UniqueIdentifier>{51b61802-7ce8-4480-8168-4ed99d334f4a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="imgui">
       <UniqueIdentifier>{8bacb998-206e-40ee-9045-0ff27754016b}</UniqueIdentifier>
     </Filter>
@@ -248,6 +245,15 @@
       <Filter>Src\Resources\Assets</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiRenderer.h">
+      <Filter>Src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshSimplifier.h">
+      <Filter>Src\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputePipeline.h">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CloudRenderer.h">
       <Filter>Src\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
@@ -503,6 +509,18 @@
     </ClCompile>
     <ClCompile Include="ImGuiRenderer.cpp">
       <Filter>Src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshSimplifier.cpp">
+      <Filter>Src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\ComputePipeline.cpp">
+      <Filter>Src\Graphics\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="CloudRenderer.cpp">
+      <Filter>Src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="gl\ComputePipeline.cpp">
+      <Filter>Src\Graphics\GL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -13,8 +13,10 @@
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CloudRenderer.h" />
     <ClInclude Include="CmdList.h" />
     <ClInclude Include="CmdQueue.h" />
+    <ClInclude Include="ComputePipeline.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="DescriptorLayoutBinding.h" />
     <ClInclude Include="DescriptorPool.h" />
@@ -32,6 +34,7 @@
     <ClInclude Include="ImGuiRenderer.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="MaterialRenderable.h" />
+    <ClInclude Include="MeshSimplifier.h" />
     <ClInclude Include="PushConstantRange.h" />
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="TextureRenderable.h" />
@@ -78,7 +81,10 @@
   <ItemGroup>
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CloudRenderer.cpp" />
     <ClCompile Include="CmdQueue.cpp" />
+    <ClCompile Include="gl\ComputePipeline.cpp" />
+    <ClCompile Include="vulkan\ComputePipeline.cpp" />
     <ClCompile Include="gl\Buffer.cpp" />
     <ClCompile Include="gl\DescriptorPool.cpp" />
     <ClCompile Include="gl\DescriptorSet.cpp" />
@@ -93,6 +99,7 @@
     <ClCompile Include="imgui\imgui_draw.cpp" />
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
+    <ClCompile Include="MeshSimplifier.cpp" />
     <ClCompile Include="TextureRenderable.cpp" />
     <ClCompile Include="vulkan\VkVma.cpp" />
     <ClCompile Include="vulkan\MaterialRenderable.cpp" />
@@ -220,8 +227,8 @@
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
     <PublicIncludeDirectories>$(PublicIncludeDirectories)</PublicIncludeDirectories>
-    <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\imgui\include\;$(SolutionDir)Dependencies\tinygltf\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\vulkan\include\;$(SolutionDir)Dependencies\FastNoiseLite\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\GLFW\bin\;$(SolutionDir)Dependencies\glew\bin\;$(SolutionDir)Dependencies\vulkan\bin\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\imgui\include\;$(SolutionDir)Dependencies\tinygltf\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\vulkan\include\;$(SolutionDir)Dependencies\FastNoise2\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLFW\bin\;$(SolutionDir)Dependencies\glew\bin\;$(SolutionDir)Dependencies\vulkan\bin\;$(SolutionDir)Dependencies\FastNoise2\bin\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugVulkan|x64'">
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
@@ -234,8 +241,8 @@
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
     <PublicIncludeDirectories>$(PublicIncludeDirectories)</PublicIncludeDirectories>
-    <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\imgui\include\;$(SolutionDir)Dependencies\tinygltf\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\vulkan\include\;$(SolutionDir)Dependencies\FastNoiseLite\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Dependencies\GLFW\bin\;$(SolutionDir)Dependencies\glew\bin\;$(SolutionDir)Dependencies\vulkan\bin\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tinyobjloader\include\;$(SolutionDir)Dependencies\stb_image\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\imgui\include\;$(SolutionDir)Dependencies\tinygltf\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\vulkan\include\;$(SolutionDir)Dependencies\FastNoise2\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Dependencies\GLFW\bin\;$(SolutionDir)Dependencies\glew\bin\;$(SolutionDir)Dependencies\vulkan\bin\;$(SolutionDir)Dependencies\FastNoise2\bin\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseVulkan|x64'">
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
@@ -260,7 +267,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>glfw3.lib;glew32.lib;opengl32.lib;vulkan-1.lib</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glew32.lib;opengl32.lib;vulkan-1.lib;FastNoise.lib</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>$(SolutionDir)compile_shaders.bat</Command>
@@ -290,7 +297,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>glfw3.lib;glew32.lib;opengl32.lib;vulkan-1.lib</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glew32.lib;opengl32.lib;vulkan-1.lib;FastNoise.lib</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>$(SolutionDir)compile_shaders.bat</Command>

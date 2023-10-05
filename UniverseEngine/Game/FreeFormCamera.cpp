@@ -4,7 +4,7 @@
 using namespace UniverseEngine;
 
 void FreeFormCamera::Start() {
-	Engine::GetInput().SetCursorMode(CursorMode::DISABLED);
+	this->active = true;
 }
 
 void FreeFormCamera::Update(float deltaTime) {
@@ -14,8 +14,13 @@ void FreeFormCamera::Update(float deltaTime) {
 
 	if (input.GetKeyDown(KeyCode::F1))
 		this->active = !this->active;
-	if (!this->active)
+	if (this->active) {
+		Engine::GetInput().SetCursorMode(CursorMode::DISABLED);
+	} else {
+		Engine::GetInput().SetCursorMode(CursorMode::ENABLED);
 		return;
+	}
+		
 
 	glm::vec3 translation{};
 	if (input.GetKey(KeyCode::W)) {

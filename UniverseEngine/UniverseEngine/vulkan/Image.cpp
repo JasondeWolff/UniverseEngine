@@ -24,6 +24,9 @@ namespace UniverseEngine {
         if (usage.test(GetImageUsageBitIndex(ImageUsageBits::STORAGE_IMAGE))) {
             flags |= VkImageUsageFlagBits::VK_IMAGE_USAGE_STORAGE_BIT;
         }
+        if (usage.test(GetImageUsageBitIndex(ImageUsageBits::COLOR_ATTACHMENT))) {
+            flags |= VkImageUsageFlagBits::VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+        }
         if (usage.test(GetImageUsageBitIndex(ImageUsageBits::DEPTH_STENCIL_ATTACHMENT))) {
             flags |= VkImageUsageFlagBits::VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
         }

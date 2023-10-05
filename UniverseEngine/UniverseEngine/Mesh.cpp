@@ -1,5 +1,7 @@
 #include "Mesh.h"
 
+#include "MeshSimplifier.h"
+
 namespace UniverseEngine {
     bool Mesh::HasTangents() const {
         return glm::length(glm::vec3(this->vertices[0].tangent)) > 0.0f;
@@ -34,7 +36,7 @@ namespace UniverseEngine {
 
             float rdiv = s1 * t2 - s2 * t1;
             float r = (rdiv == 0.0f) ? 0.0f : 1.0f / rdiv;
-            
+
             glm::vec3 sdir((t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r,
                            (t2 * z1 - t1 * z2) * r);
             glm::vec3 tdir((s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r,
@@ -69,4 +71,26 @@ namespace UniverseEngine {
         this->indices.clear();
         this->indices.shrink_to_fit();
     }
-}
+
+    Mesh Mesh::BuildSimplified(float percentage) const {
+        MeshSimplifier simplifier(this->name, this->materialIdx, this->vertices, this->indices);
+        return simplifier.BuildSimplified(percentage);
+    }
+
+    LODMesh::LODMesh(Mesh&& mesh) : lods{} {
+        this->lods.emplace_back(std::move(mesh));
+        this->configs.emplace_back(Config{1.0f, 4.0f});
+    }
+
+    std::optional<size_t> LODMesh::BestLOD(const glm::vec3& observer, const glm::vec3& mesh) const {
+        float distance = glm::distance(observer, mesh);
+        for (size_t i = 0; i < this->configs.size(); i++) {
+            const Config& config = this->configs[i];
+
+            if (distance <= config.maxDistance) {
+                return std::make_optional(i);
+            }
+        }
+        return std::nullopt;
+    }
+}  // namespace UniverseEngine

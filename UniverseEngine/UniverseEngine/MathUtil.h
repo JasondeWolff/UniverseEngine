@@ -1,8 +1,8 @@
 #pragma once
 
 #include <glm/gtc/quaternion.hpp>
-#include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
 namespace UniverseEngine {
     inline constexpr glm::vec3 Right() {
@@ -20,4 +20,6 @@ namespace UniverseEngine {
 
     glm::vec3 ClampMagnitude(const glm::vec3& v, float magnitude = 1.0f);
     glm::vec2 ClampMagnitude(const glm::vec2& v, float magnitude = 1.0f);
+
+    uint32_t DivideUp(uint32_t n, uint32_t d);
 }  // namespace UniverseEngine

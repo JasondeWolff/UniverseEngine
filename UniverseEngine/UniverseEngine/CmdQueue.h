@@ -14,6 +14,7 @@ namespace UniverseEngine {
 
     enum class QueueType {
         GRAPHICS,
+        COMPUTE,
         PRESENT
     };
 

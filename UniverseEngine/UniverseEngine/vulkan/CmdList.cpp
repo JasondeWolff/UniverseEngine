@@ -6,6 +6,7 @@
 #include "../Buffer.h"
 #include "../CmdList.h"
 #include "../CmdQueue.h"
+#include "../ComputePipeline.h"
 #include "../DescriptorSet.h"
 #include "../GraphicsPipeline.h"
 #include "../Logging.h"
@@ -19,6 +20,8 @@ namespace UniverseEngine {
                 return VkImageLayout::VK_IMAGE_LAYOUT_UNDEFINED;
             case ImageLayout::GENERAL:
                 return VkImageLayout::VK_IMAGE_LAYOUT_GENERAL;
+            case ImageLayout::PRESENT_SRC:
+                return VkImageLayout::VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
             case ImageLayout::COLOR_ATTACHMENT_OPTIMAL:
                 return VkImageLayout::VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
             case ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
@@ -70,6 +73,7 @@ namespace UniverseEngine {
         vkResetCommandBuffer(this->cmdBuffer, 0);
 
         this->boundGraphicsPipeline.reset();
+        this->boundComputePipeline.reset();
         this->trackedRenderPasses.clear();
         this->trackedBuffers.clear();
         this->trackedImages.clear();
@@ -121,7 +125,6 @@ namespace UniverseEngine {
         imageCopy.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         imageCopy.dstSubresource.layerCount = 1;
         imageCopy.dstOffset = {0, 0, 0};
-        
 
         uint32_t mipWidth = cubemap->Width();
         uint32_t mipHeight = cubemap->Height();
@@ -278,6 +281,30 @@ namespace UniverseEngine {
             barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
             sourceStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
             destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+        } else if (vkOldLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL &&
+                   vkNewLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR) {
+            barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+            barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+            sourceStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+            destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        } else if (vkOldLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR &&
+                   vkNewLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
+            barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+            barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+            sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+        } else if (vkOldLayout == VK_IMAGE_LAYOUT_GENERAL &&
+                   vkNewLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR) {
+            barrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+            barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+            sourceStage = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
+            destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        } else if (vkOldLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR &&
+                   vkNewLayout == VK_IMAGE_LAYOUT_GENERAL) {
+            barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+            barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+            sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            destinationStage = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
         } else {
             UE_FATAL("Unsupported image layout transition.");
         }
@@ -356,10 +383,17 @@ namespace UniverseEngine {
         vkCmdEndRenderPass(this->cmdBuffer);
     }
 
-    void CmdList::BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet, uint32_t set) {
+    void CmdList::BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet, uint32_t set,
+                                    PipelineType pipelineType) {
         VkDescriptorSet descriptorSets[] = {descriptorSet->GetDescriptorSet()};
-        vkCmdBindDescriptorSets(this->cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                this->boundGraphicsPipeline->GetLayout(), set, 1, descriptorSets, 0,
+
+        VkPipelineBindPoint bindPoint = (pipelineType == PipelineType::GRAPHICS)
+                                            ? VK_PIPELINE_BIND_POINT_GRAPHICS
+                                            : VK_PIPELINE_BIND_POINT_COMPUTE;
+        VkPipelineLayout layout = (pipelineType == PipelineType::GRAPHICS)
+                                      ? this->boundGraphicsPipeline->GetLayout()
+                                      : this->boundComputePipeline->GetLayout();
+        vkCmdBindDescriptorSets(this->cmdBuffer, bindPoint, layout, set, 1, descriptorSets, 0,
                                 nullptr);
 
         trackedDescriptorSets.push_back(descriptorSet);
@@ -372,6 +406,13 @@ namespace UniverseEngine {
         this->boundGraphicsPipeline = graphicsPipeline;
     }
 
+    void CmdList::BindComputePipeline(std::shared_ptr<ComputePipeline> computePipeline) {
+        vkCmdBindPipeline(this->cmdBuffer, VK_PIPELINE_BIND_POINT_COMPUTE,
+                          computePipeline->GetPipeline());
+
+        this->boundComputePipeline = computePipeline;
+    }
+
     void CmdList::Draw(uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex,
                        uint32_t firstInstance) {
         vkCmdDraw(this->cmdBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
@@ -381,6 +422,10 @@ namespace UniverseEngine {
                                uint32_t firstInstance, uint32_t vertexOffset) {
         vkCmdDrawIndexed(this->cmdBuffer, indexCount, instanceCount, firstIndex, vertexOffset,
                          firstInstance);
+    }
+
+    void CmdList::Dispatch(uint32_t x, uint32_t y, uint32_t z) {
+        vkCmdDispatch(this->cmdBuffer, x, y, z);
     }
 
     void CmdList::PushConstant(const std::string& name, void* constant, size_t size,

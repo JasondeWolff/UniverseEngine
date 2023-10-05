@@ -9,10 +9,12 @@ namespace UniverseEngine {
     class RenderPass;
     class LogicalDevice;
     class Image;
+    class Swapchain;
 
     class Framebuffer {
     public:
-        Framebuffer(std::shared_ptr<LogicalDevice> device, std::vector<std::shared_ptr<Image>> images,
+        Framebuffer(std::shared_ptr<LogicalDevice> device,
+                    std::vector<std::shared_ptr<Image>> images,
                     std::shared_ptr<RenderPass> renderPass);
         ~Framebuffer();
 
@@ -29,7 +31,16 @@ namespace UniverseEngine {
         std::vector<std::shared_ptr<Image>> images;
 
 #ifdef GRAPHICS_API_GL
+    public:
+        unsigned GetFramebuffer() const;
 
+    private:
+        friend class Swapchain;
+        Framebuffer(std::shared_ptr<LogicalDevice> device,
+                    std::vector<std::shared_ptr<Image>> images,
+                    std::shared_ptr<RenderPass> renderPass, unsigned fbo);
+
+        unsigned framebuffer;
 #elif defined(GRAPHICS_API_VULKAN)
     public:
         VkFramebuffer GetFramebuffer() const;

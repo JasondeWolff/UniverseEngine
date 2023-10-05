@@ -13,6 +13,11 @@ namespace UniverseEngine {
     class DescriptorSetLayout;
     struct PushConstantRange;
 
+    enum class PipelineType {
+        GRAPHICS,
+        COMPUTE
+    };
+
     enum class GraphicsPolygonMode {
         FILL,
         LINE
@@ -21,6 +26,7 @@ namespace UniverseEngine {
     struct GraphicsPipelineInfo {
         bool ignoreDepth = false;
         bool blending = false;
+        bool inputVertices = true;
         GraphicsPolygonMode polygonMode = GraphicsPolygonMode::FILL;
     };
 

@@ -12,13 +12,14 @@ namespace UniverseEngine {
     VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const GraphicsInstance& instance,
                                                const PhysicalDevice& physicalDevice) {
         uint32_t formatCount;
-        UE_ASSERT(!vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice.GetPhysicalDevice(),
-                                             instance.GetSurface(), &formatCount, nullptr));
+        UE_ASSERT(!vkGetPhysicalDeviceSurfaceFormatsKHR(
+            physicalDevice.GetPhysicalDevice(), instance.GetSurface(), &formatCount, nullptr));
         UE_ASSERT_MSG(formatCount > 0, "No swapchain formats found.");
 
         std::vector<VkSurfaceFormatKHR> formats(formatCount);
         UE_ASSERT(!vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice.GetPhysicalDevice(),
-                                             instance.GetSurface(), &formatCount, formats.data()));
+                                                        instance.GetSurface(), &formatCount,
+                                                        formats.data()));
 
         for (const auto& availableFormat : formats) {
             if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB &&
@@ -38,9 +39,9 @@ namespace UniverseEngine {
         UE_ASSERT_MSG(presentModeCount > 0, "No present modes found.");
 
         std::vector<VkPresentModeKHR> presentModes(presentModeCount);
-        UE_ASSERT(!vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice.GetPhysicalDevice(),
-                                                  instance.GetSurface(), &presentModeCount,
-                                                  presentModes.data()));
+        UE_ASSERT(!vkGetPhysicalDeviceSurfacePresentModesKHR(
+            physicalDevice.GetPhysicalDevice(), instance.GetSurface(), &presentModeCount,
+            presentModes.data()));
 
         for (const auto& availablePresentMode : presentModes) {
             if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
@@ -55,7 +56,7 @@ namespace UniverseEngine {
                                 const PhysicalDevice& physicalDevice) {
         VkSurfaceCapabilitiesKHR capabilities;
         UE_ASSERT(!vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice.GetPhysicalDevice(),
-                                                  instance.GetSurface(), &capabilities));
+                                                             instance.GetSurface(), &capabilities));
 
         VkExtent2D extent;
         if (capabilities.currentExtent.width != UINT_MAX) {
@@ -64,9 +65,9 @@ namespace UniverseEngine {
             extent = {window.Width(), window.Height()};
 
             extent.width = std::clamp(extent.width, capabilities.minImageExtent.width,
-                                            capabilities.maxImageExtent.width);
+                                      capabilities.maxImageExtent.width);
             extent.height = std::clamp(extent.height, capabilities.minImageExtent.height,
-                           capabilities.maxImageExtent.height);
+                                       capabilities.maxImageExtent.height);
         }
 
         extent.width = std::max(2U, extent.width);
@@ -79,7 +80,7 @@ namespace UniverseEngine {
                               const PhysicalDevice& physicalDevice) {
         VkSurfaceCapabilitiesKHR capabilities;
         UE_ASSERT(!vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice.GetPhysicalDevice(),
-                                                  instance.GetSurface(), &capabilities));
+                                                             instance.GetSurface(), &capabilities));
 
         uint32_t imageCount = capabilities.minImageCount + 1;
         if (capabilities.maxImageCount > 0 && imageCount > capabilities.maxImageCount) {
@@ -99,7 +100,7 @@ namespace UniverseEngine {
 
         VkSurfaceCapabilitiesKHR capabilities;
         UE_ASSERT(!vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice.GetPhysicalDevice(),
-                                                  instance.GetSurface(), &capabilities));
+                                                             instance.GetSurface(), &capabilities));
 
         VkSwapchainCreateInfoKHR createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
@@ -114,7 +115,7 @@ namespace UniverseEngine {
         createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
         createInfo.presentMode = this->presentMode;
         createInfo.clipped = VK_TRUE;
-        
+
         if (physicalDevice.GraphicsFamily() != physicalDevice.PresentFamily()) {
             uint32_t queueFamilyIndices[] = {physicalDevice.GraphicsFamily(),
                                              physicalDevice.PresentFamily()};
@@ -171,6 +172,14 @@ namespace UniverseEngine {
                 std::move(Semaphore(UniverseEngine::Format("Render Finished %i", i), device)));
             inflightFences.emplace_back(std::move(std::make_shared<Fence>(device, true)));
         }
+
+        this->renderPass = std::make_shared<RenderPass>(
+            this->device, std::vector<GraphicsFormat>{this->Format()}, std::nullopt);
+        for (auto& image : this->images) {
+            std::vector<std::shared_ptr<Image>> images{image};
+            this->framebuffers.emplace_back(
+                std::move(Framebuffer(this->device, images, this->renderPass)));
+        }
     }
 
     Swapchain::~Swapchain() {
@@ -198,18 +207,8 @@ namespace UniverseEngine {
         return this->renderFinishedSemaphores[static_cast<size_t>(this->currentFrame)];
     }
 
-    void Swapchain::RebuildFramebuffers(std::shared_ptr<RenderPass> renderPass,
-                                        std::shared_ptr<Image> depthImage) {
-        this->framebuffers.clear();
-        for (auto& image : this->images) {
-            std::vector<std::shared_ptr<Image>> images{image};
-            if (depthImage) {
-                images.push_back(depthImage);
-            }
-
-            this->framebuffers.emplace_back(
-                std::move(Framebuffer(this->device, images, renderPass)));
-        }
+    std::shared_ptr<RenderPass> Swapchain::GetRenderPass() {
+        return this->renderPass;
     }
 
     std::shared_ptr<Fence> Swapchain::NextImage() {
@@ -249,7 +248,8 @@ namespace UniverseEngine {
     }
 
     Rect2D Swapchain::Extent() const {
-        return Rect2D(static_cast<float>(this->extent.width), static_cast<float>(this->extent.height));
+        return Rect2D(static_cast<float>(this->extent.width),
+                      static_cast<float>(this->extent.height));
     }
 }  // namespace UniverseEngine
 #endif

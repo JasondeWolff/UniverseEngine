@@ -46,13 +46,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)UniverseEngine\;$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\vulkan\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\imgui\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\FastNoiseLite\include\</IncludePath>
+    <IncludePath>$(SolutionDir)UniverseEngine\;$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\vulkan\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\imgui\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\FastNoise2\include\</IncludePath>
     <LibraryPath>$(SolutionDir)bin\UniverseEngine\$(Configuration)\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Projectname)\$(Configuration)\$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)intermediate\$(Projectname)\$(Configuration)\$(Platform)\</IntDir>
-    <IncludePath>$(SolutionDir)UniverseEngine\;$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\vulkan\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\imgui\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\FastNoiseLite\include\</IncludePath>
+    <IncludePath>$(SolutionDir)UniverseEngine\;$(SolutionDir)Dependencies\glm\include\;$(SolutionDir)Dependencies\tree\include\;$(SolutionDir)Dependencies\vulkan\include\;$(SolutionDir)Dependencies\GLFW\include\;$(SolutionDir)Dependencies\imgui\include\;$(SolutionDir)Dependencies\glew\include\;$(SolutionDir)Dependencies\FastNoise2\include\</IncludePath>
     <LibraryPath>$(SolutionDir)bin\UniverseEngine\$(Configuration)\$(Platform);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -95,15 +95,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AssetDemo.cpp" />
+    <ClCompile Include="CloudDemo.cpp" />
     <ClCompile Include="FreeFormCamera.cpp" />
+    <ClCompile Include="LODDemo.cpp" />
     <ClCompile Include="MyGame.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="SpaceShip.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\UniverseEngine\.clang-format" />
+    <None Include="Assets\Shaders\GL\clouds.comp" />
     <None Include="Assets\Shaders\GL\imgui.frag" />
     <None Include="Assets\Shaders\GL\imgui.vert" />
+    <None Include="Assets\Shaders\GL\present.frag" />
+    <None Include="Assets\Shaders\GL\present.vert" />
     <None Include="Assets\Shaders\GL\skybox.frag" />
     <None Include="Assets\Shaders\GL\skybox.vert" />
     <None Include="Assets\Shaders\GL\unlit.frag">
@@ -114,6 +119,9 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </None>
+    <None Include="Assets\Shaders\Vulkan\clouds.comp" />
+    <None Include="Assets\Shaders\Vulkan\present.frag" />
+    <None Include="Assets\Shaders\Vulkan\present.vert" />
     <None Include="Assets\Shaders\Vulkan\imgui.frag" />
     <None Include="Assets\Shaders\Vulkan\imgui.vert" />
     <None Include="Assets\Shaders\Vulkan\skybox.frag" />
@@ -123,7 +131,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetDemo.h" />
+    <ClInclude Include="CloudDemo.h" />
     <ClInclude Include="FreeFormCamera.h" />
+    <ClInclude Include="LODDemo.h" />
     <ClInclude Include="MyGame.h" />
     <ClInclude Include="SpaceShip.h" />
   </ItemGroup>

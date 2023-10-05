@@ -31,16 +31,31 @@ namespace UniverseEngine {
 
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
-        glm::vec3 worldPosition;
         size_t materialIdx;
 
         bool HasTangents() const;
         void GenerateTangents();
+
+        Mesh BuildSimplified(float percentage) const;
 
     private:
         friend class Graphics;
         std::unique_ptr<MeshRenderable> renderable;
 
         void ClearCPUData();
+    };
+
+    struct LODMesh {
+        LODMesh(Mesh&& mesh);
+
+        std::optional<size_t> BestLOD(const glm::vec3& observer, const glm::vec3& mesh) const;
+
+        struct Config {
+            float detail = 1.0f;
+            float maxDistance = 5.0f;
+        };
+
+        std::vector<Mesh> lods;
+        std::vector<Config> configs;
     };
 }  // namespace UniverseEngine

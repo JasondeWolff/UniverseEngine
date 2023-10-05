@@ -36,6 +36,12 @@
     <ClCompile Include="SpaceShip.cpp">
       <Filter>Src</Filter>
     </ClCompile>
+    <ClCompile Include="LODDemo.cpp">
+      <Filter>Src\Games</Filter>
+    </ClCompile>
+    <ClCompile Include="CloudDemo.cpp">
+      <Filter>Src\Games</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\UniverseEngine\.clang-format" />
@@ -66,13 +72,31 @@
     <None Include="Assets\Shaders\Vulkan\imgui.vert">
       <Filter>Assets\Shaders\Vulkan</Filter>
     </None>
-    <None Include="Assets\Shaders\GL\imgui.vert">
-      <Filter>Assets\Shaders\GL</Filter>
-    </None>
     <None Include="Assets\Shaders\Vulkan\imgui.frag">
       <Filter>Assets\Shaders\Vulkan</Filter>
     </None>
+    <None Include="Assets\Shaders\Vulkan\clouds.comp">
+      <Filter>Assets\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="Assets\Shaders\Vulkan\present.vert">
+      <Filter>Assets\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="Assets\Shaders\Vulkan\present.frag">
+      <Filter>Assets\Shaders\Vulkan</Filter>
+    </None>
+    <None Include="Assets\Shaders\GL\clouds.comp">
+      <Filter>Assets\Shaders\GL</Filter>
+    </None>
     <None Include="Assets\Shaders\GL\imgui.frag">
+      <Filter>Assets\Shaders\GL</Filter>
+    </None>
+    <None Include="Assets\Shaders\GL\imgui.vert">
+      <Filter>Assets\Shaders\GL</Filter>
+    </None>
+    <None Include="Assets\Shaders\GL\present.frag">
+      <Filter>Assets\Shaders\GL</Filter>
+    </None>
+    <None Include="Assets\Shaders\GL\present.vert">
       <Filter>Assets\Shaders\GL</Filter>
     </None>
   </ItemGroup>
@@ -88,6 +112,12 @@
     </ClInclude>
     <ClInclude Include="SpaceShip.h">
       <Filter>Src</Filter>
+    </ClInclude>
+    <ClInclude Include="LODDemo.h">
+      <Filter>Src\Games</Filter>
+    </ClInclude>
+    <ClInclude Include="CloudDemo.h">
+      <Filter>Src\Games</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

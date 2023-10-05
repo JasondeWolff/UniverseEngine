@@ -57,10 +57,15 @@ namespace UniverseEngine {
                                                  queueFamilies.data());
 
         this->graphicsFamily = UINT_MAX;
+        this->computeFamily = UINT_MAX;
         this->presentFamily = UINT_MAX;
         for (size_t i = 0; i < queueFamilyCount; i++) {
             if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
                 this->graphicsFamily = static_cast<uint32_t>(i);
+            }
+
+            if (queueFamilies[i].queueFlags & VK_QUEUE_COMPUTE_BIT) {
+                this->computeFamily = static_cast<uint32_t>(i);
             }
 
             VkBool32 presentSupport = false;
@@ -70,7 +75,8 @@ namespace UniverseEngine {
                 this->presentFamily = static_cast<uint32_t>(i);
             }
 
-            if (this->graphicsFamily != UINT_MAX && this->presentFamily != UINT_MAX) {
+            if (this->graphicsFamily != UINT_MAX && this->computeFamily != UINT_MAX &&
+                this->presentFamily != UINT_MAX) {
                 return;
             }
         }
@@ -86,12 +92,16 @@ namespace UniverseEngine {
         return this->graphicsFamily;
     }
 
+    uint32_t PhysicalDevice::ComputeFamily() const {
+        return this->computeFamily;
+    }
+
     uint32_t PhysicalDevice::PresentFamily() const {
         return this->presentFamily;
     }
 
     uint32_t PhysicalDevice::FindMemoryType(uint32_t typeFilter,
-                            VkMemoryPropertyFlags properties) const {
+                                            VkMemoryPropertyFlags properties) const {
         VkPhysicalDeviceMemoryProperties memProperties;
         vkGetPhysicalDeviceMemoryProperties(this->physicalDevice, &memProperties);
 

@@ -25,7 +25,13 @@ namespace UniverseEngine {
     std::shared_ptr<Scene> Resources::CreateScene(Mesh&& mesh) {
         std::shared_ptr<Scene> hScene = std::make_shared<Scene>();
 
-        hScene.get()->meshes.emplace_back(std::move(mesh));
+        hScene->meshes.emplace_back(std::move(mesh));
+        hScene->materials.emplace_back(Material{});
+        auto instanceRoot = hScene->hierarchy.begin();
+        instanceRoot = hScene->hierarchy.insert(instanceRoot, SceneNode{});
+        SceneNode node{};
+        node.meshIdx = std::make_optional(0);
+        hScene->hierarchy.append_child(instanceRoot, node);
 
         this->scenes.push_back(hScene);
         this->newScenes.push_back(hScene);
@@ -46,6 +52,8 @@ namespace UniverseEngine {
             hScene = LoadGLTF(filePath);
         else
             UE_FATAL("Cannot load unsupported scene type '%s'.", extension);
+
+        hScene->BuildLODS();
 
         this->scenes.push_back(hScene);
         this->newScenes.push_back(hScene);
@@ -81,10 +89,10 @@ namespace UniverseEngine {
         if (shader != this->shaderPaths.end())
             return shader->second;
 
-        static const std::string supportedExtensions[2] = {".vert", ".frag"};
+        static const std::string supportedExtensions[3] = {".vert", ".frag", ".comp"};
 
         fs::path extension = filePath.extension();
-        for (size_t i = 0; i < 2; i++) {
+        for (size_t i = 0; i < 3; i++) {
             if (supportedExtensions[i] == extension) {
                 std::shared_ptr<Shader> hShader = LoadShaderSource(filePath);
                 this->shaderPaths.insert(std::make_pair(filePath, hShader));

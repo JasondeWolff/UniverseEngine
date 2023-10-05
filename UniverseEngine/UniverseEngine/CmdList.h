@@ -1,19 +1,19 @@
 #pragma once
 
+#include <array>
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 #include <memory>
 #include <string>
 #include <vector>
-#include <array>
 
 #include "GraphicsAPI.h"
+#include "GraphicsPipeline.h"
 #include "GraphicsStageFlags.h"
 #include "Image.h"
 #include "Rect2D.h"
 
 namespace UniverseEngine {
-    class GraphicsPipeline;
     class CmdQueue;
     class LogicalDevice;
     class Swapchain;
@@ -21,6 +21,7 @@ namespace UniverseEngine {
     class Framebuffer;
     class Buffer;
     class DescriptorSet;
+    class ComputePipeline;
 
     class CmdList {
     public:
@@ -34,7 +35,8 @@ namespace UniverseEngine {
 
         void CopyBuffers(std::shared_ptr<Buffer> src, std::shared_ptr<Buffer> dst);
         void CopyBuffers(std::shared_ptr<Buffer> src, std::shared_ptr<Image> dst);
-        void CopyImagesIntoCubemap(const std::array<std::shared_ptr<Image>, 6>& images, std::shared_ptr<Image> cubemap);
+        void CopyImagesIntoCubemap(const std::array<std::shared_ptr<Image>, 6>& images,
+                                   std::shared_ptr<Image> cubemap);
         void GenerateMips(std::shared_ptr<Image> image);
 
         void TransitionImageLayout(std::shared_ptr<Image> image, ImageLayout oldLayout,
@@ -50,14 +52,18 @@ namespace UniverseEngine {
                              const glm::vec4& clearColor);
         void EndRenderPass();
 
-        void BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet, uint32_t set);
+        void BindDescriptorSet(std::shared_ptr<DescriptorSet> descriptorSet, uint32_t set,
+                               PipelineType pipelineType = PipelineType::GRAPHICS);
 
         void BindGraphicsPipeline(std::shared_ptr<GraphicsPipeline> graphicsPipeline);
+        void BindComputePipeline(std::shared_ptr<ComputePipeline> computePipeline);
 
         void Draw(uint32_t vertexCount, uint32_t instanceCount = 1, uint32_t firstVertex = 0,
                   uint32_t firstInstance = 0);
         void DrawElements(uint32_t indexCount, uint32_t instanceCount = 1, uint32_t firstIndex = 0,
                           uint32_t firstInstance = 0, uint32_t vertexOffset = 0);
+
+        void Dispatch(uint32_t x, uint32_t y = 1, uint32_t z = 1);
 
         template <typename T>
         void PushConstant(const std::string& name, T& constant, GraphicsStageFlags stageFlags) {
@@ -77,9 +83,11 @@ namespace UniverseEngine {
         VkCommandBuffer cmdBuffer;
 #endif
 
-        void PushConstant(const std::string& name, void* constant, size_t size, GraphicsStageFlags stageFlags);
+        void PushConstant(const std::string& name, void* constant, size_t size,
+                          GraphicsStageFlags stageFlags);
 
         std::shared_ptr<GraphicsPipeline> boundGraphicsPipeline;
+        std::shared_ptr<ComputePipeline> boundComputePipeline;
         std::vector<std::shared_ptr<RenderPass>> trackedRenderPasses;
         std::vector<std::shared_ptr<Buffer>> trackedBuffers;
         std::vector<std::shared_ptr<Image>> trackedImages;

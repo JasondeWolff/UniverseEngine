@@ -11,19 +11,21 @@ namespace UniverseEngine {
     class LogicalDevice;
     class PhysicalDevice;
 
-    typedef std::bitset<6> ImageUsage;
+    typedef std::bitset<7> ImageUsage;
     enum ImageUsageBits {
         TRANSFER_SRC_IMAGE = 0x0001,
         TRANSFER_DST_IMAGE = 0x0002,
         SAMPLED_IMAGE = 0x0004,
         STORAGE_IMAGE = 0x0008,
-        DEPTH_STENCIL_ATTACHMENT = 0x0010,
+        COLOR_ATTACHMENT = 0x0010,
+        DEPTH_STENCIL_ATTACHMENT = 0x0020,
     };
     size_t GetImageUsageBitIndex(ImageUsageBits bits);
 
     enum class ImageLayout {
         UNDEFINED,
         GENERAL,
+        PRESENT_SRC,
         COLOR_ATTACHMENT_OPTIMAL,
         DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
         DEPTH_STENCIL_READ_ONLY_OPTIMAL,
