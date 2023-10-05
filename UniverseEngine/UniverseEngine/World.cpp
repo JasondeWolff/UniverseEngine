@@ -9,16 +9,10 @@ namespace UniverseEngine {
         camera.transform.SetRotation(EulerToQuat(glm::vec3(180, 0, 0)));
     }
 
-    std::shared_ptr<SceneInstance> World::GenerateWorld() {
+    void World::GenerateWorld() {
 
         //Generate a 1x1 grid
-        tg.Init(100,100,25,25);
-
-        auto sceneInstance = std::make_shared<SceneInstance>(tg.generatedWorld[0][0]);
-        this->sceneInstances.push_back(sceneInstance);
-        this->newInstances.push_back(sceneInstance);
-
-        return sceneInstance;
+        tg.Init(25,25,25,25);
     }
 
     std::shared_ptr<SceneInstance> World::AddSceneInstance(std::shared_ptr<Scene> hScene) {
@@ -34,16 +28,20 @@ namespace UniverseEngine {
 
     void World::Update() {
         tg.Update();
-
-        /*std::vector<std::shared_ptr<SceneInstance>> instances;
-        for (auto chunk : tg.newgeneratedWorld) {
-            auto sceneInstance = std::make_shared<SceneInstance>(chunk);
-            this->sceneInstances.push_back(sceneInstance);
-            this->newInstances.push_back(sceneInstance);
-            instances.emplace_back(sceneInstance);
+        
+        for (int x = 0; x < tg.newlyGeneratedWorld.size(); x++) {
+            for (int y = 0; y < tg.newlyGeneratedWorld[x].size(); y++) {
+                auto sceneInstance = std::make_shared<SceneInstance>(tg.newlyGeneratedWorld[x][y]);
+                this->sceneInstances.push_back(sceneInstance);
+                this->newInstances.push_back(sceneInstance);
+            }
         }
 
-
-        tg.newgeneratedWorld.empty();*/
+        //After we update the world with all the new chunks we want to clear the array
+        //  so we dont keep on adding the same mesh
+        for (auto& innerVector : tg.newlyGeneratedWorld) {
+            innerVector.clear();
+        }
+        tg.newlyGeneratedWorld.clear();
     }
 }  // namespace UniverseEngine

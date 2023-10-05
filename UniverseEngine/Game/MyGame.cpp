@@ -20,7 +20,7 @@ void MyGame::OnStart() {
 	this->freeFormCamera.Start();
 	this->spaceShip.Start();
 	
-	auto GeneratedTerrianInstance = Engine::GetWorld().GenerateWorld();
+	Engine::GetWorld().GenerateWorld();
 }
 
 void MyGame::Update(float deltaTime) {
