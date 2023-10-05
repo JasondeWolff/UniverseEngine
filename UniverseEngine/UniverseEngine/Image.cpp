@@ -15,6 +15,10 @@ namespace UniverseEngine {
         return this->height;
     }
 
+    uint32_t Image::Depth() const {
+        return this->depth;
+    }
+
     uint32_t Image::Mips() const {
         return this->mips;
     }

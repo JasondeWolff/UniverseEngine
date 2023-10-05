@@ -10,7 +10,7 @@ layout(binding = 1) uniform UniformBufferObject {
     mat4 invProj;
 } ubo;
 
-layout (binding = 2, rgba8) uniform image3D noise;
+layout (binding = 2) uniform sampler3D noise;
 
 struct Ray {
     vec3 origin;
@@ -46,7 +46,8 @@ bool IntersectAABB(Ray ray, AABB aabb, out float lo, out float hi) {
 }
 
 float sampleDensity(vec3 position) {
-    return 1.0;
+    float density = texture(noise, position * 0.1).r;
+    return density * 4.0;
 }
 
 float march(Ray ray, float tmin, float tmax) {
@@ -56,7 +57,7 @@ float march(Ray ray, float tmin, float tmax) {
 
     float stepSize = totalDistance / NUM_STEPS;
     while (distanceTraveled < totalDistance) {
-        vec3 position = ray.origin + ray.direction * distanceTraveled;
+        vec3 position = ray.origin + ray.direction * (tmin + distanceTraveled);
         totalDensity += sampleDensity(position) * stepSize;
         distanceTraveled += stepSize;
     }

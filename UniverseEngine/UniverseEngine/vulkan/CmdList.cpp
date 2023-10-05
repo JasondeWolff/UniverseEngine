@@ -103,7 +103,7 @@ namespace UniverseEngine {
         copyRegion.imageSubresource.baseArrayLayer = 0;
         copyRegion.imageSubresource.layerCount = 1;
         copyRegion.imageOffset = {0, 0, 0};
-        copyRegion.imageExtent = {dst->Width(), dst->Height(), 1};
+        copyRegion.imageExtent = {dst->Width(), dst->Height(), dst->Depth()};
 
         vkCmdCopyBufferToImage(this->cmdBuffer, src->GetBuffer(), dst->GetImage(),
                                VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &copyRegion);

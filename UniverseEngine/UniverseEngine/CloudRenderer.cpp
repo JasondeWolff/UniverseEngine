@@ -20,6 +20,8 @@ namespace UniverseEngine {
                         DescriptorLayoutBinding("outputImage", 0, DescriptorType::STORAGE_IMAGE,
                                                 GraphicsStageFlagBits::COMPUTE_STAGE),
                         DescriptorLayoutBinding("ubo", 1, DescriptorType::UNIFORM_BUFFER,
+                                                GraphicsStageFlagBits::COMPUTE_STAGE),
+                        DescriptorLayoutBinding("noise", 2, DescriptorType::COMBINED_IMAGE_SAMPLER,
                                                 GraphicsStageFlagBits::COMPUTE_STAGE)});
 
         for (size_t i = 0; i < this->descriptorSets.size(); i++) {
@@ -46,6 +48,8 @@ namespace UniverseEngine {
                 std::move(Semaphore(Format("Cloud Renderer %i", i), device)));
         }
 
+        this->sampler = std::make_shared<Sampler>("Cloud Noise Sampler", device, physicalDevice);
+
         this->GenerateNoise();
     }
 
@@ -71,6 +75,8 @@ namespace UniverseEngine {
 
         this->descriptorSets[currentFrame]->SetImage(0, DescriptorType::STORAGE_IMAGE, colorImage,
                                                      nullptr);
+        this->descriptorSets[currentFrame]->SetImage(2, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                                                     this->noise->Renderable().GetImage(), this->sampler);
         cmdList.BindDescriptorSet(this->descriptorSets[currentFrame], 0, PipelineType::COMPUTE);
         cmdList.Dispatch(DivideUp(colorImage->Width(), 16), DivideUp(colorImage->Height(), 16));
 
@@ -78,27 +84,31 @@ namespace UniverseEngine {
     }
 
     void CloudRenderer::GenerateNoise() {
-        size_t resolution = 32;
+        size_t resolution = 256;
 
         auto fnCellular = FastNoise::New<FastNoise::CellularDistance>();
         auto fnFractal = FastNoise::New<FastNoise::FractalFBm>();
         fnFractal->SetSource(fnCellular);
-        fnFractal->SetOctaveCount(5);
+        fnFractal->SetOctaveCount(1);
 
-        std::vector<float> noiseData(resolution * resolution * resolution);
-        fnFractal->GenUniformGrid3D(noiseData.data(), 0, 0, 0, static_cast<int>(resolution),
+        float* noiseData =
+            static_cast<float*>(malloc(resolution * resolution * resolution * sizeof(float)));
+        fnFractal->GenUniformGrid3D(noiseData, 0, 0, 0, static_cast<int>(resolution),
                                     static_cast<int>(resolution), static_cast<int>(resolution),
                                     0.2f, 1337);
 
-        std::vector<unsigned char> noiseData8(noiseData.size());
-        for (size_t i = 0; i < noiseData.size(); i++) {
-            noiseData8[i] = static_cast<unsigned char>(noiseData[i] * 255.99f);
+        unsigned char* noiseData8 = static_cast<unsigned char*>(
+            malloc(resolution * resolution * resolution * sizeof(unsigned char) * 4));
+        for (size_t i = 0; i < resolution * resolution * resolution; i++) {
+            noiseData8[i * 4 + 0] = static_cast<unsigned char>(noiseData[i] * 255.99f);
+            noiseData8[i * 4 + 1] = static_cast<unsigned char>(noiseData[i] * 255.99f);
+            noiseData8[i * 4 + 2] = static_cast<unsigned char>(noiseData[i] * 255.99f);
+            noiseData8[i * 4 + 3] = static_cast<unsigned char>(noiseData[i] * 255.99f);
         }
-        return;
+
         this->noise = Engine::GetResources().CreateTexture(
-            "Cloud Noise", noiseData8.data(),
-            static_cast<unsigned>(resolution), static_cast<unsigned>(resolution),
-            TextureType::UNORM, ImageDimensions::IMAGE_3D, static_cast<unsigned>(resolution),
-            false);
+            "Cloud Noise", noiseData8, static_cast<unsigned>(resolution),
+            static_cast<unsigned>(resolution), TextureType::UNORM, ImageDimensions::IMAGE_3D,
+            static_cast<unsigned>(resolution), false);
     }
 }  // namespace UniverseEngine

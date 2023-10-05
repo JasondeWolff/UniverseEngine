@@ -39,6 +39,7 @@ namespace UniverseEngine {
         std::array<std::shared_ptr<DescriptorSet>, Swapchain::MAX_FRAMES_IN_FLIGHT> descriptorSets;
 
         std::shared_ptr<Texture> noise;
+        std::shared_ptr<Sampler> sampler;
 
         std::vector<Semaphore> semaphores;
 
