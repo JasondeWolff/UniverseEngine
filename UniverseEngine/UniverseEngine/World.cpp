@@ -12,11 +12,12 @@ namespace UniverseEngine {
     std::shared_ptr<SceneInstance> World::GenerateWorld() {
 
         //Generate a 1x1 grid
-        tg.Init();
+        tg.Init(100,100,25,25);
 
-        auto sceneInstance = std::make_shared<SceneInstance>(tg.generatedWorld.at(0).at(0));
+        auto sceneInstance = std::make_shared<SceneInstance>(tg.generatedWorld[0][0]);
         this->sceneInstances.push_back(sceneInstance);
         this->newInstances.push_back(sceneInstance);
+
         return sceneInstance;
     }
 
@@ -32,5 +33,17 @@ namespace UniverseEngine {
     }
 
     void World::Update() {
+        tg.Update();
+
+        /*std::vector<std::shared_ptr<SceneInstance>> instances;
+        for (auto chunk : tg.newgeneratedWorld) {
+            auto sceneInstance = std::make_shared<SceneInstance>(chunk);
+            this->sceneInstances.push_back(sceneInstance);
+            this->newInstances.push_back(sceneInstance);
+            instances.emplace_back(sceneInstance);
+        }
+
+
+        tg.newgeneratedWorld.empty();*/
     }
 }  // namespace UniverseEngine

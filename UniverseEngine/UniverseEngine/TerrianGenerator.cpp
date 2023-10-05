@@ -2,63 +2,64 @@
 #include "Engine.h"
 #include "Resources.h"
 #include "Scene.h"
+#include "Camera.h"
+
+#include <iostream>
+#include <string>
+#include <vector>
 
 namespace UniverseEngine {
     TerrianGenerator::TerrianGenerator() {
         
     }
 
-    void TerrianGenerator::Init() {
-        glm::vec2 pos = glm::vec2(0, 0);
-
-        this->generatedWorld.resize(1);
-        this->generatedWorld.at(0).resize(1);
-
-        float width = 100;
-        float height = 100;
-        float widthSegments = 100;
-        float heightSegments = 100;
-
-        CreatePlane(100,100,25,25);
+    void TerrianGenerator::Init(int width, int height, int widthSegments, int heightSegments)
+    {
+        this->chunk_width = width;
+        this->chunk_height = height;
+        this->chunk_widthSegments = widthSegments;
+        this->chunk_heightSegments = heightSegments;
+        
+        CreatePlane(glm::vec2(0,0));
     }
 
-    void TerrianGenerator::CreatePlane(int width, int height, int widthSegments,
-                                       int heightSegments) {
+    void TerrianGenerator::CreatePlane(glm::vec2 gridPos) {
 
         // Calculate step sizes
-        float dx = width / static_cast<float>(widthSegments);
-        float dy = height / static_cast<float>(heightSegments);
+        float dx = chunk_width / static_cast<float>(chunk_widthSegments);
+        float dy = chunk_height / static_cast<float>(chunk_heightSegments);
 
         Mesh chunk;
-        chunk.name = std::string("Plane" + this->generatedWorld.size());
+        chunk.name = std::string("Plane");
         chunk.vertices.clear();
-        chunk.vertices.reserve(widthSegments * heightSegments);
+        chunk.vertices.reserve(chunk_widthSegments * chunk_heightSegments);
 
         // Generate vertices
-        for (int y = 0; y <= heightSegments; ++y) {
-            for (int x = 0; x <= widthSegments; ++x) {
+        for (int y = 0; y <= chunk_widthSegments; ++y) {
+            for (int x = 0; x <= chunk_heightSegments; ++x) {
                 Vertex vertex;
 
                 float randOffset = (float)(rand() % 5);
-                vertex.position = glm::vec3(x * dx - width / 2.0f, randOffset, y * dy - height / 2.0f);
+                vertex.position = glm::vec3(x * dx - chunk_width / 2.0f, randOffset,
+                                            y * dy - chunk_height / 2.0f);
                 vertex.texCoord =
-                    glm::vec2(static_cast<float>(x) / static_cast<float>(widthSegments),
-                              static_cast<float>(y) / static_cast<float>(heightSegments));
+                    glm::vec2(static_cast<float>(x) / static_cast<float>(chunk_widthSegments),
+                              static_cast<float>(y) / static_cast<float>(chunk_heightSegments));
                 chunk.vertices.push_back(vertex);
             }
         }
 
         // Generate indices
-        for (int y = 0; y < heightSegments; ++y) {
-            for (int x = 0; x < widthSegments; ++x) {
-                int vertexIndex = y * (widthSegments + 1) + x;
+        for (int y = 0; y < chunk_heightSegments; ++y) {
+            for (int x = 0; x < chunk_widthSegments; ++x) {
+                int vertexIndex = y * (chunk_widthSegments + 1) + x;
                 chunk.indices.push_back(vertexIndex);
                 chunk.indices.push_back(vertexIndex + 1);
-                chunk.indices.push_back(vertexIndex + widthSegments + 1);
+                chunk.indices.push_back(vertexIndex + chunk_widthSegments + 1);
 
                 chunk.indices.push_back(vertexIndex + 1);
-                chunk.indices.push_back(vertexIndex + widthSegments + 2);
-                chunk.indices.push_back(vertexIndex + widthSegments + 1);
+                chunk.indices.push_back(vertexIndex + chunk_widthSegments + 2);
+                chunk.indices.push_back(vertexIndex + chunk_widthSegments + 1);
             }
         }
         chunk.materialIdx = 0;
@@ -71,12 +72,34 @@ namespace UniverseEngine {
         auto meshHierarchyRoot = hScene.get()->hierarchy.begin();
         SceneNode node{};
         node.meshIdx = std::make_optional(0);
-        node.transform = Transform(glm::vec3(0, -10, 0), glm::identity<glm::quat>(), glm::vec3(1, 1, 1));
+        node.transform = Transform(glm::vec3(gridPos.x * chunk_width, -50,
+                                gridPos.y * chunk_width), 
+            glm::identity<glm::quat>(), 
+            glm::vec3(1, 1, 1)
+        );
         meshHierarchyRoot = hScene.get()->hierarchy.insert(meshHierarchyRoot, node);
 
-        this->generatedWorld.at(0).at(0) = hScene;    }
+        
+        //this->generatedWorld[(unsigned int)gridPos.x][(unsigned int)gridPos.y] = hScene;
+        /*this->generatedWorld.insert(std::pair < std::map<unsigned int, std::shared_ptr<Scene>>(
+                                                    (unsigned int)gridPos.y, hScene));*/
+        this->generatedWorld[(uint32_t)gridPos.x][(uint32_t)gridPos.y] = hScene;
+    }
 
     void TerrianGenerator::Update() {
-        
+        auto camera = Engine::GetWorld().camera;
+        glm::vec3 camerePos = camera.transform.GetTranslation();
+        glm::vec2 gridPos =
+        { 
+            camerePos.x / chunk_width,
+            camerePos.y / chunk_height 
+        };
+
+        if (this->generatedWorld[(uint32_t)gridPos.x][(uint32_t)gridPos.y] == nullptr)
+        {
+            CreatePlane(gridPos);
+        }
+
+        int debug = 0;
     }
 }  // namespace UniverseEngine

@@ -19,10 +19,10 @@ void MyGame::OnStart() {
 
 	Engine::GetGraphics().SetPolygonMode(GraphicsPolygonMode::LINE);
 
-	auto GeneratedTerrianInstance = Engine::GetWorld().GenerateWorld();
-
 	this->freeFormCamera.Start();
 	this->spaceShip.Start();
+	
+	auto GeneratedTerrianInstance = Engine::GetWorld().GenerateWorld();
 }
 
 void MyGame::Update(float deltaTime) {
