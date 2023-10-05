@@ -34,6 +34,8 @@ namespace UniverseEngine {
         void SetSkybox(std::array<std::shared_ptr<Texture>, 6> textures);
         void SetPolygonMode(GraphicsPolygonMode polygonMode);
         void UseLODs(bool useLODs);
+        CloudConfig GetCloudConfig() const;
+        void SetCloudConfig(const CloudConfig& config) const;
 
         void RebuildShaders() const;
 

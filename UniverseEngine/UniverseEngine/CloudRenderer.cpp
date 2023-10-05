@@ -8,13 +8,20 @@
 struct UniformBuffer {
     glm::mat4 invView;
     glm::mat4 invProj;
+    glm::vec4 cloudOffset;
+    float cloudScale;
+    float cloudDensityThreshold;
+    float cloudDensityMultiplier;
+
+    float PADDING;
 };
 
 namespace UniverseEngine {
     CloudRenderer::CloudRenderer(std::shared_ptr<LogicalDevice> device,
                                  const PhysicalDevice& physicalDevice,
                                  std::shared_ptr<DescriptorPool> descriptorPool,
-                                 const Graphics& graphics) {
+                                 const Graphics& graphics)
+        : config{} {
         this->descriptorSetLayout = std::make_shared<DescriptorSetLayout>(
             device, std::vector<DescriptorLayoutBinding>{
                         DescriptorLayoutBinding("outputImage", 0, DescriptorType::STORAGE_IMAGE,
@@ -64,7 +71,13 @@ namespace UniverseEngine {
         const glm::mat4& invViewMatrix = camera.transform.GetMatrix();
         const glm::mat4& invProjectionMatrix = glm::inverse(camera.GetMatrix());
 
-        UniformBuffer uniformBuffer{invViewMatrix, invProjectionMatrix};
+        UniformBuffer uniformBuffer;
+        uniformBuffer.invView = invViewMatrix;
+        uniformBuffer.invProj = invProjectionMatrix;
+        uniformBuffer.cloudOffset = glm::vec4(this->config.offset, 0.0);
+        uniformBuffer.cloudScale = this->config.scale;
+        uniformBuffer.cloudDensityThreshold = this->config.densityThreshold;
+        uniformBuffer.cloudDensityMultiplier = this->config.densityMultiplier;
         void* uniformBufferData = this->uniformBuffers[currentFrame]->Map();
         memcpy(uniformBufferData, &uniformBuffer, sizeof(UniformBuffer));
         this->uniformBuffers[currentFrame]->Unmap();
@@ -78,7 +91,7 @@ namespace UniverseEngine {
         this->descriptorSets[currentFrame]->SetImage(2, DescriptorType::COMBINED_IMAGE_SAMPLER,
                                                      this->noise->Renderable().GetImage(), this->sampler);
         cmdList.BindDescriptorSet(this->descriptorSets[currentFrame], 0, PipelineType::COMPUTE);
-        cmdList.Dispatch(DivideUp(colorImage->Width(), 16), DivideUp(colorImage->Height(), 16));
+        cmdList.Dispatch(DivideUp(colorImage->Width(), 32), DivideUp(colorImage->Height(), 32));
 
         cmdList.TransitionImageLayout(colorImage, ImageLayout::GENERAL, ImageLayout::PRESENT_SRC);
     }
@@ -89,7 +102,7 @@ namespace UniverseEngine {
         auto fnCellular = FastNoise::New<FastNoise::CellularDistance>();
         auto fnFractal = FastNoise::New<FastNoise::FractalFBm>();
         fnFractal->SetSource(fnCellular);
-        fnFractal->SetOctaveCount(1);
+        fnFractal->SetOctaveCount(5);
 
         float* noiseData =
             static_cast<float*>(malloc(resolution * resolution * resolution * sizeof(float)));

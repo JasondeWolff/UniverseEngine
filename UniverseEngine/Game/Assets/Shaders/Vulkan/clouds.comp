@@ -1,13 +1,19 @@
 #version 450
 #extension GL_KHR_vulkan_glsl: enable
 
-#define NUM_STEPS 200
+#define NUM_STEPS 30
 
 layout (binding = 0, rgba8) uniform image2D outputImage;
 
 layout(binding = 1) uniform UniformBufferObject {
     mat4 invView;
     mat4 invProj;
+    vec4 cloudOffset;
+    float cloudScale;
+    float cloudDensityThreshold;
+    float cloudDensityMultiplier;
+
+    float PADDING;
 } ubo;
 
 layout (binding = 2) uniform sampler3D noise;
@@ -46,18 +52,20 @@ bool IntersectAABB(Ray ray, AABB aabb, out float lo, out float hi) {
 }
 
 float sampleDensity(vec3 position) {
-    float density = texture(noise, position * 0.1).r;
-    return density * 4.0;
+    float density = texture(noise, position * ubo.cloudScale * 0.01 + ubo.cloudOffset.xyz * 0.01).r;
+    density = max(density - ubo.cloudDensityThreshold, 0.0) * ubo.cloudDensityMultiplier;
+    return density;
 }
 
 float march(Ray ray, float tmin, float tmax) {
-    float totalDistance = tmax - tmin;
+    float distanceToCloud = max(tmin, 0.0);
+    float distanceThroughCloud = tmax - distanceToCloud;
     float totalDensity = 0.0;
     float distanceTraveled = 0.0;
 
-    float stepSize = totalDistance / NUM_STEPS;
-    while (distanceTraveled < totalDistance) {
-        vec3 position = ray.origin + ray.direction * (tmin + distanceTraveled);
+    float stepSize = distanceThroughCloud / NUM_STEPS;
+    while (distanceTraveled < distanceThroughCloud) {
+        vec3 position = ray.origin + ray.direction * (distanceToCloud + distanceTraveled);
         totalDensity += sampleDensity(position) * stepSize;
         distanceTraveled += stepSize;
     }
@@ -66,7 +74,7 @@ float march(Ray ray, float tmin, float tmax) {
     return transmittance;
 }
 
-layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
+layout (local_size_x = 32, local_size_y = 32, local_size_z = 1) in;
 void main() 
 {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
@@ -75,8 +83,8 @@ void main()
     if (id.x >= dispatchSize.x || id.y >= dispatchSize.y) return;
 
     AABB aabb;
-    aabb.lo = vec3(-1.0);
-    aabb.hi = vec3(1.0);
+    aabb.lo = vec3(-10.0, -1.0, -10.0);
+    aabb.hi = vec3(10.0, 1.0, 10.0);
 
     vec2 pixelCenter = vec2(float(id.x) + 0.5, float(id.y) + 0.5);
     vec2 screenSize = vec2(float(dispatchSize.x), float(dispatchSize.y));

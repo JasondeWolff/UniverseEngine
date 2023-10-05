@@ -33,10 +33,18 @@ void CloudDemo::Update(float deltaTime) {
 
 	this->camera.Update(deltaTime);
 
+	CloudConfig config = Engine::GetGraphics().GetCloudConfig();
+
 	bool uiActive = true;
-	ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiCond_Always);
+	ImGui::SetNextWindowSize(ImVec2(350, 250), ImGuiCond_Always);
 	ImGui::Begin("CloudDemo", &uiActive);
+	ImGui::DragFloat3("Offset", &config.offset.x);
+	ImGui::SliderFloat("Scale", &config.scale, 0.1f, 1.0f);
+	ImGui::SliderFloat("Density Threshold", &config.densityThreshold, 0.0f, 0.5f);
+	ImGui::SliderFloat("Density Multiplier", &config.densityMultiplier, 0.0f, 3.0f);
 	ImGui::End();
+
+	Engine::GetGraphics().SetCloudConfig(config);
 }
 
 void CloudDemo::OnClose() {

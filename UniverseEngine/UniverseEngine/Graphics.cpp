@@ -100,6 +100,14 @@ namespace UniverseEngine {
         this->useLODs = useLODs;
     }
 
+    CloudConfig Graphics::GetCloudConfig() const {
+        return this->cloudRenderer->config;
+    }
+
+    void Graphics::SetCloudConfig(const CloudConfig& config) const {
+        this->cloudRenderer->config = config;
+    }
+
     void Graphics::Update() {
         this->RebuildShaders();
         this->BuildRenderables();

@@ -23,6 +23,13 @@
 namespace UniverseEngine {
     class Graphics;
 
+    struct CloudConfig {
+        glm::vec3 offset = glm::vec3(0.0);
+        float scale = 0.6f;
+        float densityThreshold = 0.2f;
+        float densityMultiplier = 1.5f;
+    };
+
     class CloudRenderer {
     public:
         CloudRenderer(std::shared_ptr<LogicalDevice> device, const PhysicalDevice& physicalDevice,
@@ -31,6 +38,8 @@ namespace UniverseEngine {
         Semaphore& CurrentSemaphore(size_t currentFrame);
 
         void Render(CmdList& cmdList, std::shared_ptr<Image> colorImage, size_t currentFrame);
+
+        CloudConfig config;
 
     private:
         std::shared_ptr<ComputePipeline> pipeline;
