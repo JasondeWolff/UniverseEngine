@@ -1,6 +1,8 @@
 #version 450
 #extension GL_KHR_vulkan_glsl: enable
 
+#define NUM_STEPS 200
+
 layout (binding = 0, rgba8) uniform image2D outputImage;
 
 layout(binding = 1) uniform UniformBufferObject {
@@ -20,7 +22,7 @@ struct AABB {
     vec3 hi;
 };
 
-float IntersectAABB(Ray ray, AABB aabb) {
+bool IntersectAABB(Ray ray, AABB aabb, out float lo, out float hi) {
     float tx1 = (aabb.lo.x - ray.origin.x) * ray.invDirection.x;
     float tx2 = (aabb.hi.x - ray.origin.x) * ray.invDirection.x;
     float tmin = min(tx1, tx2);
@@ -36,11 +38,29 @@ float IntersectAABB(Ray ray, AABB aabb) {
     tmin = max(min(tz1, tz2), tmin);
     tmax = min(max(tz1, tz2), tmax);
 
-    if (tmax >= tmin && tmax > 0.0) {
-        return tmin;
-    } else {
-        return -1.0;
+    lo = tmin;
+    hi = tmax;
+    return tmax >= tmin && tmax > 0.0;
+}
+
+float sampleDensity(vec3 position) {
+    return 1.0;
+}
+
+float march(Ray ray, float tmin, float tmax) {
+    float totalDistance = tmax - tmin;
+    float totalDensity = 0.0;
+    float distanceTraveled = 0.0;
+
+    float stepSize = totalDistance / NUM_STEPS;
+    while (distanceTraveled < totalDistance) {
+        vec3 position = ray.origin + ray.direction * distanceTraveled;
+        totalDensity += sampleDensity(position) * stepSize;
+        distanceTraveled += stepSize;
     }
+
+    float transmittance = exp(-totalDensity);
+    return transmittance;
 }
 
 layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
@@ -69,9 +89,13 @@ void main()
     ray.invDirection = vec4(1.0) / direction;
     ray.payload = 0.0;
 
-    vec3 color;
-    if (IntersectAABB(ray, aabb) > 0.0) {
-        color = vec3(1.0, 1.0, 1.0);
+    float tmin, tmax;
+    if(IntersectAABB(ray, aabb, tmin, tmax)) {
+        float transmittance = march(ray, tmin, tmax);
+
+        vec3 color = imageLoad(outputImage, id).rgb;
+        //color = mix(color, vec3(1.0), 0.1);
+        color *= transmittance;
         imageStore(outputImage, id, vec4(color, 1.0));
-    }    
+    }  
 }
