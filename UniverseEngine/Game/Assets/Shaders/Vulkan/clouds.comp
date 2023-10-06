@@ -45,6 +45,7 @@ struct Ray {
 struct AABB {
     vec3 lo;
     vec3 hi;
+    vec3 size;
 };
 
 float LinearDepth(float d)
@@ -88,10 +89,24 @@ float beer(float d) {
     return exp(-d);
 }
 
-float sampleDensity(vec3 position) {
+float remap(float v, float minOld, float maxOld, float minNew, float maxNew) {
+    return minNew + (v - minOld) * (maxNew - minNew) / (maxOld - minOld);
+}
+
+float sampleDensity(vec3 position, AABB aabb) {
+    const float containerEdgeFadeDst = 1.5;
+    float dstFromEdgeX = min(containerEdgeFadeDst, min(position.x - aabb.lo.x, aabb.hi.x - position.x));
+    float dstFromEdgeZ = min(containerEdgeFadeDst, min(position.z - aabb.lo.z, aabb.hi.z - position.z));
+    float edgeWeight = min(dstFromEdgeZ,dstFromEdgeX)/containerEdgeFadeDst;
+
+    float gMin = 0.2;
+    float gMax = 0.7;
+    float heightPercent = (position.y - aabb.lo.y) / aabb.size.y;
+    float heightGradient = clamp(remap(heightPercent, 0.0, gMin, 0, 1), 0.0, 1.0) * clamp(remap(heightPercent, 1, gMax, 0, 1), 0.0, 1.0);
+
     float density = texture(noise, position * ubo.cloudScale * 0.01 + ubo.cloudOffset.xyz * 0.01).r;
     density = max(density - ubo.cloudDensityThreshold, 0.0) * ubo.cloudDensityMultiplier;
-    return density;
+    return density * heightGradient * edgeWeight;
 }
 
 float lightMarch(vec3 position, AABB aabb) {
@@ -109,8 +124,8 @@ float lightMarch(vec3 position, AABB aabb) {
 
     float totalDensity = 0.0;
     for (int i = 0; i < SECONDARY_STEPS; i++) {
-        position += L * stepSize;
-        totalDensity += max(0.0, sampleDensity(position) * stepSize);
+        position += ray.direction * stepSize;
+        totalDensity += max(0.0, sampleDensity(position, aabb) * stepSize);
     }
 
     float transmittance = exp(-totalDensity * ubo.lightAbsorbtion);
@@ -135,7 +150,7 @@ vec2 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
     float stepSize = uniformStepSize;
     for (int i = 0; i < PRIMARY_STEPS; i++) {
         vec3 position = ray.origin + ray.direction * (distanceToCloud + i * stepSize);
-        float density = sampleDensity(position);
+        float density = sampleDensity(position, aabb);
 
         float stepSizeFactor = (1.0 - density) + (1.0 - badDensityThreshold);
         stepSize = clamp(stepSize * stepSizeFactor, minStepSize, maxStepSize);
@@ -167,8 +182,9 @@ void main()
     if (id.x >= dispatchSize.x || id.y >= dispatchSize.y) return;
 
     AABB aabb;
-    aabb.lo = vec3(-1000.0, -20.0, -1000.0);
-    aabb.hi = vec3(1000.0, 20.0, 1000.0);
+    aabb.lo = vec3(-5.0, -2.0, -5.0);
+    aabb.hi = vec3(5.0, 2.0, 5.0);
+    aabb.size = (aabb.hi - aabb.lo);
 
     vec2 pixelCenter = vec2(float(id.x) + 0.5, float(id.y) + 0.5);
     vec2 screenSize = vec2(float(dispatchSize.x), float(dispatchSize.y));
