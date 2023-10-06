@@ -27,21 +27,21 @@ namespace UniverseEngine {
     }
 
     void World::Update() {
-        tg.Update();
-        
-        for (int x = 0; x < tg.newlyGeneratedWorld.size(); x++) {
-            for (int y = 0; y < tg.newlyGeneratedWorld[x].size(); y++) {
-                auto sceneInstance = std::make_shared<SceneInstance>(tg.newlyGeneratedWorld[x][y]);
-                this->sceneInstances.push_back(sceneInstance);
-                this->newInstances.push_back(sceneInstance);
-            }
-        }
+        //tg.Update();
+        //
+        //for (int x = 0; x < tg.newlyGeneratedWorld.size(); x++) {
+        //    for (int y = 0; y < tg.newlyGeneratedWorld[x].size(); y++) {
+        //        auto sceneInstance = std::make_shared<SceneInstance>(tg.newlyGeneratedWorld[x][y]);
+        //        this->sceneInstances.push_back(sceneInstance);
+        //        this->newInstances.push_back(sceneInstance);
+        //    }
+        //}
 
-        //After we update the world with all the new chunks we want to clear the array
-        //  so we dont keep on adding the same mesh
-        for (auto& innerVector : tg.newlyGeneratedWorld) {
-            innerVector.clear();
-        }
-        tg.newlyGeneratedWorld.clear();
+        ////After we update the world with all the new chunks we want to clear the array
+        ////  so we dont keep on adding the same mesh
+        //for (auto& innerVector : tg.newlyGeneratedWorld) {
+        //    innerVector.clear();
+        //}
+        //tg.newlyGeneratedWorld.clear();
     }
 }  // namespace UniverseEngine
