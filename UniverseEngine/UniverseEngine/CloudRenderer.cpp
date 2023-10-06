@@ -76,6 +76,9 @@ namespace UniverseEngine {
 
     void CloudRenderer::Render(CmdList& cmdList, std::shared_ptr<Image> colorImage,
                                std::shared_ptr<Image> depthImage, size_t currentFrame) {
+        if (!config.enabled)
+            return;
+
         World& world = Engine::GetWorld();
         Camera& camera = world.camera;
         const glm::mat4& invViewMatrix = camera.transform.GetMatrix();

@@ -34,6 +34,7 @@ void CloudDemo::Update(float deltaTime) {
 	this->camera.Update(deltaTime);
 
 	CloudConfig config = Engine::GetGraphics().GetCloudConfig();
+	config.enabled = true;
 
 	bool uiActive = true;
 	ImGui::SetNextWindowSize(ImVec2(350, 250), ImGuiCond_Always);

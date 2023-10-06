@@ -8,7 +8,7 @@
 
 int main() {
 	UniverseEngine::Engine engine{};
-	engine.Start<MyGame>();
+	engine.Start<CloudDemo>();
 
 	return 0;
 }
