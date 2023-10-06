@@ -9,6 +9,9 @@ struct UniformBuffer {
     glm::mat4 invView;
     glm::mat4 invProj;
 
+    glm::vec4 lightDir;
+    glm::vec4 lightColor;
+
     glm::vec4 cloudOffset;
     float cloudScale;
     float cloudDensityThreshold;
@@ -85,6 +88,8 @@ namespace UniverseEngine {
         uniformBuffer.cloudScale = this->config.scale;
         uniformBuffer.cloudDensityThreshold = this->config.densityThreshold;
         uniformBuffer.cloudDensityMultiplier = this->config.densityMultiplier;
+        uniformBuffer.lightDir = glm::vec4(world.sun.direction, 1.0);
+        uniformBuffer.lightColor = glm::vec4(world.sun.lightSource.color, 1.0);
         uniformBuffer.zNear = camera.GetNear();
         uniformBuffer.zFar = camera.GetFar();
         void* uniformBufferData = this->uniformBuffers[currentFrame]->Map();

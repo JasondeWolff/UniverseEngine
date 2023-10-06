@@ -55,9 +55,7 @@ namespace UniverseEngine {
 
         std::vector<VkPipelineStageFlags> vkWaitStages;
         for (auto& waitStage : waitStages) {
-            vkWaitStages.push_back(GetVkPipelineStageFlags(waitStage) |
-                                   VkPipelineStageFlagBits::VK_PIPELINE_STAGE_ALL_COMMANDS_BIT |
-                                   VkPipelineStageFlagBits::VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
+            vkWaitStages.push_back(GetVkPipelineStageFlags(waitStage));
         }
 
         VkSubmitInfo submitInfo{};
@@ -69,7 +67,7 @@ namespace UniverseEngine {
         submitInfo.pSignalSemaphores = vkSignalSemaphores.data();
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = &cmdList->cmdBuffer;
-
+        
         if (!fence)
             fence = std::make_shared<Fence>(this->device);
         vkQueueSubmit(this->queue, 1, &submitInfo, fence->GetFence());
