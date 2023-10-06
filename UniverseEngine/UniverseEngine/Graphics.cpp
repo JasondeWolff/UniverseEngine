@@ -262,8 +262,10 @@ namespace UniverseEngine {
 
         std::shared_ptr<CmdList> presentCmdList = this->cmdQueue->GetCmdList();
 
-        presentCmdList->TransitionImageLayout(this->colorImage, ImageLayout::PRESENT_SRC,
-                                              ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        presentCmdList->TransitionImageLayout(
+            this->colorImage, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+            ResourceAccessBits::ACCESS_SHADER_READ_BIT,
+            PipelineStageBits::PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
 
         presentCmdList->BeginRenderPass(this->swapchain->GetRenderPass(),
                                         this->swapchain->GetCurrentFramebuffer(),
@@ -277,7 +279,9 @@ namespace UniverseEngine {
         presentCmdList->EndRenderPass();
 
         presentCmdList->TransitionImageLayout(
-            this->colorImage, ImageLayout::SHADER_READ_ONLY_OPTIMAL, ImageLayout::PRESENT_SRC);
+            this->colorImage, ImageLayout::PRESENT_SRC,
+            ResourceAccessBits::ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+            PipelineStageBits::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
 
         std::vector<Semaphore*> presentWaitSemaphores{};
         std::vector<Semaphore*> presentSignalSemaphores{

@@ -23,6 +23,28 @@ namespace UniverseEngine {
     class DescriptorSet;
     class ComputePipeline;
 
+    typedef std::bitset<17> ResourceAccess;
+    enum ResourceAccessBits {
+        ACCESS_INDIRECT_COMMAND_READ_BIT = 0x00000001,
+        ACCESS_INDEX_READ_BIT = 0x00000002,
+        ACCESS_VERTEX_ATTRIBUTE_READ_BIT = 0x00000004,
+        ACCESS_UNIFORM_READ_BIT = 0x00000008,
+        ACCESS_INPUT_ATTACHMENT_READ_BIT = 0x00000010,
+        ACCESS_SHADER_READ_BIT = 0x00000020,
+        ACCESS_SHADER_WRITE_BIT = 0x00000040,
+        ACCESS_COLOR_ATTACHMENT_READ_BIT = 0x00000080,
+        ACCESS_COLOR_ATTACHMENT_WRITE_BIT = 0x00000100,
+        ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT = 0x00000200,
+        ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = 0x00000400,
+        ACCESS_TRANSFER_READ_BIT = 0x00000800,
+        ACCESS_TRANSFER_WRITE_BIT = 0x00001000,
+        ACCESS_HOST_READ_BIT = 0x00002000,
+        ACCESS_HOST_WRITE_BIT = 0x00004000,
+        ACCESS_MEMORY_READ_BIT = 0x00008000,
+        ACCESS_MEMORY_WRITE_BIT = 0x00010000,
+    };
+    size_t GetResourceAccessBitIndex(ResourceAccessBits bits);
+
     class CmdList {
     public:
         ~CmdList();
@@ -40,8 +62,7 @@ namespace UniverseEngine {
                                    std::shared_ptr<Image> cubemap);
         void GenerateMips(std::shared_ptr<Image> image);
 
-        void TransitionImageLayout(std::shared_ptr<Image> image, ImageLayout oldLayout,
-                                   ImageLayout newLayout);
+        void TransitionImageLayout(std::shared_ptr<Image> image, ImageLayout layout, ResourceAccess access, PipelineStage pipelineStage);
 
         void SetScissor(const Rect2D& rect2D);
         void SetViewport(const Rect2D& rect2D, bool normalize = true);

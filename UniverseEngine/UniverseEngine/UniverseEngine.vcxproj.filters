@@ -256,6 +256,9 @@
     <ClInclude Include="CloudRenderer.h">
       <Filter>Src\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="vulkan\VkResourceStateTracker.h">
+      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
@@ -521,6 +524,15 @@
     </ClCompile>
     <ClCompile Include="gl\ComputePipeline.cpp">
       <Filter>Src\Graphics\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="vulkan\VkResourceStateTracker.cpp">
+      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdList.cpp">
+      <Filter>Src\Graphics\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsPipeline.cpp">
+      <Filter>Src\Graphics\Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

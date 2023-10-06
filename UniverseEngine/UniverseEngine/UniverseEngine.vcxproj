@@ -68,6 +68,7 @@
     <ClInclude Include="Swapchain.h" />
     <ClInclude Include="GraphicsFormat.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="vulkan\VkResourceStateTracker.h" />
     <ClInclude Include="vulkan\VkConversion.h" />
     <ClInclude Include="Voxel.h" />
     <ClInclude Include="vulkan\VkGraphicsFormat.h" />
@@ -82,8 +83,11 @@
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CloudRenderer.cpp" />
+    <ClCompile Include="CmdList.cpp" />
     <ClCompile Include="CmdQueue.cpp" />
     <ClCompile Include="gl\ComputePipeline.cpp" />
+    <ClCompile Include="GraphicsPipeline.cpp" />
+    <ClCompile Include="vulkan\VkResourceStateTracker.cpp" />
     <ClCompile Include="vulkan\ComputePipeline.cpp" />
     <ClCompile Include="gl\Buffer.cpp" />
     <ClCompile Include="gl\DescriptorPool.cpp" />

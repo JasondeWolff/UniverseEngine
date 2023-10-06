@@ -33,14 +33,17 @@ namespace UniverseEngine {
                 ImageUsageBits::SAMPLED_IMAGE,
             format, 1, texture.dimensions, texture.depth);
 
-        uploadCmdList.TransitionImageLayout(this->image, ImageLayout::UNDEFINED,
-                                            ImageLayout::TRANSFER_DST_OPTIMAL);
+        uploadCmdList.TransitionImageLayout(this->image, ImageLayout::TRANSFER_DST_OPTIMAL,
+                                            ResourceAccessBits::ACCESS_TRANSFER_WRITE_BIT,
+                                            PipelineStageBits::PIPELINE_STAGE_TRANSFER_BIT);
         uploadCmdList.CopyBuffers(stagingBuffer, this->image);
         if (texture.mips > 1) {
             uploadCmdList.GenerateMips(this->image);
         } else {
-            uploadCmdList.TransitionImageLayout(this->image, ImageLayout::TRANSFER_DST_OPTIMAL,
-                                                ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+            uploadCmdList.TransitionImageLayout(
+                this->image, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+                ResourceAccessBits::ACCESS_SHADER_READ_BIT,
+                PipelineStageBits::PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
         }
     }
 
@@ -54,8 +57,9 @@ namespace UniverseEngine {
             "Empty", device, physicalDevice, 1, 1, 1,
             ImageUsageBits::TRANSFER_DST_IMAGE | ImageUsageBits::SAMPLED_IMAGE,
             GraphicsFormat::R8G8B8A8_SRGB);
-        cmdList.TransitionImageLayout(image, ImageLayout::UNDEFINED,
-                                      ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        cmdList.TransitionImageLayout(image, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+                                      ResourceAccessBits::ACCESS_SHADER_READ_BIT,
+                                      PipelineStageBits::PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
         return image;
     }
 }  // namespace UniverseEngine

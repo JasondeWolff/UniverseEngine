@@ -7,6 +7,7 @@
 #include "../Logging.h"
 #include "../Swapchain.h"
 #include "VkGraphicsFormat.h"
+#include "VkResourceStateTracker.h"
 
 namespace UniverseEngine {
     VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const GraphicsInstance& instance,
@@ -163,6 +164,12 @@ namespace UniverseEngine {
             this->images.push_back(
                 std::make_shared<Image>(device, swapChainImages[i], swapChainImageViews[i],
                                         this->extent.width, this->extent.height));
+
+            ImageState imageState;
+            imageState.layout = VkImageLayout::VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+            imageState.stageFlags = VkPipelineStageFlagBits::VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+            imageState.accessFlags = VkAccessFlagBits::VK_ACCESS_NONE;
+            VkResourceStateTracker::AddGlobalImageState(this->images[0]->GetImage(), imageState);
         }
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {

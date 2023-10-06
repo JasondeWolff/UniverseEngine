@@ -7,6 +7,7 @@
 #include "../LogicalDevice.h"
 #include "VkDebugNames.h"
 #include "VkGraphicsFormat.h"
+#include "VkResourceStateTracker.h"
 
 namespace UniverseEngine {
     VkImageUsageFlags GetVkImageUsageFlags(ImageUsage usage) {
@@ -72,6 +73,12 @@ namespace UniverseEngine {
         VkDebugNames::Set(*device, VK_OBJECT_TYPE_IMAGE, reinterpret_cast<uint64_t>(this->image),
                           name);
 
+        ImageState imageState;
+        imageState.layout = VkImageLayout::VK_IMAGE_LAYOUT_UNDEFINED;
+        imageState.stageFlags = VkPipelineStageFlagBits::VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+        imageState.accessFlags = VkAccessFlagBits::VK_ACCESS_NONE;
+        VkResourceStateTracker::AddGlobalImageState(this->image, imageState);
+
         VkImageViewCreateInfo viewInfo{};
         viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         viewInfo.image = this->image;
@@ -109,6 +116,7 @@ namespace UniverseEngine {
         vkDestroyImageView(this->device->GetDevice(), this->imageView, nullptr);
 
         if (this->allocation) {
+            VkResourceStateTracker::RemoveGlobalImageState(this->image);
             vmaDestroyImage(this->device->GetAllocator(), this->image, this->allocation);
         }
     }

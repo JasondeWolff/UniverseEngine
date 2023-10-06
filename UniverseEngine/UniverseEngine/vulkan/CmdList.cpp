@@ -12,6 +12,7 @@
 #include "../Logging.h"
 #include "../Swapchain.h"
 #include "VkConversion.h"
+#include "VkResourceStateTracker.h"
 
 namespace UniverseEngine {
     VkImageLayout GetVkImageLayout(ImageLayout layout) {
@@ -38,6 +39,129 @@ namespace UniverseEngine {
 
         UE_FATAL("Unsupported image layout");
         return VkImageLayout::VK_IMAGE_LAYOUT_UNDEFINED;
+    }
+
+    VkAccessFlags GetVkAccessFlags(ResourceAccess access) {
+        VkAccessFlags flags = 0;
+
+        if (access.test(
+                GetResourceAccessBitIndex(ResourceAccessBits::ACCESS_INDIRECT_COMMAND_READ_BIT))) {
+            flags |= VkAccessFlagBits::VK_ACCESS_INDIRECT_COMMAND_READ_BIT;
+        }
+        if (access.test(GetResourceAccessBitIndex(ResourceAccessBits::ACCESS_INDEX_READ_BIT))) {
+            flags |= VkAccessFlagBits::VK_ACCESS_INDEX_READ_BIT;
+        }
+        if (access.test(
+                GetResourceAccessBitIndex(ResourceAccessBits::ACCESS_VERTEX_ATTRIBUTE_READ_BIT))) {
+            flags |= VkAccessFlagBits::VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT;
+        }
+        if (access.test(GetResourceAccessBitIndex(ResourceAccessBits::ACCESS_UNIFORM_READ_BIT))) {
+            flags |= VkAccessFlagBits::VK_ACCESS_UNIFORM_READ_BIT;
+        }
+        if (access.test(
+                GetResourceAccessBitIndex(ResourceAccessBits::ACCESS_INPUT_ATTACHMENT_READ_BIT))) {
+            flags |= VkAccessFlagBits::VK_ACCESS_INPUT_ATTACHMENT_READ_BIT;
+        }
+        if (access.test(GetResourceAccessBitIndex(ResourceAccessBits::ACCESS_SHADER_READ_BIT))) {
+            flags |= VkAccessFlagBits::VK_ACCESS_SHADER_READ_BIT;
+        }
+        if (access.test(GetResourceAccessBitIndex(ResourceAccessBits::ACCESS_SHADER_WRITE_BIT))) {
+            flags |= VkAccessFlagBits::VK_ACCESS_SHADER_WRITE_BIT;
+        }
+        if (access.test(
+                GetResourceAccessBitIndex(ResourceAccessBits::ACCESS_COLOR_ATTACHMENT_READ_BIT))) {
+            flags |= VkAccessFlagBits::VK_ACCESS_COLOR_ATTACHMENT_READ_BIT;
+        }
+        if (access.test(
+                GetResourceAccessBitIndex(ResourceAccessBits::ACCESS_COLOR_ATTACHMENT_WRITE_BIT))) {
+            flags |= VkAccessFlagBits::VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        }
+        if (access.test(GetResourceAccessBitIndex(
+                ResourceAccessBits::ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT))) {
+            flags |= VkAccessFlagBits::VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
+        }
+        if (access.test(GetResourceAccessBitIndex(
+                ResourceAccessBits::ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT))) {
+            flags |= VkAccessFlagBits::VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+        }
+        if (access.test(GetResourceAccessBitIndex(ResourceAccessBits::ACCESS_TRANSFER_READ_BIT))) {
+            flags |= VkAccessFlagBits::VK_ACCESS_TRANSFER_READ_BIT;
+        }
+        if (access.test(GetResourceAccessBitIndex(ResourceAccessBits::ACCESS_TRANSFER_WRITE_BIT))) {
+            flags |= VkAccessFlagBits::VK_ACCESS_TRANSFER_WRITE_BIT;
+        }
+        if (access.test(GetResourceAccessBitIndex(ResourceAccessBits::ACCESS_HOST_READ_BIT))) {
+            flags |= VkAccessFlagBits::VK_ACCESS_HOST_READ_BIT;
+        }
+        if (access.test(GetResourceAccessBitIndex(ResourceAccessBits::ACCESS_HOST_WRITE_BIT))) {
+            flags |= VkAccessFlagBits::VK_ACCESS_HOST_WRITE_BIT;
+        }
+        if (access.test(GetResourceAccessBitIndex(ResourceAccessBits::ACCESS_MEMORY_READ_BIT))) {
+            flags |= VkAccessFlagBits::VK_ACCESS_MEMORY_READ_BIT;
+        }
+        if (access.test(GetResourceAccessBitIndex(ResourceAccessBits::ACCESS_MEMORY_WRITE_BIT))) {
+            flags |= VkAccessFlagBits::VK_ACCESS_MEMORY_WRITE_BIT;
+        }
+
+        return flags;
+    }
+
+    VkPipelineStageFlags GetVkPipelineStageFlags(PipelineStage stage) {
+        VkAccessFlags flags = 0;
+
+        if (stage.test(
+                GetPipelineStageBitIndex(PipelineStageBits::PIPELINE_STAGE_TOP_OF_PIPE_BIT))) {
+            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+        }
+        if (stage.test(
+                GetPipelineStageBitIndex(PipelineStageBits::PIPELINE_STAGE_DRAW_INDIRECT_BIT))) {
+            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT;
+        }
+        if (stage.test(
+                GetPipelineStageBitIndex(PipelineStageBits::PIPELINE_STAGE_VERTEX_INPUT_BIT))) {
+            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_VERTEX_INPUT_BIT;
+        }
+        if (stage.test(
+                GetPipelineStageBitIndex(PipelineStageBits::PIPELINE_STAGE_VERTEX_SHADER_BIT))) {
+            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_VERTEX_SHADER_BIT;
+        }
+        if (stage.test(GetPipelineStageBitIndex(
+                PipelineStageBits::PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT))) {
+            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT;
+        }
+        if (stage.test(GetPipelineStageBitIndex(
+                PipelineStageBits::PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT))) {
+            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT;
+        }
+        if (stage.test(
+                GetPipelineStageBitIndex(PipelineStageBits::PIPELINE_STAGE_GEOMETRY_SHADER_BIT))) {
+            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT;
+        }
+        if (stage.test(
+                GetPipelineStageBitIndex(PipelineStageBits::PIPELINE_STAGE_FRAGMENT_SHADER_BIT))) {
+            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+        }
+        if (stage.test(GetPipelineStageBitIndex(
+                PipelineStageBits::PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT))) {
+            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+        }
+        if (stage.test(GetPipelineStageBitIndex(
+                PipelineStageBits::PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT))) {
+            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
+        }
+        if (stage.test(GetPipelineStageBitIndex(
+                PipelineStageBits::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT))) {
+            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+        }
+        if (stage.test(
+                GetPipelineStageBitIndex(PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT))) {
+            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
+        }
+        if (stage.test(GetPipelineStageBitIndex(PipelineStageBits::PIPELINE_STAGE_TRANSFER_BIT))) {
+            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_TRANSFER_BIT;
+        }
+
+        return flags;
     }
 
     CmdList::CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue)
@@ -113,15 +237,15 @@ namespace UniverseEngine {
     }
 
     void CmdList::CopyImages(std::shared_ptr<Image> src, std::shared_ptr<Image> dst) {
-
         this->trackedImages.push_back(src);
         this->trackedImages.push_back(dst);
     }
 
     void CmdList::CopyImagesIntoCubemap(const std::array<std::shared_ptr<Image>, 6>& images,
                                         std::shared_ptr<Image> cubemap) {
-        this->TransitionImageLayout(cubemap, ImageLayout::UNDEFINED,
-                                    ImageLayout::TRANSFER_DST_OPTIMAL);
+        this->TransitionImageLayout(cubemap, ImageLayout::TRANSFER_DST_OPTIMAL,
+                                    ResourceAccessBits::ACCESS_TRANSFER_WRITE_BIT,
+                                    PipelineStageBits::PIPELINE_STAGE_TRANSFER_BIT);
 
         VkImageCopy imageCopy{};
         imageCopy.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -136,8 +260,9 @@ namespace UniverseEngine {
         uint32_t mipHeight = cubemap->Height();
 
         for (size_t i = 0; i < images.size(); i++) {
-            this->TransitionImageLayout(images[i], ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-                                        ImageLayout::TRANSFER_SRC_OPTIMAL);
+            this->TransitionImageLayout(images[i], ImageLayout::TRANSFER_SRC_OPTIMAL,
+                                        ResourceAccessBits::ACCESS_TRANSFER_READ_BIT,
+                                        PipelineStageBits::PIPELINE_STAGE_TRANSFER_BIT);
         }
 
         for (uint32_t mip = 0; mip < images[0]->Mips(); mip++) {
@@ -160,8 +285,9 @@ namespace UniverseEngine {
                 mipHeight /= 2;
         }
 
-        this->TransitionImageLayout(cubemap, ImageLayout::TRANSFER_DST_OPTIMAL,
-                                    ImageLayout::SHADER_READ_ONLY_OPTIMAL);
+        this->TransitionImageLayout(cubemap, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+                                    ResourceAccessBits::ACCESS_SHADER_READ_BIT,
+                                    PipelineStageBits::PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
     }
 
     void CmdList::GenerateMips(std::shared_ptr<Image> image) {
@@ -236,12 +362,16 @@ namespace UniverseEngine {
         this->trackedImages.push_back(image);
     }
 
-    void CmdList::TransitionImageLayout(std::shared_ptr<Image> image, ImageLayout oldLayout,
-                                        ImageLayout newLayout) {
-        VkImageLayout vkOldLayout = GetVkImageLayout(oldLayout);
-        VkImageLayout vkNewLayout = GetVkImageLayout(newLayout);
+    void CmdList::TransitionImageLayout(std::shared_ptr<Image> image, ImageLayout layout,
+                                        ResourceAccess access, PipelineStage pipelineStage) {
+        ImageState imageState;
+        imageState.layout = GetVkImageLayout(layout);
+        imageState.accessFlags = GetVkAccessFlags(access);
+        imageState.stageFlags = GetVkPipelineStageFlags(pipelineStage);
 
-        VkImageMemoryBarrier barrier{};
+        VkResourceStateTracker::TransitionImage(this->cmdBuffer, *image, imageState);
+
+        /*VkImageMemoryBarrier barrier{};
         barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
         barrier.oldLayout = vkOldLayout;
         barrier.newLayout = vkNewLayout;
@@ -316,7 +446,7 @@ namespace UniverseEngine {
         }
 
         vkCmdPipelineBarrier(this->cmdBuffer, sourceStage, destinationStage, 0, 0, nullptr, 0,
-                             nullptr, 1, &barrier);
+                             nullptr, 1, &barrier);*/
 
         this->trackedImages.push_back(image);
     }

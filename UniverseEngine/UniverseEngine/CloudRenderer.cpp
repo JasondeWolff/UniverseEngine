@@ -86,7 +86,7 @@ namespace UniverseEngine {
 
         cmdList.BindComputePipeline(this->pipeline);
 
-        cmdList.TransitionImageLayout(colorImage, ImageLayout::PRESENT_SRC, ImageLayout::GENERAL);
+        /*cmdList.TransitionImageLayout(colorImage, ImageLayout::PRESENT_SRC, ImageLayout::GENERAL);
 
         this->descriptorSets[currentFrame]->SetImage(0, DescriptorType::STORAGE_IMAGE, colorImage,
                                                      nullptr);
@@ -98,7 +98,7 @@ namespace UniverseEngine {
         cmdList.BindDescriptorSet(this->descriptorSets[currentFrame], 0, PipelineType::COMPUTE);
         cmdList.Dispatch(DivideUp(colorImage->Width(), 32), DivideUp(colorImage->Height(), 32));
 
-        cmdList.TransitionImageLayout(colorImage, ImageLayout::GENERAL, ImageLayout::PRESENT_SRC);
+        cmdList.TransitionImageLayout(colorImage, ImageLayout::GENERAL, ImageLayout::PRESENT_SRC);*/
     }
 
     void CloudRenderer::GenerateNoise() {
