@@ -1,9 +1,9 @@
 #version 450
 #extension GL_KHR_vulkan_glsl: enable
 
-#define PRIMARY_STEPS 30
-#define SECONDARY_STEPS 10
-#define MIN_TRANSMITTANCE 0.01
+#define PRIMARY_STEPS 50
+#define SECONDARY_STEPS 4
+#define MIN_TRANSMITTANCE 0.1
 
 layout (binding = 0, rgba8) uniform image2D outputImage;
 layout (binding = 1) uniform sampler2D depthImage;
@@ -101,9 +101,37 @@ float lightMarch(vec3 position, AABB aabb) {
 }
 
 vec2 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
-    float distanceToCloud = max(tmin, 0.0);
-    float distanceThroughCloud = min(depth, tmax) - distanceToCloud;
-    float distanceTraveled = 0.0;
+//    float distanceToCloud = max(tmin, 0.0);
+//    float distanceThroughCloud = min(min(depth, tmax) - distanceToCloud, 100.0);
+//    float distanceTraveled = 0.0;
+//
+//    float transmittance = 1.0;
+//    float lightEnergy = 0.0;
+//
+//    const float phaseVal = 0.74;
+//    const float lightAbsorbtion = 0.85;
+//
+//    float stepSize = distanceThroughCloud / PRIMARY_STEPS;
+//    while (distanceTraveled < distanceThroughCloud) {
+//        vec3 position = ray.origin + ray.direction * (distanceToCloud + distanceTraveled);
+//        float density = sampleDensity(position);
+//
+//        if (density > 0.0) {
+//            float lightTransmittance = lightMarch(position, aabb);
+//            lightEnergy += density * stepSize * transmittance * lightTransmittance * phaseVal;
+//            transmittance *= exp(-density * stepSize * lightAbsorbtion);
+//
+//            if (transmittance < MIN_TRANSMITTANCE) {
+//                break;
+//            }
+//        }
+//        distanceTraveled += stepSize;
+//    }
+//
+//    return vec2(transmittance, lightEnergy);
+
+float distanceToCloud = max(tmin, 0.0);
+    float distanceThroughCloud = min(min(depth, tmax) - distanceToCloud, 100.0);
 
     float transmittance = 1.0;
     float lightEnergy = 0.0;
@@ -111,10 +139,18 @@ vec2 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
     const float phaseVal = 0.74;
     const float lightAbsorbtion = 0.85;
 
-    float stepSize = distanceThroughCloud / PRIMARY_STEPS;
-    while (distanceTraveled < distanceThroughCloud) {
-        vec3 position = ray.origin + ray.direction * (distanceToCloud + distanceTraveled);
+    float uniformStepSize = distanceThroughCloud / PRIMARY_STEPS;
+    float minStepSize = uniformStepSize * 0.1;
+    float maxStepSize = uniformStepSize * 3.0;
+    const float badDensityThreshold = 0.1;
+
+    float stepSize = uniformStepSize;
+    for (int i = 0; i < PRIMARY_STEPS; i++) {
+        vec3 position = ray.origin + ray.direction * (distanceToCloud + i * stepSize);
         float density = sampleDensity(position);
+
+        float stepSizeFactor = (1.0 - density) + (1.0 - badDensityThreshold);
+        stepSize = clamp(stepSize * stepSizeFactor, minStepSize, maxStepSize);
 
         if (density > 0.0) {
             float lightTransmittance = lightMarch(position, aabb);
@@ -125,7 +161,10 @@ vec2 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
                 break;
             }
         }
-        distanceTraveled += stepSize;
+
+        if (i * stepSize > distanceThroughCloud) {
+            break;
+        }
     }
 
     return vec2(transmittance, lightEnergy);
