@@ -112,6 +112,12 @@ namespace UniverseEngine {
         this->trackedImages.push_back(dst);
     }
 
+    void CmdList::CopyImages(std::shared_ptr<Image> src, std::shared_ptr<Image> dst) {
+
+        this->trackedImages.push_back(src);
+        this->trackedImages.push_back(dst);
+    }
+
     void CmdList::CopyImagesIntoCubemap(const std::array<std::shared_ptr<Image>, 6>& images,
                                         std::shared_ptr<Image> cubemap) {
         this->TransitionImageLayout(cubemap, ImageLayout::UNDEFINED,

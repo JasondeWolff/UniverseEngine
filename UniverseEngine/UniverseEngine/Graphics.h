@@ -64,6 +64,7 @@ namespace UniverseEngine {
         std::unique_ptr<Swapchain> swapchain;
         std::shared_ptr<Image> colorImage;
         std::shared_ptr<Image> depthImage;
+        std::shared_ptr<Image> readableDepthImage;
 
         std::unique_ptr<CloudRenderer> cloudRenderer;
         std::unique_ptr<ImGuiRenderer> imguiRenderer;

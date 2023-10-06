@@ -26,9 +26,11 @@ namespace UniverseEngine {
             device, std::vector<DescriptorLayoutBinding>{
                         DescriptorLayoutBinding("outputImage", 0, DescriptorType::STORAGE_IMAGE,
                                                 GraphicsStageFlagBits::COMPUTE_STAGE),
-                        DescriptorLayoutBinding("ubo", 1, DescriptorType::UNIFORM_BUFFER,
+                        DescriptorLayoutBinding("depthImage", 1, DescriptorType::STORAGE_IMAGE,
                                                 GraphicsStageFlagBits::COMPUTE_STAGE),
                         DescriptorLayoutBinding("noise", 2, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                                                GraphicsStageFlagBits::COMPUTE_STAGE),
+                        DescriptorLayoutBinding("ubo", 3, DescriptorType::UNIFORM_BUFFER,
                                                 GraphicsStageFlagBits::COMPUTE_STAGE)});
 
         for (size_t i = 0; i < this->descriptorSets.size(); i++) {
@@ -38,7 +40,7 @@ namespace UniverseEngine {
             this->descriptorSets[i] =
                 std::make_shared<DescriptorSet>(device, descriptorPool, this->descriptorSetLayout);
 
-            this->descriptorSets[i]->SetBuffer(1, DescriptorType::UNIFORM_BUFFER,
+            this->descriptorSets[i]->SetBuffer(3, DescriptorType::UNIFORM_BUFFER,
                                                this->uniformBuffers[i]);
         }
 
@@ -65,7 +67,7 @@ namespace UniverseEngine {
     }
 
     void CloudRenderer::Render(CmdList& cmdList, std::shared_ptr<Image> colorImage,
-                               size_t currentFrame) {
+                               std::shared_ptr<Image> depthImage, size_t currentFrame) {
         World& world = Engine::GetWorld();
         Camera& camera = world.camera;
         const glm::mat4& invViewMatrix = camera.transform.GetMatrix();
@@ -88,8 +90,11 @@ namespace UniverseEngine {
 
         this->descriptorSets[currentFrame]->SetImage(0, DescriptorType::STORAGE_IMAGE, colorImage,
                                                      nullptr);
+        this->descriptorSets[currentFrame]->SetImage(1, DescriptorType::STORAGE_IMAGE, depthImage,
+                                                     nullptr);
         this->descriptorSets[currentFrame]->SetImage(2, DescriptorType::COMBINED_IMAGE_SAMPLER,
-                                                     this->noise->Renderable().GetImage(), this->sampler);
+                                                     this->noise->Renderable().GetImage(),
+                                                     this->sampler);
         cmdList.BindDescriptorSet(this->descriptorSets[currentFrame], 0, PipelineType::COMPUTE);
         cmdList.Dispatch(DivideUp(colorImage->Width(), 32), DivideUp(colorImage->Height(), 32));
 

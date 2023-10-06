@@ -53,9 +53,11 @@ namespace UniverseEngine {
         B8G8R8A8_SINT = 49,
         B8G8R8A8_SRGB = 50,
         D32_SFLOAT = 51,
+        D24_UNORM_S8_UINT = 52,
+        R32_SFLOAT = 53,
     };
 
     inline bool IsDepthFormat(GraphicsFormat format) {
-        return format == GraphicsFormat::D32_SFLOAT;
+        return format == GraphicsFormat::D32_SFLOAT || format == GraphicsFormat::D24_UNORM_S8_UINT;
     }
 }

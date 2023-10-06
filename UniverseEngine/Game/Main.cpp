@@ -8,7 +8,7 @@
 
 int main() {
 	UniverseEngine::Engine engine{};
-	engine.Start<CloudDemo>();
+	engine.Start<AssetDemo>();
 
 	return 0;
 }

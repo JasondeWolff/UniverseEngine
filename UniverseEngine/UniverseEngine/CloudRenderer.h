@@ -37,7 +37,8 @@ namespace UniverseEngine {
 
         Semaphore& CurrentSemaphore(size_t currentFrame);
 
-        void Render(CmdList& cmdList, std::shared_ptr<Image> colorImage, size_t currentFrame);
+        void Render(CmdList& cmdList, std::shared_ptr<Image> colorImage,
+                    std::shared_ptr<Image> depthImage, size_t currentFrame);
 
         CloudConfig config;
 
