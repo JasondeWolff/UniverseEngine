@@ -30,6 +30,15 @@ namespace UniverseEngine {
         float scale = 0.14f;
         float densityThreshold = 0.27f;
         float densityMultiplier = 0.7f;
+
+        float forwardScattering = 0.72f;
+        float backwardScattering = 0.33f;
+        float baseBrightness = 0.7f;
+        float phaseFactor = 0.74f;
+
+        float lightAbsorbtion = 1.05f;
+        float indirectLightAbsorbtion = 0.96f;
+        float darknessThreshold = 0.07f;
     };
 
     class CloudRenderer {

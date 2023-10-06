@@ -22,12 +22,17 @@ layout(binding = 3) uniform UniformBufferObject {
     float cloudDensityThreshold;
     float cloudDensityMultiplier;
 
+    float forwardScattering;
+    float backwardScattering;
+    float baseBrightness;
+    float phaseFactor;
+
+    float lightAbsorbtion;
+    float indirectLightAbsorbtion;
+    float darknessThreshold;
+
     float zNear;
     float zFar;
-
-    float PADDING0;
-    float PADDING1;
-    float PADDING2;
 } ubo;
 
 struct Ray {
@@ -68,6 +73,21 @@ bool IntersectAABB(Ray ray, AABB aabb, out float lo, out float hi) {
     return tmax >= tmin && tmax > 0.0;
 }
 
+float henyey(float a, float g) {
+    float g2 = g*g;
+    return (1-g2) / (4*3.1415*pow(1+g2-2*g*(a), 1.5));
+}
+
+float phase(float a) {
+    float blend = 0.5;
+    float hgBlend = henyey(a, ubo.forwardScattering) * (1.0 - blend) + henyey(a, -ubo.backwardScattering) * blend;
+    return ubo.baseBrightness + hgBlend * ubo.phaseFactor;
+}
+
+float beer(float d) {
+    return exp(-d);
+}
+
 float sampleDensity(vec3 position) {
     float density = texture(noise, position * ubo.cloudScale * 0.01 + ubo.cloudOffset.xyz * 0.01).r;
     density = max(density - ubo.cloudDensityThreshold, 0.0) * ubo.cloudDensityMultiplier;
@@ -82,9 +102,6 @@ float lightMarch(vec3 position, AABB aabb) {
     ray.direction = L;
     ray.invDirection = vec3(1.0) / L;
 
-    const float sunlightAbsorbtion = 0.94;
-    const float darknessThreshold = 0.07;
-
     float tmin, tmax;
     IntersectAABB(ray, aabb, tmin, tmax);
     float distanceThroughCloud = tmax;
@@ -96,48 +113,19 @@ float lightMarch(vec3 position, AABB aabb) {
         totalDensity += max(0.0, sampleDensity(position) * stepSize);
     }
 
-    float transmittance = exp(-totalDensity * sunlightAbsorbtion);
-    return darknessThreshold + transmittance * (1.0 - darknessThreshold);
+    float transmittance = exp(-totalDensity * ubo.lightAbsorbtion);
+    return ubo.darknessThreshold + transmittance * (1.0 - ubo.darknessThreshold);
 }
 
 vec2 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
-//    float distanceToCloud = max(tmin, 0.0);
-//    float distanceThroughCloud = min(min(depth, tmax) - distanceToCloud, 100.0);
-//    float distanceTraveled = 0.0;
-//
-//    float transmittance = 1.0;
-//    float lightEnergy = 0.0;
-//
-//    const float phaseVal = 0.74;
-//    const float lightAbsorbtion = 0.85;
-//
-//    float stepSize = distanceThroughCloud / PRIMARY_STEPS;
-//    while (distanceTraveled < distanceThroughCloud) {
-//        vec3 position = ray.origin + ray.direction * (distanceToCloud + distanceTraveled);
-//        float density = sampleDensity(position);
-//
-//        if (density > 0.0) {
-//            float lightTransmittance = lightMarch(position, aabb);
-//            lightEnergy += density * stepSize * transmittance * lightTransmittance * phaseVal;
-//            transmittance *= exp(-density * stepSize * lightAbsorbtion);
-//
-//            if (transmittance < MIN_TRANSMITTANCE) {
-//                break;
-//            }
-//        }
-//        distanceTraveled += stepSize;
-//    }
-//
-//    return vec2(transmittance, lightEnergy);
-
-float distanceToCloud = max(tmin, 0.0);
+    float distanceToCloud = max(tmin, 0.0);
     float distanceThroughCloud = min(min(depth, tmax) - distanceToCloud, 100.0);
 
     float transmittance = 1.0;
     float lightEnergy = 0.0;
 
-    const float phaseVal = 0.74;
-    const float lightAbsorbtion = 0.85;
+    float cosAngle = dot(ray.direction, -ubo.lightDir.xyz);
+    float phaseVal = phase(cosAngle);
 
     float uniformStepSize = distanceThroughCloud / PRIMARY_STEPS;
     float minStepSize = uniformStepSize * 0.1;
@@ -155,7 +143,7 @@ float distanceToCloud = max(tmin, 0.0);
         if (density > 0.0) {
             float lightTransmittance = lightMarch(position, aabb);
             lightEnergy += density * stepSize * transmittance * lightTransmittance * phaseVal;
-            transmittance *= exp(-density * stepSize * lightAbsorbtion);
+            transmittance *= exp(-density * stepSize * ubo.indirectLightAbsorbtion);
 
             if (transmittance < MIN_TRANSMITTANCE) {
                 break;
