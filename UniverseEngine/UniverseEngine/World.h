@@ -20,7 +20,7 @@ namespace UniverseEngine {
         Camera camera;
         Sun sun;
 
-        std::shared_ptr<SceneInstance> GenerateWorld();
+        void GenerateWorld();
         std::shared_ptr<SceneInstance> AddSceneInstance(std::shared_ptr<Scene> hScene);
         const std::vector<std::shared_ptr<SceneInstance>>& GetAllSceneInstances() const;
 

@@ -25,7 +25,7 @@ void TerrianDemo::OnStart() {
 	}
 	graphics.SetSkybox(skyboxTextures);
 
-	auto GeneratedTerrianInstance = Engine::GetWorld().GenerateWorld();
+	Engine::GetWorld().GenerateWorld();
 
 	this->camera.Start();
 }

@@ -107,7 +107,7 @@ namespace UniverseEngine {
         auto fnCellular = FastNoise::New<FastNoise::CellularDistance>();
         auto fnFractal = FastNoise::New<FastNoise::FractalFBm>();
         fnFractal->SetSource(fnCellular);
-        fnFractal->SetOctaveCount(5);
+        fnFractal->SetOctaveCount(1);
 
         float* noiseData =
             static_cast<float*>(malloc(resolution * resolution * resolution * sizeof(float)));

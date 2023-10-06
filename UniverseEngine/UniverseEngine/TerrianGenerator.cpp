@@ -10,8 +10,6 @@
 #include <vector>
 
 namespace UniverseEngine {
-    TerrianGenerator::TerrianGenerator() {
-    }
 
     void TerrianGenerator::Init(int width, int height, int widthSegments, int heightSegments)
     {
@@ -20,10 +18,10 @@ namespace UniverseEngine {
         this->chunk_widthSegments = widthSegments;
         this->chunk_heightSegments = heightSegments;
         
-        CreatePlane(glm::vec2(0,0));
+        //CreatePlane(glm::vec2(0,0));
     }
 
-    void TerrianGenerator::CreatePlane(glm::vec2 gridPos) {
+    std::shared_ptr<Scene> TerrianGenerator::CreatePlane(glm::vec2 gridPos) {
 
         // Calculate step sizes
         float dx = chunk_width / static_cast<float>(chunk_widthSegments);
@@ -66,26 +64,36 @@ namespace UniverseEngine {
 
         auto hScene = Engine::GetResources().CreateScene(std::move(chunk));
         
-        //this->generatedWorld[(unsigned int)gridPos.x][(unsigned int)gridPos.y] = hScene;
-        /*this->generatedWorld.insert(std::pair < std::map<unsigned int, std::shared_ptr<Scene>>(
-                                                    (unsigned int)gridPos.y, hScene));*/
-        this->generatedWorld[(uint32_t)gridPos.x][(uint32_t)gridPos.y] = hScene;
+        return hScene;
+    }
+
+    void TerrianGenerator::ResizeVectors(int newWidth, int newHeight) {
+        // Resize the generatedWorld vector
+        this->generatedWorld.resize(newWidth, std::vector<std::shared_ptr<Scene>>(newHeight, nullptr));
+
+        // Resize the newlyGeneratedWorld vector (if needed)
+        this->newlyGeneratedWorld.resize(newWidth, std::vector<std::shared_ptr<Scene>>(newHeight, nullptr));
     }
 
     void TerrianGenerator::Update() {
         auto camera = Engine::GetWorld().camera;
-        glm::vec3 camerePos = camera.transform.GetTranslation();
-        glm::vec2 gridPos =
-        { 
-            camerePos.x / chunk_width,
-            camerePos.y / chunk_height 
+        glm::vec3 cameraPos = camera.transform.GetTranslation();
+
+        const glm::ivec2 gridPos = {
+            static_cast<int>(cameraPos.x) / chunk_width,
+            static_cast<int>(cameraPos.y) / chunk_height
         };
 
-        if (this->generatedWorld[(uint32_t)gridPos.x][(uint32_t)gridPos.y] == nullptr)
-        {
-            CreatePlane(gridPos);
+        // Check if the vectors need resizing
+        if (gridPos.x >= this->generatedWorld.size() || gridPos.y >= this->generatedWorld[0].size()) {
+            // Resize the vectors to accommodate the grid position
+            ResizeVectors(gridPos.x + 1, gridPos.y + 1);
         }
 
-        int debug = 0;
+        if (this->generatedWorld[gridPos.x][gridPos.y] == nullptr) {
+            auto chunkScene = CreatePlane(gridPos);
+            this->newlyGeneratedWorld[gridPos.x][gridPos.y] = chunkScene;
+            this->generatedWorld[gridPos.x][gridPos.y] = chunkScene;
+        }
     }
 }  // namespace UniverseEngine
