@@ -8,12 +8,16 @@
 struct UniformBuffer {
     glm::mat4 invView;
     glm::mat4 invProj;
+
     glm::vec4 cloudOffset;
     float cloudScale;
     float cloudDensityThreshold;
     float cloudDensityMultiplier;
 
-    float PADDING;
+    float zNear;
+    float zFar;
+
+    float PADDING[3];
 };
 
 namespace UniverseEngine {
@@ -23,15 +27,16 @@ namespace UniverseEngine {
                                  const Graphics& graphics)
         : config{} {
         this->descriptorSetLayout = std::make_shared<DescriptorSetLayout>(
-            device, std::vector<DescriptorLayoutBinding>{
-                        DescriptorLayoutBinding("outputImage", 0, DescriptorType::STORAGE_IMAGE,
-                                                GraphicsStageFlagBits::COMPUTE_STAGE),
-                        DescriptorLayoutBinding("depthImage", 1, DescriptorType::STORAGE_IMAGE,
-                                                GraphicsStageFlagBits::COMPUTE_STAGE),
-                        DescriptorLayoutBinding("noise", 2, DescriptorType::COMBINED_IMAGE_SAMPLER,
-                                                GraphicsStageFlagBits::COMPUTE_STAGE),
-                        DescriptorLayoutBinding("ubo", 3, DescriptorType::UNIFORM_BUFFER,
-                                                GraphicsStageFlagBits::COMPUTE_STAGE)});
+            device,
+            std::vector<DescriptorLayoutBinding>{
+                DescriptorLayoutBinding("outputImage", 0, DescriptorType::STORAGE_IMAGE,
+                                        GraphicsStageFlagBits::COMPUTE_STAGE),
+                DescriptorLayoutBinding("depthImage", 1, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                                        GraphicsStageFlagBits::COMPUTE_STAGE),
+                DescriptorLayoutBinding("noise", 2, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                                        GraphicsStageFlagBits::COMPUTE_STAGE),
+                DescriptorLayoutBinding("ubo", 3, DescriptorType::UNIFORM_BUFFER,
+                                        GraphicsStageFlagBits::COMPUTE_STAGE)});
 
         for (size_t i = 0; i < this->descriptorSets.size(); i++) {
             this->uniformBuffers[i] = std::make_shared<Buffer>(
@@ -80,25 +85,39 @@ namespace UniverseEngine {
         uniformBuffer.cloudScale = this->config.scale;
         uniformBuffer.cloudDensityThreshold = this->config.densityThreshold;
         uniformBuffer.cloudDensityMultiplier = this->config.densityMultiplier;
+        uniformBuffer.zNear = camera.GetNear();
+        uniformBuffer.zFar = camera.GetFar();
         void* uniformBufferData = this->uniformBuffers[currentFrame]->Map();
         memcpy(uniformBufferData, &uniformBuffer, sizeof(UniformBuffer));
         this->uniformBuffers[currentFrame]->Unmap();
 
         cmdList.BindComputePipeline(this->pipeline);
 
-        /*cmdList.TransitionImageLayout(colorImage, ImageLayout::PRESENT_SRC, ImageLayout::GENERAL);
+        cmdList.TransitionImageLayout(colorImage, ImageLayout::GENERAL,
+                                      ResourceAccessBits::ACCESS_SHADER_READ_BIT |
+                                          ResourceAccessBits::ACCESS_SHADER_WRITE_BIT,
+                                      PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+        cmdList.TransitionImageLayout(depthImage, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+                                      ResourceAccessBits::ACCESS_SHADER_READ_BIT,
+                                      PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
 
         this->descriptorSets[currentFrame]->SetImage(0, DescriptorType::STORAGE_IMAGE, colorImage,
                                                      nullptr);
-        this->descriptorSets[currentFrame]->SetImage(1, DescriptorType::STORAGE_IMAGE, depthImage,
-                                                     nullptr);
+        this->descriptorSets[currentFrame]->SetImage(1, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                                                     depthImage, this->sampler);
         this->descriptorSets[currentFrame]->SetImage(2, DescriptorType::COMBINED_IMAGE_SAMPLER,
                                                      this->noise->Renderable().GetImage(),
                                                      this->sampler);
         cmdList.BindDescriptorSet(this->descriptorSets[currentFrame], 0, PipelineType::COMPUTE);
         cmdList.Dispatch(DivideUp(colorImage->Width(), 32), DivideUp(colorImage->Height(), 32));
 
-        cmdList.TransitionImageLayout(colorImage, ImageLayout::GENERAL, ImageLayout::PRESENT_SRC);*/
+        cmdList.TransitionImageLayout(
+            colorImage, ImageLayout::PRESENT_SRC,
+            ResourceAccessBits::ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+            PipelineStageBits::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
+        cmdList.TransitionImageLayout(depthImage, ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+                                      ResourceAccessBits::ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
+                                      PipelineStageBits::PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT);
     }
 
     void CloudRenderer::GenerateNoise() {

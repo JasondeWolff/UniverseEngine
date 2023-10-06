@@ -18,7 +18,11 @@ namespace UniverseEngine {
         barrier.srcAccessMask = oldState.accessFlags;
         barrier.dstAccessMask = newState.accessFlags;
         barrier.image = image.GetImage();
-        barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        if (IsDepthFormat(image.Format()))
+            barrier.subresourceRange.aspectMask =
+                VK_IMAGE_ASPECT_DEPTH_BIT;
+        else
+            barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         barrier.subresourceRange.baseMipLevel = 0;
         barrier.subresourceRange.levelCount = image.Mips();
         barrier.subresourceRange.baseArrayLayer = 0;

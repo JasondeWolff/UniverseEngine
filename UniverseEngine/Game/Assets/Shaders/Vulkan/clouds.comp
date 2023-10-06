@@ -4,19 +4,25 @@
 #define NUM_STEPS 30
 
 layout (binding = 0, rgba8) uniform image2D outputImage;
-layout (binding = 1, r32f) uniform readonly image2D depthImage;
+layout (binding = 1) uniform sampler2D depthImage;
 
 layout (binding = 2) uniform sampler3D noise;
 
 layout(binding = 3) uniform UniformBufferObject {
     mat4 invView;
     mat4 invProj;
+
     vec4 cloudOffset;
     float cloudScale;
     float cloudDensityThreshold;
     float cloudDensityMultiplier;
 
-    float PADDING;
+    float zNear;
+    float zFar;
+
+    float PADDING0;
+    float PADDING1;
+    float PADDING2;
 } ubo;
 
 struct Ray {
@@ -30,6 +36,11 @@ struct AABB {
     vec3 lo;
     vec3 hi;
 };
+
+float LinearDepth(float d)
+{
+    return ubo.zNear * ubo.zFar / (ubo.zFar + d * (ubo.zNear - ubo.zFar));
+}
 
 bool IntersectAABB(Ray ray, AABB aabb, out float lo, out float hi) {
     float tx1 = (aabb.lo.x - ray.origin.x) * ray.invDirection.x;
@@ -58,9 +69,9 @@ float sampleDensity(vec3 position) {
     return density;
 }
 
-float march(Ray ray, float tmin, float tmax) {
+float march(Ray ray, float tmin, float tmax, float depth) {
     float distanceToCloud = max(tmin, 0.0);
-    float distanceThroughCloud = tmax - distanceToCloud;
+    float distanceThroughCloud = min(tmax, depth) - distanceToCloud;
     float totalDensity = 0.0;
     float distanceTraveled = 0.0;
 
@@ -95,6 +106,9 @@ void main()
     vec4 target = ubo.invProj * vec4(uv, 1.0, 1.0);
     vec4 direction = ubo.invView * vec4(normalize(target.xyz), 0.0);
 
+    float nonlinearDepth = texture(depthImage, vec2(id) / vec2(dispatchSize)).r;
+    float depth = LinearDepth(nonlinearDepth);
+
     Ray ray;
     ray.origin = origin;
     ray.direction = direction.xyz;
@@ -103,10 +117,10 @@ void main()
 
     float tmin, tmax;
     if(IntersectAABB(ray, aabb, tmin, tmax)) {
-        float transmittance = march(ray, tmin, tmax);
+        float transmittance = march(ray, tmin, tmax, depth);
 
         vec3 color = imageLoad(outputImage, id).rgb;
         color *= transmittance;
-        imageStore(outputImage, id, vec4(color, 1.0));
+        imageStore(outputImage, id, vec4(depth, depth, color.r, 1.0));
     }  
 }

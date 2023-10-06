@@ -251,9 +251,9 @@ namespace UniverseEngine {
         this->cmdQueue->SubmitCmdList(pbrCmdList, nullptr, waitSemaphores, signalSemaphores);
 
         std::shared_ptr<CmdList> computeCmdList = this->computeQueue->GetCmdList();
-        /*this->cloudRenderer->Render(*computeCmdList, this->colorImage,
-                                    this->readableDepthImage,
-                                    currentFrame);*/
+        this->cloudRenderer->Render(*computeCmdList, this->colorImage,
+                                    this->depthImage,
+                                    currentFrame);
         std::vector<Semaphore*> cloudWaitSemaphores{
             &this->cloudRenderer->CurrentSemaphore(currentFrame)};
         std::vector<Semaphore*> cloudSignalSemaphores{};
@@ -360,11 +360,12 @@ namespace UniverseEngine {
             GraphicsFormat::R8G8B8A8_UNORM);
         this->depthImage = std::make_shared<Image>(
             "Depth Image", this->device, *this->physicalDevice, width, height, 1,
-            ImageUsageBits::DEPTH_STENCIL_ATTACHMENT, GraphicsFormat::D32_SFLOAT);
-        this->readableDepthImage = std::make_shared<Image>(
+            ImageUsageBits::DEPTH_STENCIL_ATTACHMENT | ImageUsageBits::SAMPLED_IMAGE,
+            GraphicsFormat::D32_SFLOAT);
+        /*this->readableDepthImage = std::make_shared<Image>(
             "Readable Depth Image", this->device, *this->physicalDevice, width, height, 1,
-            ImageUsageBits::SAMPLED_IMAGE | ImageUsageBits::STORAGE_IMAGE,
-            GraphicsFormat::R32_SFLOAT);
+            ImageUsageBits::SAMPLED_IMAGE | ImageUsageBits::STORAGE_IMAGE | ImageUsageBits::TRANSFER_DST_IMAGE,
+            GraphicsFormat::R32_SFLOAT);*/
 
         this->renderPass = std::make_shared<RenderPass>(
             this->device, std::vector<GraphicsFormat>{this->colorImage->Format()},
