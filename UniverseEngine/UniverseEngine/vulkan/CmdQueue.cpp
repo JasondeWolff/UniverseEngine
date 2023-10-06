@@ -8,6 +8,7 @@
 #include "../Fence.h"
 #include "../Logging.h"
 #include "../Semaphore.h"
+#include "VkConversion.h"
 
 namespace UniverseEngine {
     CmdQueue::CmdQueue(const std::shared_ptr<LogicalDevice> device,
@@ -39,6 +40,7 @@ namespace UniverseEngine {
 
     void CmdQueue::SubmitCmdList(std::shared_ptr<CmdList> cmdList, std::shared_ptr<Fence> fence,
                                  const std::vector<Semaphore*>& waitSemaphores,
+                                 const std::vector<PipelineStage>& waitStages,
                                  const std::vector<Semaphore*>& signalSemaphores) {
         cmdList->End();
 
@@ -51,17 +53,22 @@ namespace UniverseEngine {
             vkSignalSemaphores.push_back(signalSemaphore->GetSemaphore());
         }
 
-        VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+        std::vector<VkPipelineStageFlags> vkWaitStages;
+        for (auto& waitStage : waitStages) {
+            vkWaitStages.push_back(GetVkPipelineStageFlags(waitStage) |
+                                   VkPipelineStageFlagBits::VK_PIPELINE_STAGE_ALL_COMMANDS_BIT |
+                                   VkPipelineStageFlagBits::VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
+        }
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
         submitInfo.waitSemaphoreCount = static_cast<uint32_t>(vkWaitSemaphores.size());
         submitInfo.pWaitSemaphores = vkWaitSemaphores.data();
+        submitInfo.pWaitDstStageMask = vkWaitStages.data();
         submitInfo.signalSemaphoreCount = static_cast<uint32_t>(vkSignalSemaphores.size());
         submitInfo.pSignalSemaphores = vkSignalSemaphores.data();
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = &cmdList->cmdBuffer;
-        submitInfo.pWaitDstStageMask = waitStages;
 
         if (!fence)
             fence = std::make_shared<Fence>(this->device);

@@ -106,64 +106,6 @@ namespace UniverseEngine {
         return flags;
     }
 
-    VkPipelineStageFlags GetVkPipelineStageFlags(PipelineStage stage) {
-        VkAccessFlags flags = 0;
-
-        if (stage.test(
-                GetPipelineStageBitIndex(PipelineStageBits::PIPELINE_STAGE_TOP_OF_PIPE_BIT))) {
-            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-        }
-        if (stage.test(
-                GetPipelineStageBitIndex(PipelineStageBits::PIPELINE_STAGE_DRAW_INDIRECT_BIT))) {
-            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT;
-        }
-        if (stage.test(
-                GetPipelineStageBitIndex(PipelineStageBits::PIPELINE_STAGE_VERTEX_INPUT_BIT))) {
-            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_VERTEX_INPUT_BIT;
-        }
-        if (stage.test(
-                GetPipelineStageBitIndex(PipelineStageBits::PIPELINE_STAGE_VERTEX_SHADER_BIT))) {
-            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_VERTEX_SHADER_BIT;
-        }
-        if (stage.test(GetPipelineStageBitIndex(
-                PipelineStageBits::PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT))) {
-            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT;
-        }
-        if (stage.test(GetPipelineStageBitIndex(
-                PipelineStageBits::PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT))) {
-            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT;
-        }
-        if (stage.test(
-                GetPipelineStageBitIndex(PipelineStageBits::PIPELINE_STAGE_GEOMETRY_SHADER_BIT))) {
-            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT;
-        }
-        if (stage.test(
-                GetPipelineStageBitIndex(PipelineStageBits::PIPELINE_STAGE_FRAGMENT_SHADER_BIT))) {
-            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-        }
-        if (stage.test(GetPipelineStageBitIndex(
-                PipelineStageBits::PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT))) {
-            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
-        }
-        if (stage.test(GetPipelineStageBitIndex(
-                PipelineStageBits::PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT))) {
-            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
-        }
-        if (stage.test(GetPipelineStageBitIndex(
-                PipelineStageBits::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT))) {
-            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        }
-        if (stage.test(
-                GetPipelineStageBitIndex(PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT))) {
-            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
-        }
-        if (stage.test(GetPipelineStageBitIndex(PipelineStageBits::PIPELINE_STAGE_TRANSFER_BIT))) {
-            flags |= VkPipelineStageFlagBits::VK_PIPELINE_STAGE_TRANSFER_BIT;
-        }
-
-        return flags;
-    }
-
     CmdList::CmdList(std::shared_ptr<LogicalDevice> device, const CmdQueue& cmdQueue)
         : device(device), cmdQueue(cmdQueue) {
         VkCommandBufferAllocateInfo allocInfo{};

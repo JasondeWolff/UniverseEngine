@@ -246,9 +246,11 @@ namespace UniverseEngine {
         pbrCmdList->EndRenderPass();
 
         std::vector<Semaphore*> waitSemaphores{&this->swapchain->GetImageAvailableSemaphore()};
+        std::vector<PipelineStage> waitStages{PipelineStageBits::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
         std::vector<Semaphore*> signalSemaphores{
             &this->cloudRenderer->CurrentSemaphore(currentFrame)};
-        this->cmdQueue->SubmitCmdList(pbrCmdList, nullptr, waitSemaphores, signalSemaphores);
+        this->cmdQueue->SubmitCmdList(pbrCmdList, nullptr, waitSemaphores, waitStages,
+                                      signalSemaphores);
 
         std::shared_ptr<CmdList> computeCmdList = this->computeQueue->GetCmdList();
         this->cloudRenderer->Render(*computeCmdList, this->colorImage,
@@ -256,9 +258,12 @@ namespace UniverseEngine {
                                     currentFrame);
         std::vector<Semaphore*> cloudWaitSemaphores{
             &this->cloudRenderer->CurrentSemaphore(currentFrame)};
-        std::vector<Semaphore*> cloudSignalSemaphores{};
+        std::vector<PipelineStage> cloudWaitStages{
+            PipelineStageBits::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | PipelineStageBits::PIPELINE_STAGE_FRAGMENT_SHADER_BIT};
+        std::vector<Semaphore*> cloudSignalSemaphores{
+            &this->cloudRenderer->CurrentSemaphore(currentFrame)};
         this->computeQueue->SubmitCmdList(computeCmdList, nullptr, cloudWaitSemaphores,
-                                          cloudSignalSemaphores);
+                                          cloudWaitStages, cloudSignalSemaphores);
 
         std::shared_ptr<CmdList> presentCmdList = this->cmdQueue->GetCmdList();
 
@@ -283,10 +288,14 @@ namespace UniverseEngine {
             ResourceAccessBits::ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
             PipelineStageBits::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
 
-        std::vector<Semaphore*> presentWaitSemaphores{};
+        std::vector<Semaphore*> presentWaitSemaphores{
+            &this->cloudRenderer->CurrentSemaphore(currentFrame)};
+        std::vector<PipelineStage> presentWaitStages{
+            PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT};
         std::vector<Semaphore*> presentSignalSemaphores{
             &this->swapchain->GetRenderFinishedSemaphore()};
         this->cmdQueue->SubmitCmdList(presentCmdList, fence, presentWaitSemaphores,
+                                      presentWaitStages,
                                       presentSignalSemaphores);
 
         this->swapchain->Present(*this->presentQueue, *fence, presentSignalSemaphores);
@@ -361,11 +370,7 @@ namespace UniverseEngine {
         this->depthImage = std::make_shared<Image>(
             "Depth Image", this->device, *this->physicalDevice, width, height, 1,
             ImageUsageBits::DEPTH_STENCIL_ATTACHMENT | ImageUsageBits::SAMPLED_IMAGE,
-            GraphicsFormat::D32_SFLOAT);
-        /*this->readableDepthImage = std::make_shared<Image>(
-            "Readable Depth Image", this->device, *this->physicalDevice, width, height, 1,
-            ImageUsageBits::SAMPLED_IMAGE | ImageUsageBits::STORAGE_IMAGE | ImageUsageBits::TRANSFER_DST_IMAGE,
-            GraphicsFormat::R32_SFLOAT);*/
+            GraphicsFormat::D24_UNORM_S8_UINT);
 
         this->renderPass = std::make_shared<RenderPass>(
             this->device, std::vector<GraphicsFormat>{this->colorImage->Format()},
@@ -491,7 +496,7 @@ namespace UniverseEngine {
 
         // TODO: Use signal semaphore to not block entire cpu
         auto fence = std::make_shared<Fence>(this->device);
-        this->cmdQueue->SubmitCmdList(uploadCmdList, fence, {}, {});
+        this->cmdQueue->SubmitCmdList(uploadCmdList, fence, {}, {}, {});
         fence->Wait();
     }
 

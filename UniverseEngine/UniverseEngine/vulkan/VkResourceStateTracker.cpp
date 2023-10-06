@@ -20,7 +20,7 @@ namespace UniverseEngine {
         barrier.image = image.GetImage();
         if (IsDepthFormat(image.Format()))
             barrier.subresourceRange.aspectMask =
-                VK_IMAGE_ASPECT_DEPTH_BIT;
+                VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
         else
             barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         barrier.subresourceRange.baseMipLevel = 0;

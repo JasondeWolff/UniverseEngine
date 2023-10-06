@@ -71,7 +71,7 @@ float sampleDensity(vec3 position) {
 
 float march(Ray ray, float tmin, float tmax, float depth) {
     float distanceToCloud = max(tmin, 0.0);
-    float distanceThroughCloud = min(tmax, depth) - distanceToCloud;
+    float distanceThroughCloud = tmax - distanceToCloud;
     float totalDensity = 0.0;
     float distanceTraveled = 0.0;
 
@@ -121,6 +121,6 @@ void main()
 
         vec3 color = imageLoad(outputImage, id).rgb;
         color *= transmittance;
-        imageStore(outputImage, id, vec4(depth, depth, color.r, 1.0));
+        imageStore(outputImage, id, vec4(nonlinearDepth, nonlinearDepth, nonlinearDepth, 1.0));
     }  
 }

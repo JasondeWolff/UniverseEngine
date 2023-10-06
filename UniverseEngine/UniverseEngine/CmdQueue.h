@@ -6,6 +6,7 @@
 #include "GraphicsAPI.h"
 #include "LogicalDevice.h"
 #include "PhysicalDevice.h"
+#include "GraphicsPipeline.h"
 
 namespace UniverseEngine {
     class CmdList;
@@ -30,6 +31,7 @@ namespace UniverseEngine {
         std::shared_ptr<CmdList> GetCmdList();
         void SubmitCmdList(std::shared_ptr<CmdList> cmdList, std::shared_ptr<Fence> fence,
                            const std::vector<Semaphore*>& waitSemaphores,
+                           const std::vector<PipelineStage>& waitStages,
                            const std::vector<Semaphore*>& signalSemaphores);
 
     private:

@@ -117,7 +117,7 @@ namespace UniverseEngine {
             PipelineStageBits::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
         cmdList.TransitionImageLayout(depthImage, ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
                                       ResourceAccessBits::ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
-                                      PipelineStageBits::PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT);
+                                      PipelineStageBits::PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT);
     }
 
     void CloudRenderer::GenerateNoise() {
