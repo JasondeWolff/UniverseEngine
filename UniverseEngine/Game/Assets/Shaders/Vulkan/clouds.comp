@@ -39,7 +39,6 @@ struct Ray {
     vec3 origin;
     vec3 direction;
     vec3 invDirection;
-    float payload;
 };
 
 struct AABB {
@@ -83,10 +82,6 @@ float phase(float a) {
     float blend = 0.5;
     float hgBlend = henyey(a, ubo.forwardScattering) * (1.0 - blend) + henyey(a, -ubo.backwardScattering) * blend;
     return ubo.baseBrightness + hgBlend * ubo.phaseFactor;
-}
-
-float beer(float d) {
-    return exp(-d);
 }
 
 float remap(float v, float minOld, float maxOld, float minNew, float maxNew) {
