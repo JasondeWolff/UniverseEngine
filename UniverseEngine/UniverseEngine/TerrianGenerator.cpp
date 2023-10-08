@@ -9,10 +9,10 @@
 #include <string>
 #include <vector>
 
-namespace UniverseEngine {
+#include "Engine.h"
 
-    void TerrianGenerator::Init(TerrianGeneratorConfig config)
-    {
+namespace UniverseEngine {
+    void TerrianGenerator::Init(TerrianGeneratorConfig config) {
         this->chunk_width = config.chunkWidth;
         this->chunk_height = config.chunkHeight;
         this->chunk_widthSegments = config.chunkWidthSegments;
@@ -21,15 +21,13 @@ namespace UniverseEngine {
         
         for (int x = 0; x < chunk_renderDistance; x++) {
             for (int y = 0; y < chunk_renderDistance; y++) {
-                auto sceneInstance = std::make_shared<SceneInstance>(CreatePlane(x,y));
+                auto scene = CreatePlane(x, y);
+                auto sceneInstance = Engine::GetWorld().AddSceneInstance(scene);
 
                 glm::vec3 position = glm::vec3((x * chunk_width) + chunk_width, -30.0f, (y * chunk_height) + chunk_height);
                 Transform chunkTrans = Transform();
                 chunkTrans.SetTranslation(position);
-                sceneInstance.get()->transform = chunkTrans;
-
-                generatedWorld.push_back(sceneInstance);
-                newlyGeneratedWorld.push_back(sceneInstance);
+                sceneInstance->transform = chunkTrans;
             }
         }
     }
@@ -40,7 +38,7 @@ namespace UniverseEngine {
         float dy = chunk_height / static_cast<float>(chunk_heightSegments);
 
         Mesh chunk;
-        chunk.name = "Plane cord: " + std::to_string(x) + ", " + std::to_string(y);
+        chunk.name = "Plane coord: " + std::to_string(x) + ", " + std::to_string(y);
         chunk.vertices.clear();
         chunk.vertices.reserve(chunk_widthSegments * chunk_heightSegments);
 
@@ -75,6 +73,7 @@ namespace UniverseEngine {
         chunk.materialIdx = 0;
 
         auto hScene = Engine::GetResources().CreateScene(std::move(chunk));
+        hScene->materials[0].name = "Terrain Material";
         
         return hScene;
     }

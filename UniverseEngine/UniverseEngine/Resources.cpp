@@ -8,7 +8,6 @@ namespace UniverseEngine {
     }
 
     std::shared_ptr<Scene> Resources::CreateScene(Mesh&& mesh) {
-
         std::shared_ptr<Scene> hScene = std::make_shared<Scene>();
         hScene->name = mesh.name;
         hScene->meshes.emplace_back(std::move(mesh));
@@ -24,6 +23,7 @@ namespace UniverseEngine {
 
         this->scenes.push_back(hScene);
         this->newScenes.push_back(hScene);
+        this->scenePaths.insert(std::make_pair(GenerateUUID(), hScene));
         return hScene;
     }
 
