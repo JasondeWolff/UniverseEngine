@@ -156,12 +156,28 @@ namespace UniverseEngine {
         fnFractal->SetSource(fnDomainScale);
         fnFractal->SetOctaveCount(2);
         fnFractal->SetLacunarity(1.5f);
+        auto fnNegativeFractal = FastNoise::New<FastNoise::FractalFBm>();
+        auto fnNegativeDomainScale = FastNoise::New<FastNoise::DomainScale>();
+        auto fnNegativeMultiply = FastNoise::New<FastNoise::Multiply>();
+        fnNegativeFractal->SetSource(fnCellular);
+        fnNegativeFractal->SetOctaveCount(5);
+        fnNegativeFractal->SetLacunarity(2.0f);
+        fnNegativeDomainScale->SetSource(fnNegativeFractal);
+        fnNegativeDomainScale->SetScale(1.54f);
+        fnNegativeMultiply->SetLHS(fnNegativeDomainScale);
+        fnNegativeMultiply->SetRHS(0.5f);
+        auto fnCombineSubtract = FastNoise::New<FastNoise::Subtract>();
+        auto fnCombineDomainScale = FastNoise::New<FastNoise::DomainScale>();
+        fnCombineSubtract->SetLHS(fnFractal);
+        fnCombineSubtract->SetRHS(fnNegativeMultiply);
+        fnCombineDomainScale->SetSource(fnCombineSubtract);
+        fnCombineDomainScale->SetScale(0.5f);
 
         float* noiseData =
             static_cast<float*>(malloc(resolution * resolution * resolution * sizeof(float)));
-        fnFractal->GenUniformGrid3D(noiseData, 0, 0, 0, static_cast<int>(resolution),
+        fnCombineSubtract->GenUniformGrid3D(noiseData, 0, 0, 0, static_cast<int>(resolution),
                                     static_cast<int>(resolution), static_cast<int>(resolution),
-                                    0.2f, 1337);
+                                    0.05f, 1337);
 
         unsigned char* noiseData8 = static_cast<unsigned char*>(
             malloc(resolution * resolution * resolution * sizeof(unsigned char) * 4));

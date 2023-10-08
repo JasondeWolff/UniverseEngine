@@ -7,6 +7,8 @@
 #include <sstream>
 
 namespace UniverseEngine {
+    // Source:
+    // https://stackoverflow.com/questions/24365331/how-can-i-generate-uuid-in-c-without-using-boost-library
     std::string GenerateUUID() {
         static std::random_device rd;
         static std::mt19937_64 gen(rd());
