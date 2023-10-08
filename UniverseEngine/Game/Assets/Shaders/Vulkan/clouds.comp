@@ -148,7 +148,7 @@ vec2 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
         float density = sampleDensity(position, aabb);
 
         float stepSizeFactor = (1.0 - density) + (1.0 - badDensityThreshold);
-        stepSize = clamp(stepSize * stepSizeFactor, minStepSize, maxStepSize);
+        // stepSize = clamp(stepSize * stepSizeFactor, minStepSize, maxStepSize);
 
         if (density > 0.0) {
             float lightTransmittance = lightMarch(position, aabb);
@@ -177,8 +177,8 @@ void main()
     if (id.x >= dispatchSize.x || id.y >= dispatchSize.y) return;
 
     AABB aabb;
-    aabb.lo = vec3(-5.0, -2.0, -5.0);
-    aabb.hi = vec3(5.0, 2.0, 5.0);
+    aabb.lo = vec3(-500.0, -5.0, -500.0);
+    aabb.hi = vec3(500.0, 5.0, 500.0);
     aabb.size = (aabb.hi - aabb.lo);
 
     vec2 pixelCenter = vec2(float(id.x) + 0.5, float(id.y) + 0.5);
@@ -196,7 +196,6 @@ void main()
     ray.origin = origin;
     ray.direction = direction.xyz;
     ray.invDirection = vec3(1.0) / direction.xyz;
-    ray.payload = 0.0;
 
     float tmin, tmax;
     if(IntersectAABB(ray, aabb, tmin, tmax)) {

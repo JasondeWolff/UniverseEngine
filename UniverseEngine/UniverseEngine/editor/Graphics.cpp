@@ -46,7 +46,7 @@ namespace UniverseEngine {
 
             ImGui::DragFloat3("Offset", &config.offset.x);
             ImGui::SliderFloat("Scale", &config.scale, 0.1f, 1.0f);
-            ImGui::SliderFloat("Density Threshold", &config.densityThreshold, 0.0f, 0.5f);
+            ImGui::SliderFloat("Density Threshold", &config.densityThreshold, 0.0f, 1.0f);
             ImGui::SliderFloat("Density Multiplier", &config.densityMultiplier, 0.0f, 3.0f);
 
             ImGui::SliderFloat("Forward Scattering", &config.forwardScattering, 0.0f, 1.0f);

@@ -27,9 +27,9 @@ namespace UniverseEngine {
         bool enabled = true;
 
         glm::vec3 offset = glm::vec3(0.0);
-        float scale = 0.4f;
-        float densityThreshold = 0.27f;
-        float densityMultiplier = 0.7f;
+        float scale = 0.133f;
+        float densityThreshold = 0.176f;
+        float densityMultiplier = 1.5f;
 
         float forwardScattering = 0.72f;
         float backwardScattering = 0.33f;

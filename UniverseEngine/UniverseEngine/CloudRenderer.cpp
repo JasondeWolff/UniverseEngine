@@ -146,10 +146,16 @@ namespace UniverseEngine {
         size_t resolution = 256;
 
         auto fnCellular = FastNoise::New<FastNoise::CellularDistance>();
+        auto fnSubtract = FastNoise::New<FastNoise::Subtract>();
+        auto fnDomainScale = FastNoise::New<FastNoise::DomainScale>();
         auto fnFractal = FastNoise::New<FastNoise::FractalFBm>();
-        fnFractal->SetSource(fnCellular);
-        fnFractal->SetOctaveCount(3);
-        fnFractal->SetLacunarity(2.0f);
+        fnSubtract->SetRHS(fnCellular);
+        fnSubtract->SetLHS(-1.0f);
+        fnDomainScale->SetSource(fnSubtract);
+        fnDomainScale->SetScale(0.5f);
+        fnFractal->SetSource(fnDomainScale);
+        fnFractal->SetOctaveCount(2);
+        fnFractal->SetLacunarity(1.5f);
 
         float* noiseData =
             static_cast<float*>(malloc(resolution * resolution * resolution * sizeof(float)));
