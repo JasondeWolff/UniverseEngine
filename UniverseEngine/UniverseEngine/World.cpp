@@ -11,9 +11,7 @@ namespace UniverseEngine {
         camera.transform.SetRotation(EulerToQuat(glm::vec3(180, 0, 0)));
     }
 
-    void World::GenerateWorld() {
-        TerrianGeneratorConfig config = { 25, 25, 25, 25, 1};
-
+    void World::GenerateWorld(TerrianGeneratorConfig config) {
         tg.Init(config);
         isTerrianGenerated = true;
 
@@ -23,7 +21,7 @@ namespace UniverseEngine {
                 this->newInstances.push_back(sceneInstance);
             }
         }
-        //tg.newlyGeneratedWorld.clear();
+        tg.newlyGeneratedWorld.clear();
     }
 
     std::shared_ptr<SceneInstance> World::AddSceneInstance(std::shared_ptr<Scene> hScene) {
@@ -38,6 +36,8 @@ namespace UniverseEngine {
     }
 
     void World::Update() {
+
+
         if (isTerrianGenerated) {
             tg.Update();
         }

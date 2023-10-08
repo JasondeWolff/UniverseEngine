@@ -26,7 +26,7 @@ namespace UniverseEngine {
                 glm::vec3 position = glm::vec3((x * chunk_width) + chunk_width, -30.0f, (y * chunk_height) + chunk_height);
                 Transform chunkTrans = Transform();
                 chunkTrans.SetTranslation(position);
-                sceneInstance.get()->transform = chunkTrans;
+                sceneInstance->transform = chunkTrans;
 
                 generatedWorld.push_back(sceneInstance);
                 newlyGeneratedWorld.push_back(sceneInstance);

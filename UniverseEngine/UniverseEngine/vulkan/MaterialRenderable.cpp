@@ -155,7 +155,8 @@ namespace UniverseEngine {
     }
 
     void MaterialRenderable::Bind(CmdList& cmdList, size_t currentFrame, uint32_t set) {
-        cmdList.BindDescriptorSet(this->descriptorSets[currentFrame], set);
+        //cmdList.BindDescriptorSet(this->descriptorSets[currentFrame], set);
+        cmdList.BindDescriptorSet(this->descriptorSets[0], set);
     }
 }  // namespace UniverseEngine
 #endif

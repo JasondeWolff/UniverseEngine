@@ -203,6 +203,7 @@ namespace UniverseEngine {
             this->skyboxDescriptorSets[currentFrame]->SetImage(
                 1, DescriptorType::COMBINED_IMAGE_SAMPLER, this->skyboxImage, this->skyboxSampler);
             pbrCmdList->BindDescriptorSet(this->skyboxDescriptorSets[currentFrame], 1);
+
             this->skyboxCube->meshes[0].lods[0].renderable->Draw(*pbrCmdList);
         }
 
@@ -247,11 +248,11 @@ namespace UniverseEngine {
 
         std::vector<Semaphore*> waitSemaphores{&this->swapchain->GetImageAvailableSemaphore()};
         std::vector<PipelineStage> waitStages{PipelineStageBits::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+
         std::vector<Semaphore*> signalSemaphores{
             &this->cloudRenderer->CurrentSemaphore(currentFrame)};
         this->cmdQueue->SubmitCmdList(pbrCmdList, nullptr, waitSemaphores, waitStages,
                                       signalSemaphores);
-
         std::shared_ptr<CmdList> computeCmdList = this->computeQueue->GetCmdList();
         this->cloudRenderer->Render(*computeCmdList, this->colorImage,
                                     this->depthImage,
@@ -353,6 +354,8 @@ namespace UniverseEngine {
             this->skyboxDescriptorSets[i] = std::make_shared<DescriptorSet>(
                 this->device, this->descriptorPool, this->skyboxDescriptorSetLayout);
         }
+
+
     }
 
     void Graphics::BuildSwapchain() {
