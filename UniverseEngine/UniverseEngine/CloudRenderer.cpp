@@ -17,10 +17,17 @@ struct UniformBuffer {
     float cloudDensityThreshold;
     float cloudDensityMultiplier;
 
+    float forwardScattering;
+    float backwardScattering;
+    float baseBrightness;
+    float phaseFactor;
+
+    float lightAbsorbtion;
+    float indirectLightAbsorbtion;
+    float darknessThreshold;
+
     float zNear;
     float zFar;
-
-    float PADDING[3];
 };
 
 namespace UniverseEngine {
@@ -93,6 +100,13 @@ namespace UniverseEngine {
         uniformBuffer.cloudDensityMultiplier = this->config.densityMultiplier;
         uniformBuffer.lightDir = glm::vec4(world.sun.direction, 1.0);
         uniformBuffer.lightColor = glm::vec4(world.sun.lightSource.color, 1.0);
+        uniformBuffer.forwardScattering = this->config.forwardScattering;
+        uniformBuffer.backwardScattering = this->config.backwardScattering;
+        uniformBuffer.baseBrightness = this->config.baseBrightness;
+        uniformBuffer.phaseFactor = this->config.phaseFactor;
+        uniformBuffer.lightAbsorbtion = this->config.lightAbsorbtion;
+        uniformBuffer.indirectLightAbsorbtion = this->config.indirectLightAbsorbtion;
+        uniformBuffer.darknessThreshold = this->config.darknessThreshold;
         uniformBuffer.zNear = camera.GetNear();
         uniformBuffer.zFar = camera.GetFar();
         void* uniformBufferData = this->uniformBuffers[currentFrame]->Map();
@@ -132,9 +146,16 @@ namespace UniverseEngine {
         size_t resolution = 256;
 
         auto fnCellular = FastNoise::New<FastNoise::CellularDistance>();
+        auto fnSubtract = FastNoise::New<FastNoise::Subtract>();
+        auto fnDomainScale = FastNoise::New<FastNoise::DomainScale>();
         auto fnFractal = FastNoise::New<FastNoise::FractalFBm>();
-        fnFractal->SetSource(fnCellular);
-        fnFractal->SetOctaveCount(1);
+        fnSubtract->SetRHS(fnCellular);
+        fnSubtract->SetLHS(-1.0f);
+        fnDomainScale->SetSource(fnSubtract);
+        fnDomainScale->SetScale(0.5f);
+        fnFractal->SetSource(fnDomainScale);
+        fnFractal->SetOctaveCount(2);
+        fnFractal->SetLacunarity(1.5f);
 
         float* noiseData =
             static_cast<float*>(malloc(resolution * resolution * resolution * sizeof(float)));

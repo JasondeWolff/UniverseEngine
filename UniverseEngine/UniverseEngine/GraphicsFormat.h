@@ -55,6 +55,7 @@ namespace UniverseEngine {
         D32_SFLOAT = 51,
         D24_UNORM_S8_UINT = 52,
         R32_SFLOAT = 53,
+        R16G16B16A16_SFLOAT = 54,
     };
 
     inline bool IsDepthFormat(GraphicsFormat format) {

@@ -5,56 +5,62 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Src\Core">
-      <UniqueIdentifier>{388a272b-b354-4ae5-9710-a0f8fba394d8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Utils">
-      <UniqueIdentifier>{b717ac76-a8bd-4aba-a278-f779726b41e9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Graphics">
-      <UniqueIdentifier>{e1588a1d-7207-4ae7-8441-7e4e5f0e69a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Resources">
-      <UniqueIdentifier>{e5161b79-c6db-49fc-ac10-7eea07d93cb8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Resources\Assets">
-      <UniqueIdentifier>{d4beccec-75d9-4ae7-8c18-8482f83652c4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Math">
-      <UniqueIdentifier>{e455f176-adc9-40ff-8601-1cbfc7810f28}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Resources\Loaders">
-      <UniqueIdentifier>{1d84470d-a6fe-4297-b2a3-70047aa28ad8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Input">
-      <UniqueIdentifier>{1a6bfce2-cce5-46e1-b82a-15130e58fb27}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Graphics\Common">
-      <UniqueIdentifier>{21b00391-0cef-49ea-8ebf-5bc5ff4cafcf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Graphics\GL">
-      <UniqueIdentifier>{afc53881-e2c3-45a4-a6b5-6d2cbe5dc92b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Graphics\Common\Assets">
-      <UniqueIdentifier>{ef60d133-6efd-42f2-873e-1d907335456f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Graphics\GL\Assets">
-      <UniqueIdentifier>{fa285c54-669d-4b7d-91ba-413b509ef73b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Graphics\Vulkan">
-      <UniqueIdentifier>{3a7e04a3-f9e4-490a-8f29-b0c1680a92fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Graphics\Vulkan\Assets">
-      <UniqueIdentifier>{40ef5870-e7e2-45e6-b8e0-53446baf3f78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Graphics\GL\Specific">
-      <UniqueIdentifier>{25ae8e87-0e92-4291-bbb6-3c3367a2e862}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Graphics\Vulkan\Specific">
-      <UniqueIdentifier>{87f5b487-77f0-4bcc-894b-e38252c33612}</UniqueIdentifier>
-    </Filter>
     <Filter Include="imgui">
       <UniqueIdentifier>{8bacb998-206e-40ee-9045-0ff27754016b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Editor">
+      <UniqueIdentifier>{45e4b0ce-1743-467d-b845-a4f06a03f779}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Runtime">
+      <UniqueIdentifier>{bd398bda-e0b1-41f1-a068-d0be85863eaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Runtime\Math">
+      <UniqueIdentifier>{e455f176-adc9-40ff-8601-1cbfc7810f28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Runtime\Resources">
+      <UniqueIdentifier>{e5161b79-c6db-49fc-ac10-7eea07d93cb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Runtime\Resources\Assets">
+      <UniqueIdentifier>{d4beccec-75d9-4ae7-8c18-8482f83652c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Runtime\Resources\Loaders">
+      <UniqueIdentifier>{1d84470d-a6fe-4297-b2a3-70047aa28ad8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Runtime\Utils">
+      <UniqueIdentifier>{b717ac76-a8bd-4aba-a278-f779726b41e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Runtime\Input">
+      <UniqueIdentifier>{1a6bfce2-cce5-46e1-b82a-15130e58fb27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Runtime\Graphics">
+      <UniqueIdentifier>{e1588a1d-7207-4ae7-8441-7e4e5f0e69a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Runtime\Graphics\Common">
+      <UniqueIdentifier>{21b00391-0cef-49ea-8ebf-5bc5ff4cafcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Runtime\Graphics\Common\Assets">
+      <UniqueIdentifier>{ef60d133-6efd-42f2-873e-1d907335456f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Runtime\Graphics\GL">
+      <UniqueIdentifier>{afc53881-e2c3-45a4-a6b5-6d2cbe5dc92b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Runtime\Graphics\GL\Assets">
+      <UniqueIdentifier>{fa285c54-669d-4b7d-91ba-413b509ef73b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Runtime\Graphics\GL\Specific">
+      <UniqueIdentifier>{25ae8e87-0e92-4291-bbb6-3c3367a2e862}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Runtime\Graphics\Vulkan">
+      <UniqueIdentifier>{3a7e04a3-f9e4-490a-8f29-b0c1680a92fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Runtime\Graphics\Vulkan\Assets">
+      <UniqueIdentifier>{40ef5870-e7e2-45e6-b8e0-53446baf3f78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Runtime\Graphics\Vulkan\Specific">
+      <UniqueIdentifier>{87f5b487-77f0-4bcc-894b-e38252c33612}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Runtime\Core">
+      <UniqueIdentifier>{388a272b-b354-4ae5-9710-a0f8fba394d8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -62,438 +68,438 @@
       <Filter>Src</Filter>
     </ClInclude>
     <ClInclude Include="Logging.h">
-      <Filter>Src\Utils</Filter>
+      <Filter>Src\Runtime\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Option.h">
-      <Filter>Src\Utils</Filter>
+      <Filter>Src\Runtime\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>Src\Resources\Assets</Filter>
+      <Filter>Src\Runtime\Resources\Assets</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>Src\Resources\Assets</Filter>
+      <Filter>Src\Runtime\Resources\Assets</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>Src\Resources\Assets</Filter>
+      <Filter>Src\Runtime\Resources\Assets</Filter>
     </ClInclude>
     <ClInclude Include="Resources.h">
-      <Filter>Src\Resources</Filter>
+      <Filter>Src\Runtime\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Engine.h">
-      <Filter>Src\Core</Filter>
+      <Filter>Src\Runtime\Core</Filter>
     </ClInclude>
     <ClInclude Include="MathUtil.h">
-      <Filter>Src\Math</Filter>
+      <Filter>Src\Runtime\Math</Filter>
     </ClInclude>
     <ClInclude Include="Transform.h">
-      <Filter>Src\Math</Filter>
+      <Filter>Src\Runtime\Math</Filter>
     </ClInclude>
     <ClInclude Include="Graphics.h">
-      <Filter>Src\Graphics</Filter>
+      <Filter>Src\Runtime\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
-      <Filter>Src\Graphics</Filter>
+      <Filter>Src\Runtime\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
-      <Filter>Src\Input</Filter>
+      <Filter>Src\Runtime\Input</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>Src\Resources\Assets</Filter>
+      <Filter>Src\Runtime\Resources\Assets</Filter>
     </ClInclude>
     <ClInclude Include="World.h">
-      <Filter>Src\Core</Filter>
+      <Filter>Src\Runtime\Core</Filter>
     </ClInclude>
     <ClInclude Include="MeshRenderable.h">
-      <Filter>Src\Graphics\Common\Assets</Filter>
+      <Filter>Src\Runtime\Graphics\Common\Assets</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsAPI.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
-      <Filter>Src\Resources\Assets</Filter>
+      <Filter>Src\Runtime\Resources\Assets</Filter>
     </ClInclude>
     <ClInclude Include="ShaderRenderable.h">
-      <Filter>Src\Graphics\Common\Assets</Filter>
+      <Filter>Src\Runtime\Graphics\Common\Assets</Filter>
     </ClInclude>
     <ClInclude Include="Format.h">
-      <Filter>Src\Utils</Filter>
+      <Filter>Src\Runtime\Utils</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsPipeline.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="ShaderType.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="CmdList.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="Rect2D.h">
-      <Filter>Src\Math</Filter>
+      <Filter>Src\Runtime\Math</Filter>
     </ClInclude>
     <ClInclude Include="CmdQueue.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Src\Math</Filter>
+      <Filter>Src\Runtime\Math</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
-      <Filter>Src\Core</Filter>
+      <Filter>Src\Runtime\Core</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
-      <Filter>Src\Utils</Filter>
+      <Filter>Src\Runtime\Utils</Filter>
     </ClInclude>
     <ClInclude Include="InputCode.h">
-      <Filter>Src\Input</Filter>
+      <Filter>Src\Runtime\Input</Filter>
     </ClInclude>
     <ClInclude Include="Gamepad.h">
-      <Filter>Src\Input</Filter>
+      <Filter>Src\Runtime\Input</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsInstance.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="PhysicalDevice.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="LogicalDevice.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="Swapchain.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="gl\GlDebugNames.h">
-      <Filter>Src\Graphics\GL\Specific</Filter>
+      <Filter>Src\Runtime\Graphics\GL\Specific</Filter>
     </ClInclude>
     <ClInclude Include="vulkan\VkExtensions.h">
-      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Specific</Filter>
     </ClInclude>
     <ClInclude Include="vulkan\VkValidation.h">
-      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Specific</Filter>
     </ClInclude>
     <ClInclude Include="vulkan\VkDebugNames.h">
-      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Specific</Filter>
     </ClInclude>
     <ClInclude Include="vulkan\VkPFN.h">
-      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Specific</Filter>
     </ClInclude>
     <ClInclude Include="RenderPass.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsFormat.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="gl\GlGraphicsFormat.h">
-      <Filter>Src\Graphics\GL\Specific</Filter>
+      <Filter>Src\Runtime\Graphics\GL\Specific</Filter>
     </ClInclude>
     <ClInclude Include="vulkan\VkGraphicsFormat.h">
-      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Specific</Filter>
     </ClInclude>
     <ClInclude Include="Framebuffer.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="Image.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="Fence.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="Semaphore.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="Voxel.h">
-      <Filter>Src\Resources\Assets</Filter>
+      <Filter>Src\Runtime\Resources\Assets</Filter>
     </ClInclude>
     <ClInclude Include="Buffer.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="TerrianGenerator.h">
-      <Filter>Src\Core</Filter>
+      <Filter>Src\Runtime\Core</Filter>
     </ClInclude>
     <ClInclude Include="DescriptorSetLayout.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="DescriptorLayoutBinding.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="DescriptorPool.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="DescriptorSet.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="vulkan\VkConversion.h">
-      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Specific</Filter>
     </ClInclude>
     <ClInclude Include="TextureRenderable.h">
-      <Filter>Src\Graphics\Common\Assets</Filter>
+      <Filter>Src\Runtime\Graphics\Common\Assets</Filter>
     </ClInclude>
     <ClInclude Include="Sampler.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsStageFlags.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="PushConstantRange.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="Defines.h">
       <Filter>Src</Filter>
     </ClInclude>
     <ClInclude Include="MaterialRenderable.h">
-      <Filter>Src\Graphics\Common\Assets</Filter>
+      <Filter>Src\Runtime\Graphics\Common\Assets</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
-      <Filter>Src\Resources\Assets</Filter>
+      <Filter>Src\Runtime\Resources\Assets</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiRenderer.h">
-      <Filter>Src\Graphics</Filter>
+      <Filter>Src\Runtime\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="MeshSimplifier.h">
-      <Filter>Src\Math</Filter>
+      <Filter>Src\Runtime\Math</Filter>
     </ClInclude>
     <ClInclude Include="ComputePipeline.h">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClInclude>
     <ClInclude Include="CloudRenderer.h">
-      <Filter>Src\Graphics</Filter>
+      <Filter>Src\Runtime\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="vulkan\VkResourceStateTracker.h">
-      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Specific</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Logging.cpp">
-      <Filter>Src\Utils</Filter>
+      <Filter>Src\Runtime\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Resources.cpp">
-      <Filter>Src\Resources</Filter>
+      <Filter>Src\Runtime\Resources</Filter>
     </ClCompile>
     <ClCompile Include="Engine.cpp">
-      <Filter>Src\Core</Filter>
+      <Filter>Src\Runtime\Core</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
-      <Filter>Src\Math</Filter>
+      <Filter>Src\Runtime\Math</Filter>
     </ClCompile>
     <ClCompile Include="MathUtil.cpp">
-      <Filter>Src\Math</Filter>
+      <Filter>Src\Runtime\Math</Filter>
     </ClCompile>
     <ClCompile Include="OBJLoader.cpp">
-      <Filter>Src\Resources\Loaders</Filter>
+      <Filter>Src\Runtime\Resources\Loaders</Filter>
     </ClCompile>
     <ClCompile Include="IMGLoader.cpp">
-      <Filter>Src\Resources\Loaders</Filter>
+      <Filter>Src\Runtime\Resources\Loaders</Filter>
     </ClCompile>
     <ClCompile Include="Graphics.cpp">
-      <Filter>Src\Graphics</Filter>
+      <Filter>Src\Runtime\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Window.cpp">
-      <Filter>Src\Graphics</Filter>
+      <Filter>Src\Runtime\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Input.cpp">
-      <Filter>Src\Input</Filter>
+      <Filter>Src\Runtime\Input</Filter>
     </ClCompile>
     <ClCompile Include="World.cpp">
-      <Filter>Src\Core</Filter>
+      <Filter>Src\Runtime\Core</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
-      <Filter>Src\Resources\Assets</Filter>
+      <Filter>Src\Runtime\Resources\Assets</Filter>
     </ClCompile>
     <ClCompile Include="gl\MeshRenderable.cpp">
-      <Filter>Src\Graphics\GL\Assets</Filter>
+      <Filter>Src\Runtime\Graphics\GL\Assets</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>Src\Resources\Assets</Filter>
+      <Filter>Src\Runtime\Resources\Assets</Filter>
     </ClCompile>
     <ClCompile Include="gl\GraphicsAPI.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="gl\ShaderRenderable.cpp">
-      <Filter>Src\Graphics\GL\Assets</Filter>
+      <Filter>Src\Runtime\Graphics\GL\Assets</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
-      <Filter>Src\Resources\Assets</Filter>
+      <Filter>Src\Runtime\Resources\Assets</Filter>
     </ClCompile>
     <ClCompile Include="ShaderLoader.cpp">
-      <Filter>Src\Resources\Loaders</Filter>
+      <Filter>Src\Runtime\Resources\Loaders</Filter>
     </ClCompile>
     <ClCompile Include="gl\GraphicsPipeline.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="gl\CmdList.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="gl\CmdQueue.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Src\Math</Filter>
+      <Filter>Src\Runtime\Math</Filter>
     </ClCompile>
     <ClCompile Include="Timer.cpp">
-      <Filter>Src\Utils</Filter>
+      <Filter>Src\Runtime\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Gamepad.cpp">
-      <Filter>Src\Input</Filter>
+      <Filter>Src\Runtime\Input</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\GraphicsInstance.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="gl\GraphicsInstance.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\CmdList.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\CmdQueue.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\GraphicsAPI.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\GraphicsPipeline.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\MeshRenderable.cpp">
-      <Filter>Src\Graphics\Vulkan\Assets</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Assets</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\ShaderRenderable.cpp">
-      <Filter>Src\Graphics\Vulkan\Assets</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Assets</Filter>
     </ClCompile>
     <ClCompile Include="gl\PhysicalDevice.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\PhysicalDevice.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="gl\LogicalDevice.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\LogicalDevice.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="gl\Swapchain.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\Swapchain.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="gl\GlDebugNames.cpp">
-      <Filter>Src\Graphics\GL\Specific</Filter>
+      <Filter>Src\Runtime\Graphics\GL\Specific</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\VkExtensions.cpp">
-      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Specific</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\VkValidation.cpp">
-      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Specific</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\VkDebugNames.cpp">
-      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Specific</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\VkPFN.cpp">
-      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Specific</Filter>
     </ClCompile>
     <ClCompile Include="gl\RenderPass.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\RenderPass.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="gl\Framebuffer.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\Framebuffer.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="gl\Image.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\Image.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="gl\Semaphore.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="gl\Fence.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\Semaphore.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\Fence.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="CmdQueue.cpp">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClCompile>
     <ClCompile Include="Voxel.cpp">
-      <Filter>Src\Resources\Assets</Filter>
+      <Filter>Src\Runtime\Resources\Assets</Filter>
     </ClCompile>
     <ClCompile Include="GLTFLoader.cpp">
-      <Filter>Src\Resources\Loaders</Filter>
+      <Filter>Src\Runtime\Resources\Loaders</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\Buffer.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Buffer.cpp">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClCompile>
     <ClCompile Include="TerrianGenerator.cpp">
-      <Filter>Src\Core</Filter>
+      <Filter>Src\Runtime\Core</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\DescriptorSetLayout.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="gl\DescriptorSetLayout.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\DescriptorPool.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\DescriptorSet.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\VkConversion.cpp">
-      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Specific</Filter>
     </ClCompile>
     <ClCompile Include="gl\DescriptorSet.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="gl\Buffer.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="gl\DescriptorPool.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
-      <Filter>Src\Resources\Assets</Filter>
+      <Filter>Src\Runtime\Resources\Assets</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\TextureRenderable.cpp">
-      <Filter>Src\Graphics\Vulkan\Assets</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Assets</Filter>
     </ClCompile>
     <ClCompile Include="gl\TextureRenderable.cpp">
-      <Filter>Src\Graphics\GL\Assets</Filter>
+      <Filter>Src\Runtime\Graphics\GL\Assets</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\Sampler.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="gl\Sampler.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="Image.cpp">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsStageFlags.cpp">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\MaterialRenderable.cpp">
-      <Filter>Src\Graphics\Vulkan\Assets</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Assets</Filter>
     </ClCompile>
     <ClCompile Include="gl\MaterialRenderable.cpp">
-      <Filter>Src\Graphics\GL\Assets</Filter>
+      <Filter>Src\Runtime\Graphics\GL\Assets</Filter>
     </ClCompile>
     <ClCompile Include="TextureRenderable.cpp">
-      <Filter>Src\Graphics\Common\Assets</Filter>
+      <Filter>Src\Runtime\Graphics\Common\Assets</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\VkVma.cpp">
-      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Specific</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
       <Filter>imgui</Filter>
@@ -511,28 +517,37 @@
       <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="ImGuiRenderer.cpp">
-      <Filter>Src\Graphics</Filter>
+      <Filter>Src\Runtime\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="MeshSimplifier.cpp">
-      <Filter>Src\Math</Filter>
+      <Filter>Src\Runtime\Math</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\ComputePipeline.cpp">
-      <Filter>Src\Graphics\Vulkan</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="CloudRenderer.cpp">
-      <Filter>Src\Graphics</Filter>
+      <Filter>Src\Runtime\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="gl\ComputePipeline.cpp">
-      <Filter>Src\Graphics\GL</Filter>
+      <Filter>Src\Runtime\Graphics\GL</Filter>
     </ClCompile>
     <ClCompile Include="vulkan\VkResourceStateTracker.cpp">
-      <Filter>Src\Graphics\Vulkan\Specific</Filter>
+      <Filter>Src\Runtime\Graphics\Vulkan\Specific</Filter>
     </ClCompile>
     <ClCompile Include="CmdList.cpp">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsPipeline.cpp">
-      <Filter>Src\Graphics\Common</Filter>
+      <Filter>Src\Runtime\Graphics\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="editor\Engine.cpp">
+      <Filter>Src\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="editor\Graphics.cpp">
+      <Filter>Src\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="editor\Input.cpp">
+      <Filter>Src\Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -112,6 +112,8 @@ namespace UniverseEngine {
                     return VkFormat::VK_FORMAT_D24_UNORM_S8_UINT;
                 case GraphicsFormat::R32_SFLOAT:
                     return VkFormat::VK_FORMAT_R32_SFLOAT;
+                case GraphicsFormat::R16G16B16A16_SFLOAT:
+                    return VkFormat::VK_FORMAT_R16G16B16A16_SFLOAT;
             }
             return VkFormat::VK_FORMAT_UNDEFINED;
         }
@@ -222,6 +224,8 @@ namespace UniverseEngine {
                     return GraphicsFormat::D24_UNORM_S8_UINT;
                 case VkFormat::VK_FORMAT_R32_SFLOAT:
                     return GraphicsFormat::R32_SFLOAT;
+                case VkFormat::VK_FORMAT_R16G16B16A16_SFLOAT:
+                    return GraphicsFormat::R16G16B16A16_SFLOAT;
             }
             return GraphicsFormat::UNDEFINED;
         }

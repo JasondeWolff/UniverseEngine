@@ -366,7 +366,7 @@ namespace UniverseEngine {
             "Color Image", this->device, *this->physicalDevice, width, height, 1,
             ImageUsageBits::COLOR_ATTACHMENT | ImageUsageBits::SAMPLED_IMAGE |
                 ImageUsageBits::STORAGE_IMAGE,
-            GraphicsFormat::R8G8B8A8_UNORM);
+            GraphicsFormat::R16G16B16A16_SFLOAT);
         this->depthImage = std::make_shared<Image>(
             "Depth Image", this->device, *this->physicalDevice, width, height, 1,
             ImageUsageBits::DEPTH_STENCIL_ATTACHMENT | ImageUsageBits::SAMPLED_IMAGE,

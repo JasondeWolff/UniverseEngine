@@ -44,8 +44,7 @@ namespace UniverseEngine {
     }
 
     uint64_t Engine::FrameCount() {
-        UE_ASSERT_MSG(Engine::gInstance,
-                      "Engine hasn't been initialized.");
+        UE_ASSERT_MSG(Engine::gInstance, "Engine hasn't been initialized.");
         return Engine::gInstance->frameCount;
     }
 
@@ -65,12 +64,16 @@ namespace UniverseEngine {
             this->timer.Reset();
 
             ImGui::NewFrame();
+#ifdef EDITOR
+            this->Editor();
+#endif
+
             this->game->Update(deltaTime);
             GetInput().Update();
             GetWorld().Update();
             GetGraphics().Update();
             GetResources().Update();
-            
+
             frameCount++;
         }
 

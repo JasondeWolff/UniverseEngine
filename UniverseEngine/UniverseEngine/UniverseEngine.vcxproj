@@ -85,6 +85,9 @@
     <ClCompile Include="CloudRenderer.cpp" />
     <ClCompile Include="CmdList.cpp" />
     <ClCompile Include="CmdQueue.cpp" />
+    <ClCompile Include="editor\Engine.cpp" />
+    <ClCompile Include="editor\Graphics.cpp" />
+    <ClCompile Include="editor\Input.cpp" />
     <ClCompile Include="gl\ComputePipeline.cpp" />
     <ClCompile Include="GraphicsPipeline.cpp" />
     <ClCompile Include="vulkan\VkResourceStateTracker.cpp" />

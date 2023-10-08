@@ -32,6 +32,8 @@ namespace UniverseEngine {
         Input();
 
         void Update();
+        void EditorBar();
+        void Editor();
 
         static const size_t MAX_KEYS = 512;
         static const size_t MAX_MOUSE_BUTTONS = 8;
