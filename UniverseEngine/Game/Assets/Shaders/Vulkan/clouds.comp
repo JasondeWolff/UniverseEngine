@@ -74,8 +74,8 @@ bool IntersectAABB(Ray ray, AABB aabb, out float lo, out float hi) {
 }
 
 float henyey(float a, float g) {
-    float g2 = g*g;
-    return (1-g2) / (4*3.1415*pow(1+g2-2*g*(a), 1.5));
+    float g2 = g * g;
+    return (1.0 - g2) / (4.0 * 3.1415 * pow(1.0 + g2 - 2.0 * g * a, 1.5));
 }
 
 float phase(float a) {
@@ -134,7 +134,7 @@ vec2 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
     float transmittance = 1.0;
     float lightEnergy = 0.0;
 
-    float cosAngle = dot(ray.direction, -ubo.lightDir.xyz);
+    float cosAngle = dot(ray.direction, -normalize(ubo.lightDir.xyz));
     float phaseVal = phase(cosAngle);
 
     float uniformStepSize = distanceThroughCloud / PRIMARY_STEPS;
