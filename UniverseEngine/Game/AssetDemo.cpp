@@ -57,18 +57,6 @@ void AssetDemo::Update(float deltaTime) {
 	}
 
 	this->camera.Update(deltaTime);
-
-	bool uiActive = true;
-	ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiCond_Always);
-	ImGui::Begin("MyGame", &uiActive);
-	static bool wireFrame = true;
-	ImGui::Checkbox("Wireframe", &wireFrame);
-	static bool lods = false;
-	ImGui::Checkbox("Use LODs", &lods);
-	ImGui::End();
-
-	Engine::GetGraphics().SetPolygonMode(!wireFrame ? GraphicsPolygonMode::FILL : GraphicsPolygonMode::LINE);
-	Engine::GetGraphics().UseLODs(lods);
 }
 
 void AssetDemo::OnClose() {
