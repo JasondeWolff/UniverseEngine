@@ -3,6 +3,7 @@
 #include <memory>
 #include <type_traits>
 
+#include "Defines.h"
 #include "Game.h"
 #include "Graphics.h"
 #include "Input.h"
@@ -40,6 +41,7 @@ namespace UniverseEngine {
         std::unique_ptr<Input> input;
 
         void Run();
+        void Editor();
     };
 
     template <typename T>

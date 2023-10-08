@@ -44,6 +44,9 @@ namespace UniverseEngine {
         Graphics();
 
         void Update();
+        void EditorBar();
+        void Editor();
+
         void Render();
 
         void BuildDescriptors();

@@ -24,10 +24,10 @@ namespace UniverseEngine {
     class Graphics;
 
     struct CloudConfig {
-        bool enabled = false;
+        bool enabled = true;
 
         glm::vec3 offset = glm::vec3(0.0);
-        float scale = 0.14f;
+        float scale = 0.4f;
         float densityThreshold = 0.27f;
         float densityMultiplier = 0.7f;
 
