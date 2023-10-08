@@ -1,18 +1,29 @@
 #include "World.h"
 #include "Engine.h"
 #include "TerrianGenerator.h"
+#include "Scene.h"
 
 namespace UniverseEngine {
     World::World() : camera{}, sun{}, sceneInstances{} 
     {
+        isTerrianGenerated = false;
         camera.transform.SetTranslation(glm::vec3(0,0,1));
         camera.transform.SetRotation(EulerToQuat(glm::vec3(180, 0, 0)));
     }
 
     void World::GenerateWorld() {
+        TerrianGeneratorConfig config = { 25, 25, 25, 25, 1};
 
-        //Generate a 1x1 grid
-        tg.Init(25,25,25,25);
+        tg.Init(config);
+        isTerrianGenerated = true;
+
+        if (tg.newlyGeneratedWorld.size() > 0) {
+            for (auto sceneInstance : tg.newlyGeneratedWorld) {
+                this->sceneInstances.push_back(sceneInstance);
+                this->newInstances.push_back(sceneInstance);
+            }
+        }
+        //tg.newlyGeneratedWorld.clear();
     }
 
     std::shared_ptr<SceneInstance> World::AddSceneInstance(std::shared_ptr<Scene> hScene) {
@@ -27,21 +38,8 @@ namespace UniverseEngine {
     }
 
     void World::Update() {
-        //tg.Update();
-        //
-        //for (int x = 0; x < tg.newlyGeneratedWorld.size(); x++) {
-        //    for (int y = 0; y < tg.newlyGeneratedWorld[x].size(); y++) {
-        //        auto sceneInstance = std::make_shared<SceneInstance>(tg.newlyGeneratedWorld[x][y]);
-        //        this->sceneInstances.push_back(sceneInstance);
-        //        this->newInstances.push_back(sceneInstance);
-        //    }
-        //}
-
-        ////After we update the world with all the new chunks we want to clear the array
-        ////  so we dont keep on adding the same mesh
-        //for (auto& innerVector : tg.newlyGeneratedWorld) {
-        //    innerVector.clear();
-        //}
-        //tg.newlyGeneratedWorld.clear();
+        if (isTerrianGenerated) {
+            tg.Update();
+        }
     }
 }  // namespace UniverseEngine

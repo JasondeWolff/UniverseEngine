@@ -32,6 +32,7 @@ namespace UniverseEngine {
 
         void Update();
 
+        bool isTerrianGenerated;
         TerrianGenerator tg;
 
         std::vector<std::shared_ptr<SceneInstance>> sceneInstances;

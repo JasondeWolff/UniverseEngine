@@ -6,16 +6,24 @@
 
 namespace UniverseEngine {
     class Resources;
+    struct SceneInstance;
     struct Scene;
+
+    struct TerrianGeneratorConfig {
+        int chunkWidth = 1;
+        int chunkHeight = 1;
+        int chunkWidthSegments = 1;
+        int chunkHeightSegments = 1;
+        int chunkRenderDistance = 1;
+    };
 
     class TerrianGenerator {
     public:
-        TerrianGenerator(){};
+        TerrianGenerator() = default;
 
-        void Init(int width = 1, int height = 1, int widthSegments = 1, int heightSegments = 1);
-        std::shared_ptr<Scene> CreatePlane(glm::vec2 gridPos);
+        void Init(TerrianGeneratorConfig config);
 
-        std::vector<std::vector<std::shared_ptr<Scene>>> newlyGeneratedWorld;
+        std::vector<std::shared_ptr<SceneInstance>> newlyGeneratedWorld;
     private:
         friend class Resources;
         friend class World;
@@ -25,10 +33,11 @@ namespace UniverseEngine {
         int chunk_height;
         int chunk_widthSegments;
         int chunk_heightSegments;
+        int chunk_renderDistance;
 
-        std::vector<std::vector<std::shared_ptr<Scene>>> generatedWorld;
+        std::vector<std::shared_ptr<SceneInstance>> generatedWorld;
 
-        void ResizeVectors(int newWidth, int newHeight);
         void Update();
+        std::shared_ptr<Scene> CreatePlane(int x, int y);
     };
 }  // namespace UniverseEngine

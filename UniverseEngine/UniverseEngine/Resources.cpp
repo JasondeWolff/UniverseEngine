@@ -8,14 +8,18 @@ namespace UniverseEngine {
     }
 
     std::shared_ptr<Scene> Resources::CreateScene(Mesh&& mesh) {
-        std::shared_ptr<Scene> hScene = std::make_shared<Scene>();
 
+        std::shared_ptr<Scene> hScene = std::make_shared<Scene>();
+        hScene->name = mesh.name;
         hScene->meshes.emplace_back(std::move(mesh));
         hScene->materials.emplace_back(Material{});
+
         auto instanceRoot = hScene->hierarchy.begin();
         instanceRoot = hScene->hierarchy.insert(instanceRoot, SceneNode{});
+
         SceneNode node{};
         node.meshIdx = std::make_optional(0);
+
         hScene->hierarchy.append_child(instanceRoot, node);
 
         this->scenes.push_back(hScene);

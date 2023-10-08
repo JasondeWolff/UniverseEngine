@@ -11,24 +11,36 @@
 
 namespace UniverseEngine {
 
-    void TerrianGenerator::Init(int width, int height, int widthSegments, int heightSegments)
+    void TerrianGenerator::Init(TerrianGeneratorConfig config)
     {
-        this->chunk_width = width;
-        this->chunk_height = height;
-        this->chunk_widthSegments = widthSegments;
-        this->chunk_heightSegments = heightSegments;
+        this->chunk_width = config.chunkWidth;
+        this->chunk_height = config.chunkHeight;
+        this->chunk_widthSegments = config.chunkWidthSegments;
+        this->chunk_heightSegments = config.chunkHeightSegments;
+        this->chunk_renderDistance = config.chunkRenderDistance;
         
-        //CreatePlane(glm::vec2(0,0));
+        for (int x = 0; x < chunk_renderDistance; x++) {
+            for (int y = 0; y < chunk_renderDistance; y++) {
+                auto sceneInstance = std::make_shared<SceneInstance>(CreatePlane(x,y));
+
+                glm::vec3 position = glm::vec3((x * chunk_width) + chunk_width, -30.0f, (y * chunk_height) + chunk_height);
+                Transform chunkTrans = Transform();
+                chunkTrans.SetTranslation(position);
+                sceneInstance.get()->transform = chunkTrans;
+
+                generatedWorld.push_back(sceneInstance);
+                newlyGeneratedWorld.push_back(sceneInstance);
+            }
+        }
     }
 
-    std::shared_ptr<Scene> TerrianGenerator::CreatePlane(glm::vec2 gridPos) {
-
+    std::shared_ptr<Scene> TerrianGenerator::CreatePlane(int x, int y) {
         // Calculate step sizes
         float dx = chunk_width / static_cast<float>(chunk_widthSegments);
         float dy = chunk_height / static_cast<float>(chunk_heightSegments);
 
         Mesh chunk;
-        chunk.name = std::string("Plane");
+        chunk.name = "Plane cord: " + std::to_string(x) + ", " + std::to_string(y);
         chunk.vertices.clear();
         chunk.vertices.reserve(chunk_widthSegments * chunk_heightSegments);
 
@@ -67,14 +79,6 @@ namespace UniverseEngine {
         return hScene;
     }
 
-    void TerrianGenerator::ResizeVectors(int newWidth, int newHeight) {
-        // Resize the generatedWorld vector
-        this->generatedWorld.resize(newWidth, std::vector<std::shared_ptr<Scene>>(newHeight, nullptr));
-
-        // Resize the newlyGeneratedWorld vector (if needed)
-        this->newlyGeneratedWorld.resize(newWidth, std::vector<std::shared_ptr<Scene>>(newHeight, nullptr));
-    }
-
     void TerrianGenerator::Update() {
         auto camera = Engine::GetWorld().camera;
         glm::vec3 cameraPos = camera.transform.GetTranslation();
@@ -84,16 +88,5 @@ namespace UniverseEngine {
             static_cast<int>(cameraPos.y) / chunk_height
         };
 
-        // Check if the vectors need resizing
-        if (gridPos.x >= this->generatedWorld.size() || gridPos.y >= this->generatedWorld[0].size()) {
-            // Resize the vectors to accommodate the grid position
-            ResizeVectors(gridPos.x + 1, gridPos.y + 1);
-        }
-
-        if (this->generatedWorld[gridPos.x][gridPos.y] == nullptr) {
-            auto chunkScene = CreatePlane(gridPos);
-            this->newlyGeneratedWorld[gridPos.x][gridPos.y] = chunkScene;
-            this->generatedWorld[gridPos.x][gridPos.y] = chunkScene;
-        }
     }
 }  // namespace UniverseEngine
