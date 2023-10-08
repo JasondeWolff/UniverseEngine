@@ -3,6 +3,7 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+#include <string>
 
 namespace UniverseEngine {
     inline constexpr glm::vec3 Right() {
@@ -14,6 +15,8 @@ namespace UniverseEngine {
     inline constexpr glm::vec3 Forward() {
         return glm::vec3(0.0, 0.0, -1.0);
     }
+
+    std::string GenerateUUID();
 
     glm::quat EulerToQuat(const glm::vec3& euler);
     glm::vec3 QuatToEuler(const glm::quat& rotation);

@@ -57,15 +57,6 @@ void TerrianDemo::Update(float deltaTime) {
 	}
 
 	this->camera.Update(deltaTime);
-
-	bool uiActive = true;
-	ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiCond_Always);
-	ImGui::Begin("LODDemo", &uiActive);
-	static bool wireFrame = false;
-	ImGui::Checkbox("Wireframe", &wireFrame);
-	ImGui::End();
-
-	Engine::GetGraphics().SetPolygonMode(!wireFrame ? GraphicsPolygonMode::FILL : GraphicsPolygonMode::LINE);
 }
 
 void TerrianDemo::OnClose() {

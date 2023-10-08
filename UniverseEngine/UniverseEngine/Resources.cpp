@@ -23,6 +23,7 @@ namespace UniverseEngine {
 
         this->scenes.push_back(hScene);
         this->newScenes.push_back(hScene);
+        this->scenePaths.insert(std::make_pair(GenerateUUID(), hScene));
         return hScene;
     }
 

@@ -14,14 +14,6 @@ namespace UniverseEngine {
     void World::GenerateWorld(TerrianGeneratorConfig config) {
         tg.Init(config);
         isTerrianGenerated = true;
-
-        if (tg.newlyGeneratedWorld.size() > 0) {
-            for (auto sceneInstance : tg.newlyGeneratedWorld) {
-                this->sceneInstances.push_back(sceneInstance);
-                this->newInstances.push_back(sceneInstance);
-            }
-        }
-        tg.newlyGeneratedWorld.clear();
     }
 
     std::shared_ptr<SceneInstance> World::AddSceneInstance(std::shared_ptr<Scene> hScene) {

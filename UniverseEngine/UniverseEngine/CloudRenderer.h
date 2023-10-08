@@ -27,8 +27,8 @@ namespace UniverseEngine {
         bool enabled = true;
 
         glm::vec3 offset = glm::vec3(0.0);
-        float scale = 0.133f;
-        float densityThreshold = 0.176f;
+        float scale = 0.45f;
+        float densityThreshold = 0.58f;
         float densityMultiplier = 1.5f;
 
         float forwardScattering = 0.72f;
@@ -36,7 +36,7 @@ namespace UniverseEngine {
         float baseBrightness = 0.7f;
         float phaseFactor = 0.74f;
 
-        float lightAbsorbtion = 1.05f;
+        float lightAbsorbtion = 0.8f;
         float indirectLightAbsorbtion = 0.96f;
         float darknessThreshold = 0.07f;
     };
