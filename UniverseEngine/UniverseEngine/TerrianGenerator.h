@@ -35,6 +35,7 @@ namespace UniverseEngine {
         int chunk_heightSegments;
         int chunk_renderDistance;
 
+
         std::vector<std::shared_ptr<SceneInstance>> generatedWorld;
 
         void Update();

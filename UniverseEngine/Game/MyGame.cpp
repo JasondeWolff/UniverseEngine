@@ -19,8 +19,6 @@ void MyGame::OnStart() {
 
 	this->freeFormCamera.Start();
 	this->spaceShip.Start();
-	
-	Engine::GetWorld().GenerateWorld();
 }
 
 void MyGame::Update(float deltaTime) {

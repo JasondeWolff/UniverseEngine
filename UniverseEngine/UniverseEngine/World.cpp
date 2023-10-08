@@ -11,9 +11,7 @@ namespace UniverseEngine {
         camera.transform.SetRotation(EulerToQuat(glm::vec3(180, 0, 0)));
     }
 
-    void World::GenerateWorld() {
-        TerrianGeneratorConfig config = { 25, 25, 25, 25, 1};
-
+    void World::GenerateWorld(TerrianGeneratorConfig config) {
         tg.Init(config);
         isTerrianGenerated = true;
     }
@@ -30,6 +28,8 @@ namespace UniverseEngine {
     }
 
     void World::Update() {
+
+
         if (isTerrianGenerated) {
             tg.Update();
         }
