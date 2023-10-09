@@ -128,11 +128,11 @@ namespace UniverseEngine {
                 mesh.indices.erase(mesh.indices.begin() + (i * 3 + 1));
                 mesh.indices.erase(mesh.indices.begin() + (i * 3 + 0));
 
-                mesh.indices.push_back(mesh.vertices.size());
+                mesh.indices.push_back(static_cast<uint32_t>(mesh.vertices.size()));
                 mesh.vertices.push_back(mesh.vertices[vi0]);
-                mesh.indices.push_back(mesh.vertices.size());
+                mesh.indices.push_back(static_cast<uint32_t>(mesh.vertices.size()));
                 mesh.vertices.push_back(mesh.vertices[vi1]);
-                mesh.indices.push_back(mesh.vertices.size());
+                mesh.indices.push_back(static_cast<uint32_t>(mesh.vertices.size()));
                 mesh.vertices.push_back(mesh.vertices[vi2]);
             }
 

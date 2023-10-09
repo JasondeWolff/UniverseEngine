@@ -52,7 +52,7 @@ namespace UniverseEngine {
                 vertex->position.y = heightValue;
             }
         }
-        //plane->GenerateNormals(true);
+        //plane->GenerateNormals();
 
         auto hScene = Engine::GetResources().CreateScene(std::move(plane->BuildFlatShaded()));
         return hScene;
