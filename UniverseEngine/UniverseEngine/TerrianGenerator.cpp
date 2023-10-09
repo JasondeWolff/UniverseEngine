@@ -36,16 +36,18 @@ namespace UniverseEngine {
     }
 
     std::shared_ptr<Scene> TerrianGenerator::CreateScene(int x, int y) {
-        float* heightMap = GenerateNoise(x, y);
         auto plane = CreatePlane(x, y);
+        float* heightMap = GenerateNoise(x, y);
 
-        for (int y = 0; y < chunk_widthSegments; y++) {
-            for (int x = 0; x < chunk_heightSegments; x++) {
+        for (int y = 0; y <= chunk_heightSegments + 1; ++y) {
+            for (int x = 0; x <= chunk_widthSegments; ++x) {
                 auto vertex = &plane->vertices[(y * chunk_widthSegments) + x];
 
-                float heightValue = heightMap[(y * chunk_widthSegments) + x];
-                if (heightValue < 0.0f)
-                    heightValue = 0.0f;
+                if (heightMap[(y * chunk_widthSegments) + x] < 0)
+                    heightMap[(y * chunk_widthSegments) + x] = 0;
+
+                float heightValue = 
+                    heightMap[(y * chunk_widthSegments) + x] * 5.f;
 
                 vertex->position[1] = heightValue;
             }
@@ -97,25 +99,27 @@ namespace UniverseEngine {
         return chunk;
     }
 
-    float* TerrianGenerator::GenerateNoise(int xPos, int yPos) {
+    float* TerrianGenerator::GenerateNoise(int x, int y) {
         auto fnSimplex = FastNoise::New<FastNoise::Simplex>();
         auto fnFractal = FastNoise::New<FastNoise::FractalFBm>();
         fnFractal->SetSource(fnSimplex);
         fnFractal->SetOctaveCount(5);
 
-        float* noiseData = new float[chunk_widthSegments * chunk_heightSegments]();
+        auto width = chunk_widthSegments + 1;
+        auto height = chunk_heightSegments + 1;
+        glm::ivec2 offset = glm::vec2(x * chunk_widthSegments - 1, y * chunk_heightSegments - 1);
 
-        for (int y = 0; y < chunk_heightSegments; y++) {
-            for (int x = 0; x < chunk_widthSegments; x++) {
-                // Calculate the absolute position in the world
-                float worldX = static_cast<float>(xPos * chunk_widthSegments) + x;
-                float worldY = static_cast<float>(yPos * chunk_heightSegments) + y;
+        float* noiseData = new float[width * height]();
+        fnFractal->GenUniformGrid2D(
+            noiseData, 
+            offset.x, 
+            offset.y, 
+            width, 
+            height, 
+            0.05f,
+            1337
+        );
 
-                float heightValue = fnFractal->GenSingle2D(worldX, worldY, 1337);
-
-                noiseData[(y * chunk_widthSegments) + x] = heightValue;
-            }
-        }
 
         return noiseData;
     }

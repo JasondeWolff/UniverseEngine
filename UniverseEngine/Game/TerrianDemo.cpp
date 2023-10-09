@@ -31,7 +31,7 @@ void TerrianDemo::OnStart() {
 	int chunkHeight = 25;
 	int chunkWidthSegments = 25;
 	int chunkHeightSegments = 25;
-	int chunkRenderDistance = 2;
+	int chunkRenderDistance = 5;
 
 	TerrianGeneratorConfig config = {
 		chunkWidth,
