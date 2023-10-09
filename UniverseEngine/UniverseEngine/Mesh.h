@@ -35,9 +35,10 @@ namespace UniverseEngine {
 
         bool HasNormals() const;
         bool HasTangents() const;
-        void GenerateNormals();
+        void GenerateNormals(bool flatShading = false);
         void GenerateTangents();
 
+        Mesh BuildFlatShaded() const;
         Mesh BuildSimplified(float percentage) const;
 
     private:

@@ -11,23 +11,38 @@ namespace UniverseEngine {
         return glm::length(glm::vec3(this->vertices[0].tangent)) > 0.0f;
     }
 
-    void Mesh::GenerateNormals() {
-        for (auto& vertex : this->vertices)
-            vertex.normal = glm::vec3(0.0f);
+    void Mesh::GenerateNormals(bool flatShading) {
+        if (flatShading) {
+            for (size_t i = 0; i < this->indices.size() / 3; i++) {
+                Vertex& v0 = this->vertices[this->indices[i * 3 + 0]];
+                Vertex& v1 = this->vertices[this->indices[i * 3 + 1]];
+                Vertex& v2 = this->vertices[this->indices[i * 3 + 2]];
 
-        for (size_t i = 0; i < this->indices.size() / 3; i++) {
-            Vertex& v0 = this->vertices[this->indices[i * 3 + 0]];
-            Vertex& v1 = this->vertices[this->indices[i * 3 + 1]];
-            Vertex& v2 = this->vertices[this->indices[i * 3 + 2]];
+                glm::vec3 n = glm::normalize(
+                    glm::cross(v1.position - v0.position, v2.position - v0.position));
+                v0.normal = n;
+                v1.normal = n;
+                v2.normal = n;
+            }
+        } else {
+            for (auto& vertex : this->vertices)
+                vertex.normal = glm::vec3(0.0f);
 
-            glm::vec3 n = glm::normalize(glm::cross(v1.position - v0.position, v2.position - v0.position));
-            v0.normal += n;
-            v1.normal += n;
-            v2.normal += n;
+            for (size_t i = 0; i < this->indices.size() / 3; i++) {
+                Vertex& v0 = this->vertices[this->indices[i * 3 + 0]];
+                Vertex& v1 = this->vertices[this->indices[i * 3 + 1]];
+                Vertex& v2 = this->vertices[this->indices[i * 3 + 2]];
+
+                glm::vec3 n = glm::normalize(
+                    glm::cross(v1.position - v0.position, v2.position - v0.position));
+                v0.normal += n;
+                v1.normal += n;
+                v2.normal += n;
+            }
+
+            for (auto& vertex : this->vertices)
+                vertex.normal = glm::normalize(vertex.normal);
         }
-
-        for (auto& vertex : this->vertices)
-            vertex.normal = glm::normalize(vertex.normal);
     }
 
     void Mesh::GenerateTangents() {
@@ -93,6 +108,41 @@ namespace UniverseEngine {
         this->vertices.shrink_to_fit();
         this->indices.clear();
         this->indices.shrink_to_fit();
+    }
+
+    Mesh Mesh::BuildFlatShaded() const {
+        Mesh mesh{};
+        mesh.name = this->name + "_FLAT";
+        mesh.vertices = this->vertices;
+        mesh.indices = this->indices;
+        mesh.materialIdx = this->materialIdx;
+
+        std::vector<bool> occupied(this->vertices.size());
+        for (size_t i = 0; i < this->indices.size() / 3; i++) {
+            uint32_t vi0 = this->indices[i * 3 + 0];
+            uint32_t vi1 = this->indices[i * 3 + 1];
+            uint32_t vi2 = this->indices[i * 3 + 2];
+
+            if (occupied[vi0] || occupied[vi1] || occupied[vi2]) {
+                mesh.indices.erase(mesh.indices.begin() + (i * 3 + 2));
+                mesh.indices.erase(mesh.indices.begin() + (i * 3 + 1));
+                mesh.indices.erase(mesh.indices.begin() + (i * 3 + 0));
+
+                mesh.indices.push_back(mesh.vertices.size());
+                mesh.vertices.push_back(mesh.vertices[vi0]);
+                mesh.indices.push_back(mesh.vertices.size());
+                mesh.vertices.push_back(mesh.vertices[vi1]);
+                mesh.indices.push_back(mesh.vertices.size());
+                mesh.vertices.push_back(mesh.vertices[vi2]);
+            }
+
+            occupied[vi0] = true;
+            occupied[vi1] = true;
+            occupied[vi2] = true;
+        }
+
+        mesh.GenerateNormals(true);
+        return Mesh(std::move(mesh));
     }
 
     Mesh Mesh::BuildSimplified(float percentage) const {
