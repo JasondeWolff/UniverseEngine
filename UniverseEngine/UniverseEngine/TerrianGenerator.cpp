@@ -49,9 +49,10 @@ namespace UniverseEngine {
                 float heightValue = 
                     heightMap[(y * chunk_widthSegments) + x] * 5.f;
 
-                vertex->position[1] = heightValue;
+                vertex->position.y = heightValue;
             }
         }
+        plane->GenerateNormals();
 
         auto hScene = Engine::GetResources().CreateScene(std::move(*plane));
         return hScene;
@@ -95,7 +96,6 @@ namespace UniverseEngine {
             }
         }
         chunk->materialIdx = 0;
-        chunk->GenerateNormals();
         
         return chunk;
     }

@@ -15,15 +15,15 @@ namespace UniverseEngine {
         for (auto& vertex : this->vertices)
             vertex.normal = glm::vec3(0.0f);
 
-        for (size_t i = 0; i < this->indices.size(); i += 3) {
-            Vertex& v0 = this->vertices[this->indices[i + 0]];
-            Vertex& v1 = this->vertices[this->indices[i + 1]];
-            Vertex& v2 = this->vertices[this->indices[i + 2]];
+        for (size_t i = 0; i < this->indices.size() / 3; i++) {
+            Vertex& v0 = this->vertices[this->indices[i * 3 + 0]];
+            Vertex& v1 = this->vertices[this->indices[i * 3 + 1]];
+            Vertex& v2 = this->vertices[this->indices[i * 3 + 2]];
 
-            glm::vec3 p = glm::cross(v1.position - v0.position, v2.position - v0.position);
-            v0.normal += p;
-            v1.normal += p;
-            v2.normal += p;
+            glm::vec3 n = glm::normalize(glm::cross(v1.position - v0.position, v2.position - v0.position));
+            v0.normal += n;
+            v1.normal += n;
+            v2.normal += n;
         }
 
         for (auto& vertex : this->vertices)
