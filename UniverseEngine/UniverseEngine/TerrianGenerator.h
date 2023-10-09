@@ -4,10 +4,13 @@
 #include <glm/vec2.hpp>
 #include <map>
 
+#include <FastNoise/FastNoise.h>
+
 namespace UniverseEngine {
     class Resources;
     struct SceneInstance;
     struct Scene;
+    struct Mesh;
 
     struct TerrianGeneratorConfig {
         int chunkWidth = 1;
@@ -35,10 +38,11 @@ namespace UniverseEngine {
         int chunk_heightSegments;
         int chunk_renderDistance;
 
-
         std::vector<std::shared_ptr<SceneInstance>> generatedWorld;
 
         void Update();
-        std::shared_ptr<Scene> CreatePlane(int x, int y);
+        std::shared_ptr<Scene> CreateScene(int x, int y);
+        Mesh* CreatePlane(int x, int y);
+        float* GenerateNoise(int x, int y); 
     };
 }  // namespace UniverseEngine
