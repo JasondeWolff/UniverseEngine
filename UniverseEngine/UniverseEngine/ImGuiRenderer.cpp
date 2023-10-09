@@ -51,6 +51,7 @@ namespace UniverseEngine {
         GraphicsPipelineInfo info{};
         info.ignoreDepth = true;
         info.blending = true;
+        info.culling = false;
         std::vector<const ShaderRenderable*> shaders = {&shaderVS->Renderable(),
                                                         &shaderFS->Renderable()};
         this->pipeline = std::make_shared<GraphicsPipeline>(

@@ -419,6 +419,7 @@ namespace UniverseEngine {
 
         GraphicsPipelineInfo skyboxInfo{};
         skyboxInfo.ignoreDepth = true;
+        skyboxInfo.culling = false;
         std::vector<const ShaderRenderable*> skyboxShaders = {shaderSkyboxVS->renderable.get(),
                                                               shaderSkyboxFS->renderable.get()};
         this->skyboxPipeline = std::make_shared<GraphicsPipeline>(

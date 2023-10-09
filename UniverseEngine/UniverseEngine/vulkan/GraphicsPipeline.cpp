@@ -108,7 +108,7 @@ namespace UniverseEngine {
             rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
         else if (info.polygonMode == GraphicsPolygonMode::LINE)
             rasterizer.polygonMode = VK_POLYGON_MODE_LINE;
-        rasterizer.cullMode = VK_CULL_MODE_NONE;
+        rasterizer.cullMode = info.culling ? VK_CULL_MODE_BACK_BIT : VK_CULL_MODE_NONE;
         rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
         rasterizer.depthBiasEnable = VK_FALSE;
         rasterizer.lineWidth = 1.0;

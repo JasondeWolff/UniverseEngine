@@ -85,16 +85,17 @@ namespace UniverseEngine {
         for (int y = 0; y < chunk_heightSegments; ++y) {
             for (int x = 0; x < chunk_widthSegments; ++x) {
                 int vertexIndex = y * (chunk_widthSegments + 1) + x;
+                chunk->indices.push_back(vertexIndex + chunk_widthSegments + 1);
+                chunk->indices.push_back(vertexIndex + 1);
                 chunk->indices.push_back(vertexIndex);
-                chunk->indices.push_back(vertexIndex + 1);
+                
                 chunk->indices.push_back(vertexIndex + chunk_widthSegments + 1);
-
-                chunk->indices.push_back(vertexIndex + 1);
                 chunk->indices.push_back(vertexIndex + chunk_widthSegments + 2);
-                chunk->indices.push_back(vertexIndex + chunk_widthSegments + 1);
+                chunk->indices.push_back(vertexIndex + 1);
             }
         }
         chunk->materialIdx = 0;
+        chunk->GenerateNormals();
         
         return chunk;
     }

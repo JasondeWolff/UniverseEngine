@@ -47,6 +47,7 @@ namespace UniverseEngine {
         bool blending = false;
         bool inputVertices = true;
         GraphicsPolygonMode polygonMode = GraphicsPolygonMode::FILL;
+        bool culling = true;
     };
 
     class GraphicsPipeline {

@@ -14,9 +14,9 @@ namespace UniverseEngine {
 
     struct Vertex {
         glm::vec3 position = glm::vec3(0.0, 0.0, 0.0);
-        glm::vec3 normal = glm::vec3(0.0, 1.0, 0.0);
+        glm::vec3 normal = glm::vec3(0.0, 0.0, 0.0);
         glm::vec2 texCoord = glm::vec2(0.0, 0.0);
-        glm::vec4 tangent = glm::vec4(0.0, 0.0, 0.0, 1.0);
+        glm::vec4 tangent = glm::vec4(0.0, 0.0, 0.0, 0.0);
         glm::vec4 color = glm::vec4(1.0, 1.0, 1.0, 1.0);
     };
 
@@ -33,7 +33,9 @@ namespace UniverseEngine {
         std::vector<uint32_t> indices;
         size_t materialIdx;
 
+        bool HasNormals() const;
         bool HasTangents() const;
+        void GenerateNormals();
         void GenerateTangents();
 
         Mesh BuildSimplified(float percentage) const;
