@@ -213,53 +213,5 @@ namespace UniverseEngine {
         cmdList.TransitionImageLayout(noiseImage, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                                       ResourceAccessBits::ACCESS_SHADER_READ_BIT,
                                       PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-
-        /*auto fnCellular = FastNoise::New<FastNoise::CellularDistance>();
-        auto fnSubtract = FastNoise::New<FastNoise::Subtract>();
-        auto fnDomainScale = FastNoise::New<FastNoise::DomainScale>();
-        auto fnFractal = FastNoise::New<FastNoise::FractalFBm>();
-        fnSubtract->SetRHS(fnCellular);
-        fnSubtract->SetLHS(-1.0f);
-        fnDomainScale->SetSource(fnSubtract);
-        fnDomainScale->SetScale(0.5f);
-        fnFractal->SetSource(fnDomainScale);
-        fnFractal->SetOctaveCount(2);
-        fnFractal->SetLacunarity(1.5f);
-        auto fnNegativeFractal = FastNoise::New<FastNoise::FractalFBm>();
-        auto fnNegativeDomainScale = FastNoise::New<FastNoise::DomainScale>();
-        auto fnNegativeMultiply = FastNoise::New<FastNoise::Multiply>();
-        fnNegativeFractal->SetSource(fnCellular);
-        fnNegativeFractal->SetOctaveCount(5);
-        fnNegativeFractal->SetLacunarity(2.0f);
-        fnNegativeDomainScale->SetSource(fnNegativeFractal);
-        fnNegativeDomainScale->SetScale(1.54f);
-        fnNegativeMultiply->SetLHS(fnNegativeDomainScale);
-        fnNegativeMultiply->SetRHS(0.5f);
-        auto fnCombineSubtract = FastNoise::New<FastNoise::Subtract>();
-        auto fnCombineDomainScale = FastNoise::New<FastNoise::DomainScale>();
-        fnCombineSubtract->SetLHS(fnFractal);
-        fnCombineSubtract->SetRHS(fnNegativeMultiply);
-        fnCombineDomainScale->SetSource(fnCombineSubtract);
-        fnCombineDomainScale->SetScale(0.5f);
-
-        float* noiseData =
-            static_cast<float*>(malloc(resolution * resolution * resolution * sizeof(float)));
-        fnCombineSubtract->GenUniformGrid3D(noiseData, 0, 0, 0, static_cast<int>(resolution),
-                                    static_cast<int>(resolution), static_cast<int>(resolution),
-                                    0.05f, 1337);
-
-        unsigned char* noiseData8 = static_cast<unsigned char*>(
-            malloc(resolution * resolution * resolution * sizeof(unsigned char) * 4));
-        for (size_t i = 0; i < resolution * resolution * resolution; i++) {
-            noiseData8[i * 4 + 0] = static_cast<unsigned char>(noiseData[i] * 255.99f);
-            noiseData8[i * 4 + 1] = static_cast<unsigned char>(noiseData[i] * 255.99f);
-            noiseData8[i * 4 + 2] = static_cast<unsigned char>(noiseData[i] * 255.99f);
-            noiseData8[i * 4 + 3] = static_cast<unsigned char>(noiseData[i] * 255.99f);
-        }*/
-
-        /*this->noise = Engine::GetResources().CreateTexture(
-            "Cloud Noise", nullptr, static_cast<unsigned>(resolution),
-            static_cast<unsigned>(resolution), TextureType::UNORM, ImageDimensions::IMAGE_3D,
-            static_cast<unsigned>(resolution), false);*/
     }
 }  // namespace UniverseEngine
