@@ -30,12 +30,16 @@ struct UniformBuffer {
     float zFar;
 };
 
+struct NoiseUniformBuffer {
+    float size;
+};
+
 namespace UniverseEngine {
     CloudRenderer::CloudRenderer(std::shared_ptr<LogicalDevice> device,
                                  const PhysicalDevice& physicalDevice,
                                  std::shared_ptr<DescriptorPool> descriptorPool,
                                  const Graphics& graphics)
-        : config{} {
+        : device(device), physicalDevice(physicalDevice), config{} {
         this->descriptorSetLayout = std::make_shared<DescriptorSetLayout>(
             device,
             std::vector<DescriptorLayoutBinding>{
@@ -47,6 +51,12 @@ namespace UniverseEngine {
                                         GraphicsStageFlagBits::COMPUTE_STAGE),
                 DescriptorLayoutBinding("ubo", 3, DescriptorType::UNIFORM_BUFFER,
                                         GraphicsStageFlagBits::COMPUTE_STAGE)});
+        this->noiseDescriptorSetLayout = std::make_shared<DescriptorSetLayout>(
+            device, std::vector<DescriptorLayoutBinding>{
+                        DescriptorLayoutBinding("noise", 0, DescriptorType::STORAGE_IMAGE,
+                                                GraphicsStageFlagBits::COMPUTE_STAGE),
+                        DescriptorLayoutBinding("ubo", 1, DescriptorType::UNIFORM_BUFFER,
+                                                GraphicsStageFlagBits::COMPUTE_STAGE)});
 
         for (size_t i = 0; i < this->descriptorSets.size(); i++) {
             this->uniformBuffers[i] = std::make_shared<Buffer>(
@@ -59,22 +69,39 @@ namespace UniverseEngine {
                                                this->uniformBuffers[i]);
         }
 
+        this->noiseUniformBuffer = std::make_shared<Buffer>(
+            "Cloud Noise UniformBuffer", device, physicalDevice, BufferUsageBits::UNIFORM_BUFFER,
+            sizeof(NoiseUniformBuffer), BufferLocation::CPU_TO_GPU);
+        this->noiseDescriptorSet =
+            std::make_shared<DescriptorSet>(device, descriptorPool, this->noiseDescriptorSetLayout);
+        this->noiseDescriptorSet->SetBuffer(1, DescriptorType::UNIFORM_BUFFER,
+                                            this->noiseUniformBuffer);
+
         auto& resources = Engine::GetResources();
         std::shared_ptr<Shader> shader = resources.LoadShader("Assets/Shaders/clouds.comp");
+        std::shared_ptr<Shader> noiseShader =
+            resources.LoadShader("Assets/Shaders/cloudNoise.comp");
         graphics.RebuildShaders();
 
         this->pipeline = std::make_shared<ComputePipeline>(
             device, shader->Renderable(),
             std::vector<std::shared_ptr<DescriptorSetLayout>>{this->descriptorSetLayout});
+        this->noisePipeline = std::make_shared<ComputePipeline>(
+            device, noiseShader->Renderable(),
+            std::vector<std::shared_ptr<DescriptorSetLayout>>{this->noiseDescriptorSetLayout});
 
         for (size_t i = 0; i < Swapchain::MAX_FRAMES_IN_FLIGHT; i++) {
             this->semaphores.emplace_back(
                 std::move(Semaphore(Format("Cloud Renderer %i", i), device)));
         }
 
-        this->sampler = std::make_shared<Sampler>("Cloud Noise Sampler", device, physicalDevice);
+        this->noise = Engine::GetResources().CreateTexture(
+            "Cloud Noise", nullptr, static_cast<unsigned>(NOISE_RESOLUTION),
+            static_cast<unsigned>(NOISE_RESOLUTION), TextureType::UNORM, ImageDimensions::IMAGE_3D,
+            static_cast<unsigned>(NOISE_RESOLUTION), false);
 
-        this->GenerateNoise();
+        this->sampler = std::make_shared<Sampler>("Cloud Noise Sampler", device, physicalDevice);
+        this->noiseDirty = true;
     }
 
     Semaphore& CloudRenderer::CurrentSemaphore(size_t currentFrame) {
@@ -83,8 +110,13 @@ namespace UniverseEngine {
 
     void CloudRenderer::Render(CmdList& cmdList, std::shared_ptr<Image> colorImage,
                                std::shared_ptr<Image> depthImage, size_t currentFrame) {
-        if (!config.enabled)
+        if (!this->config.enabled)
             return;
+
+        if (this->noiseDirty) {
+            this->GenerateNoise(cmdList);
+            this->noiseDirty = false;
+        }
 
         World& world = Engine::GetWorld();
         Camera& camera = world.camera;
@@ -142,10 +174,47 @@ namespace UniverseEngine {
                                       PipelineStageBits::PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT);
     }
 
-    void CloudRenderer::GenerateNoise() {
-        size_t resolution = 256;
+    void CloudRenderer::GenerateNoise(CmdList& cmdList) {
+        NoiseUniformBuffer uniformBuffer;
+        uniformBuffer.size = static_cast<float>(NOISE_RESOLUTION);
+        void* uniformBufferData = this->noiseUniformBuffer->Map();
+        memcpy(uniformBufferData, &uniformBuffer, sizeof(UniformBuffer));
+        this->noiseUniformBuffer->Unmap();
 
-        auto fnCellular = FastNoise::New<FastNoise::CellularDistance>();
+        auto genNoiseImage = std::make_shared<Image>(
+            "Cloud Noise Gen", this->device, this->physicalDevice,
+            static_cast<uint32_t>(NOISE_RESOLUTION), static_cast<uint32_t>(NOISE_RESOLUTION), 1,
+            ImageUsageBits::TRANSFER_SRC_IMAGE | ImageUsageBits::STORAGE_IMAGE,
+            GraphicsFormat::R8G8B8A8_UNORM, 1, ImageDimensions::IMAGE_3D,
+            static_cast<uint32_t>(NOISE_RESOLUTION));
+
+        auto noiseImage = this->noise->Renderable().GetImage();
+
+        cmdList.BindComputePipeline(this->noisePipeline);
+
+        cmdList.TransitionImageLayout(genNoiseImage, ImageLayout::GENERAL,
+                                      ResourceAccessBits::ACCESS_SHADER_WRITE_BIT,
+                                      PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+
+        this->noiseDescriptorSet->SetImage(0, DescriptorType::STORAGE_IMAGE, genNoiseImage,
+                                           nullptr);
+
+        cmdList.BindDescriptorSet(this->noiseDescriptorSet, 0, PipelineType::COMPUTE);
+        cmdList.Dispatch(DivideUp(NOISE_RESOLUTION, 8), DivideUp(NOISE_RESOLUTION, 8),
+                         DivideUp(NOISE_RESOLUTION, 8));
+
+        cmdList.TransitionImageLayout(genNoiseImage, ImageLayout::TRANSFER_SRC_OPTIMAL,
+                                      ResourceAccessBits::ACCESS_TRANSFER_READ_BIT,
+                                      PipelineStageBits::PIPELINE_STAGE_TRANSFER_BIT);
+        cmdList.TransitionImageLayout(noiseImage, ImageLayout::TRANSFER_DST_OPTIMAL,
+                                      ResourceAccessBits::ACCESS_TRANSFER_WRITE_BIT,
+                                      PipelineStageBits::PIPELINE_STAGE_TRANSFER_BIT);
+        cmdList.CopyImages(genNoiseImage, noiseImage);
+        cmdList.TransitionImageLayout(noiseImage, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+                                      ResourceAccessBits::ACCESS_SHADER_READ_BIT,
+                                      PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+
+        /*auto fnCellular = FastNoise::New<FastNoise::CellularDistance>();
         auto fnSubtract = FastNoise::New<FastNoise::Subtract>();
         auto fnDomainScale = FastNoise::New<FastNoise::DomainScale>();
         auto fnFractal = FastNoise::New<FastNoise::FractalFBm>();
@@ -186,11 +255,11 @@ namespace UniverseEngine {
             noiseData8[i * 4 + 1] = static_cast<unsigned char>(noiseData[i] * 255.99f);
             noiseData8[i * 4 + 2] = static_cast<unsigned char>(noiseData[i] * 255.99f);
             noiseData8[i * 4 + 3] = static_cast<unsigned char>(noiseData[i] * 255.99f);
-        }
+        }*/
 
-        this->noise = Engine::GetResources().CreateTexture(
-            "Cloud Noise", noiseData8, static_cast<unsigned>(resolution),
+        /*this->noise = Engine::GetResources().CreateTexture(
+            "Cloud Noise", nullptr, static_cast<unsigned>(resolution),
             static_cast<unsigned>(resolution), TextureType::UNORM, ImageDimensions::IMAGE_3D,
-            static_cast<unsigned>(resolution), false);
+            static_cast<unsigned>(resolution), false);*/
     }
 }  // namespace UniverseEngine

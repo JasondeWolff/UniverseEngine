@@ -19,9 +19,11 @@ namespace UniverseEngine {
                                      device, physicalDevice, BufferUsageBits::TRANSFER_SRC_BUFFER,
                                      static_cast<uint64_t>(imageSize), BufferLocation::CPU_TO_GPU);
 
-        void* data = stagingBuffer->Map();
-        memcpy(data, texture.data, imageSize);
-        stagingBuffer->Unmap();
+        if (texture.data) {
+            void* data = stagingBuffer->Map();
+            memcpy(data, texture.data, imageSize);
+            stagingBuffer->Unmap();
+        }
 
         GraphicsFormat format = (texture.type == TextureType::SRGB)
                                     ? GraphicsFormat::R8G8B8A8_SRGB

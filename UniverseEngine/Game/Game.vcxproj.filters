@@ -102,6 +102,9 @@
     <None Include="Assets\Shaders\GL\present.vert">
       <Filter>Assets\Shaders\GL</Filter>
     </None>
+    <None Include="Assets\Shaders\Vulkan\cloudNoise.comp">
+      <Filter>Assets\Shaders\Vulkan</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeFormCamera.h">

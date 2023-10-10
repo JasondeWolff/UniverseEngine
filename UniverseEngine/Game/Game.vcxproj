@@ -129,6 +129,7 @@
     <None Include="Assets\Shaders\Vulkan\skybox.vert" />
     <None Include="Assets\Shaders\Vulkan\unlit.frag" />
     <None Include="Assets\Shaders\Vulkan\unlit.vert" />
+    <None Include="Assets\Shaders\Vulkan\cloudNoise.comp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetDemo.h" />

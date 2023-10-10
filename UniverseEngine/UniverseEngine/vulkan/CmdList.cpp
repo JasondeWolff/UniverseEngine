@@ -191,7 +191,7 @@ namespace UniverseEngine {
         blit.srcOffsets[1] = {static_cast<int32_t>(src->Width()),
                               static_cast<int32_t>(src->Height()),
                               static_cast<int32_t>(src->Depth())};
-        blit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT | VK_IMAGE_ASPECT_DEPTH_BIT;
+        blit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         blit.srcSubresource.mipLevel = 0;
         blit.srcSubresource.baseArrayLayer = 0;
         blit.srcSubresource.layerCount = 1;
@@ -199,7 +199,7 @@ namespace UniverseEngine {
         blit.dstOffsets[1] = {static_cast<int32_t>(dst->Width()),
                               static_cast<int32_t>(dst->Height()),
                               static_cast<int32_t>(dst->Depth())};
-        blit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT | VK_IMAGE_ASPECT_DEPTH_BIT;
+        blit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         blit.dstSubresource.mipLevel = 0;
         blit.dstSubresource.baseArrayLayer = 0;
         blit.dstSubresource.layerCount = 1;

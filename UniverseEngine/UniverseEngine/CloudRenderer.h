@@ -54,16 +54,27 @@ namespace UniverseEngine {
         CloudConfig config;
 
     private:
+        static const size_t NOISE_RESOLUTION = 256;
+
+        const std::shared_ptr<LogicalDevice> device;
+        const PhysicalDevice& physicalDevice;
+
         std::shared_ptr<ComputePipeline> pipeline;
         std::shared_ptr<DescriptorSetLayout> descriptorSetLayout;
         std::array<std::shared_ptr<Buffer>, Swapchain::MAX_FRAMES_IN_FLIGHT> uniformBuffers;
         std::array<std::shared_ptr<DescriptorSet>, Swapchain::MAX_FRAMES_IN_FLIGHT> descriptorSets;
 
+        std::shared_ptr<ComputePipeline> noisePipeline;
+        std::shared_ptr<DescriptorSetLayout> noiseDescriptorSetLayout;
+        std::shared_ptr<Buffer> noiseUniformBuffer;
+        std::shared_ptr<DescriptorSet> noiseDescriptorSet;
+
+        bool noiseDirty;
         std::shared_ptr<Texture> noise;
         std::shared_ptr<Sampler> sampler;
 
         std::vector<Semaphore> semaphores;
 
-        void GenerateNoise();
+        void GenerateNoise(CmdList& cmdList);
     };
 }  // namespace UniverseEngine
