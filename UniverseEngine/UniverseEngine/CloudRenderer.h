@@ -54,7 +54,7 @@ namespace UniverseEngine {
         CloudConfig config;
 
     private:
-        static const size_t NOISE_RESOLUTION = 256;
+        static const size_t NOISE_RESOLUTION = 64;
 
         const std::shared_ptr<LogicalDevice> device;
         const PhysicalDevice& physicalDevice;
@@ -76,7 +76,7 @@ namespace UniverseEngine {
 
         bool noiseDirty;
         std::shared_ptr<Texture> noise;
-        std::shared_ptr<Texture> sdf;
+        std::shared_ptr<Image> sdf;
         std::shared_ptr<Sampler> sampler;
 
         std::vector<Semaphore> semaphores;

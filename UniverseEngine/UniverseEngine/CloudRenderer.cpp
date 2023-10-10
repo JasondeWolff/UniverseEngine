@@ -36,6 +36,7 @@ struct NoiseUniformBuffer {
 
 struct SDFUniformBuffer {
     float densityThreshold;
+    float densityMultiplier;
 };
 
 namespace UniverseEngine {
@@ -53,7 +54,9 @@ namespace UniverseEngine {
                                         GraphicsStageFlagBits::COMPUTE_STAGE),
                 DescriptorLayoutBinding("noise", 2, DescriptorType::COMBINED_IMAGE_SAMPLER,
                                         GraphicsStageFlagBits::COMPUTE_STAGE),
-                DescriptorLayoutBinding("ubo", 3, DescriptorType::UNIFORM_BUFFER,
+                DescriptorLayoutBinding("sdf", 3, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                                        GraphicsStageFlagBits::COMPUTE_STAGE),
+                DescriptorLayoutBinding("ubo", 4, DescriptorType::UNIFORM_BUFFER,
                                         GraphicsStageFlagBits::COMPUTE_STAGE)});
         this->noiseDescriptorSetLayout = std::make_shared<DescriptorSetLayout>(
             device, std::vector<DescriptorLayoutBinding>{
@@ -77,7 +80,7 @@ namespace UniverseEngine {
             this->descriptorSets[i] =
                 std::make_shared<DescriptorSet>(device, descriptorPool, this->descriptorSetLayout);
 
-            this->descriptorSets[i]->SetBuffer(3, DescriptorType::UNIFORM_BUFFER,
+            this->descriptorSets[i]->SetBuffer(4, DescriptorType::UNIFORM_BUFFER,
                                                this->uniformBuffers[i]);
         }
 
@@ -123,10 +126,13 @@ namespace UniverseEngine {
             "Cloud Noise", nullptr, static_cast<unsigned>(NOISE_RESOLUTION),
             static_cast<unsigned>(NOISE_RESOLUTION), TextureType::UNORM, ImageDimensions::IMAGE_3D,
             static_cast<unsigned>(NOISE_RESOLUTION), false);
-        this->sdf = Engine::GetResources().CreateTexture(
-            "Cloud SDF", nullptr, static_cast<unsigned>(NOISE_RESOLUTION),
-            static_cast<unsigned>(NOISE_RESOLUTION), TextureType::UNORM, ImageDimensions::IMAGE_3D,
-            static_cast<unsigned>(NOISE_RESOLUTION), false);
+        this->sdf = std::make_shared<Image>(
+            "Cloud SDF", device, physicalDevice, static_cast<unsigned>(NOISE_RESOLUTION),
+            static_cast<unsigned>(NOISE_RESOLUTION), 1,
+            ImageUsageBits::TRANSFER_SRC_IMAGE | ImageUsageBits::TRANSFER_DST_IMAGE |
+                ImageUsageBits::SAMPLED_IMAGE,
+            GraphicsFormat::R8_UNORM, 1, ImageDimensions::IMAGE_3D,
+            static_cast<unsigned>(NOISE_RESOLUTION));
 
         this->sampler = std::make_shared<Sampler>("Cloud Noise Sampler", device, physicalDevice);
         this->noiseDirty = true;
@@ -190,6 +196,9 @@ namespace UniverseEngine {
         this->descriptorSets[currentFrame]->SetImage(2, DescriptorType::COMBINED_IMAGE_SAMPLER,
                                                      this->noise->Renderable().GetImage(),
                                                      this->sampler);
+        this->descriptorSets[currentFrame]->SetImage(3, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                                                     this->sdf,
+                                                     this->sampler);
         cmdList.BindDescriptorSet(this->descriptorSets[currentFrame], 0, PipelineType::COMPUTE);
         cmdList.Dispatch(DivideUp(colorImage->Width(), 32), DivideUp(colorImage->Height(), 32));
 
@@ -217,6 +226,7 @@ namespace UniverseEngine {
             static_cast<uint32_t>(NOISE_RESOLUTION));
 
         auto noiseImage = this->noise->Renderable().GetImage();
+        auto sdfImage = this->sdf;
 
         cmdList.BindComputePipeline(this->noisePipeline);
         cmdList.TransitionImageLayout(genNoiseImage, ImageLayout::GENERAL,
@@ -241,6 +251,7 @@ namespace UniverseEngine {
 
         SDFUniformBuffer sdfUniformBuffer;
         sdfUniformBuffer.densityThreshold = this->config.densityThreshold;
+        sdfUniformBuffer.densityMultiplier = this->config.densityMultiplier;
         uniformBufferData = this->sdfUniformBuffer->Map();
         memcpy(uniformBufferData, &sdfUniformBuffer, sizeof(SDFUniformBuffer));
         this->sdfUniformBuffer->Unmap();
@@ -249,7 +260,7 @@ namespace UniverseEngine {
             "Cloud SDF Gen", this->device, this->physicalDevice,
             static_cast<uint32_t>(NOISE_RESOLUTION), static_cast<uint32_t>(NOISE_RESOLUTION), 1,
             ImageUsageBits::TRANSFER_SRC_IMAGE | ImageUsageBits::STORAGE_IMAGE,
-            GraphicsFormat::R8G8B8A8_UNORM, 1, ImageDimensions::IMAGE_3D,
+            GraphicsFormat::R8_UNORM, 1, ImageDimensions::IMAGE_3D,
             static_cast<uint32_t>(NOISE_RESOLUTION));
 
         cmdList.BindComputePipeline(this->sdfPipeline);
@@ -262,5 +273,16 @@ namespace UniverseEngine {
         cmdList.BindDescriptorSet(this->sdfDescriptorSet, 0, PipelineType::COMPUTE);
         cmdList.Dispatch(DivideUp(NOISE_RESOLUTION, 8), DivideUp(NOISE_RESOLUTION, 8),
                          DivideUp(NOISE_RESOLUTION, 8));
+
+        cmdList.TransitionImageLayout(genSDFImage, ImageLayout::TRANSFER_SRC_OPTIMAL,
+                                      ResourceAccessBits::ACCESS_TRANSFER_READ_BIT,
+                                      PipelineStageBits::PIPELINE_STAGE_TRANSFER_BIT);
+        cmdList.TransitionImageLayout(sdfImage, ImageLayout::TRANSFER_DST_OPTIMAL,
+                                      ResourceAccessBits::ACCESS_TRANSFER_WRITE_BIT,
+                                      PipelineStageBits::PIPELINE_STAGE_TRANSFER_BIT);
+        cmdList.CopyImages(genSDFImage, sdfImage);
+        cmdList.TransitionImageLayout(sdfImage, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+                                      ResourceAccessBits::ACCESS_SHADER_READ_BIT,
+                                      PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
     }
 }  // namespace UniverseEngine

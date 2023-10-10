@@ -2,14 +2,33 @@
 #extension GL_KHR_vulkan_glsl: enable
 
 layout (binding = 0) uniform sampler3D noise;
-layout (binding = 1, rgba8) uniform image3D sdf;
+layout (binding = 1, r8) uniform image3D sdf;
 
 layout(binding = 2) uniform UniformBufferObject {
     float densityThreshold;
+    float densityMultiplier;
 } ubo;
 
-float genSDF(vec3 p) {
-    return 0.0;
+float genSDF(ivec3 id, ivec3 dispatchSize) {
+    vec3 globalP = vec3(id) / vec3(dispatchSize);
+
+    float minDistance = 1.0;
+    for (int x = 0; x < 64; x++) {
+        for (int y = 0; y < 64; y++) {
+            for (int z = 0; z < 64; z++) {
+                vec3 p = vec3(x, y, z) / vec3(dispatchSize);
+                float density = texture(noise, p).r;
+                density = max(density - ubo.densityThreshold, 0.0) * ubo.densityMultiplier;
+            
+                if (density > 0.1) {
+                    float d = distance(p, globalP);
+                    minDistance = min(minDistance, d);
+                }
+            }
+        }
+    }
+
+    return minDistance;
 }
 
 layout (local_size_x = 8, local_size_y = 8, local_size_z = 8) in;
@@ -20,6 +39,5 @@ void main()
     
     if (id.x >= dispatchSize.x || id.y >= dispatchSize.y || id.z >= dispatchSize.z) return;
 
-    vec3 p = vec3(id) / vec3(dispatchSize);
-    imageStore(sdf, id, vec4(genSDF(p)));
+    imageStore(sdf, id, vec4(genSDF(id, dispatchSize)));
 }

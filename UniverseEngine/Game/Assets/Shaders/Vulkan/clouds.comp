@@ -9,8 +9,9 @@ layout (binding = 0, rgba8) uniform image2D outputImage;
 layout (binding = 1) uniform sampler2D depthImage;
 
 layout (binding = 2) uniform sampler3D noise;
+layout (binding = 3) uniform sampler3D sdf;
 
-layout(binding = 3) uniform UniformBufferObject {
+layout(binding = 4) uniform UniformBufferObject {
     mat4 invView;
     mat4 invProj;
 
@@ -104,11 +105,15 @@ float sampleDensity(vec3 position, AABB aabb) {
     return density * heightGradient * edgeWeight;
 }
 
+float sampleSDF(vec3 position) {
+    return texture(sdf, position * ubo.cloudScale * 0.01 + ubo.cloudOffset.xyz * 0.01).r / (ubo.cloudScale * 0.01);
+}
+
 float lightMarch(vec3 position, AABB aabb) {
     vec3 L = -normalize(ubo.lightDir.xyz);
 
     Ray ray;
-    ray.origin = position;    
+    ray.origin = position;
     ray.direction = L;
     ray.invDirection = vec3(1.0) / L;
 
@@ -138,17 +143,12 @@ vec2 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
     float phaseVal = phase(cosAngle);
 
     float uniformStepSize = distanceThroughCloud / PRIMARY_STEPS;
-    float minStepSize = uniformStepSize * 0.1;
-    float maxStepSize = uniformStepSize * 3.0;
-    const float badDensityThreshold = 0.1;
 
-    float stepSize = uniformStepSize;
-    for (int i = 0; i < PRIMARY_STEPS; i++) {
-        vec3 position = ray.origin + ray.direction * (distanceToCloud + i * stepSize);
+    float travelledDistance = 0.0;
+    while (travelledDistance < distanceThroughCloud) {
+        vec3 position = ray.origin + ray.direction * (distanceToCloud + travelledDistance);
+        float stepSize = max(sampleSDF(position), uniformStepSize);
         float density = sampleDensity(position, aabb);
-
-        float stepSizeFactor = (1.0 - density) + (1.0 - badDensityThreshold);
-        // stepSize = clamp(stepSize * stepSizeFactor, minStepSize, maxStepSize);
 
         if (density > 0.0) {
             float lightTransmittance = lightMarch(position, aabb);
@@ -160,9 +160,7 @@ vec2 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
             }
         }
 
-        if (i * stepSize > distanceThroughCloud) {
-            break;
-        }
+        travelledDistance += stepSize;
     }
 
     return vec2(transmittance, lightEnergy);
