@@ -75,7 +75,7 @@ namespace UniverseEngine {
         std::shared_ptr<DescriptorSet> sdfDescriptorSet;
 
         bool noiseDirty;
-        std::shared_ptr<Texture> noise;
+        std::shared_ptr<Image> noise;
         std::shared_ptr<Image> sdf;
         std::shared_ptr<Sampler> sampler;
 

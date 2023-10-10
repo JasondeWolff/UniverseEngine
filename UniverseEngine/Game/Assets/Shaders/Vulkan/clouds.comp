@@ -1,7 +1,7 @@
 #version 450
 #extension GL_KHR_vulkan_glsl: enable
 
-#define PRIMARY_STEPS 50
+#define PRIMARY_STEPS 16
 #define SECONDARY_STEPS 4
 #define MIN_TRANSMITTANCE 0.1
 

@@ -8,7 +8,7 @@
 #define UI3 uvec3(UI0, UI1, 2798796415U)
 #define UIF (1.0 / float(0xffffffffU))
 
-layout (binding = 0, rgba8) uniform image3D noise;
+layout (binding = 0, r8) uniform image3D noise;
 
 layout(binding = 1) uniform UniformBufferObject {
     float size;

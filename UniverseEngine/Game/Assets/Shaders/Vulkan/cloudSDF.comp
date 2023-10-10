@@ -20,7 +20,7 @@ float genSDF(ivec3 id, ivec3 dispatchSize) {
                 float density = texture(noise, p).r;
                 density = max(density - ubo.densityThreshold, 0.0) * ubo.densityMultiplier;
             
-                if (density > 0.1) {
+                if (density > 0.01) {
                     float d = distance(p, globalP);
                     minDistance = min(minDistance, d);
                 }

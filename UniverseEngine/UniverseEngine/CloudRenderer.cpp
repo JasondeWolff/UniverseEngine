@@ -122,10 +122,13 @@ namespace UniverseEngine {
                 std::move(Semaphore(Format("Cloud Renderer %i", i), device)));
         }
 
-        this->noise = Engine::GetResources().CreateTexture(
-            "Cloud Noise", nullptr, static_cast<unsigned>(NOISE_RESOLUTION),
-            static_cast<unsigned>(NOISE_RESOLUTION), TextureType::UNORM, ImageDimensions::IMAGE_3D,
-            static_cast<unsigned>(NOISE_RESOLUTION), false);
+        this->noise = std::make_shared<Image>(
+            "Cloud Noise", device, physicalDevice, static_cast<unsigned>(NOISE_RESOLUTION),
+            static_cast<unsigned>(NOISE_RESOLUTION), 1,
+            ImageUsageBits::TRANSFER_SRC_IMAGE | ImageUsageBits::TRANSFER_DST_IMAGE |
+                ImageUsageBits::SAMPLED_IMAGE,
+            GraphicsFormat::R8_UNORM, 1, ImageDimensions::IMAGE_3D,
+            static_cast<unsigned>(NOISE_RESOLUTION));
         this->sdf = std::make_shared<Image>(
             "Cloud SDF", device, physicalDevice, static_cast<unsigned>(NOISE_RESOLUTION),
             static_cast<unsigned>(NOISE_RESOLUTION), 1,
@@ -194,7 +197,7 @@ namespace UniverseEngine {
         this->descriptorSets[currentFrame]->SetImage(1, DescriptorType::COMBINED_IMAGE_SAMPLER,
                                                      depthImage, this->sampler);
         this->descriptorSets[currentFrame]->SetImage(2, DescriptorType::COMBINED_IMAGE_SAMPLER,
-                                                     this->noise->Renderable().GetImage(),
+                                                     this->noise,
                                                      this->sampler);
         this->descriptorSets[currentFrame]->SetImage(3, DescriptorType::COMBINED_IMAGE_SAMPLER,
                                                      this->sdf,
@@ -222,10 +225,10 @@ namespace UniverseEngine {
             "Cloud Noise Gen", this->device, this->physicalDevice,
             static_cast<uint32_t>(NOISE_RESOLUTION), static_cast<uint32_t>(NOISE_RESOLUTION), 1,
             ImageUsageBits::TRANSFER_SRC_IMAGE | ImageUsageBits::STORAGE_IMAGE,
-            GraphicsFormat::R8G8B8A8_UNORM, 1, ImageDimensions::IMAGE_3D,
+            GraphicsFormat::R8_UNORM, 1, ImageDimensions::IMAGE_3D,
             static_cast<uint32_t>(NOISE_RESOLUTION));
 
-        auto noiseImage = this->noise->Renderable().GetImage();
+        auto noiseImage = this->noise;
         auto sdfImage = this->sdf;
 
         cmdList.BindComputePipeline(this->noisePipeline);
