@@ -138,7 +138,6 @@ float genNoise(vec3 p) {
         		 worley.z * 0.25; 
     
     float cloud = remap(perlinWorley, wfbm - 1.0, 1.0, 0.0, 1.0);
-    cloud = remap(cloud, .85, 1., 0., 1.);
 
     return cloud;
 }
