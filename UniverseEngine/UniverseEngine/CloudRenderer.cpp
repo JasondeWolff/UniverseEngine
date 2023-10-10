@@ -139,6 +139,7 @@ namespace UniverseEngine {
 
         this->sampler = std::make_shared<Sampler>("Cloud Noise Sampler", device, physicalDevice);
         this->noiseDirty = true;
+        this->oldConfig = this->config;
     }
 
     Semaphore& CloudRenderer::CurrentSemaphore(size_t currentFrame) {
@@ -149,6 +150,11 @@ namespace UniverseEngine {
                                std::shared_ptr<Image> depthImage, size_t currentFrame) {
         if (!this->config.enabled)
             return;
+
+        if (this->config.densityThreshold != this->oldConfig.densityThreshold) {
+            this->noiseDirty = true;
+        }
+        this->oldConfig = this->config;
 
         if (this->noiseDirty) {
             this->GenerateNoise(cmdList);

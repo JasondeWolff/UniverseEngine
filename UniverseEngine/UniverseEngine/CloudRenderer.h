@@ -81,6 +81,8 @@ namespace UniverseEngine {
 
         std::vector<Semaphore> semaphores;
 
+        CloudConfig oldConfig;
+
         void GenerateNoise(CmdList& cmdList);
     };
 }  // namespace UniverseEngine
