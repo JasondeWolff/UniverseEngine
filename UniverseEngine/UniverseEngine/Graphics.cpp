@@ -124,6 +124,8 @@ namespace UniverseEngine {
             }
 
             this->Render();
+        } else {
+            ImGui::Render();
         }
 
         this->window->Update();
@@ -247,20 +249,21 @@ namespace UniverseEngine {
         pbrCmdList->EndRenderPass();
 
         std::vector<Semaphore*> waitSemaphores{&this->swapchain->GetImageAvailableSemaphore()};
-        std::vector<PipelineStage> waitStages{PipelineStageBits::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+        std::vector<PipelineStage> waitStages{
+            PipelineStageBits::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
 
         std::vector<Semaphore*> signalSemaphores{
             &this->cloudRenderer->CurrentSemaphore(currentFrame)};
         this->cmdQueue->SubmitCmdList(pbrCmdList, nullptr, waitSemaphores, waitStages,
                                       signalSemaphores);
         std::shared_ptr<CmdList> computeCmdList = this->computeQueue->GetCmdList();
-        this->cloudRenderer->Render(*computeCmdList, this->colorImage,
-                                    this->depthImage,
+        this->cloudRenderer->Render(*computeCmdList, this->colorImage, this->depthImage,
                                     currentFrame);
         std::vector<Semaphore*> cloudWaitSemaphores{
             &this->cloudRenderer->CurrentSemaphore(currentFrame)};
         std::vector<PipelineStage> cloudWaitStages{
-            PipelineStageBits::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | PipelineStageBits::PIPELINE_STAGE_FRAGMENT_SHADER_BIT};
+            PipelineStageBits::PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT |
+            PipelineStageBits::PIPELINE_STAGE_FRAGMENT_SHADER_BIT};
         std::vector<Semaphore*> cloudSignalSemaphores{
             &this->cloudRenderer->CurrentSemaphore(currentFrame)};
         this->computeQueue->SubmitCmdList(computeCmdList, nullptr, cloudWaitSemaphores,
@@ -279,6 +282,8 @@ namespace UniverseEngine {
         presentCmdList->SetScissor(swapchainExtent);
         presentCmdList->SetViewport(swapchainExtent);
         presentCmdList->BindGraphicsPipeline(this->presentPipeline);
+        this->presentDescriptorSets[currentFrame]->SetImage(
+            0, DescriptorType::COMBINED_IMAGE_SAMPLER, this->colorImage, this->sampler);
         presentCmdList->BindDescriptorSet(this->presentDescriptorSets[currentFrame], 0);
         presentCmdList->Draw(3);
         this->imguiRenderer->Render(*presentCmdList, currentFrame);
@@ -296,8 +301,7 @@ namespace UniverseEngine {
         std::vector<Semaphore*> presentSignalSemaphores{
             &this->swapchain->GetRenderFinishedSemaphore()};
         this->cmdQueue->SubmitCmdList(presentCmdList, fence, presentWaitSemaphores,
-                                      presentWaitStages,
-                                      presentSignalSemaphores);
+                                      presentWaitStages, presentSignalSemaphores);
 
         this->swapchain->Present(*this->presentQueue, *fence, presentSignalSemaphores);
     }
@@ -323,8 +327,6 @@ namespace UniverseEngine {
         for (size_t i = 0; i < this->presentDescriptorSets.size(); i++) {
             this->presentDescriptorSets[i] = std::make_shared<DescriptorSet>(
                 this->device, this->descriptorPool, this->presentDescriptorSetLayout);
-            this->presentDescriptorSets[i]->SetImage(0, DescriptorType::COMBINED_IMAGE_SAMPLER,
-                                                     this->colorImage, this->sampler);
         }
         for (size_t i = 0; i < this->vpUniformBuffers.size(); i++) {
             this->vpUniformBuffers[i] =
@@ -354,8 +356,6 @@ namespace UniverseEngine {
             this->skyboxDescriptorSets[i] = std::make_shared<DescriptorSet>(
                 this->device, this->descriptorPool, this->skyboxDescriptorSetLayout);
         }
-
-
     }
 
     void Graphics::BuildSwapchain() {
