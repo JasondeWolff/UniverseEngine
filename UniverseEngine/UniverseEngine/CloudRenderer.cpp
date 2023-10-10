@@ -34,6 +34,10 @@ struct NoiseUniformBuffer {
     float size;
 };
 
+struct SDFUniformBuffer {
+    float densityThreshold;
+};
+
 namespace UniverseEngine {
     CloudRenderer::CloudRenderer(std::shared_ptr<LogicalDevice> device,
                                  const PhysicalDevice& physicalDevice,
@@ -57,6 +61,14 @@ namespace UniverseEngine {
                                                 GraphicsStageFlagBits::COMPUTE_STAGE),
                         DescriptorLayoutBinding("ubo", 1, DescriptorType::UNIFORM_BUFFER,
                                                 GraphicsStageFlagBits::COMPUTE_STAGE)});
+        this->sdfDescriptorSetLayout = std::make_shared<DescriptorSetLayout>(
+            device, std::vector<DescriptorLayoutBinding>{
+                        DescriptorLayoutBinding("noise", 0, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                                                GraphicsStageFlagBits::COMPUTE_STAGE),
+                        DescriptorLayoutBinding("sdf", 1, DescriptorType::STORAGE_IMAGE,
+                                                GraphicsStageFlagBits::COMPUTE_STAGE),
+                        DescriptorLayoutBinding("ubo", 2, DescriptorType::UNIFORM_BUFFER,
+                                                GraphicsStageFlagBits::COMPUTE_STAGE)});
 
         for (size_t i = 0; i < this->descriptorSets.size(); i++) {
             this->uniformBuffers[i] = std::make_shared<Buffer>(
@@ -77,10 +89,19 @@ namespace UniverseEngine {
         this->noiseDescriptorSet->SetBuffer(1, DescriptorType::UNIFORM_BUFFER,
                                             this->noiseUniformBuffer);
 
+        this->sdfUniformBuffer = std::make_shared<Buffer>(
+            "Cloud SDF UniformBuffer", device, physicalDevice, BufferUsageBits::UNIFORM_BUFFER,
+            sizeof(SDFUniformBuffer), BufferLocation::CPU_TO_GPU);
+        this->sdfDescriptorSet =
+            std::make_shared<DescriptorSet>(device, descriptorPool, this->sdfDescriptorSetLayout);
+        this->sdfDescriptorSet->SetBuffer(2, DescriptorType::UNIFORM_BUFFER,
+                                          this->sdfUniformBuffer);
+
         auto& resources = Engine::GetResources();
         std::shared_ptr<Shader> shader = resources.LoadShader("Assets/Shaders/clouds.comp");
         std::shared_ptr<Shader> noiseShader =
             resources.LoadShader("Assets/Shaders/cloudNoise.comp");
+        std::shared_ptr<Shader> sdfShader = resources.LoadShader("Assets/Shaders/cloudSDF.comp");
         graphics.RebuildShaders();
 
         this->pipeline = std::make_shared<ComputePipeline>(
@@ -89,6 +110,9 @@ namespace UniverseEngine {
         this->noisePipeline = std::make_shared<ComputePipeline>(
             device, noiseShader->Renderable(),
             std::vector<std::shared_ptr<DescriptorSetLayout>>{this->noiseDescriptorSetLayout});
+        this->sdfPipeline = std::make_shared<ComputePipeline>(
+            device, sdfShader->Renderable(),
+            std::vector<std::shared_ptr<DescriptorSetLayout>>{this->sdfDescriptorSetLayout});
 
         for (size_t i = 0; i < Swapchain::MAX_FRAMES_IN_FLIGHT; i++) {
             this->semaphores.emplace_back(
@@ -97,6 +121,10 @@ namespace UniverseEngine {
 
         this->noise = Engine::GetResources().CreateTexture(
             "Cloud Noise", nullptr, static_cast<unsigned>(NOISE_RESOLUTION),
+            static_cast<unsigned>(NOISE_RESOLUTION), TextureType::UNORM, ImageDimensions::IMAGE_3D,
+            static_cast<unsigned>(NOISE_RESOLUTION), false);
+        this->sdf = Engine::GetResources().CreateTexture(
+            "Cloud SDF", nullptr, static_cast<unsigned>(NOISE_RESOLUTION),
             static_cast<unsigned>(NOISE_RESOLUTION), TextureType::UNORM, ImageDimensions::IMAGE_3D,
             static_cast<unsigned>(NOISE_RESOLUTION), false);
 
@@ -175,10 +203,10 @@ namespace UniverseEngine {
     }
 
     void CloudRenderer::GenerateNoise(CmdList& cmdList) {
-        NoiseUniformBuffer uniformBuffer;
-        uniformBuffer.size = static_cast<float>(NOISE_RESOLUTION);
+        NoiseUniformBuffer noiseUniformBuffer;
+        noiseUniformBuffer.size = static_cast<float>(NOISE_RESOLUTION);
         void* uniformBufferData = this->noiseUniformBuffer->Map();
-        memcpy(uniformBufferData, &uniformBuffer, sizeof(UniformBuffer));
+        memcpy(uniformBufferData, &noiseUniformBuffer, sizeof(NoiseUniformBuffer));
         this->noiseUniformBuffer->Unmap();
 
         auto genNoiseImage = std::make_shared<Image>(
@@ -191,14 +219,11 @@ namespace UniverseEngine {
         auto noiseImage = this->noise->Renderable().GetImage();
 
         cmdList.BindComputePipeline(this->noisePipeline);
-
         cmdList.TransitionImageLayout(genNoiseImage, ImageLayout::GENERAL,
                                       ResourceAccessBits::ACCESS_SHADER_WRITE_BIT,
                                       PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-
         this->noiseDescriptorSet->SetImage(0, DescriptorType::STORAGE_IMAGE, genNoiseImage,
                                            nullptr);
-
         cmdList.BindDescriptorSet(this->noiseDescriptorSet, 0, PipelineType::COMPUTE);
         cmdList.Dispatch(DivideUp(NOISE_RESOLUTION, 8), DivideUp(NOISE_RESOLUTION, 8),
                          DivideUp(NOISE_RESOLUTION, 8));
@@ -213,5 +238,29 @@ namespace UniverseEngine {
         cmdList.TransitionImageLayout(noiseImage, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                                       ResourceAccessBits::ACCESS_SHADER_READ_BIT,
                                       PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+
+        SDFUniformBuffer sdfUniformBuffer;
+        sdfUniformBuffer.densityThreshold = this->config.densityThreshold;
+        uniformBufferData = this->sdfUniformBuffer->Map();
+        memcpy(uniformBufferData, &sdfUniformBuffer, sizeof(SDFUniformBuffer));
+        this->sdfUniformBuffer->Unmap();
+
+        auto genSDFImage = std::make_shared<Image>(
+            "Cloud SDF Gen", this->device, this->physicalDevice,
+            static_cast<uint32_t>(NOISE_RESOLUTION), static_cast<uint32_t>(NOISE_RESOLUTION), 1,
+            ImageUsageBits::TRANSFER_SRC_IMAGE | ImageUsageBits::STORAGE_IMAGE,
+            GraphicsFormat::R8G8B8A8_UNORM, 1, ImageDimensions::IMAGE_3D,
+            static_cast<uint32_t>(NOISE_RESOLUTION));
+
+        cmdList.BindComputePipeline(this->sdfPipeline);
+        cmdList.TransitionImageLayout(genSDFImage, ImageLayout::GENERAL,
+                                      ResourceAccessBits::ACCESS_SHADER_WRITE_BIT,
+                                      PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+        this->sdfDescriptorSet->SetImage(0, DescriptorType::COMBINED_IMAGE_SAMPLER, noiseImage,
+                                           this->sampler);
+        this->sdfDescriptorSet->SetImage(1, DescriptorType::STORAGE_IMAGE, genSDFImage, nullptr);
+        cmdList.BindDescriptorSet(this->sdfDescriptorSet, 0, PipelineType::COMPUTE);
+        cmdList.Dispatch(DivideUp(NOISE_RESOLUTION, 8), DivideUp(NOISE_RESOLUTION, 8),
+                         DivideUp(NOISE_RESOLUTION, 8));
     }
 }  // namespace UniverseEngine

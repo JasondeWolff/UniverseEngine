@@ -1,0 +1,25 @@
+#version 450
+#extension GL_KHR_vulkan_glsl: enable
+
+layout (binding = 0) uniform sampler3D noise;
+layout (binding = 1, rgba8) uniform image3D sdf;
+
+layout(binding = 2) uniform UniformBufferObject {
+    float densityThreshold;
+} ubo;
+
+float genSDF(vec3 p) {
+    return 0.0;
+}
+
+layout (local_size_x = 8, local_size_y = 8, local_size_z = 8) in;
+void main() 
+{
+    ivec3 id = ivec3(gl_GlobalInvocationID.xyz);
+    ivec3 dispatchSize = ivec3(gl_WorkGroupSize.xyz * gl_NumWorkGroups.xyz);
+    
+    if (id.x >= dispatchSize.x || id.y >= dispatchSize.y || id.z >= dispatchSize.z) return;
+
+    vec3 p = vec3(id) / vec3(dispatchSize);
+    imageStore(sdf, id, vec4(genSDF(p)));
+}

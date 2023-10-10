@@ -69,8 +69,14 @@ namespace UniverseEngine {
         std::shared_ptr<Buffer> noiseUniformBuffer;
         std::shared_ptr<DescriptorSet> noiseDescriptorSet;
 
+        std::shared_ptr<ComputePipeline> sdfPipeline;
+        std::shared_ptr<DescriptorSetLayout> sdfDescriptorSetLayout;
+        std::shared_ptr<Buffer> sdfUniformBuffer;
+        std::shared_ptr<DescriptorSet> sdfDescriptorSet;
+
         bool noiseDirty;
         std::shared_ptr<Texture> noise;
+        std::shared_ptr<Texture> sdf;
         std::shared_ptr<Sampler> sampler;
 
         std::vector<Semaphore> semaphores;
