@@ -59,6 +59,9 @@ namespace UniverseEngine {
                                3.0f);
             ImGui::SliderFloat("Darkness Threshold", &config.darknessThreshold, 0.0f, 0.4f);
 
+            ImGui::Checkbox("SDF Debug", &config.sdfDebug);
+            ImGui::SliderFloat("SDF Factor", &config.sdfFactor, 0.0f, 1.0f);
+
             if (ImGui::Button("Reset")) {
                 config = CloudConfig{};
             }

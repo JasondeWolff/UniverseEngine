@@ -28,6 +28,11 @@ struct UniformBuffer {
 
     float zNear;
     float zFar;
+
+    int sdfDebug;
+    float sdfFactor;
+
+    float PADDING[2];
 };
 
 struct NoiseUniformBuffer {
@@ -184,6 +189,8 @@ namespace UniverseEngine {
         uniformBuffer.darknessThreshold = this->config.darknessThreshold;
         uniformBuffer.zNear = camera.GetNear();
         uniformBuffer.zFar = camera.GetFar();
+        uniformBuffer.sdfDebug = this->config.sdfDebug;
+        uniformBuffer.sdfFactor = this->config.sdfFactor;
         void* uniformBufferData = this->uniformBuffers[currentFrame]->Map();
         memcpy(uniformBufferData, &uniformBuffer, sizeof(UniformBuffer));
         this->uniformBuffers[currentFrame]->Unmap();

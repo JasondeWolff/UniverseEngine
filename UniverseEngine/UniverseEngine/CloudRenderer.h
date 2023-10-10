@@ -39,6 +39,9 @@ namespace UniverseEngine {
         float lightAbsorbtion = 0.8f;
         float indirectLightAbsorbtion = 0.96f;
         float darknessThreshold = 0.12f;
+
+        bool sdfDebug = false;
+        float sdfFactor = 1.0f;
     };
 
     class CloudRenderer {
