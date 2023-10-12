@@ -19,9 +19,17 @@ layout(binding = 4) uniform UniformBufferObject {
     vec4 lightDir;
     vec4 lightColor;
 
-    vec4 cloudOffset;
-    float cloudScale;
-    float cloudDensityThreshold;
+    vec4 cloudWeatherOffset;
+    vec4 cloudDetailOffset;
+    vec4 cloudRoughOffset;
+    float cloudWeatherScale;
+    float cloudDetailScale;
+    float cloudRoughScale;
+
+    float cloudWeatherDensityThreshold;
+    float cloudDetailDensityThreshold;
+    float cloudRoughDensityThreshold;
+
     float cloudDensityMultiplier;
 
     float forwardScattering;
@@ -97,7 +105,7 @@ float remap(float v, float minOld, float maxOld, float minNew, float maxNew) {
 }
 
 float sampleSDF(vec3 position) {
-    return ubo.sdfFactor * texture(sdf, position * ubo.cloudScale * 0.01 + ubo.cloudOffset.xyz * 0.01).r / (ubo.cloudScale * 0.01);
+    return ubo.sdfFactor * texture(sdf, position * ubo.cloudWeatherScale * 0.01 + ubo.cloudWeatherOffset.xyz * 0.01).r / (ubo.cloudWeatherScale * 0.01);
 }
 
 float sampleDensity(vec3 position, AABB aabb) {
@@ -115,8 +123,19 @@ float sampleDensity(vec3 position, AABB aabb) {
     float heightPercent = (position.y - aabb.lo.y) / aabb.size.y;
     float heightGradient = clamp(remap(heightPercent, 0.0, gMin, 0, 1), 0.0, 1.0) * clamp(remap(heightPercent, 1, gMax, 0, 1), 0.0, 1.0);
 
-    float density = texture(noise, position * ubo.cloudScale * 0.01 + ubo.cloudOffset.xyz * 0.01).r;
-    density = max(density - ubo.cloudDensityThreshold, 0.0) * ubo.cloudDensityMultiplier;
+    vec3 weatherUV = position * ubo.cloudWeatherScale * 0.01 + ubo.cloudWeatherOffset.xyz * 0.01;
+    weatherUV.y = heightPercent;
+    vec3 detailUV = position * ubo.cloudDetailScale * 0.01 + ubo.cloudDetailOffset.xyz * 0.01;
+    vec3 roughUV = position * ubo.cloudRoughScale * 0.01 + ubo.cloudRoughOffset.xyz * 0.01;
+
+    float weather = texture(noise, weatherUV).g;
+    float roughDensity = texture(noise, roughUV).r;
+    float detail = texture(noise, detailUV).b;
+
+    weather = max(weather - ubo.cloudWeatherDensityThreshold, 0.0);
+    roughDensity = max(roughDensity - ubo.cloudRoughDensityThreshold, 0.0) * ubo.cloudDensityMultiplier;
+    
+    float density = weather * roughDensity;
     return density * heightGradient * edgeWeight;
 }
 

@@ -26,10 +26,17 @@ namespace UniverseEngine {
     struct CloudConfig {
         bool enabled = true;
 
-        glm::vec3 offset = glm::vec3(0.0);
-        float scale = 0.263f;
-        float densityThreshold = 0.69f;
-        float densityMultiplier = 1.5f;
+        glm::vec3 weatherOffset = glm::vec3(0.0);
+        glm::vec3 detailOffset = glm::vec3(0.0);
+        glm::vec3 roughOffset = glm::vec3(0.0);
+        float weatherScale = 0.15f;
+        float detailScale = 0.2f;
+        float roughScale = 0.6f;
+        float weatherDensityThreshold = 0.95f;
+        float detailDensityThreshold = 0.6f;
+        float roughDensityThreshold = 0.35f;
+
+        float densityMultiplier = 1.2f;
 
         float forwardScattering = 0.72f;
         float backwardScattering = 0.33f;

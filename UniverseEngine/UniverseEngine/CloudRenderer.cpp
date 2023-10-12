@@ -12,9 +12,16 @@ struct UniformBuffer {
     glm::vec4 lightDir;
     glm::vec4 lightColor;
 
-    glm::vec4 cloudOffset;
-    float cloudScale;
-    float cloudDensityThreshold;
+    glm::vec4 weatherOffset;
+    glm::vec4 detailOffset;
+    glm::vec4 roughOffset;
+    float weatherScale;
+    float detailScale;
+    float roughScale;
+    float weatherDensityThreshold;
+    float detailDensityThreshold;
+    float roughDensityThreshold;
+
     float cloudDensityMultiplier;
 
     float forwardScattering;
@@ -132,7 +139,7 @@ namespace UniverseEngine {
             static_cast<unsigned>(NOISE_RESOLUTION), 1,
             ImageUsageBits::TRANSFER_SRC_IMAGE | ImageUsageBits::TRANSFER_DST_IMAGE |
                 ImageUsageBits::SAMPLED_IMAGE,
-            GraphicsFormat::R8_UNORM, 1, ImageDimensions::IMAGE_3D,
+            GraphicsFormat::R8G8B8A8_UNORM, 1, ImageDimensions::IMAGE_3D,
             static_cast<unsigned>(NOISE_RESOLUTION));
         this->sdf = std::make_shared<Image>(
             "Cloud SDF", device, physicalDevice, static_cast<unsigned>(NOISE_RESOLUTION),
@@ -156,7 +163,7 @@ namespace UniverseEngine {
         if (!this->config.enabled)
             return;
 
-        if (this->config.densityThreshold != this->oldConfig.densityThreshold) {
+        if (this->config.weatherDensityThreshold != this->oldConfig.weatherDensityThreshold) {
             this->noiseDirty = true;
         }
         this->oldConfig = this->config;
@@ -174,9 +181,15 @@ namespace UniverseEngine {
         UniformBuffer uniformBuffer;
         uniformBuffer.invView = invViewMatrix;
         uniformBuffer.invProj = invProjectionMatrix;
-        uniformBuffer.cloudOffset = glm::vec4(this->config.offset, 0.0);
-        uniformBuffer.cloudScale = this->config.scale;
-        uniformBuffer.cloudDensityThreshold = this->config.densityThreshold;
+        uniformBuffer.weatherOffset = glm::vec4(this->config.weatherOffset, 0.0);
+        uniformBuffer.detailOffset = glm::vec4(this->config.detailOffset, 0.0);
+        uniformBuffer.roughOffset = glm::vec4(this->config.roughOffset, 0.0);
+        uniformBuffer.weatherScale = this->config.weatherScale;
+        uniformBuffer.detailScale = this->config.detailScale;
+        uniformBuffer.roughScale = this->config.roughScale;
+        uniformBuffer.weatherDensityThreshold = this->config.weatherDensityThreshold;
+        uniformBuffer.detailDensityThreshold = this->config.detailDensityThreshold;
+        uniformBuffer.roughDensityThreshold = this->config.roughDensityThreshold;
         uniformBuffer.cloudDensityMultiplier = this->config.densityMultiplier;
         uniformBuffer.lightDir = glm::vec4(world.sun.direction, 1.0);
         uniformBuffer.lightColor = glm::vec4(world.sun.lightSource.color, 1.0);
@@ -210,11 +223,9 @@ namespace UniverseEngine {
         this->descriptorSets[currentFrame]->SetImage(1, DescriptorType::COMBINED_IMAGE_SAMPLER,
                                                      depthImage, this->sampler);
         this->descriptorSets[currentFrame]->SetImage(2, DescriptorType::COMBINED_IMAGE_SAMPLER,
-                                                     this->noise,
-                                                     this->sampler);
+                                                     this->noise, this->sampler);
         this->descriptorSets[currentFrame]->SetImage(3, DescriptorType::COMBINED_IMAGE_SAMPLER,
-                                                     this->sdf,
-                                                     this->sampler);
+                                                     this->sdf, this->sampler);
         cmdList.BindDescriptorSet(this->descriptorSets[currentFrame], 0, PipelineType::COMPUTE);
         cmdList.Dispatch(DivideUp(colorImage->Width(), 32), DivideUp(colorImage->Height(), 32));
 
@@ -238,7 +249,7 @@ namespace UniverseEngine {
             "Cloud Noise Gen", this->device, this->physicalDevice,
             static_cast<uint32_t>(NOISE_RESOLUTION), static_cast<uint32_t>(NOISE_RESOLUTION), 1,
             ImageUsageBits::TRANSFER_SRC_IMAGE | ImageUsageBits::STORAGE_IMAGE,
-            GraphicsFormat::R8_UNORM, 1, ImageDimensions::IMAGE_3D,
+            GraphicsFormat::R8G8B8A8_UNORM, 1, ImageDimensions::IMAGE_3D,
             static_cast<uint32_t>(NOISE_RESOLUTION));
 
         auto noiseImage = this->noise;
@@ -266,7 +277,7 @@ namespace UniverseEngine {
                                       PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
 
         SDFUniformBuffer sdfUniformBuffer;
-        sdfUniformBuffer.densityThreshold = this->config.densityThreshold;
+        sdfUniformBuffer.densityThreshold = this->config.weatherDensityThreshold;
         sdfUniformBuffer.densityMultiplier = this->config.densityMultiplier;
         uniformBufferData = this->sdfUniformBuffer->Map();
         memcpy(uniformBufferData, &sdfUniformBuffer, sizeof(SDFUniformBuffer));
@@ -284,7 +295,7 @@ namespace UniverseEngine {
                                       ResourceAccessBits::ACCESS_SHADER_WRITE_BIT,
                                       PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
         this->sdfDescriptorSet->SetImage(0, DescriptorType::COMBINED_IMAGE_SAMPLER, noiseImage,
-                                           this->sampler);
+                                         this->sampler);
         this->sdfDescriptorSet->SetImage(1, DescriptorType::STORAGE_IMAGE, genSDFImage, nullptr);
         cmdList.BindDescriptorSet(this->sdfDescriptorSet, 0, PipelineType::COMPUTE);
         cmdList.Dispatch(DivideUp(NOISE_RESOLUTION, 8), DivideUp(NOISE_RESOLUTION, 8),

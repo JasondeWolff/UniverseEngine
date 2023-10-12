@@ -32,10 +32,10 @@ namespace UniverseEngine {
             ImGui::End();
 
             this->SetPolygonMode(!wireFrame ? GraphicsPolygonMode::FILL
-                                                            : GraphicsPolygonMode::LINE);
+                                            : GraphicsPolygonMode::LINE);
             this->UseLODs(lods);
         }
-        
+
         if (clouds) {
             CloudConfig config = this->GetCloudConfig();
 
@@ -44,9 +44,19 @@ namespace UniverseEngine {
 
             ImGui::Checkbox("Enabled", &config.enabled);
 
-            ImGui::DragFloat3("Offset", &config.offset.x);
-            ImGui::SliderFloat("Scale", &config.scale, 0.1f, 1.0f);
-            ImGui::SliderFloat("Density Threshold", &config.densityThreshold, 0.0f, 1.0f);
+            ImGui::DragFloat3("Weather Offset", &config.weatherOffset.x);
+            ImGui::SliderFloat("Weather Scale", &config.weatherScale, 0.1f, 1.0f);
+            ImGui::SliderFloat("Weather Density Threshold", &config.weatherDensityThreshold, 0.0f,
+                               1.0f);
+            ImGui::DragFloat3("Detail Offset", &config.detailOffset.x);
+            ImGui::SliderFloat("Detail Scale", &config.detailScale, 0.1f, 1.0f);
+            ImGui::SliderFloat("Detail Density Threshold", &config.detailDensityThreshold, 0.0f,
+                               1.0f);
+            ImGui::DragFloat3("Rough Offset", &config.roughOffset.x);
+            ImGui::SliderFloat("Rough Scale", &config.roughScale, 0.1f, 1.0f);
+            ImGui::SliderFloat("Rough Density Threshold", &config.roughDensityThreshold, 0.0f,
+                               1.0f);
+
             ImGui::SliderFloat("Density Multiplier", &config.densityMultiplier, 0.0f, 3.0f);
 
             ImGui::SliderFloat("Forward Scattering", &config.forwardScattering, 0.0f, 1.0f);
