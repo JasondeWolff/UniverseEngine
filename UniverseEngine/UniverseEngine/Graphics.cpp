@@ -160,7 +160,7 @@ namespace UniverseEngine {
         this->UpdateMaterials(currentFrame, *pbrCmdList);
 
         pbrCmdList->BeginRenderPass(this->renderPass, *this->framebuffer,
-                                    glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+                                    glm::vec4(0.6f, 0.8f, 1.0f, 1.0f));
 
         pbrCmdList->SetScissor(swapchainExtent);
         pbrCmdList->SetViewport(swapchainExtent);

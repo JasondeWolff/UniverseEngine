@@ -30,11 +30,11 @@ namespace UniverseEngine {
         glm::vec3 detailOffset = glm::vec3(0.0);
         glm::vec3 roughOffset = glm::vec3(0.0);
         float weatherScale = 0.15f;
-        float detailScale = 0.2f;
-        float roughScale = 0.6f;
+        float detailScale = 0.755f;
+        float roughScale = 0.675f;
         float weatherDensityThreshold = 0.95f;
-        float detailDensityThreshold = 0.6f;
-        float roughDensityThreshold = 0.35f;
+        float detailDensityThreshold = 0.778f;
+        float roughDensityThreshold = 0.18f;
 
         float densityMultiplier = 1.2f;
 
@@ -48,7 +48,7 @@ namespace UniverseEngine {
         float darknessThreshold = 0.12f;
 
         bool sdfDebug = false;
-        float sdfFactor = 1.0f;
+        float sdfFactor = 0.0f;
     };
 
     class CloudRenderer {

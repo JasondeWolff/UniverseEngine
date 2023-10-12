@@ -17,7 +17,7 @@ float genSDF(ivec3 id, ivec3 dispatchSize) {
         for (int y = 0; y < 64; y++) {
             for (int z = 0; z < 64; z++) {
                 vec3 p = vec3(x, y, z) / vec3(dispatchSize);
-                float density = texture(noise, p).r;
+                float density = texture(noise, p).g;
                 density = max(density - ubo.densityThreshold, 0.0) * ubo.densityMultiplier;
             
                 if (density > 0.01) {

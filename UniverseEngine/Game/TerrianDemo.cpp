@@ -23,7 +23,7 @@ void TerrianDemo::OnStart() {
 	for (size_t i = 0; i < skyboxTexturePaths.size(); i++) {
 		skyboxTextures[i] = resources.LoadTexture(skyboxTexturePaths[i], TextureType::SRGB);
 	}
-	graphics.SetSkybox(skyboxTextures);
+	//graphics.SetSkybox(skyboxTextures);
 
 	this->camera.Start();
 

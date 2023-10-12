@@ -116,7 +116,7 @@ float sampleDensity(vec3 position, AABB aabb) {
     const float containerEdgeFadeDst = 1.5;
     float dstFromEdgeX = min(containerEdgeFadeDst, min(position.x - aabb.lo.x, aabb.hi.x - position.x));
     float dstFromEdgeZ = min(containerEdgeFadeDst, min(position.z - aabb.lo.z, aabb.hi.z - position.z));
-    float edgeWeight = min(dstFromEdgeZ,dstFromEdgeX)/containerEdgeFadeDst;
+    float edgeWeight = min(dstFromEdgeZ, dstFromEdgeX) / containerEdgeFadeDst;
 
     float gMin = 0.2;
     float gMax = 0.7;
@@ -134,8 +134,9 @@ float sampleDensity(vec3 position, AABB aabb) {
 
     weather = max(weather - ubo.cloudWeatherDensityThreshold, 0.0);
     roughDensity = max(roughDensity - ubo.cloudRoughDensityThreshold, 0.0) * ubo.cloudDensityMultiplier;
+    detail = max(detail - ubo.cloudDetailDensityThreshold, 0.0) * heightPercent * heightPercent;
     
-    float density = weather * roughDensity;
+    float density = (weather * roughDensity) - detail;
     return density * heightGradient * edgeWeight;
 }
 
