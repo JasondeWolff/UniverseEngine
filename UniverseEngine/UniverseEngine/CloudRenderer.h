@@ -30,21 +30,21 @@ namespace UniverseEngine {
         glm::vec3 detailOffset = glm::vec3(0.0);
         glm::vec3 roughOffset = glm::vec3(0.0);
         float weatherScale = 0.15f;
-        float detailScale = 0.755f;
-        float roughScale = 0.675f;
-        float weatherDensityThreshold = 0.95f;
-        float detailDensityThreshold = 0.778f;
-        float roughDensityThreshold = 0.18f;
+        float detailScale = 0.46f;
+        float roughScale = 0.35f;
+        float weatherDensityThreshold = 0.18f;
+        float detailDensityThreshold = 0.35f;
+        float roughDensityThreshold = 0.39f;
 
-        float densityMultiplier = 1.2f;
+        float densityMultiplier = 0.31f;
 
         float forwardScattering = 0.72f;
         float backwardScattering = 0.33f;
         float baseBrightness = 0.7f;
         float phaseFactor = 0.74f;
 
-        float lightAbsorbtion = 0.8f;
-        float indirectLightAbsorbtion = 0.96f;
+        float lightAbsorbtion = 1.0f;
+        float indirectLightAbsorbtion = 0.094f;
         float darknessThreshold = 0.12f;
 
         bool sdfDebug = false;

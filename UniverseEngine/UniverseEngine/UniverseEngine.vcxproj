@@ -277,7 +277,8 @@
       <AdditionalDependencies>glfw3.lib;glew32.lib;opengl32.lib;vulkan-1.lib;FastNoiseD.lib</AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
-      <Command>$(SolutionDir)compile_shaders.bat</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

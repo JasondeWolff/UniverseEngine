@@ -9,7 +9,7 @@ public:
 	void Start();
 	void Update(float deltaTime);
 
-	float movementSpeed = 5.0f;
+	float movementSpeed = 65.0f;
 	float lookSensitivity = 0.3f;
 
 private:

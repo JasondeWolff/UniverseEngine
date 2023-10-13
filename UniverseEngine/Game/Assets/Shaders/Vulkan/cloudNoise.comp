@@ -132,13 +132,13 @@ float genWeatherNoise(vec3 p) {
     p.y = 0.0;
     float pfbm = mix(1.0, perlinfbm(p, 1.0, 7), 0.5);
     pfbm = abs(pfbm * 2.0 - 1.0);
-    pfbm = 1.0 - remap(pfbm, 0.15, 0.25, 0.0, 1.0);
+    pfbm = 1.0 - remap(pfbm, 0.05, 0.25, 0.0, 1.0);
 
     return pfbm;
 }
 
 layout (local_size_x = 8, local_size_y = 8, local_size_z = 8) in;
-void main() 
+void main()
 {
     ivec3 id = ivec3(gl_GlobalInvocationID.xyz);
     ivec3 dispatchSize = ivec3(gl_WorkGroupSize.xyz * gl_NumWorkGroups.xyz);
