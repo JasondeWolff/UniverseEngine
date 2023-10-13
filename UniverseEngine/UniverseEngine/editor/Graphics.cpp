@@ -43,31 +43,34 @@ namespace UniverseEngine {
             ImGui::Begin("[GRAPHICS] Clouds", &clouds);
 
             ImGui::Checkbox("Enabled", &config.enabled);
+            ImGui::Separator();
+            ImGui::Spacing();
 
+            ImGui::Text("Noise");
             ImGui::DragFloat3("Weather Offset", &config.weatherOffset.x);
             ImGui::SliderFloat("Weather Scale", &config.weatherScale, 0.1f, 1.0f);
             ImGui::SliderFloat("Weather Density Threshold", &config.weatherDensityThreshold, 0.0f,
                                1.0f);
+            ImGui::Spacing();
             ImGui::DragFloat3("Detail Offset", &config.detailOffset.x);
             ImGui::SliderFloat("Detail Scale", &config.detailScale, 0.1f, 1.0f);
             ImGui::SliderFloat("Detail Density Threshold", &config.detailDensityThreshold, 0.0f,
                                1.0f);
+            ImGui::Spacing();
             ImGui::DragFloat3("Rough Offset", &config.roughOffset.x);
             ImGui::SliderFloat("Rough Scale", &config.roughScale, 0.1f, 1.0f);
             ImGui::SliderFloat("Rough Density Threshold", &config.roughDensityThreshold, 0.0f,
                                1.0f);
-
+            ImGui::Spacing();
             ImGui::SliderFloat("Density Multiplier", &config.densityMultiplier, 0.0f, 3.0f);
+            ImGui::Separator();
+            ImGui::Spacing();
 
-            ImGui::SliderFloat("Forward Scattering", &config.forwardScattering, 0.0f, 1.0f);
-            ImGui::SliderFloat("Backward Scattering", &config.backwardScattering, 0.0f, 1.0f);
-            ImGui::SliderFloat("Base Brightness", &config.baseBrightness, 0.0f, 5.0f);
-            ImGui::SliderFloat("Phase Factor", &config.phaseFactor, 0.0f, 2.0f);
-
+            ImGui::Text("Lighting");
             ImGui::SliderFloat("Direct Light Absorbtion", &config.lightAbsorbtion, 0.0f, 3.0f);
-            ImGui::SliderFloat("Inirect Light Absorbtion", &config.indirectLightAbsorbtion, 0.0f,
-                               3.0f);
-            ImGui::SliderFloat("Darkness Threshold", &config.darknessThreshold, 0.0f, 0.4f);
+            ImGui::SliderFloat("Eccentricity", &config.eccentricity, 0.0f, 1.0f);
+            ImGui::SliderFloat("AO Strength", &config.aoStrength, 0.0f,
+                               1.0f);
 
             ImGui::Checkbox("SDF Debug", &config.sdfDebug);
             ImGui::SliderFloat("SDF Factor", &config.sdfFactor, 0.0f, 1.0f);

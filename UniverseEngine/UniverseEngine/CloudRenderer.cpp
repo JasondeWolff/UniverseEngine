@@ -24,14 +24,9 @@ struct UniformBuffer {
 
     float cloudDensityMultiplier;
 
-    float forwardScattering;
-    float backwardScattering;
-    float baseBrightness;
-    float phaseFactor;
-
     float lightAbsorbtion;
-    float indirectLightAbsorbtion;
-    float darknessThreshold;
+    float eccentricity;
+    float aoStrength;
 
     float zNear;
     float zFar;
@@ -134,9 +129,10 @@ namespace UniverseEngine {
                 std::move(Semaphore(Format("Cloud Renderer %i", i), device)));
         }
 
+        unsigned mips = static_cast<unsigned>(std::floor(std::log2(NOISE_RESOLUTION))) + 1;
         this->noise = std::make_shared<Image>(
             "Cloud Noise", device, physicalDevice, static_cast<unsigned>(NOISE_RESOLUTION),
-            static_cast<unsigned>(NOISE_RESOLUTION), 1,
+            static_cast<unsigned>(NOISE_RESOLUTION), mips,
             ImageUsageBits::TRANSFER_SRC_IMAGE | ImageUsageBits::TRANSFER_DST_IMAGE |
                 ImageUsageBits::SAMPLED_IMAGE,
             GraphicsFormat::R8G8B8A8_UNORM, 1, ImageDimensions::IMAGE_3D,
@@ -193,13 +189,9 @@ namespace UniverseEngine {
         uniformBuffer.cloudDensityMultiplier = this->config.densityMultiplier;
         uniformBuffer.lightDir = glm::vec4(world.sun.direction, 1.0);
         uniformBuffer.lightColor = glm::vec4(world.sun.lightSource.color, 1.0);
-        uniformBuffer.forwardScattering = this->config.forwardScattering;
-        uniformBuffer.backwardScattering = this->config.backwardScattering;
-        uniformBuffer.baseBrightness = this->config.baseBrightness;
-        uniformBuffer.phaseFactor = this->config.phaseFactor;
         uniformBuffer.lightAbsorbtion = this->config.lightAbsorbtion;
-        uniformBuffer.indirectLightAbsorbtion = this->config.indirectLightAbsorbtion;
-        uniformBuffer.darknessThreshold = this->config.darknessThreshold;
+        uniformBuffer.eccentricity = this->config.eccentricity;
+        uniformBuffer.aoStrength = this->config.aoStrength;
         uniformBuffer.zNear = camera.GetNear();
         uniformBuffer.zFar = camera.GetFar();
         uniformBuffer.sdfDebug = this->config.sdfDebug;
@@ -272,6 +264,7 @@ namespace UniverseEngine {
                                       ResourceAccessBits::ACCESS_TRANSFER_WRITE_BIT,
                                       PipelineStageBits::PIPELINE_STAGE_TRANSFER_BIT);
         cmdList.CopyImages(genNoiseImage, noiseImage);
+        cmdList.GenerateMips(noiseImage);
         cmdList.TransitionImageLayout(noiseImage, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                                       ResourceAccessBits::ACCESS_SHADER_READ_BIT,
                                       PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);

@@ -29,17 +29,11 @@ layout(binding = 4) uniform UniformBufferObject {
     float cloudWeatherDensityThreshold;
     float cloudDetailDensityThreshold;
     float cloudRoughDensityThreshold;
-
     float cloudDensityMultiplier;
 
-    float forwardScattering;
-    float backwardScattering;
-    float baseBrightness;
-    float phaseFactor;
-
     float lightAbsorbtion;
-    float indirectLightAbsorbtion;
-    float darknessThreshold;
+    float eccentricity;
+    float aoStrength;
 
     float zNear;
     float zFar;
@@ -90,14 +84,15 @@ bool IntersectAABB(Ray ray, AABB aabb, out float lo, out float hi) {
 }
 
 float remap(float v, float minOld, float maxOld, float minNew, float maxNew) {
-    return minNew + (v - minOld) * (maxNew - minNew) / (maxOld - minOld);
+    v = clamp(v, minOld, maxOld);
+    return minNew + (((v - minOld) / (maxOld - minOld)) * (maxNew - minNew));
 }
 
 float sampleSDF(vec3 position) {
     return ubo.sdfFactor * texture(sdf, position * ubo.cloudWeatherScale * 0.01 + ubo.cloudWeatherOffset.xyz * 0.01).r / (ubo.cloudWeatherScale * 0.01);
 }
 
-float sampleDensity(vec3 position, AABB aabb) {
+float sampleDensity(vec3 position, AABB aabb, float lod) {
     if (ubo.sdfDebug) {
         return sampleSDF(position);
     }
@@ -117,9 +112,9 @@ float sampleDensity(vec3 position, AABB aabb) {
     vec3 detailUV = position * ubo.cloudDetailScale * 0.01 + ubo.cloudDetailOffset.xyz * 0.01;
     vec3 roughUV = position * ubo.cloudRoughScale * 0.01 + ubo.cloudRoughOffset.xyz * 0.01;
 
-    float weather = texture(noise, weatherUV).g;
-    float roughDensity = texture(noise, roughUV).r;
-    float detail = texture(noise, detailUV).b;
+    float weather = textureLod(noise, weatherUV, lod).g;
+    float roughDensity = textureLod(noise, roughUV, lod).r;
+    float detail = textureLod(noise, detailUV, lod).b;
 
     weather = max(weather - ubo.cloudWeatherDensityThreshold, 0.0);
     roughDensity = max(roughDensity - ubo.cloudRoughDensityThreshold, 0.0) * ubo.cloudDensityMultiplier;
@@ -135,11 +130,10 @@ float henyeyGreenstein(float cosAngle, float eccentricity) {
 }
 
 float phase(float cosAngle) {
-    const float eccentricity = 0.1;
     const float silverIntensity = 0.2;
     const float silverSpread = 0.3;
 
-    return henyeyGreenstein(cosAngle, eccentricity);//max(henyeyGreenstein(cosAngle, eccentricity), silverIntensity * henyeyGreenstein(cosAngle, silverSpread));
+    return henyeyGreenstein(cosAngle, ubo.eccentricity);//max(henyeyGreenstein(cosAngle, eccentricity), silverIntensity * henyeyGreenstein(cosAngle, silverSpread));
 }
 
 float beer(float d) {
@@ -147,69 +141,8 @@ float beer(float d) {
 }
 
 float magnus(float d) {
-    return max(exp(-d), exp(-d * 0.25) * 0.7);
+    return max(exp(-d * ubo.lightAbsorbtion), exp(-d * ubo.lightAbsorbtion * 0.25) * 0.7);
 }
-
-//float lightMarch(vec3 position, AABB aabb) {
-//    vec3 L = -normalize(ubo.lightDir.xyz);
-//
-//    Ray ray;
-//    ray.origin = position;
-//    ray.direction = L;
-//    ray.invDirection = vec3(1.0) / L;
-//
-//    float tmin, tmax;
-//    IntersectAABB(ray, aabb, tmin, tmax);
-//    float distanceThroughCloud = tmax;
-//    float stepSize = distanceThroughCloud / SECONDARY_STEPS;
-//
-//    float totalDensity = 0.0;
-//    for (int i = 0; i < SECONDARY_STEPS; i++) {
-//        position += ray.direction * stepSize;
-//        totalDensity += max(0.0, sampleDensity(position, aabb) * stepSize);
-//    }
-//
-//    float transmittance = magnus(totalDensity) * ubo.lightAbsorbtion;
-//    return ubo.darknessThreshold + transmittance * (1.0 - ubo.darknessThreshold);
-//}
-//
-//vec2 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
-//    float distanceToCloud = max(tmin, 0.0);
-//    float distanceThroughCloud = min(min(depth, tmax) - distanceToCloud, 500.0);
-//
-//    float transmittance = 1.0;
-//    float lightEnergy = 0.0;
-//
-//    const float eccentricity = 0.99;
-//    const float silverIntensity = 0.2;
-//    const float silverSpread = 0.03;
-//
-//    float cosAngle = dot(ray.direction, -normalize(ubo.lightDir.xyz)); 
-//    float phaseVal = max(henyeyGreenstein(cosAngle, eccentricity), silverIntensity * henyeyGreenstein(cosAngle, 0.99 - silverSpread));
-//
-//    float uniformStepSize = distanceThroughCloud / mix(MAX_PRIMARY_STEPS_HORIZONTAL, MAX_PRIMARY_STEPS_VERTICAL, abs(ray.direction.y));
-//
-//    float travelledDistance = 0.0;
-//    while (travelledDistance < distanceThroughCloud) {
-//        vec3 position = ray.origin + ray.direction * (distanceToCloud + travelledDistance);
-//        float stepSize = max(sampleSDF(position), uniformStepSize);
-//        float density = sampleDensity(position, aabb);
-//
-//        if (density > 0.0) {
-//            float lightTransmittance = lightMarch(position, aabb);
-//            lightEnergy += density * stepSize * transmittance * lightTransmittance * phaseVal;
-//            transmittance *= magnus(density * stepSize) * ubo.indirectLightAbsorbtion;
-//
-//            if (transmittance < MIN_TRANSMITTANCE) {
-//                break;
-//            }
-//        }
-//
-//        travelledDistance += stepSize;
-//    }
-//
-//    return vec2(transmittance, lightEnergy);
-//}
 
 vec3 lightMarch(vec3 position, AABB aabb) {
     vec3 L = -normalize(ubo.lightDir.xyz);
@@ -227,16 +160,16 @@ vec3 lightMarch(vec3 position, AABB aabb) {
     float totalDensity = 0.0;
     for (int i = 0; i < SECONDARY_STEPS; i++) {
         position += ray.direction * stepSize;
-        totalDensity += max(0.0, sampleDensity(position, aabb) * stepSize);
+        totalDensity += max(0.0, sampleDensity(position, aabb, 0.0) * stepSize);
     }
 
-    float transmittance = beer(totalDensity);
+    float transmittance = magnus(totalDensity);
     return transmittance * ubo.lightColor.rgb;
 }
 
 vec4 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
     float distanceToCloud = max(tmin, 0.0);
-    float distanceThroughCloud = min(min(depth, tmax) - distanceToCloud, 500.0);
+    float distanceThroughCloud = min(min(depth, tmax) - distanceToCloud, 500.0); // Decrease when close to aabb vertically, increase when far away
     float uniformStepSize = distanceThroughCloud / mix(MAX_PRIMARY_STEPS_HORIZONTAL, MAX_PRIMARY_STEPS_VERTICAL, abs(ray.direction.y));
 
     float transmittance = 1.0;
@@ -248,13 +181,19 @@ vec4 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
     float travelledDistance = 0.0;
     while (travelledDistance < distanceThroughCloud) {
         vec3 position = ray.origin + ray.direction * (distanceToCloud + travelledDistance);
+        float heightPercent = (position.y - aabb.lo.y) / aabb.size.y;
         float stepSize = max(sampleSDF(position), uniformStepSize);
 
-        float density = sampleDensity(position, aabb);
+        float density = sampleDensity(position, aabb, 0.0);
 
         if (density > 0.0) {
-            vec3 sampledScattering = density * lightMarch(position, aabb) * phaseVal * stepSize;
-            float sampledTransmittance = beer(density * stepSize);
+            float loddedDensity = max(0.0, sampleDensity(position, aabb, 0.0)) * 14.0;
+            float depthProbability = pow(loddedDensity, mix(2.0, 0.5, transmittance));
+            float ao = mix(1.0, depthProbability, ubo.aoStrength);
+            vec3 lighting = ao * lightMarch(position, aabb);
+
+            vec3 sampledScattering = density * lighting * phaseVal * stepSize;
+            float sampledTransmittance = magnus(density * stepSize);
 
             scattering += sampledScattering * transmittance;
             transmittance *= sampledTransmittance;
@@ -279,8 +218,8 @@ void main()
     if (id.x >= dispatchSize.x || id.y >= dispatchSize.y) return;
 
     AABB aabb;
-    aabb.lo = vec3(-50000.0, -50.0 + 100.0, -50000.0);
-    aabb.hi = vec3(50000.0, 50.0 + 100.0, 50000.0);
+    aabb.lo = vec3(-50000.0, 0.0 + 100.0, -50000.0);
+    aabb.hi = vec3(50000.0, 200.0 + 100.0, 50000.0);
     aabb.size = (aabb.hi - aabb.lo);
 
     vec2 pixelCenter = vec2(float(id.x) + 0.5, float(id.y) + 0.5);

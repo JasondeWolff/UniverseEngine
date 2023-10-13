@@ -38,14 +38,9 @@ namespace UniverseEngine {
 
         float densityMultiplier = 0.31f;
 
-        float forwardScattering = 0.72f;
-        float backwardScattering = 0.33f;
-        float baseBrightness = 0.7f;
-        float phaseFactor = 0.74f;
-
         float lightAbsorbtion = 1.0f;
-        float indirectLightAbsorbtion = 0.094f;
-        float darknessThreshold = 0.12f;
+        float eccentricity = 0.25f;
+        float aoStrength = 0.3f;
 
         bool sdfDebug = false;
         float sdfFactor = 0.0f;

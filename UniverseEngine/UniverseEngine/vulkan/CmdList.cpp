@@ -274,6 +274,7 @@ namespace UniverseEngine {
 
         int32_t mipWidth = static_cast<int32_t>(image->Width());
         int32_t mipHeight = static_cast<int32_t>(image->Height());
+        int32_t mipDepth = static_cast<int32_t>(image->Depth());
 
         for (uint32_t i = 1; i < image->Mips(); i++) {
             barrier.subresourceRange.baseMipLevel = i - 1;
@@ -288,14 +289,15 @@ namespace UniverseEngine {
 
             VkImageBlit blit{};
             blit.srcOffsets[0] = {0, 0, 0};
-            blit.srcOffsets[1] = {mipWidth, mipHeight, 1};
+            blit.srcOffsets[1] = {mipWidth, mipHeight, mipDepth};
             blit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
             blit.srcSubresource.mipLevel = i - 1;
             blit.srcSubresource.baseArrayLayer = 0;
             blit.srcSubresource.layerCount = 1;
             blit.dstOffsets[0] = {0, 0, 0};
             blit.dstOffsets[1] = {mipWidth > 1 ? mipWidth / 2 : 1,
-                                  mipHeight > 1 ? mipHeight / 2 : 1, 1};
+                                  mipHeight > 1 ? mipHeight / 2 : 1,
+                                  mipDepth > 1 ? mipDepth / 2 : 1};
             blit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
             blit.dstSubresource.mipLevel = i;
             blit.dstSubresource.baseArrayLayer = 0;
@@ -318,6 +320,8 @@ namespace UniverseEngine {
                 mipWidth /= 2;
             if (mipHeight > 1)
                 mipHeight /= 2;
+            if (mipDepth > 1)
+                mipDepth /= 2;
         }
 
         barrier.subresourceRange.baseMipLevel = image->Mips() - 1;
