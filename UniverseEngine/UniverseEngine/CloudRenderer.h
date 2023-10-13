@@ -43,7 +43,9 @@ namespace UniverseEngine {
         float aoStrength = 0.3f;
 
         bool sdfDebug = false;
-        float sdfFactor = 0.0f;
+        float sdfFactor = 1.0f;
+        float minTransmittance = 0.07f;
+        RenderScale renderScale = RenderScale::QUARTER_RES;
     };
 
     class CloudRenderer {
@@ -55,6 +57,7 @@ namespace UniverseEngine {
 
         void Render(CmdList& cmdList, std::shared_ptr<Image> colorImage,
                     std::shared_ptr<Image> depthImage, size_t currentFrame);
+        void BuildSizedResources(uint32_t width, uint32_t height);
 
         CloudConfig config;
 
@@ -69,6 +72,10 @@ namespace UniverseEngine {
         std::array<std::shared_ptr<Buffer>, Swapchain::MAX_FRAMES_IN_FLIGHT> uniformBuffers;
         std::array<std::shared_ptr<DescriptorSet>, Swapchain::MAX_FRAMES_IN_FLIGHT> descriptorSets;
 
+        std::shared_ptr<ComputePipeline> compositPipeline;
+        std::shared_ptr<DescriptorSetLayout> compositDescriptorSetLayout;
+        std::shared_ptr<DescriptorSet> compositDescriptorSet;
+
         std::shared_ptr<ComputePipeline> noisePipeline;
         std::shared_ptr<DescriptorSetLayout> noiseDescriptorSetLayout;
         std::shared_ptr<Buffer> noiseUniformBuffer;
@@ -79,7 +86,7 @@ namespace UniverseEngine {
         std::shared_ptr<Buffer> sdfUniformBuffer;
         std::shared_ptr<DescriptorSet> sdfDescriptorSet;
 
-        bool noiseDirty;
+        std::shared_ptr<Image> downsizedRenderTarget;
         std::shared_ptr<Image> noise;
         std::shared_ptr<Image> sdf;
         std::shared_ptr<Sampler> sampler;

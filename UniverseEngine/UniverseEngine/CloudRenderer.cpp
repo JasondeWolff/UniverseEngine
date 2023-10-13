@@ -33,8 +33,9 @@ struct UniformBuffer {
 
     int sdfDebug;
     float sdfFactor;
+    float minTransmittance;
 
-    float PADDING[2];
+    float PADDING[1];
 };
 
 struct NoiseUniformBuffer {
@@ -65,6 +66,12 @@ namespace UniverseEngine {
                                         GraphicsStageFlagBits::COMPUTE_STAGE),
                 DescriptorLayoutBinding("ubo", 4, DescriptorType::UNIFORM_BUFFER,
                                         GraphicsStageFlagBits::COMPUTE_STAGE)});
+        this->compositDescriptorSetLayout = std::make_shared<DescriptorSetLayout>(
+            device, std::vector<DescriptorLayoutBinding>{
+                        DescriptorLayoutBinding("clouds", 0, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                                                GraphicsStageFlagBits::COMPUTE_STAGE),
+                        DescriptorLayoutBinding("outputImage", 1, DescriptorType::STORAGE_IMAGE,
+                                                GraphicsStageFlagBits::COMPUTE_STAGE)});
         this->noiseDescriptorSetLayout = std::make_shared<DescriptorSetLayout>(
             device, std::vector<DescriptorLayoutBinding>{
                         DescriptorLayoutBinding("noise", 0, DescriptorType::STORAGE_IMAGE,
@@ -91,6 +98,9 @@ namespace UniverseEngine {
                                                this->uniformBuffers[i]);
         }
 
+        this->compositDescriptorSet = std::make_shared<DescriptorSet>(
+            device, descriptorPool, this->compositDescriptorSetLayout);
+
         this->noiseUniformBuffer = std::make_shared<Buffer>(
             "Cloud Noise UniformBuffer", device, physicalDevice, BufferUsageBits::UNIFORM_BUFFER,
             sizeof(NoiseUniformBuffer), BufferLocation::CPU_TO_GPU);
@@ -109,6 +119,7 @@ namespace UniverseEngine {
 
         auto& resources = Engine::GetResources();
         std::shared_ptr<Shader> shader = resources.LoadShader("Assets/Shaders/clouds.comp");
+        std::shared_ptr<Shader> compositShader = resources.LoadShader("Assets/Shaders/cloudComposit.comp");
         std::shared_ptr<Shader> noiseShader =
             resources.LoadShader("Assets/Shaders/cloudNoise.comp");
         std::shared_ptr<Shader> sdfShader = resources.LoadShader("Assets/Shaders/cloudSDF.comp");
@@ -117,6 +128,9 @@ namespace UniverseEngine {
         this->pipeline = std::make_shared<ComputePipeline>(
             device, shader->Renderable(),
             std::vector<std::shared_ptr<DescriptorSetLayout>>{this->descriptorSetLayout});
+        this->compositPipeline = std::make_shared<ComputePipeline>(
+            device, compositShader->Renderable(),
+            std::vector<std::shared_ptr<DescriptorSetLayout>>{this->compositDescriptorSetLayout});
         this->noisePipeline = std::make_shared<ComputePipeline>(
             device, noiseShader->Renderable(),
             std::vector<std::shared_ptr<DescriptorSetLayout>>{this->noiseDescriptorSetLayout});
@@ -146,8 +160,7 @@ namespace UniverseEngine {
             static_cast<unsigned>(NOISE_RESOLUTION));
 
         this->sampler = std::make_shared<Sampler>("Cloud Noise Sampler", device, physicalDevice);
-        this->noiseDirty = true;
-        this->oldConfig = this->config;
+        this->oldConfig.weatherDensityThreshold = -1.0f;
     }
 
     Semaphore& CloudRenderer::CurrentSemaphore(size_t currentFrame) {
@@ -160,14 +173,12 @@ namespace UniverseEngine {
             return;
 
         if (this->config.weatherDensityThreshold != this->oldConfig.weatherDensityThreshold) {
-            this->noiseDirty = true;
+            this->GenerateNoise(cmdList);
+        }
+        if (this->config.renderScale != this->oldConfig.renderScale) {
+            this->BuildSizedResources(colorImage->Width(), colorImage->Height());
         }
         this->oldConfig = this->config;
-
-        if (this->noiseDirty) {
-            this->GenerateNoise(cmdList);
-            this->noiseDirty = false;
-        }
 
         World& world = Engine::GetWorld();
         Camera& camera = world.camera;
@@ -196,22 +207,22 @@ namespace UniverseEngine {
         uniformBuffer.zFar = camera.GetFar();
         uniformBuffer.sdfDebug = this->config.sdfDebug;
         uniformBuffer.sdfFactor = this->config.sdfFactor;
+        uniformBuffer.minTransmittance = this->config.minTransmittance;
         void* uniformBufferData = this->uniformBuffers[currentFrame]->Map();
         memcpy(uniformBufferData, &uniformBuffer, sizeof(UniformBuffer));
         this->uniformBuffers[currentFrame]->Unmap();
 
+        // Render clouds at lower resolution
         cmdList.BindComputePipeline(this->pipeline);
-
-        cmdList.TransitionImageLayout(colorImage, ImageLayout::GENERAL,
+        cmdList.TransitionImageLayout(this->downsizedRenderTarget, ImageLayout::GENERAL,
                                       ResourceAccessBits::ACCESS_SHADER_READ_BIT |
                                           ResourceAccessBits::ACCESS_SHADER_WRITE_BIT,
                                       PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
         cmdList.TransitionImageLayout(depthImage, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                                       ResourceAccessBits::ACCESS_SHADER_READ_BIT,
                                       PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-
-        this->descriptorSets[currentFrame]->SetImage(0, DescriptorType::STORAGE_IMAGE, colorImage,
-                                                     nullptr);
+        this->descriptorSets[currentFrame]->SetImage(0, DescriptorType::STORAGE_IMAGE,
+                                                     this->downsizedRenderTarget, nullptr);
         this->descriptorSets[currentFrame]->SetImage(1, DescriptorType::COMBINED_IMAGE_SAMPLER,
                                                      depthImage, this->sampler);
         this->descriptorSets[currentFrame]->SetImage(2, DescriptorType::COMBINED_IMAGE_SAMPLER,
@@ -219,8 +230,27 @@ namespace UniverseEngine {
         this->descriptorSets[currentFrame]->SetImage(3, DescriptorType::COMBINED_IMAGE_SAMPLER,
                                                      this->sdf, this->sampler);
         cmdList.BindDescriptorSet(this->descriptorSets[currentFrame], 0, PipelineType::COMPUTE);
-        cmdList.Dispatch(DivideUp(colorImage->Width(), 32), DivideUp(colorImage->Height(), 32));
+        cmdList.Dispatch(DivideUp(this->downsizedRenderTarget->Width(), 32),
+                         DivideUp(this->downsizedRenderTarget->Height(), 32));
 
+        // Composit clouds onto the full res color image
+        cmdList.BindComputePipeline(this->compositPipeline);
+        cmdList.TransitionImageLayout(this->downsizedRenderTarget, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+                                      ResourceAccessBits::ACCESS_SHADER_READ_BIT,
+                                      PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+        cmdList.TransitionImageLayout(colorImage, ImageLayout::GENERAL,
+                                      ResourceAccessBits::ACCESS_SHADER_READ_BIT |
+                                          ResourceAccessBits::ACCESS_SHADER_WRITE_BIT,
+                                      PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+        this->compositDescriptorSet->SetImage(0, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                                              this->downsizedRenderTarget, this->sampler);
+        this->compositDescriptorSet->SetImage(1, DescriptorType::STORAGE_IMAGE, colorImage,
+                                              nullptr);
+        cmdList.BindDescriptorSet(this->compositDescriptorSet, 0, PipelineType::COMPUTE);
+        cmdList.Dispatch(DivideUp(colorImage->Width(), 32),
+                         DivideUp(colorImage->Height(), 32));
+
+        // Transition color and depth back into attachment states
         cmdList.TransitionImageLayout(
             colorImage, ImageLayout::PRESENT_SRC,
             ResourceAccessBits::ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
@@ -228,6 +258,27 @@ namespace UniverseEngine {
         cmdList.TransitionImageLayout(depthImage, ImageLayout::DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
                                       ResourceAccessBits::ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
                                       PipelineStageBits::PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT);
+    }
+
+    void CloudRenderer::BuildSizedResources(uint32_t width, uint32_t height) {
+        switch (this->config.renderScale) {
+            case RenderScale::HALF_RES: {
+                width /= 2;
+                height /= 2;
+                break;
+            }
+            case RenderScale::QUARTER_RES: {
+                width /= 4;
+                height /= 4;
+                break;
+            }
+        }
+
+        this->downsizedRenderTarget = std::make_shared<Image>(
+            "Cloud Render Target", this->device, this->physicalDevice, width, height, 1,
+            ImageUsageBits::COLOR_ATTACHMENT | ImageUsageBits::SAMPLED_IMAGE |
+                ImageUsageBits::STORAGE_IMAGE,
+            GraphicsFormat::R16G16B16A16_SFLOAT);
     }
 
     void CloudRenderer::GenerateNoise(CmdList& cmdList) {
@@ -244,9 +295,6 @@ namespace UniverseEngine {
             GraphicsFormat::R8G8B8A8_UNORM, 1, ImageDimensions::IMAGE_3D,
             static_cast<uint32_t>(NOISE_RESOLUTION));
 
-        auto noiseImage = this->noise;
-        auto sdfImage = this->sdf;
-
         cmdList.BindComputePipeline(this->noisePipeline);
         cmdList.TransitionImageLayout(genNoiseImage, ImageLayout::GENERAL,
                                       ResourceAccessBits::ACCESS_SHADER_WRITE_BIT,
@@ -260,14 +308,11 @@ namespace UniverseEngine {
         cmdList.TransitionImageLayout(genNoiseImage, ImageLayout::TRANSFER_SRC_OPTIMAL,
                                       ResourceAccessBits::ACCESS_TRANSFER_READ_BIT,
                                       PipelineStageBits::PIPELINE_STAGE_TRANSFER_BIT);
-        cmdList.TransitionImageLayout(noiseImage, ImageLayout::TRANSFER_DST_OPTIMAL,
+        cmdList.TransitionImageLayout(this->noise, ImageLayout::TRANSFER_DST_OPTIMAL,
                                       ResourceAccessBits::ACCESS_TRANSFER_WRITE_BIT,
                                       PipelineStageBits::PIPELINE_STAGE_TRANSFER_BIT);
-        cmdList.CopyImages(genNoiseImage, noiseImage);
-        cmdList.GenerateMips(noiseImage);
-        cmdList.TransitionImageLayout(noiseImage, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
-                                      ResourceAccessBits::ACCESS_SHADER_READ_BIT,
-                                      PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+        cmdList.CopyImages(genNoiseImage, this->noise);
+        cmdList.GenerateMips(this->noise);
 
         SDFUniformBuffer sdfUniformBuffer;
         sdfUniformBuffer.densityThreshold = this->config.weatherDensityThreshold;
@@ -287,7 +332,10 @@ namespace UniverseEngine {
         cmdList.TransitionImageLayout(genSDFImage, ImageLayout::GENERAL,
                                       ResourceAccessBits::ACCESS_SHADER_WRITE_BIT,
                                       PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
-        this->sdfDescriptorSet->SetImage(0, DescriptorType::COMBINED_IMAGE_SAMPLER, noiseImage,
+        cmdList.TransitionImageLayout(this->noise, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+                                      ResourceAccessBits::ACCESS_SHADER_READ_BIT,
+                                      PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
+        this->sdfDescriptorSet->SetImage(0, DescriptorType::COMBINED_IMAGE_SAMPLER, this->noise,
                                          this->sampler);
         this->sdfDescriptorSet->SetImage(1, DescriptorType::STORAGE_IMAGE, genSDFImage, nullptr);
         cmdList.BindDescriptorSet(this->sdfDescriptorSet, 0, PipelineType::COMPUTE);
@@ -297,11 +345,12 @@ namespace UniverseEngine {
         cmdList.TransitionImageLayout(genSDFImage, ImageLayout::TRANSFER_SRC_OPTIMAL,
                                       ResourceAccessBits::ACCESS_TRANSFER_READ_BIT,
                                       PipelineStageBits::PIPELINE_STAGE_TRANSFER_BIT);
-        cmdList.TransitionImageLayout(sdfImage, ImageLayout::TRANSFER_DST_OPTIMAL,
+        cmdList.TransitionImageLayout(this->sdf, ImageLayout::TRANSFER_DST_OPTIMAL,
                                       ResourceAccessBits::ACCESS_TRANSFER_WRITE_BIT,
                                       PipelineStageBits::PIPELINE_STAGE_TRANSFER_BIT);
-        cmdList.CopyImages(genSDFImage, sdfImage);
-        cmdList.TransitionImageLayout(sdfImage, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+        cmdList.CopyImages(genSDFImage, this->sdf);
+
+        cmdList.TransitionImageLayout(this->sdf, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                                       ResourceAccessBits::ACCESS_SHADER_READ_BIT,
                                       PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
     }

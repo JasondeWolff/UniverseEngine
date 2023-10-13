@@ -108,6 +108,9 @@
     <None Include="Assets\Shaders\Vulkan\cloudSDF.comp">
       <Filter>Assets\Shaders\Vulkan</Filter>
     </None>
+    <None Include="Assets\Shaders\Vulkan\cloudComposit.comp">
+      <Filter>Assets\Shaders\Vulkan</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FreeFormCamera.h">

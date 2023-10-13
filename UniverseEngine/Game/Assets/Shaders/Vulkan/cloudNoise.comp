@@ -10,7 +10,7 @@
 
 layout (binding = 0, rgba8) uniform image3D noise;
 
-layout(binding = 1) uniform UniformBufferObject {
+layout (binding = 1) uniform UniformBufferObject {
     float size;
 } ubo;
 

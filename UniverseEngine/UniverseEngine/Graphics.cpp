@@ -64,12 +64,13 @@ namespace UniverseEngine {
         this->skyboxCube =
             Engine::GetResources().LoadScene("Assets/Models/SkyboxCube/SkyboxCube.gltf");
 
+        this->cloudRenderer = std::make_unique<CloudRenderer>(this->device, *this->physicalDevice,
+                                                              this->descriptorPool, *this);
+
         this->BuildSwapchain();
         this->BuildDescriptors();
         this->BuildPipelines();
 
-        this->cloudRenderer = std::make_unique<CloudRenderer>(this->device, *this->physicalDevice,
-                                                              this->descriptorPool, *this);
         this->imguiRenderer = std::make_unique<ImGuiRenderer>(
             this->device, *this->physicalDevice, this->descriptorPool,
             this->swapchain->GetRenderPass(), *this);
@@ -380,6 +381,8 @@ namespace UniverseEngine {
             std::make_optional<GraphicsFormat>(this->depthImage->Format()));
         std::vector<std::shared_ptr<Image>> images{this->colorImage, this->depthImage};
         this->framebuffer = std::make_unique<Framebuffer>(this->device, images, this->renderPass);
+
+        this->cloudRenderer->BuildSizedResources(width, height);
     }
 
     void Graphics::BuildPipelines() {

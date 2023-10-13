@@ -10,6 +10,8 @@
 namespace UniverseEngine {
     class LogicalDevice;
 
+    enum class RenderScale { FULL_RES, HALF_RES, QUARTER_RES };
+
     class RenderPass {
     public:
         RenderPass(std::shared_ptr<LogicalDevice> device, const std::vector<GraphicsFormat>& colorFormats, std::optional<GraphicsFormat> depthFormat);

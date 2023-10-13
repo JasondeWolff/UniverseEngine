@@ -137,6 +137,7 @@
     <None Include="Assets\Shaders\Vulkan\unlit.vert" />
     <None Include="Assets\Shaders\Vulkan\cloudNoise.comp" />
     <None Include="Assets\Shaders\Vulkan\cloudSDF.comp" />
+    <None Include="Assets\Shaders\Vulkan\cloudComposit.comp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetDemo.h" />

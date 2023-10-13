@@ -1,12 +1,11 @@
 #version 450
 #extension GL_KHR_vulkan_glsl: enable
 
-#define MAX_PRIMARY_STEPS_HORIZONTAL 96
-#define MAX_PRIMARY_STEPS_VERTICAL 54
+#define MAX_PRIMARY_STEPS_HORIZONTAL 64
+#define MAX_PRIMARY_STEPS_VERTICAL 32
 #define SECONDARY_STEPS 5
-#define MIN_TRANSMITTANCE 0.01
 
-layout (binding = 0, rgba8) uniform image2D outputImage;
+layout (binding = 0, rgba16f) uniform image2D outputImage;
 layout (binding = 1) uniform sampler2D depthImage;
 
 layout (binding = 2) uniform sampler3D noise;
@@ -40,9 +39,9 @@ layout(binding = 4) uniform UniformBufferObject {
 
     bool sdfDebug;
     float sdfFactor;
+    float minTransmittance;
 
     float PADDING0;
-    float PADDING1;
 } ubo;
 
 struct Ray {
@@ -176,9 +175,16 @@ vec3 lightMarch(vec3 position, AABB aabb) {
     return transmittance * ubo.lightColor.rgb;
 }
 
+float AABBAltitudeDistance(Ray ray, AABB aabb) {
+    if (ray.origin.y < aabb.lo.y) return aabb.lo.y - ray.origin.y;
+    if (ray.origin.y > aabb.hi.y) return ray.origin.y - aabb.hi.y;
+    return 0.0;
+}
+
 vec4 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
     float distanceToCloud = max(tmin, 0.0);
-    float distanceThroughCloud = min(min(depth, tmax) - distanceToCloud, 500.0); // Decrease when close to aabb vertically, increase when far away
+    float maxDistanceThroughCloud = min(AABBAltitudeDistance(ray, aabb) * 3.0 + 600.0, 1200.0);
+    float distanceThroughCloud = min(min(depth, tmax) - distanceToCloud, maxDistanceThroughCloud);
     float uniformStepSize = distanceThroughCloud / mix(MAX_PRIMARY_STEPS_HORIZONTAL, MAX_PRIMARY_STEPS_VERTICAL, abs(ray.direction.y));
 
     float transmittance = 1.0;
@@ -196,7 +202,7 @@ vec4 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
         float density = sampleFullDensity(position, aabb, 0.0);
 
         if (density > 0.0) {
-            float loddedDensity = max(0.0, sampleFullDensity(position, aabb, 0.0)) * 14.0;
+            float loddedDensity = density * 14.0;
             float depthProbability = pow(loddedDensity, mix(2.0, 0.5, transmittance));
             float ao = mix(1.0, depthProbability, ubo.aoStrength);
             vec3 lighting = ao * lightMarch(position, aabb);
@@ -207,7 +213,7 @@ vec4 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
             scattering += sampledScattering * transmittance;
             transmittance *= sampledTransmittance;
 
-            if (transmittance < MIN_TRANSMITTANCE) {
+            if (transmittance <= ubo.minTransmittance) {
                 break;
             }
         }
@@ -215,12 +221,11 @@ vec4 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
         travelledDistance += stepSize;
     }
 
-    return vec4(transmittance, scattering);
+    return vec4(scattering, transmittance);
 }
 
 layout (local_size_x = 32, local_size_y = 32, local_size_z = 1) in;
-void main() 
-{
+void main() {
     ivec2 id = ivec2(gl_GlobalInvocationID.xy);
     ivec2 dispatchSize = ivec2(gl_WorkGroupSize.xy * gl_NumWorkGroups.xy);
     
@@ -249,10 +254,9 @@ void main()
 
     float tmin, tmax;
     if(IntersectAABB(ray, aabb, tmin, tmax)) {
-        vec3 color = imageLoad(outputImage, id).rgb;
-
         vec4 marchResult = march(ray, tmin, tmax, depth, aabb);
-        color = color * marchResult.x + marchResult.yzw;
-        imageStore(outputImage, id, vec4(color, 1.0));
-    }  
+        imageStore(outputImage, id, marchResult);
+    } else {
+        imageStore(outputImage, id, vec4(0.0, 0.0, 0.0, 1.0));
+    }
 }
