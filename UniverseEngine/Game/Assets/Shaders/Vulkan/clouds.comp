@@ -1,8 +1,8 @@
 #version 450
 #extension GL_KHR_vulkan_glsl: enable
 
-#define MAX_PRIMARY_STEPS_HORIZONTAL 64
-#define MAX_PRIMARY_STEPS_VERTICAL 32
+#define MAX_PRIMARY_STEPS_HORIZONTAL 94
+#define MAX_PRIMARY_STEPS_VERTICAL 56
 #define SECONDARY_STEPS 5
 
 layout (binding = 0, rgba16f) uniform image2D outputImage;

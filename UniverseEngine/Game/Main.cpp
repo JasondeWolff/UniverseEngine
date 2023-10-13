@@ -8,7 +8,7 @@
 
 int main() {
 	UniverseEngine::Engine engine{};
-	engine.Start<TerrianDemo>();
+	engine.Start<MyGame>();
 
 	return 0;
 }

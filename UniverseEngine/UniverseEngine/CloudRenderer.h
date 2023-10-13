@@ -45,7 +45,7 @@ namespace UniverseEngine {
         bool sdfDebug = false;
         float sdfFactor = 1.0f;
         float minTransmittance = 0.07f;
-        RenderScale renderScale = RenderScale::QUARTER_RES;
+        RenderScale renderScale = RenderScale::HALF_RES;
     };
 
     class CloudRenderer {
