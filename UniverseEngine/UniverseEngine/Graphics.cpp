@@ -57,9 +57,11 @@ namespace UniverseEngine {
             std::make_unique<CmdQueue>(this->device, *this->physicalDevice, QueueType::PRESENT);
         this->descriptorPool = std::make_shared<DescriptorPool>(this->device);
 
-        this->sampler = std::make_shared<Sampler>("Sampler", this->device, *this->physicalDevice);
-        this->skyboxSampler =
-            std::make_shared<Sampler>("Skybox Sampler", this->device, *this->physicalDevice);
+        SamplerInfo samplerInfo{};
+        this->sampler =
+            std::make_shared<Sampler>("Sampler", this->device, *this->physicalDevice, samplerInfo);
+        this->skyboxSampler = std::make_shared<Sampler>("Skybox Sampler", this->device,
+                                                        *this->physicalDevice, samplerInfo);
 
         this->skyboxCube =
             Engine::GetResources().LoadScene("Assets/Models/SkyboxCube/SkyboxCube.gltf");

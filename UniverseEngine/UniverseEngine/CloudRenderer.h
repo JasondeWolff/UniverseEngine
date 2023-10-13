@@ -90,6 +90,7 @@ namespace UniverseEngine {
         std::shared_ptr<Image> noise;
         std::shared_ptr<Image> sdf;
         std::shared_ptr<Sampler> sampler;
+        std::shared_ptr<Sampler> nearestSampler;
 
         std::vector<Semaphore> semaphores;
 

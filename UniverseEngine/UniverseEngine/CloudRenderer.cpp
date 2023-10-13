@@ -159,7 +159,14 @@ namespace UniverseEngine {
             GraphicsFormat::R8_UNORM, 1, ImageDimensions::IMAGE_3D,
             static_cast<unsigned>(NOISE_RESOLUTION));
 
-        this->sampler = std::make_shared<Sampler>("Cloud Noise Sampler", device, physicalDevice);
+        SamplerInfo samplerInfo;
+        samplerInfo.filterMode = FilterMode::NEAREST;
+        this->nearestSampler =
+            std::make_shared<Sampler>("Cloud Noise Sampler", device, physicalDevice, samplerInfo);
+        samplerInfo.filterMode = FilterMode::LINEAR;
+        this->sampler =
+            std::make_shared<Sampler>("Cloud Noise Sampler", device, physicalDevice, samplerInfo);
+        
         this->oldConfig.weatherDensityThreshold = -1.0f;
     }
 
@@ -224,7 +231,7 @@ namespace UniverseEngine {
         this->descriptorSets[currentFrame]->SetImage(0, DescriptorType::STORAGE_IMAGE,
                                                      this->downsizedRenderTarget, nullptr);
         this->descriptorSets[currentFrame]->SetImage(1, DescriptorType::COMBINED_IMAGE_SAMPLER,
-                                                     depthImage, this->sampler);
+                                                     depthImage, this->nearestSampler);
         this->descriptorSets[currentFrame]->SetImage(2, DescriptorType::COMBINED_IMAGE_SAMPLER,
                                                      this->noise, this->sampler);
         this->descriptorSets[currentFrame]->SetImage(3, DescriptorType::COMBINED_IMAGE_SAMPLER,

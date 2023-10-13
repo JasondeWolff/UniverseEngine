@@ -25,9 +25,9 @@ namespace UniverseEngine {
         if (general) {
             ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiCond_Appearing);
             ImGui::Begin("[GRAPHICS] General", &general);
-            static bool wireFrame = true;
+            static bool wireFrame = this->polygonMode == GraphicsPolygonMode::LINE;
             ImGui::Checkbox("Wireframe", &wireFrame);
-            static bool lods = false;
+            static bool lods = this->useLODs;
             ImGui::Checkbox("Use LODs", &lods);
             ImGui::End();
 

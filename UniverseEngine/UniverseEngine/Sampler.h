@@ -10,10 +10,19 @@ namespace UniverseEngine {
     class LogicalDevice;
     class PhysicalDevice;
 
+    enum class FilterMode {
+        NEAREST,
+        LINEAR
+    };
+
+    struct SamplerInfo {
+        FilterMode filterMode = FilterMode::LINEAR;
+    };
+
     class Sampler {
     public:
         Sampler(const std::string& name, std::shared_ptr<LogicalDevice> device,
-                const PhysicalDevice& physicalDevice);
+                const PhysicalDevice& physicalDevice, const SamplerInfo& info);
         ~Sampler();
         Sampler(const Sampler& other) = delete;
         Sampler& operator=(const Sampler& other) = delete;

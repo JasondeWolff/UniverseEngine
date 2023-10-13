@@ -8,15 +8,17 @@
 
 namespace UniverseEngine {
     Sampler::Sampler(const std::string& name, std::shared_ptr<LogicalDevice> device,
-                     const PhysicalDevice& physicalDevice)
+                     const PhysicalDevice& physicalDevice, const SamplerInfo& info)
         : device(device) {
         VkPhysicalDeviceProperties properties{};
         vkGetPhysicalDeviceProperties(physicalDevice.GetPhysicalDevice(), &properties);
 
         VkSamplerCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-        createInfo.magFilter = VK_FILTER_LINEAR;
-        createInfo.minFilter = VK_FILTER_LINEAR;
+        createInfo.magFilter =
+            info.filterMode == FilterMode::LINEAR ? VK_FILTER_LINEAR : VK_FILTER_NEAREST;
+        createInfo.minFilter =
+            info.filterMode == FilterMode::LINEAR ? VK_FILTER_LINEAR : VK_FILTER_NEAREST;
         createInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
         createInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
         createInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;

@@ -56,12 +56,11 @@ struct AABB {
     vec3 size;
 };
 
-float LinearDepth(float d)
-{
+float linearDepth(float d) {
     return ubo.zNear * ubo.zFar / (ubo.zFar + d * (ubo.zNear - ubo.zFar));
 }
 
-bool IntersectAABB(Ray ray, AABB aabb, out float lo, out float hi) {
+bool intersectAABB(Ray ray, AABB aabb, out float lo, out float hi) {
     float tx1 = (aabb.lo.x - ray.origin.x) * ray.invDirection.x;
     float tx2 = (aabb.hi.x - ray.origin.x) * ray.invDirection.x;
     float tmin = min(tx1, tx2);
@@ -161,7 +160,7 @@ vec3 lightMarch(vec3 position, AABB aabb) {
     ray.invDirection = vec3(1.0) / L;
 
     float tmin, tmax;
-    IntersectAABB(ray, aabb, tmin, tmax);
+    intersectAABB(ray, aabb, tmin, tmax);
     float distanceThroughCloud = tmax;
     float stepSize = distanceThroughCloud / SECONDARY_STEPS;
 
@@ -237,15 +236,14 @@ void main() {
     aabb.size = (aabb.hi - aabb.lo);
 
     vec2 pixelCenter = vec2(float(id.x) + 0.5, float(id.y) + 0.5);
-    vec2 screenSize = vec2(float(dispatchSize.x), float(dispatchSize.y));
-    vec2 uv = (pixelCenter / screenSize) * 2.0 - 1.0;
+    vec2 uv = (pixelCenter / vec2(dispatchSize)) * 2.0 - 1.0;
     uv.y = -uv.y;
     vec3 origin = (ubo.invView * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
     vec4 target = ubo.invProj * vec4(uv, 1.0, 1.0);
     vec4 direction = ubo.invView * vec4(normalize(target.xyz), 0.0);
 
-    float nonlinearDepth = texture(depthImage, pixelCenter / vec2(dispatchSize)).r;
-    float depth = LinearDepth(nonlinearDepth);
+    float nonlinearDepth = texture(depthImage, vec2(id) / vec2(dispatchSize)).r;
+    float depth = linearDepth(nonlinearDepth);
 
     Ray ray;
     ray.origin = origin;
@@ -253,7 +251,7 @@ void main() {
     ray.invDirection = vec3(1.0) / direction.xyz;
 
     float tmin, tmax;
-    if(IntersectAABB(ray, aabb, tmin, tmax)) {
+    if(intersectAABB(ray, aabb, tmin, tmax)) {
         vec4 marchResult = march(ray, tmin, tmax, depth, aabb);
         imageStore(outputImage, id, marchResult);
     } else {

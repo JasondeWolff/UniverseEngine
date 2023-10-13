@@ -72,7 +72,7 @@ namespace UniverseEngine {
         std::unique_ptr<ImGuiRenderer> imguiRenderer;
 
         GraphicsPolygonMode polygonMode = GraphicsPolygonMode::FILL;
-        bool useLODs = true;
+        bool useLODs = false;
 
         std::unique_ptr<Framebuffer> framebuffer;
         std::shared_ptr<RenderPass> renderPass;

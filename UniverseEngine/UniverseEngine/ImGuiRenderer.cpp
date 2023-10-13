@@ -32,7 +32,8 @@ namespace UniverseEngine {
         this->fontTexture = Engine::GetResources().CreateTexture(
             "ImGui Font", data, static_cast<unsigned>(width), static_cast<unsigned>(height),
             TextureType::UNORM, ImageDimensions::IMAGE_2D, 1, false);
-        this->sampler = std::make_shared<Sampler>("Sampler", device, physicalDevice);
+        SamplerInfo samplerInfo{};
+        this->sampler = std::make_shared<Sampler>("Sampler", device, physicalDevice, samplerInfo);
 
         this->descriptorSetLayout = std::make_shared<DescriptorSetLayout>(
             device, std::vector<DescriptorLayoutBinding>{
