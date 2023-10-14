@@ -20,6 +20,16 @@
 #include "Swapchain.h"
 #include "Window.h"
 
+/// <summary>
+/// TODO:
+/// [ ] Combine weather and rough noise to reduce texture reads
+/// [ ] Improve distant cloud rendering (LODs?)
+/// [ ] Different clouds at multiple altitudes (Cumulus, Stratocumulus, Stratus)
+/// [ ] Temporal reprojection for performance
+/// [ ] Planar sample projection to reduce artifacts
+/// [X] Blue noise
+/// </summary>
+
 namespace UniverseEngine {
     class Graphics;
 
@@ -45,6 +55,8 @@ namespace UniverseEngine {
         bool sdfDebug = false;
         float sdfFactor = 1.0f;
         float minTransmittance = 0.07f;
+        float blueNoiseStrength = 10.0f;
+
         RenderScale renderScale = RenderScale::HALF_RES;
     };
 
@@ -93,6 +105,8 @@ namespace UniverseEngine {
         std::shared_ptr<Sampler> nearestSampler;
 
         std::vector<Semaphore> semaphores;
+
+        std::shared_ptr<Texture> blueNoise;
 
         CloudConfig oldConfig;
 

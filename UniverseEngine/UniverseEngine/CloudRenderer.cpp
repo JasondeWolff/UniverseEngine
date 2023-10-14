@@ -34,8 +34,7 @@ struct UniformBuffer {
     int sdfDebug;
     float sdfFactor;
     float minTransmittance;
-
-    float PADDING[1];
+    float blueNoiseStrength;
 };
 
 struct NoiseUniformBuffer {
@@ -64,7 +63,9 @@ namespace UniverseEngine {
                                         GraphicsStageFlagBits::COMPUTE_STAGE),
                 DescriptorLayoutBinding("sdf", 3, DescriptorType::COMBINED_IMAGE_SAMPLER,
                                         GraphicsStageFlagBits::COMPUTE_STAGE),
-                DescriptorLayoutBinding("ubo", 4, DescriptorType::UNIFORM_BUFFER,
+                DescriptorLayoutBinding("blueNoise", 4, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                                        GraphicsStageFlagBits::COMPUTE_STAGE),
+                DescriptorLayoutBinding("ubo", 5, DescriptorType::UNIFORM_BUFFER,
                                         GraphicsStageFlagBits::COMPUTE_STAGE)});
         this->compositDescriptorSetLayout = std::make_shared<DescriptorSetLayout>(
             device, std::vector<DescriptorLayoutBinding>{
@@ -94,7 +95,7 @@ namespace UniverseEngine {
             this->descriptorSets[i] =
                 std::make_shared<DescriptorSet>(device, descriptorPool, this->descriptorSetLayout);
 
-            this->descriptorSets[i]->SetBuffer(4, DescriptorType::UNIFORM_BUFFER,
+            this->descriptorSets[i]->SetBuffer(5, DescriptorType::UNIFORM_BUFFER,
                                                this->uniformBuffers[i]);
         }
 
@@ -119,7 +120,8 @@ namespace UniverseEngine {
 
         auto& resources = Engine::GetResources();
         std::shared_ptr<Shader> shader = resources.LoadShader("Assets/Shaders/clouds.comp");
-        std::shared_ptr<Shader> compositShader = resources.LoadShader("Assets/Shaders/cloudComposit.comp");
+        std::shared_ptr<Shader> compositShader =
+            resources.LoadShader("Assets/Shaders/cloudComposit.comp");
         std::shared_ptr<Shader> noiseShader =
             resources.LoadShader("Assets/Shaders/cloudNoise.comp");
         std::shared_ptr<Shader> sdfShader = resources.LoadShader("Assets/Shaders/cloudSDF.comp");
@@ -158,6 +160,8 @@ namespace UniverseEngine {
                 ImageUsageBits::SAMPLED_IMAGE,
             GraphicsFormat::R8_UNORM, 1, ImageDimensions::IMAGE_3D,
             static_cast<unsigned>(NOISE_RESOLUTION));
+        this->blueNoise =
+            Engine::GetResources().LoadTexture("Assets/BlueNoise.png", TextureType::UNORM);
 
         SamplerInfo samplerInfo;
         samplerInfo.filterMode = FilterMode::NEAREST;
@@ -166,7 +170,7 @@ namespace UniverseEngine {
         samplerInfo.filterMode = FilterMode::LINEAR;
         this->sampler =
             std::make_shared<Sampler>("Cloud Noise Sampler", device, physicalDevice, samplerInfo);
-        
+
         this->oldConfig.weatherDensityThreshold = -1.0f;
     }
 
@@ -215,6 +219,7 @@ namespace UniverseEngine {
         uniformBuffer.sdfDebug = this->config.sdfDebug;
         uniformBuffer.sdfFactor = this->config.sdfFactor;
         uniformBuffer.minTransmittance = this->config.minTransmittance;
+        uniformBuffer.blueNoiseStrength = this->config.blueNoiseStrength;
         void* uniformBufferData = this->uniformBuffers[currentFrame]->Map();
         memcpy(uniformBufferData, &uniformBuffer, sizeof(UniformBuffer));
         this->uniformBuffers[currentFrame]->Unmap();
@@ -236,13 +241,17 @@ namespace UniverseEngine {
                                                      this->noise, this->sampler);
         this->descriptorSets[currentFrame]->SetImage(3, DescriptorType::COMBINED_IMAGE_SAMPLER,
                                                      this->sdf, this->sampler);
+        this->descriptorSets[currentFrame]->SetImage(4, DescriptorType::COMBINED_IMAGE_SAMPLER,
+                                                     this->blueNoise->Renderable().GetImage(),
+                                                     this->sampler);
         cmdList.BindDescriptorSet(this->descriptorSets[currentFrame], 0, PipelineType::COMPUTE);
         cmdList.Dispatch(DivideUp(this->downsizedRenderTarget->Width(), 32),
                          DivideUp(this->downsizedRenderTarget->Height(), 32));
 
         // Composit clouds onto the full res color image
         cmdList.BindComputePipeline(this->compositPipeline);
-        cmdList.TransitionImageLayout(this->downsizedRenderTarget, ImageLayout::SHADER_READ_ONLY_OPTIMAL,
+        cmdList.TransitionImageLayout(this->downsizedRenderTarget,
+                                      ImageLayout::SHADER_READ_ONLY_OPTIMAL,
                                       ResourceAccessBits::ACCESS_SHADER_READ_BIT,
                                       PipelineStageBits::PIPELINE_STAGE_COMPUTE_SHADER_BIT);
         cmdList.TransitionImageLayout(colorImage, ImageLayout::GENERAL,
@@ -254,8 +263,7 @@ namespace UniverseEngine {
         this->compositDescriptorSet->SetImage(1, DescriptorType::STORAGE_IMAGE, colorImage,
                                               nullptr);
         cmdList.BindDescriptorSet(this->compositDescriptorSet, 0, PipelineType::COMPUTE);
-        cmdList.Dispatch(DivideUp(colorImage->Width(), 32),
-                         DivideUp(colorImage->Height(), 32));
+        cmdList.Dispatch(DivideUp(colorImage->Width(), 32), DivideUp(colorImage->Height(), 32));
 
         // Transition color and depth back into attachment states
         cmdList.TransitionImageLayout(

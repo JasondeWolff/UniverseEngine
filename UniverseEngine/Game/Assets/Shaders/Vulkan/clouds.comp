@@ -10,8 +10,9 @@ layout (binding = 1) uniform sampler2D depthImage;
 
 layout (binding = 2) uniform sampler3D noise;
 layout (binding = 3) uniform sampler3D sdf;
+layout (binding = 4) uniform sampler2D blueNoise;
 
-layout(binding = 4) uniform UniformBufferObject {
+layout(binding = 5) uniform UniformBufferObject {
     mat4 invView;
     mat4 invProj;
 
@@ -40,8 +41,7 @@ layout(binding = 4) uniform UniformBufferObject {
     bool sdfDebug;
     float sdfFactor;
     float minTransmittance;
-
-    float PADDING0;
+    float blueNoiseStrength;
 } ubo;
 
 struct Ray {
@@ -180,7 +180,7 @@ float AABBAltitudeDistance(Ray ray, AABB aabb) {
     return 0.0;
 }
 
-vec4 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
+vec4 march(Ray ray, vec2 uv, float tmin, float tmax, float depth, AABB aabb) {
     float distanceToCloud = max(tmin, 0.0);
     float maxDistanceThroughCloud = min(AABBAltitudeDistance(ray, aabb) * 3.0 + 600.0, 1200.0);
     float distanceThroughCloud = min(min(depth, tmax) - distanceToCloud, maxDistanceThroughCloud);
@@ -192,7 +192,8 @@ vec4 march(Ray ray, float tmin, float tmax, float depth, AABB aabb) {
     float cosAngle = dot(ray.direction, -normalize(ubo.lightDir.xyz)); 
     float phaseVal = phase(cosAngle);
 
-    float travelledDistance = 0.0;
+    float travelledDistance = texture(blueNoise, uv * 3.0).r * ubo.blueNoiseStrength;
+
     while (travelledDistance < distanceThroughCloud) {
         vec3 position = ray.origin + ray.direction * (distanceToCloud + travelledDistance);
         float heightPercent = (position.y - aabb.lo.y) / aabb.size.y;
@@ -252,7 +253,7 @@ void main() {
 
     float tmin, tmax;
     if(intersectAABB(ray, aabb, tmin, tmax)) {
-        vec4 marchResult = march(ray, tmin, tmax, depth, aabb);
+        vec4 marchResult = march(ray, uv, tmin, tmax, depth, aabb);
         imageStore(outputImage, id, marchResult);
     } else {
         imageStore(outputImage, id, vec4(0.0, 0.0, 0.0, 1.0));
