@@ -39,20 +39,22 @@ namespace UniverseEngine {
         auto plane = CreatePlane(x, y);
         float* heightMap = GenerateNoise(x, y);
 
-        for (int y = 0; y <= chunk_heightSegments + 1; ++y) {
-            for (int x = 0; x <= chunk_widthSegments; ++x) {
-                auto vertex = &plane->vertices[(y * chunk_widthSegments) + x];
+        int count = 0;
+        for (int y = 0; y <= chunk_heightSegments + 1; y++) {
+            for (int x = 0; x <= chunk_widthSegments; x++) {
+                int index = (y * chunk_widthSegments) + x;
+                auto vertex = &plane->vertices[index];
 
-                if (heightMap[(y * chunk_widthSegments) + x] < 0)
-                    heightMap[(y * chunk_widthSegments) + x] = 0;
+                if (heightMap[index] < 0)
+                    heightMap[index] = 0;
 
-                float heightValue = 
-                    heightMap[(y * chunk_widthSegments) + x] * 5.f;
+                float heightValue = heightMap[index] * heightMap[index] * 50.0f;
 
                 vertex->position.y = heightValue;
+                count++;
             }
         }
-        //plane->GenerateNormals();
+        printf("Noise count: %d\n", count);
 
         auto hScene = Engine::GetResources().CreateScene(std::move(plane->BuildFlatShaded()));
         return hScene;
@@ -68,9 +70,10 @@ namespace UniverseEngine {
         chunk->vertices.clear();
         chunk->vertices.reserve(chunk_widthSegments * chunk_heightSegments);
 
+        int count = 0;
         // Generate vertices
-        for (int y = 0; y <= chunk_widthSegments; ++y) {
-            for (int x = 0; x <= chunk_heightSegments; ++x) {
+        for (int y = 0; y <= chunk_heightSegments; ++y) {
+            for (int x = 0; x <= chunk_widthSegments; ++x) {
                 Vertex vertex;
 
                 vertex.position = glm::vec3(x * dx - chunk_width / 2.0f, 1.0f,
@@ -79,8 +82,11 @@ namespace UniverseEngine {
                     glm::vec2(static_cast<float>(x) / static_cast<float>(chunk_widthSegments),
                               static_cast<float>(y) / static_cast<float>(chunk_heightSegments));
                 chunk->vertices.push_back(vertex);
+                count++;
             }
         }
+        printf("Vertex count: %d\n", count);
+        
 
         // Generate indices
         for (int y = 0; y < chunk_heightSegments; ++y) {
@@ -104,11 +110,11 @@ namespace UniverseEngine {
         auto fnSimplex = FastNoise::New<FastNoise::Simplex>();
         auto fnFractal = FastNoise::New<FastNoise::FractalFBm>();
         fnFractal->SetSource(fnSimplex);
-        fnFractal->SetOctaveCount(5);
+        fnFractal->SetOctaveCount(7);
 
         auto width = chunk_widthSegments + 1;
         auto height = chunk_heightSegments + 1;
-        glm::ivec2 offset = glm::vec2(x * chunk_widthSegments - 1, y * chunk_heightSegments - 1);
+        glm::ivec2 offset = glm::vec2(x * chunk_widthSegments, y * chunk_heightSegments);
 
         float* noiseData = new float[width * height]();
         fnFractal->GenUniformGrid2D(
@@ -117,7 +123,7 @@ namespace UniverseEngine {
             offset.y, 
             width, 
             height, 
-            0.05f,
+            0.005f,
             1337
         );
 
@@ -129,10 +135,14 @@ namespace UniverseEngine {
         auto camera = Engine::GetWorld().camera;
         glm::vec3 cameraPos = camera.transform.GetTranslation();
 
-        const glm::ivec2 gridPos = {
-            static_cast<int>(cameraPos.x) / chunk_width,
-            static_cast<int>(cameraPos.y) / chunk_height
+        float xOffset = ((chunk_renderDistance * chunk_width) + chunk_width) / 2.0f;
+        float zOffset = ((chunk_renderDistance * chunk_height) + chunk_height) / 2.0f;
+
+        const glm::vec2 gridPos = {
+            (cameraPos.x - xOffset) / chunk_widthSegments, 
+            (cameraPos.z - zOffset) / chunk_heightSegments
         };
 
+        printf("GridPos: %9.6f %9.6f \n", gridPos.x, gridPos.y);
     }
 }  // namespace UniverseEngine
