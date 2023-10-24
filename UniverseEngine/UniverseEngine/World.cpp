@@ -7,7 +7,7 @@ namespace UniverseEngine {
     World::World() : camera{}, sun{}, sceneInstances{} 
     {
         isTerrianGenerated = false;
-        camera.transform.SetTranslation(glm::vec3(0,0,1));
+        camera.transform.SetTranslation(glm::vec3(0,0,0));
         camera.transform.SetRotation(EulerToQuat(glm::vec3(180, 0, 0)));
     }
 
@@ -28,8 +28,6 @@ namespace UniverseEngine {
     }
 
     void World::Update() {
-
-
         if (isTerrianGenerated) {
             tg.Update();
         }
