@@ -12,7 +12,7 @@
 namespace UniverseEngine {
     class Camera {
     public:
-        Camera(float fov = 70.0, float aspect = 1.0, float near = 0.1, float far = 3000.0);
+        Camera(float fov = 70.0, float aspect = 1.0, float near = 0.1, float far = 5000.0);
 
         Transform transform;
 

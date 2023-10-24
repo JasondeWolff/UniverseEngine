@@ -35,6 +35,9 @@ struct UniformBuffer {
     float sdfFactor;
     float minTransmittance;
     float blueNoiseStrength;
+    float maxDepth;
+
+    float PADDING[3];
 };
 
 struct NoiseUniformBuffer {
@@ -220,6 +223,7 @@ namespace UniverseEngine {
         uniformBuffer.sdfFactor = this->config.sdfFactor;
         uniformBuffer.minTransmittance = this->config.minTransmittance;
         uniformBuffer.blueNoiseStrength = this->config.blueNoiseStrength;
+        uniformBuffer.maxDepth = this->config.maxDepth;
         void* uniformBufferData = this->uniformBuffers[currentFrame]->Map();
         memcpy(uniformBufferData, &uniformBuffer, sizeof(UniformBuffer));
         this->uniformBuffers[currentFrame]->Unmap();

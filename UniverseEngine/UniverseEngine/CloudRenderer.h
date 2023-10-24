@@ -56,6 +56,7 @@ namespace UniverseEngine {
         float sdfFactor = 1.0f;
         float minTransmittance = 0.07f;
         float blueNoiseStrength = 10.0f;
+        float maxDepth = 500.0f;
 
         RenderScale renderScale = RenderScale::HALF_RES;
     };
