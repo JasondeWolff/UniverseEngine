@@ -51,7 +51,6 @@ namespace UniverseEngine {
         std::shared_ptr<Scene> LoadOBJ(const std::filesystem::path& filePath);
         std::shared_ptr<Texture> LoadIMG(const std::filesystem::path& filePath, TextureType type);
         std::shared_ptr<Shader> LoadShaderSource(const std::filesystem::path& filePath);
-        Mesh CreatePlane(int width = 1, int height = 1, int widthSegments = 1,
-                         int heightSegments = 1);
+        Mesh CreatePlane(int width, int height, int widthSegments, int heightSegments);
     };
 }  // namespace UniverseEngine

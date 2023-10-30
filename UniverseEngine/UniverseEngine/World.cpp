@@ -12,6 +12,14 @@ namespace UniverseEngine {
     }
 
     void World::GenerateWorld(TerrianGeneratorConfig config) {
+        float xOffset = (float)(config.chunkWidth * config.chunkRenderDistance) + config.chunkWidth;
+        float zOffset = (float)(config.chunkHeight * config.chunkRenderDistance) + config.chunkHeight;
+        xOffset = xOffset / 2;
+        zOffset = zOffset / 2;
+
+        auto& camera = Engine::GetWorld().camera;
+        camera.transform.Translate(glm::vec3(xOffset, -5.0f, zOffset));
+
         tg.Init(config);
         isTerrianGenerated = true;
     }

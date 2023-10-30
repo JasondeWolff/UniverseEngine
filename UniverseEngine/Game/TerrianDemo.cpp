@@ -27,11 +27,11 @@ void TerrianDemo::OnStart() {
 
 	this->camera.Start();
 
-	int chunkWidth = 25;
-	int chunkHeight = 25;
-	int chunkWidthSegments = 25;
-	int chunkHeightSegments = 25;
-	int chunkRenderDistance = 1;
+	int chunkWidth = 50;
+	int chunkHeight = 50;
+	int chunkWidthSegments = 10;
+	int chunkHeightSegments = 10;
+	int chunkRenderDistance = 3;
 
 	TerrianGeneratorConfig config = {
 		chunkWidth,
@@ -42,13 +42,6 @@ void TerrianDemo::OnStart() {
 	};
 
 	Engine::GetWorld().GenerateWorld(config);
-
-    float xOffset = ((chunkRenderDistance * chunkWidth) + chunkWidth) / 2.0f;
-    float zOffset = ((chunkRenderDistance * chunkHeight) + chunkHeight) / 2.0f;
-    auto& camera = Engine::GetWorld().camera;
-    camera.transform.Translate(glm::vec3(xOffset, -5.0f, zOffset));
-
-	int debug = 0;
 }
 
 void TerrianDemo::Update(float deltaTime) {

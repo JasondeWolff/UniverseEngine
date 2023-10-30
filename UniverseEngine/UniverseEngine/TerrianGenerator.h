@@ -26,7 +26,6 @@ namespace UniverseEngine {
 
         void Init(TerrianGeneratorConfig config);
 
-        std::vector<std::shared_ptr<SceneInstance>> newlyGeneratedWorld;
     private:
         friend class Resources;
         friend class World;
@@ -38,10 +37,12 @@ namespace UniverseEngine {
         int chunk_heightSegments;
         int chunk_renderDistance;
 
-        std::vector<std::shared_ptr<SceneInstance>> generatedWorld;
+        std::vector<std::shared_ptr<SceneInstance>> terrian;
+        glm::ivec2 previousGridPos;
 
         void Update();
-        std::shared_ptr<Scene> CreateScene(int x, int y);
+        std::shared_ptr<Scene> CreateTerrian(int x, int y);
+        void GenerateNewTerrian(int gridPosX, int gridPosY);
         Mesh* CreatePlane(int x, int y);
         float* GenerateNoise(int x, int y); 
     };

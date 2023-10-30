@@ -19,27 +19,33 @@ namespace UniverseEngine {
         this->chunk_widthSegments = config.chunkWidthSegments;
         this->chunk_heightSegments = config.chunkHeightSegments;
         this->chunk_renderDistance = config.chunkRenderDistance;
+        this->previousGridPos = glm::vec2(0, 0);
 
         for (int y = 0; y < chunk_renderDistance; y++) {
             for (int x = 0; x < chunk_renderDistance; x++) {
 
-                auto hScene = CreateScene(x, y);
+                auto hScene = CreateTerrian(x, y);
 
                 auto sceneInstance = Engine::GetWorld().AddSceneInstance(hScene);
 
-                glm::vec3 position = glm::vec3((x * chunk_width) + chunk_width, -30.0f, (y * chunk_height) + chunk_height);
+                glm::vec3 position = glm::vec3(
+                    (x * chunk_width) + chunk_width, 
+                    -30.0f, 
+                    (y * chunk_height) + chunk_height
+                );
                 Transform chunkTrans = Transform();
                 chunkTrans.SetTranslation(position);
                 sceneInstance->transform = chunkTrans;
+
+                terrian.emplace_back(sceneInstance);
             }
         }
     }
 
-    std::shared_ptr<Scene> TerrianGenerator::CreateScene(int x, int y) {
+    std::shared_ptr<Scene> TerrianGenerator::CreateTerrian(int x, int y) {
         auto plane = CreatePlane(x, y);
         float* heightMap = GenerateNoise(x, y);
 
-        int count = 0;
         for (int y = 0; y <= chunk_heightSegments + 1; y++) {
             for (int x = 0; x <= chunk_widthSegments; x++) {
                 int index = (y * chunk_widthSegments) + x;
@@ -51,10 +57,8 @@ namespace UniverseEngine {
                 float heightValue = heightMap[index] * heightMap[index] * 50.0f;
 
                 vertex->position.y = heightValue;
-                count++;
             }
         }
-        printf("Noise count: %d\n", count);
 
         auto hScene = Engine::GetResources().CreateScene(std::move(plane->BuildFlatShaded()));
         return hScene;
@@ -70,7 +74,6 @@ namespace UniverseEngine {
         chunk->vertices.clear();
         chunk->vertices.reserve(chunk_widthSegments * chunk_heightSegments);
 
-        int count = 0;
         // Generate vertices
         for (int y = 0; y <= chunk_heightSegments; ++y) {
             for (int x = 0; x <= chunk_widthSegments; ++x) {
@@ -81,11 +84,13 @@ namespace UniverseEngine {
                 vertex.texCoord =
                     glm::vec2(static_cast<float>(x) / static_cast<float>(chunk_widthSegments),
                               static_cast<float>(y) / static_cast<float>(chunk_heightSegments));
+
+                auto randColor = rand() % 255;
+                vertex.color = glm::vec4(randColor, randColor, randColor, 1.0f);
+
                 chunk->vertices.push_back(vertex);
-                count++;
             }
         }
-        printf("Vertex count: %d\n", count);
         
 
         // Generate indices
@@ -127,22 +132,50 @@ namespace UniverseEngine {
             1337
         );
 
-
         return noiseData;
+    }
+
+    void TerrianGenerator::GenerateNewTerrian(int gridPosX, int gridPosY) 
+    {
+        //Generate some more terrian
+        printf("GridPos: %dx%d \n", gridPosX, gridPosY);
+
+        auto hScene = CreateTerrian(gridPosX, gridPosY);
+
+        auto sceneInstance = Engine::GetWorld().AddSceneInstance(hScene);
+
+        glm::vec3 position = glm::vec3((gridPosX * chunk_width) + chunk_width, -30.0f,
+                                        (gridPosY * chunk_height) + chunk_height);
+        Transform chunkTrans = Transform();
+        chunkTrans.SetTranslation(position);
+        sceneInstance->transform = chunkTrans;
+
+        terrian.emplace_back(sceneInstance);
     }
 
     void TerrianGenerator::Update() {
         auto camera = Engine::GetWorld().camera;
-        glm::vec3 cameraPos = camera.transform.GetTranslation();
+        const glm::vec3 cameraPos = camera.transform.GetTranslation();
 
-        float xOffset = ((chunk_renderDistance * chunk_width) + chunk_width) / 2.0f;
-        float zOffset = ((chunk_renderDistance * chunk_height) + chunk_height) / 2.0f;
+        float xOffset = (float)(chunk_width * chunk_renderDistance) + chunk_width;
+        float zOffset = (float)(chunk_height * chunk_renderDistance) + chunk_height;
+        xOffset = xOffset / 2.0f;
+        zOffset = zOffset / 2.0f;
 
-        const glm::vec2 gridPos = {
-            (cameraPos.x - xOffset) / chunk_widthSegments, 
-            (cameraPos.z - zOffset) / chunk_heightSegments
+        const glm::ivec2 gridPos = {
+            static_cast<int>((cameraPos.x - xOffset) / chunk_width),
+            static_cast<int>((cameraPos.z - zOffset) / chunk_height)
         };
+        
+        bool open = true;
+        ImGui::SetNextWindowSize(ImVec2(200, 250));
+        ImGui::Begin("[TERRIAN] General", &open);
+        ImGui::Text("GridPos: %dx%d \n", gridPos.x, gridPos.y);
+        ImGui::End();
 
-        printf("GridPos: %9.6f %9.6f \n", gridPos.x, gridPos.y);
+        if (gridPos != previousGridPos) {
+            //GenerateNewTerrian(gridPos.x, gridPos.y);
+            previousGridPos = gridPos;
+        }
     }
 }  // namespace UniverseEngine
