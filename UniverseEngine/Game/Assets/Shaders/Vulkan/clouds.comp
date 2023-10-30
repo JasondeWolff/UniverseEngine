@@ -42,6 +42,11 @@ layout(binding = 5) uniform UniformBufferObject {
     float sdfFactor;
     float minTransmittance;
     float blueNoiseStrength;
+    float maxDepth;
+
+    float PADDING0;
+    float PADDING1;
+    float PADDING2;
 } ubo;
 
 struct Ray {
@@ -183,7 +188,7 @@ float AABBAltitudeDistance(Ray ray, AABB aabb) {
 vec4 march(Ray ray, vec2 uv, float tmin, float tmax, float depth, AABB aabb) {
     float distanceToCloud = max(tmin, 0.0);
     float maxDistanceThroughCloud = min(AABBAltitudeDistance(ray, aabb) * 3.0 + 600.0, 1200.0);
-    float distanceThroughCloud = min(min(depth, tmax) - distanceToCloud, maxDistanceThroughCloud);
+    float distanceThroughCloud = min(min(depth, tmax) - distanceToCloud, ubo.maxDepth);
     float uniformStepSize = distanceThroughCloud / mix(MAX_PRIMARY_STEPS_HORIZONTAL, MAX_PRIMARY_STEPS_VERTICAL, abs(ray.direction.y));
 
     float transmittance = 1.0;

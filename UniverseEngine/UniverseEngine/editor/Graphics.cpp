@@ -79,6 +79,7 @@ namespace UniverseEngine {
             ImGui::SliderFloat("SDF Factor", &config.sdfFactor, 0.0f, 1.0f);
             ImGui::SliderFloat("Transmittance Threshold", &config.minTransmittance, 0.0f, 0.1f);
             ImGui::SliderFloat("Blue Noise Strength", &config.blueNoiseStrength, 0.0f, 20.0f);
+            ImGui::SliderFloat("Max Depth", &config.maxDepth, 0.0f, 3000.0f);
             int renderScale = static_cast<int>(config.renderScale);
             ImGui::Combo("Render Scale", &renderScale, "Full Res\0Half Res\0Quarter Res");
             config.renderScale = static_cast<RenderScale>(renderScale);
