@@ -171,7 +171,7 @@ vec3 Shade(vec3 P, vec3 V, vec3 N, vec3 f0, vec3 diffuseColor, float metallic, f
 }
 
 void main() { 
-    vec3 baseColor = material.baseColor.rgb;
+    vec3 baseColor = material.baseColor.rgb * fragColor;
     if (material.hasBaseColorMap) {
         baseColor *= texture(baseColorMap, fragTexCoord).rgb;
     }

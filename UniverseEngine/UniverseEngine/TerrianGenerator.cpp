@@ -12,6 +12,15 @@
 #include "Engine.h"
 
 namespace UniverseEngine {
+    // Utils
+    glm::vec4 HexToVec4(unsigned int hexValue) {
+        float red = ((hexValue >> 16) & 0xFF) / 255.0f;
+        float green = ((hexValue >> 8) & 0xFF) / 255.0f;
+        float blue = (hexValue & 0xFF) / 255.0f;
+
+        return glm::vec4(red, green, blue, 1.0f);
+    }
+
     void TerrianGenerator::Init(TerrianGeneratorConfig config) {
         this->chunk_width = config.chunkWidth;
         this->chunk_height = config.chunkHeight;
@@ -19,25 +28,7 @@ namespace UniverseEngine {
         this->chunk_heightSegments = config.chunkHeightSegments;
         this->chunk_renderDistance = config.chunkRenderDistance;
         this->previousGridPos = glm::vec2(0, 0);
-        /*for (int y = 0; y < chunk_renderDistance; y++) {
-            for (int x = 0; x < chunk_renderDistance; x++) {
-
-                auto hScene = CreateTerrian(x, y);
-
-                auto sceneInstance = Engine::GetWorld().AddSceneInstance(hScene);
-
-                glm::vec3 position = glm::vec3(
-                    (x * chunk_width) + chunk_width, 
-                    -30.0f, 
-                    (y * chunk_height) + chunk_height
-                );
-                Transform chunkTrans = Transform();
-                chunkTrans.SetTranslation(position);
-                sceneInstance->transform = chunkTrans;
-
-                terrian.emplace_back(sceneInstance);
-            }
-        }*/
+        this->noiseSeed = rand();
     }
 
     std::shared_ptr<Scene> TerrianGenerator::CreateTerrian(int gridX, int gridY) {
@@ -56,8 +47,23 @@ namespace UniverseEngine {
 
                 vertex->position.y = heightValue;
 
-                if (gridX == 0 && gridY == 0) {
-                    vertex->position.y = -30;
+                if (heightMap[index] == 0) {
+                    vertex->color = HexToVec4(climate::Water);
+                } 
+                else if (heightMap[index] <= 0.25f) {
+                    vertex->color = HexToVec4(climate::Sand);
+                } 
+                else if (heightMap[index] <= 0.50f) {
+                    vertex->color = HexToVec4(climate::Grass);
+                } 
+                else if (heightMap[index] <= 0.48f) {
+                    vertex->color = HexToVec4(climate::Woods);
+                } 
+                else if (heightMap[index] <= 0.65f) {
+                    vertex->color = HexToVec4(climate::Rocks);
+                } 
+                else{
+                    vertex->color = HexToVec4(climate::Snow);
                 }
             }
         }
@@ -130,8 +136,8 @@ namespace UniverseEngine {
             offset.y, 
             width, 
             height, 
-            0.005f,
-            999
+            0.01f,
+            noiseSeed
         );
 
         return noiseData;
@@ -166,6 +172,7 @@ namespace UniverseEngine {
         ImGui::Text("GridPos: %dx%d \n", gridPos.x, gridPos.y);
         ImGui::End();
 
+         
         // Define the range of grid positions to generate terrain around the player
         int gridRange = chunk_renderDistance;  // Adjust this as needed
 

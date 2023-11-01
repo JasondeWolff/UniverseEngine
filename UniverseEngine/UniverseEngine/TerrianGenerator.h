@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
-#include <glm/vec2.hpp>  // Include the appropriate header for glm::ivec2
+#include <glm/glm.hpp>  // Include the appropriate header for glm::ivec2
 #include <set>
 
 #include <FastNoise/FastNoise.h>
@@ -18,6 +18,15 @@ namespace UniverseEngine {
         int chunkWidthSegments = 1;
         int chunkHeightSegments = 1;
         int chunkRenderDistance = 1;
+    };
+
+    enum climate { 
+        Water = 0x0000FF, 
+        Sand = 0xC2B280, 
+        Grass = 0x90EE90,
+        Woods = 0x228C22,
+        Rocks = 0x5A4D41,
+        Snow = 0xFFFFFF
     };
 
     struct IVec2Compare {
@@ -46,6 +55,7 @@ namespace UniverseEngine {
         int chunk_widthSegments;
         int chunk_heightSegments;
         int chunk_renderDistance;
+        int noiseSeed;
 
         // Declare a set with the custom comparison function
         std::set<glm::ivec2, IVec2Compare> loadedChunks;
