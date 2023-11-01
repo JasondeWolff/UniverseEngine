@@ -8,7 +8,6 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
 
 #include "Engine.h"
 
@@ -20,8 +19,7 @@ namespace UniverseEngine {
         this->chunk_heightSegments = config.chunkHeightSegments;
         this->chunk_renderDistance = config.chunkRenderDistance;
         this->previousGridPos = glm::vec2(0, 0);
-
-        for (int y = 0; y < chunk_renderDistance; y++) {
+        /*for (int y = 0; y < chunk_renderDistance; y++) {
             for (int x = 0; x < chunk_renderDistance; x++) {
 
                 auto hScene = CreateTerrian(x, y);
@@ -39,12 +37,12 @@ namespace UniverseEngine {
 
                 terrian.emplace_back(sceneInstance);
             }
-        }
+        }*/
     }
 
-    std::shared_ptr<Scene> TerrianGenerator::CreateTerrian(int x, int y) {
-        auto plane = CreatePlane(x, y);
-        float* heightMap = GenerateNoise(x, y);
+    std::shared_ptr<Scene> TerrianGenerator::CreateTerrian(int gridX, int gridY) {
+        auto plane = CreatePlane(gridX, gridY);
+        float* heightMap = GenerateNoise(gridX, gridY);
 
         for (int y = 0; y <= chunk_heightSegments + 1; y++) {
             for (int x = 0; x <= chunk_widthSegments; x++) {
@@ -57,6 +55,10 @@ namespace UniverseEngine {
                 float heightValue = heightMap[index] * heightMap[index] * 50.0f;
 
                 vertex->position.y = heightValue;
+
+                if (gridX == 0 && gridY == 0) {
+                    vertex->position.y = -30;
+                }
             }
         }
 
@@ -129,23 +131,19 @@ namespace UniverseEngine {
             width, 
             height, 
             0.005f,
-            1337
+            999
         );
 
         return noiseData;
     }
 
-    void TerrianGenerator::GenerateNewTerrian(int gridPosX, int gridPosY) 
+    void TerrianGenerator::GenerateNewTerrain(int gridPosX, int gridPosY) 
     {
-        //Generate some more terrian
-        printf("GridPos: %dx%d \n", gridPosX, gridPosY);
-
         auto hScene = CreateTerrian(gridPosX, gridPosY);
 
         auto sceneInstance = Engine::GetWorld().AddSceneInstance(hScene);
 
-        glm::vec3 position = glm::vec3((gridPosX * chunk_width) + chunk_width, -30.0f,
-                                        (gridPosY * chunk_height) + chunk_height);
+        glm::vec3 position = glm::vec3((gridPosX * chunk_width) + chunk_width, -30.0f, (gridPosY * chunk_height) + chunk_height);
         Transform chunkTrans = Transform();
         chunkTrans.SetTranslation(position);
         sceneInstance->transform = chunkTrans;
@@ -157,14 +155,9 @@ namespace UniverseEngine {
         auto camera = Engine::GetWorld().camera;
         const glm::vec3 cameraPos = camera.transform.GetTranslation();
 
-        float xOffset = (float)(chunk_width * chunk_renderDistance) + chunk_width;
-        float zOffset = (float)(chunk_height * chunk_renderDistance) + chunk_height;
-        xOffset = xOffset / 2.0f;
-        zOffset = zOffset / 2.0f;
-
         const glm::ivec2 gridPos = {
-            static_cast<int>((cameraPos.x - xOffset) / chunk_width),
-            static_cast<int>((cameraPos.z - zOffset) / chunk_height)
+            static_cast<int>((cameraPos.x - chunk_width) / chunk_width),
+            static_cast<int>((cameraPos.z - chunk_height) / chunk_height)
         };
         
         bool open = true;
@@ -173,9 +166,23 @@ namespace UniverseEngine {
         ImGui::Text("GridPos: %dx%d \n", gridPos.x, gridPos.y);
         ImGui::End();
 
-        if (gridPos != previousGridPos) {
-            //GenerateNewTerrian(gridPos.x, gridPos.y);
-            previousGridPos = gridPos;
+        // Define the range of grid positions to generate terrain around the player
+        int gridRange = chunk_renderDistance;  // Adjust this as needed
+
+        for (int i = -gridRange; i <= gridRange; i++) {
+            for (int j = -gridRange; j <= gridRange; j++) {
+                glm::ivec2 currentGrid = {gridPos.x + i, gridPos.y + j};
+
+                // Check if terrain needs to be generated for this grid position
+                if (currentGrid != previousGridPos) {
+                    if (loadedChunks.find(currentGrid) == loadedChunks.end()) {
+                        // Generate terrain only if it's not already loaded
+                        GenerateNewTerrain(currentGrid.x, currentGrid.y);
+                        loadedChunks.insert(currentGrid);
+                    }
+                    previousGridPos = currentGrid;
+                }
+            }
         }
     }
 }  // namespace UniverseEngine
